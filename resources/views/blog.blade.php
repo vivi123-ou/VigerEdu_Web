@@ -1,0 +1,560 @@
+@extends('layouts.app')
+
+@section('title', 'Blog - Kiến thức du học Đức')
+
+@push('styles')
+  <style>
+    /* ================================================
+       BLOG PAGE STYLES
+       ================================================ */
+
+    .blog-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 55rem;
+      margin: 0 auto;
+    }
+    .blog-hero-pretitle {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Search bar floating */
+    .blog-search-wrap {
+      position: relative;
+      z-index: 10;
+      padding: 0 1.5rem;
+      margin-top: -2.5rem;
+      margin-bottom: 2rem;
+    }
+    .blog-search-bar {
+      max-width: 52rem;
+      margin: 0 auto;
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--border-light);
+    }
+    .blog-search-input-wrap {
+      position: relative;
+      margin: 0 0 1rem;
+    }
+    .blog-search-input-wrap svg {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 18px;
+      height: 18px;
+    }
+    .blog-search-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.8rem 1rem 0.8rem 2.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      font-size: 0.9rem;
+      background: var(--bg-main);
+      outline: none;
+      transition: border-color 0.2s ease;
+      font-family: "Inter", sans-serif;
+    }
+    .blog-search-input:focus {
+      border-color: var(--accent-main);
+    }
+    .blog-tags {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .blog-tag {
+      display: inline-block;
+      text-decoration: none;
+      padding: 0.45rem 1.1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.825rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+    .blog-tag.active {
+      background: var(--accent-main);
+      color: white;
+    }
+    .blog-tag:not(.active) {
+      background: var(--bg-main);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+    .blog-tag:not(.active):hover {
+      border-color: var(--accent-main);
+      color: var(--accent-main);
+      background: white;
+    }
+
+    /* Section wrapper */
+    .blog-section {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    /* Section header decoration */
+    .blog-section-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .blog-section-label::before {
+      content: "";
+      display: block;
+      width: 2.5rem;
+      height: 2px;
+      background: var(--accent-alt);
+      flex-shrink: 0;
+    }
+    .blog-section-label span {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .blog-section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 2.5rem;
+    }
+
+    /* Featured post */
+    .featured-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-light);
+      background: white;
+      max-width: 62rem; /* giới hạn độ rộng, không kéo hết 80rem */
+      margin: 0 auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    @media (min-width: 1024px) {
+      .featured-card {
+        grid-template-columns: 0.9fr 1.1fr; /* ảnh hẹp hơn, chữ rộng hơn */
+      }
+    }
+    .featured-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-xl);
+    }
+    .featured-card-img {
+      position: relative;
+      min-height: 180px;
+      max-height: 260px;
+      overflow: hidden;
+    }
+    @media (min-width: 1024px) {
+      .featured-card-img {
+        max-height: none;
+      }
+    }
+    .featured-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .featured-card:hover .featured-card-img img {
+      transform: scale(1.05);
+    }
+    .featured-card-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 60%);
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem 1.25rem;
+    }
+    .featured-card-img-overlay h3 {
+      color: white;
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.35;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .featured-card-body {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .featured-card-body p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 4; /* cắt đoạn mô tả dài */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .featured-card-footer {
+      border-top: 1px solid var(--border-light);
+      padding-top: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .featured-card-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .read-more-link {
+      color: var(--accent-main);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.2s ease;
+    }
+    .read-more-link:hover {
+      color: var(--accent-hover);
+    }
+
+    /* Post grid */
+    .post-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    @media (min-width: 640px) {
+      .post-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .post-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .post-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .post-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    .post-card-img {
+      height: 200px;
+      overflow: hidden;
+    }
+    .post-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .post-card:hover .post-card-img img {
+      transform: scale(1.05);
+    }
+    .post-card-body {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .post-card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 0.75rem;
+      transition: color 0.2s ease;
+    }
+    .post-card:hover .post-card-title {
+      color: var(--accent-main);
+    }
+    .post-card-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .post-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .post-tag {
+      background: var(--accent-main);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.7rem;
+      border-radius: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 3rem;
+    }
+    .page-link {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      background: var(--text-primary);
+      color: var(--bg-white);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .page-link:hover,
+    .page-link.active {
+      background: var(--accent-main);
+    }
+  </style>
+@endpush
+
+@section('content')
+  <main class="main-content">
+    <!-- 1. HERO -->
+    <section
+      class="cta-section animate-hidden"
+      style="
+        margin: 0;
+        border-radius: 0;
+        padding: 10rem 0 6rem;
+        background-image:
+          linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(238, 193, 98, 0.8) 100%),
+          url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80');
+        background-size: cover;
+        background-position: center;
+        border-bottom: 4px solid var(--accent-alt);
+      "
+    >
+      <div class="blog-hero-content">
+        <p class="blog-hero-pretitle">Blog du học Đức</p>
+        <h1 class="hero-heading" style="color: white; margin-bottom: 1rem">
+          KIẾN THỨC DU HỌC ĐỨC
+        </h1>
+        <p class="cta-desc" style="max-width: 750px; margin: 1.5rem auto 2.5rem; font-weight: 300;">
+          Kinh nghiệm, lộ trình, học bổng, visa và chi phí du học Đức được biên
+          soạn theo hướng dễ hiểu, thực tế và hữu ích nhất.
+        </p>
+      </div>
+    </section>
+
+    <!-- Search Bar Floating -->
+    <div class="blog-search-wrap">
+      <div class="blog-search-bar animate-hidden">
+        {{-- Form GET nên không cần @csrf --}}
+        <form action="{{ url('/blog') }}" method="get" class="blog-search-input-wrap">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          @if ($activeCategory !== null)
+            <input type="hidden" name="category" value="{{ $activeCategory }}" />
+          @endif
+          <input
+            type="text"
+            name="q"
+            value="{{ $q }}"
+            class="blog-search-input"
+            placeholder="Tìm kiếm bài viết, tài liệu..."
+          />
+        </form>
+        <div class="blog-tags">
+          <a href="{{ url('/blog') }}" class="blog-tag {{ $activeCategory === null ? 'active' : '' }}">Tất cả</a>
+          @foreach ($categories as $c)
+            <a
+              href="{{ url('/blog?category=' . $c->id) }}"
+              class="blog-tag {{ $activeCategory == $c->id ? 'active' : '' }}"
+              >{{ $c->name }}</a
+            >
+          @endforeach
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. BÀI VIẾT NỔI BẬT -->
+    @if ($featured)
+      <section class="blog-section">
+        <div class="blog-section-label animate-hidden">
+          <span>Bài viết nổi bật</span>
+        </div>
+        <h2 class="animate-hidden">Nội dung được quan tâm nhiều nhất</h2>
+
+        <div class="featured-card animate-hidden delay-100">
+          <div class="featured-card-img">
+            <img
+              src="{{ $featured->featured_image
+                ? asset($featured->featured_image)
+                : 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1000&q=80' }}"
+              alt="{{ $featured->title }}"
+            />
+            <div class="featured-card-img-overlay">
+              <h3>{{ $featured->title }}</h3>
+            </div>
+          </div>
+          <div class="featured-card-body">
+            <div>
+              @if (!empty($featured->excerpt))
+                <p>{{ $featured->excerpt }}</p>
+              @endif
+            </div>
+            <div class="featured-card-footer">
+              <span class="featured-card-meta">
+                {{ $featured->created_at?->format('d/m/Y') }} · Viger EDU
+              </span>
+              <a href="{{ url('/bai-viet/' . $featured->slug) }}" class="read-more-link">Đọc thêm →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    @endif
+
+    <!-- 3. BÀI VIẾT MỚI NHẤT -->
+    <section class="blog-section" style="padding-top: 0">
+      <div class="blog-section-label animate-hidden">
+        <span>Bài viết mới</span>
+      </div>
+      <h2 class="animate-hidden">Bài viết mới nhất về du học tại Đức</h2>
+
+      @if ($posts->isNotEmpty())
+        <div class="post-grid">
+          @foreach ($posts as $post)
+            <a href="{{ url('/bai-viet/' . $post->slug) }}" class="post-card animate-hidden">
+              <div class="post-card-img">
+                <img
+                  src="{{ $post->featured_image
+                    ? asset($post->featured_image)
+                    : 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=80' }}"
+                  alt="{{ $post->title }}"
+                />
+              </div>
+              <div class="post-card-body">
+                <div>
+                  <div class="post-card-title">{{ $post->title }}</div>
+                  @if (!empty($post->excerpt))
+                    <div class="post-card-desc">{{ $post->excerpt }}</div>
+                  @endif
+                </div>
+                <div class="post-card-footer">
+                  @if ($post->category)
+                    <span class="post-tag">{{ $post->category->name }}</span>
+                  @else
+                    <span></span>
+                  @endif
+                  <span class="read-more-link">Đọc thêm →</span>
+                </div>
+              </div>
+            </a>
+          @endforeach
+        </div>
+      @elseif (! $featured)
+        <p style="text-align: center; color: var(--text-muted); padding: 3rem 0;">
+          Không tìm thấy bài viết nào.
+        </p>
+      @endif
+
+      {{-- Phân trang: $posts->url() đã giữ ?category= và ?q= nhờ withQueryString() ở controller --}}
+      @if ($posts->lastPage() > 1)
+        <div class="pagination animate-hidden">
+          @if ($posts->currentPage() > 1)
+            <a
+              href="{{ $posts->previousPageUrl() }}"
+              class="page-link"
+              style="background: transparent; color: var(--text-primary)"
+              >&laquo;</a
+            >
+          @endif
+
+          @foreach (range(1, $posts->lastPage()) as $i)
+            <a
+              href="{{ $posts->url($i) }}"
+              class="page-link {{ $i === $posts->currentPage() ? 'active' : '' }}"
+              >{{ $i }}</a
+            >
+          @endforeach
+
+          @if ($posts->hasMorePages())
+            <a
+              href="{{ $posts->nextPageUrl() }}"
+              class="page-link"
+              style="background: transparent; color: var(--text-primary)"
+              >&raquo;</a
+            >
+          @endif
+        </div>
+      @endif
+    </section>
+
+    <section class="cta-section animate-hidden">
+      <div class="page-container">
+        <div class="section-pretitle" style="justify-content: center">
+          <span>✨ Bắt đầu hành trình của riêng bạn</span>
+        </div>
+        <h2 class="cta-title">Khởi đầu hành trình chinh phục tương lai</h2>
+        <p class="cta-desc">
+          Liên hệ với chúng tôi ngay hôm nay để được tư vấn lộ trình học tập và
+          sự nghiệp vững chắc tại nước ngoài.
+        </p>
+        <a class="cta-pill" href="/lien-he">Bắt đầu ngay</a>
+      </div>
+    </section>
+  </main>
+@endsection
+
+@push('scripts')
+  <script src="{{ asset('js/animations.js') }}"></script>
+@endpush

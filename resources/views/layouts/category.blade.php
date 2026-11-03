@@ -1,0 +1,401 @@
+@extends('layouts.app')
+
+{{--
+  Layout dùng chung cho mọi trang "danh sách bài viết theo chuyên mục"
+  (education.*, consult.*, blog.*, chuong-trinh-hoc).
+
+  Trang con chỉ cần khai báo các section:
+    title            : tiêu đề tab
+    banner_image     : URL ảnh nền banner
+    banner_color     : màu cuối của gradient, vd 'rgba(193, 18, 31, 0.8)'
+    banner_pretitle  : dòng nhỏ phía trên tiêu đề
+    banner_heading   : tiêu đề lớn
+    banner_desc      : đoạn mô tả
+    after_content    : (tuỳ chọn) khối HTML hiển thị dưới danh sách, vd CTA
+
+  Controller cần truyền: $posts (paginator), $latestPosts (collection).
+--}}
+
+@push('styles')
+  <style>
+    .overview-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      padding: 6rem 1.5rem;
+      max-width: 80rem;
+      margin: 0 auto;
+    }
+    @media (min-width: 1024px) {
+      .overview-layout {
+        flex-direction: row;
+      }
+    }
+    .overview-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .overview-sidebar {
+      width: 100%;
+    }
+    @media (min-width: 1024px) {
+      .overview-sidebar {
+        width: 380px;
+        flex-shrink: 0;
+      }
+    }
+
+    /* Grid of cards */
+    .blog-grid-new {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .blog-grid-new {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .card-new {
+      background: #2b303a;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      height: 100%;
+    }
+    .card-new:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+      border-color: rgba(255, 183, 3, 0.3);
+    }
+    .card-new-img {
+      height: 220px;
+      overflow: hidden;
+      position: relative;
+      background: #1a1d24;
+    }
+    .card-new-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .card-new:hover .card-new-img img {
+      transform: scale(1.05);
+    }
+    .card-new-body {
+      padding: 1.5rem;
+      background-color: #2b303a;
+      color: var(--bg-white);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-new-meta {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.75rem;
+    }
+    .card-new-meta svg {
+      width: 15px;
+      height: 15px;
+      color: var(--accent-alt);
+      flex-shrink: 0;
+    }
+    .card-new-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.45;
+      margin: 0 0 0.75rem;
+      color: #fff;
+      transition: color 0.2s ease;
+    }
+    .card-new:hover .card-new-title {
+      color: var(--accent-alt);
+    }
+    .card-new-desc {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-new-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .card-new-link {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-alt);
+      transition: transform 0.2s ease;
+    }
+    .card-new:hover .card-new-link {
+      transform: translateX(4px);
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 3rem;
+    }
+    .page-link {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      background: var(--text-primary);
+      color: var(--bg-white);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .page-link:hover,
+    .page-link.active {
+      background: var(--accent-main);
+    }
+
+    /* Sidebar */
+    .sidebar-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      padding-left: 0.75rem;
+      border-left: 4px solid var(--accent-main);
+      color: var(--text-primary);
+    }
+    .sidebar-list {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: transform 0.2s ease;
+    }
+    .sidebar-item:hover {
+      transform: translateX(5px);
+    }
+    .sidebar-item-num {
+      background: var(--text-primary);
+      color: var(--bg-white);
+      font-weight: 700;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s ease;
+    }
+    .sidebar-item-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-top: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      transition: color 0.2s ease;
+    }
+    .sidebar-item:hover .sidebar-item-num {
+      background: var(--accent-main);
+    }
+    .sidebar-item:hover .sidebar-item-text {
+      color: var(--accent-main);
+    }
+  </style>
+@endpush
+
+@section('content')
+  <main class="main-content">
+    <!-- HEADER BANNER -->
+    <section
+      class="cta-section animate-hidden"
+      style="
+        margin: 0;
+        border-radius: 0;
+        padding: 10rem 0 6rem;
+        background-image:
+          linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, @yield('banner_color') 100%),
+          url('@yield('banner_image')');
+        background-size: cover;
+        background-position: center;
+        border-bottom: 4px solid var(--accent-alt);
+      "
+    >
+      <div class="page-container">
+        <div class="text-center animate-hidden">
+          <div class="section-pretitle" style="justify-content: center; margin-bottom: 1rem">
+            <span style="color: var(--accent-alt); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;"
+              >@yield('banner_pretitle')</span
+            >
+          </div>
+          <h1 class="hero-heading" style="color: white; margin-bottom: 1rem">
+            @yield('banner_heading')
+          </h1>
+          <p class="cta-desc" style="max-width: 750px; margin: 1.5rem auto 0; font-weight: 300;">
+            @yield('banner_desc')
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAYOUT CHÍNH: MAIN + SIDEBAR -->
+    <div class="overview-layout">
+      <!-- CỘT TRÁI: DANH SÁCH THẺ BÀI VIẾT -->
+      <div class="overview-main">
+        <div class="section-pretitle animate-hidden" style="margin-bottom: 1.5rem">
+          <span style="color: var(--accent-alt-hover); background-color: #fff9e6; padding: 0.35rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;"
+            >Chuyên đề &amp; Bài viết</span
+          >
+        </div>
+
+        @if ($posts->isNotEmpty())
+          <div class="blog-grid-new">
+            @foreach ($posts as $post)
+              <a href="{{ url('/bai-viet/' . $post->slug) }}" class="card-new animate-hidden delay-100">
+                <div class="card-new-img">
+                  <img
+                    src="{{ $post->featured_image
+                      ? asset($post->featured_image)
+                      : 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80' }}"
+                    alt="{{ $post->title }}"
+                  />
+                </div>
+
+                <div class="card-new-body">
+                  <div>
+                    <div class="card-new-meta">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <span>
+                        @if ($post->created_at)
+                          {{ $post->created_at->format('d') }} tháng {{ $post->created_at->format('m, Y') }}
+                        @endif
+                      </span>
+                    </div>
+
+                    <h3 class="card-new-title">{{ $post->title }}</h3>
+
+                    @if (!empty($post->excerpt))
+                      <p class="card-new-desc">{{ $post->excerpt }}</p>
+                    @endif
+                  </div>
+
+                  <div class="card-new-footer">
+                    <span class="card-new-link"> Xem chi tiết &rarr; </span>
+                  </div>
+                </div>
+              </a>
+            @endforeach
+          </div>
+        @else
+          <div style="text-align: center; padding: 3.5rem 1.5rem; background: var(--bg-white); border-radius: var(--radius-xl); border: 1px solid var(--border-color);">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="width: 44px; height: 44px; color: var(--text-muted); margin-bottom: 0.75rem;"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+              />
+            </svg>
+            <p style="color: var(--text-muted); font-size: 1.05rem; margin: 0">
+              Chưa có bài viết nào trong chuyên mục này.
+            </p>
+          </div>
+        @endif
+
+        {{-- Phân trang: $posts->url() tự dùng đúng URL của trang hiện tại --}}
+        @if ($posts->lastPage() > 1)
+          <div class="pagination animate-hidden">
+            @if ($posts->currentPage() > 1)
+              <a href="{{ $posts->previousPageUrl() }}" class="page-link" style="background: transparent; color: var(--text-primary)">&laquo;</a>
+            @endif
+
+            @foreach (range(1, $posts->lastPage()) as $i)
+              <a href="{{ $posts->url($i) }}" class="page-link {{ $i === $posts->currentPage() ? 'active' : '' }}">{{ $i }}</a>
+            @endforeach
+
+            @if ($posts->hasMorePages())
+              <a href="{{ $posts->nextPageUrl() }}" class="page-link" style="background: transparent; color: var(--text-primary)">&raquo;</a>
+            @endif
+          </div>
+        @endif
+      </div>
+
+      <!-- CỘT PHẢI: SIDEBAR -->
+      <aside class="overview-sidebar animate-hidden delay-300">
+        <div>
+          <h2 class="sidebar-title">Bài Đăng Mới Nhất</h2>
+
+          <div class="sidebar-list">
+            @forelse ($latestPosts as $p)
+              <a href="{{ url('/bai-viet/' . $p->slug) }}" class="sidebar-item">
+                <div class="sidebar-item-num">{{ $loop->iteration }}</div>
+                <div class="sidebar-item-text">{{ $p->title }}</div>
+              </a>
+            @empty
+              <span style="color: var(--text-muted); font-size: 0.9rem">Chưa có bài viết nào.</span>
+            @endforelse
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    @yield('after_content')
+  </main>
+@endsection
+
+@push('scripts')
+  <script src="{{ asset('js/animations.js') }}"></script>
+@endpush
