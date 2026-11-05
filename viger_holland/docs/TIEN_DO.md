@@ -44,5 +44,27 @@
 ### Câu hỏi cho Vân
 - Chưa có hotline, Zalo, địa chỉ, giờ làm việc để hiện ở chân trang (đang để trống, chân trang tự ẩn dòng trống). Vân gửi khi có, hoặc sửa trên admin từ giai đoạn 3.
 
-## Tiếp theo: Giai đoạn 2
-Contracts (`ScoringEngine`, `MajorCatalog`) + `RiasecFitEngineV2` + `JsonMajorCatalog` (ánh xạ khóa tiếng Việt của `majors.json` sang `code`, `type`, `name_vi`… theo hợp đồng) + unit test theo `test_cases.json` + test engine giả.
+### Chỉnh giao diện lần 2 (theo góp ý của Vân)
+- Font giống viger.edu.vn: **Work Sans** (chữ) + **Playfair Display** (tiêu đề in hoa). Chọn được qua `settings.font_body` / `font_heading`, chỉ nhận font trong `config('holland.fonts')`.
+- Trang giới thiệu tham khảo UEH "Hiểu về bạn": khối **Cách làm bài 3 bước** và **Phương pháp Holland – 6 nhóm** (chữ từ settings). Đổi "em" → "bạn".
+- Admin: chữ 16px, nhãn "Sắp có", hướng dẫn nhanh trên bảng điều khiển.
+
+## Giai đoạn 2 – Thuật toán chấm điểm (xong ngày 05/11/2026)
+
+### Đã xong
+- `App\Contracts\ScoringEngine` (`score()` từ bài làm, `scorePercent()` từ điểm % có sẵn) và `App\Contracts\MajorCatalog`.
+- `App\Engines\RiasecFitEngineV2`: port nguyên công thức bản tham chiếu. Xếp hạng FIT → khớp mã → mã ngành; top 5 đại học + top 3 học nghề; `fields`, `testas`, `ranking` (toàn bộ ngành đang bật).
+- `App\Data\HollandResult` (`toArray()` đúng `holland-result/1`, `toArray(withRanking: true)` cho `/score?full=1`), `MajorMatch`, `Major`, `ScoringConfig`.
+- `App\Catalogs\JsonMajorCatalog`: đọc `majors.json`, ánh xạ khóa tiếng Việt (`id`, `loai`, `ten`, `linh_vuc`, `codes`…) sang khóa hợp đồng (`code`, `type`, `name_vi`, `field`, `holland_codes`…); nhận cả khóa của CRM.
+- Chọn engine bằng `config('holland.engine')` + danh sách `config('holland.engines')`. Tham số chấm điểm mặc định ở `config('holland.scoring')` (khớp `holland_config.json`, có test kiểm tra).
+- `docs/THAY_THUAT_TOAN.md`: cách viết và đăng ký engine mới.
+- **Test (56 test / 69.501 kiểm tra, đều đạt):**
+  - 5 học sinh `test_cases.json` (điểm %, mã, di3, consistency, has_tie, top 5 đại học với code_used/code_match/score_match/fit, top 3 học nghề, lĩnh vực mạnh nhất), sai số 0,001. HS01: AIS, N043, FIT 0,8011.
+  - Đối chiếu với `holland_engine_reference.php` trên 300 hồ sơ ngẫu nhiên (thang Đúng/Không và 5 mức).
+  - Bằng điểm, hồ sơ phẳng, ngành 3 mã, ngành tắt, thang Likert, nhãn, trọng số từ cấu hình, cấu trúc `holland-result/1`, engine giả thay qua cấu hình.
+
+### Câu hỏi cho Vân
+- Câu lý do đang giữ đúng hợp đồng: `"AIS ↔ IAS · em đạt I 67%, A 89%, S 56%"`. Muốn đổi thành **"bạn đạt"** thì chỉ cần sửa `config('holland.scoring.reason_subject')` (giai đoạn 3 sửa trên admin) + mẫu trong `HOP_DONG_KET_NOI.md`. Vân quyết giúp.
+
+## Tiếp theo: Giai đoạn 3a
+Form Phần A động → các trang câu hỏi Phần B (lưu tạm trong trình duyệt) → nộp bài (lưu attempt, chấm, đưa lead vào outbox) → trang kết quả (biểu đồ 6 nhóm, mã, ngành gợi ý, đặt lịch, Gọi/Zalo) → email kết quả.
