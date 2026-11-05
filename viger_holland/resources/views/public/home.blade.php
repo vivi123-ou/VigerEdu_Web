@@ -8,34 +8,26 @@
     <section class="hero">
         <div class="container hero__grid">
             <div class="hero__main">
-                <p class="eyebrow">{{ setting('test_name') }}</p>
+                <p class="eyebrow">{{ setting('intro_eyebrow', setting('test_name')) }}</p>
                 <h1 class="hero__title">{{ setting('intro_title') }}</h1>
                 <p class="hero__subtitle">{{ setting('intro_subtitle') }}</p>
 
-                <dl class="facts">
-                    <div class="facts__item">
-                        <dt>{{ setting('intro_fact_questions', 'Số câu hỏi') }}</dt>
-                        <dd>{{ $questionCount }}</dd>
-                    </div>
-                    @if (filled(setting('intro_fact_time')))
-                        <div class="facts__item">
-                            <dt>{{ setting('intro_fact_time_label', 'Thời gian') }}</dt>
-                            <dd>{{ setting('intro_fact_time') }}</dd>
-                        </div>
-                    @endif
-                    @if (filled(setting('intro_fact_price')))
-                        <div class="facts__item">
-                            <dt>{{ setting('intro_fact_price_label', 'Chi phí') }}</dt>
-                            <dd>{{ setting('intro_fact_price') }}</dd>
-                        </div>
-                    @endif
-                </dl>
+                @php
+                    $benefits = array_filter([setting('intro_benefit_1'), setting('intro_benefit_2'), setting('intro_benefit_3')]);
+                @endphp
+                @if ($benefits)
+                    <ul class="benefits">
+                        @foreach ($benefits as $benefit)
+                            <li>@include('partials.icon', ['name' => 'check', 'size' => 18, 'class' => 'benefits__icon']) {{ $benefit }}</li>
+                        @endforeach
+                    </ul>
+                @endif
 
-                {{-- Giai đoạn 3: nút dẫn tới form Phần A. Tạm thời báo đang hoàn thiện. --}}
+                {{-- Giai đoạn 3a: nút dẫn tới trang làm bài. Tạm thời báo đang hoàn thiện. --}}
                 <button class="btn btn--primary btn--lg" type="button" disabled aria-describedby="sap-mo">
-                    {{ setting('intro_button_text', 'Bắt đầu làm bài') }} <span class="btn__arrow" aria-hidden="true">→</span>
+                    {{ setting('intro_button_text', 'Bắt đầu') }} <span class="btn__arrow" aria-hidden="true">→</span>
                 </button>
-                <p id="sap-mo" class="hero__note">{{ setting('intro_coming_soon') }}</p>
+                <p id="sap-mo" class="hero__note">{{ setting('intro_coming_soon') ?: setting('intro_button_note') }}</p>
             </div>
 
             @if (filled(setting('steps_title')))

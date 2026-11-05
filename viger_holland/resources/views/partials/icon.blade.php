@@ -26,5 +26,8 @@
         @case('grid')
             <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>
             @break
+        @case('check')
+            <path d="m5 12.5 4.5 4.5L19 7.5"/>
+            @break
     @endswitch
 </svg>

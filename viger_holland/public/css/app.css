@@ -139,6 +139,17 @@ a:focus-visible, button:focus-visible {
 }
 .hero__note { color: var(--muted); font-size: 0.875rem; margin-top: 0.875rem; }
 
+/* Lợi ích */
+.benefits {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+}
+.benefits li { display: flex; align-items: flex-start; gap: 0.6rem; font-weight: 500; }
+.benefits__icon { color: var(--brand); margin-top: 0.2rem; }
+
 /* Bảng thông tin nhanh */
 .facts {
     display: grid;

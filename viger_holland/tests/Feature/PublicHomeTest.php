@@ -24,8 +24,8 @@ class PublicHomeTest extends TestCase
             ->assertOk()
             ->assertSee('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">', false)
             ->assertSee('<html lang="vi">', false)
-            ->assertSee('Khám phá ngành học phù hợp với bạn')
-            ->assertSee('<dd>54</dd>', false)
+            ->assertSee('Bạn thật sự hợp với ngành nào?')
+            ->assertSee('Hoàn toàn miễn phí')
             ->assertSee('Về trang chủ')
             ->assertSee('https://viger.edu.vn', false)
             ->assertSee('<div id="viger-chatbot"></div>', false);
@@ -42,7 +42,15 @@ class PublicHomeTest extends TestCase
             ->assertSee('Trung tâm Thử Nghiệm')
             ->assertSee('Tiêu đề do Thầy sửa')
             ->assertSee('https://vi-du.test', false)
-            ->assertDontSee('Khám phá ngành học phù hợp với bạn');
+            ->assertDontSee('Bạn thật sự hợp với ngành nào?');
+    }
+
+    public function test_home_page_does_not_show_question_count_or_time_limit(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('54')
+            ->assertDontSee('phút');
     }
 
     public function test_chatbot_embed_code_is_inserted_only_when_configured(): void
