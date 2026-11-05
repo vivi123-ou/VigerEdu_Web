@@ -1,7 +1,7 @@
 /* =====================================================================
    Web Holland – trang quản trị
    Phẳng, góc vuông, đường kẻ mảnh; dùng được trên điện thoại.
-   Font Be Vietnam Pro nạp trong partials/fonts.blade.php.
+   Font lấy từ Cài đặt (mặc định Work Sans, giống web chính) – partials/fonts.blade.php.
    ===================================================================== */
 
 :root {
@@ -23,9 +23,9 @@
 
 body {
     margin: 0;
-    font-family: "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 0.9375rem;
-    line-height: 1.55;
+    font-family: var(--font-body, "Work Sans", sans-serif);
+    font-size: 1rem;
+    line-height: 1.6;
     color: var(--ink);
     background: var(--bg);
     -webkit-font-smoothing: antialiased;
@@ -239,7 +239,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 .sidebar.is-open + .sidebar-scrim { display: block; }
 .sidebar__title {
     margin: 1.25rem 1.25rem 0.4rem;
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -247,7 +247,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 }
 .sidebar__list { list-style: none; margin: 0; padding: 0; }
 .sidebar__link {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
     padding: 0.5rem 1.25rem;
     border-left: 3px solid transparent;
     text-decoration: none;
@@ -255,8 +258,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 }
 .sidebar__link:hover { background: var(--bg); color: var(--ink); }
 .sidebar__link.is-active { border-left-color: var(--brand); background: var(--bg); color: var(--ink); font-weight: 600; }
-.sidebar__link.is-pending { color: #98a3ae; }
-.sidebar__link.is-pending.is-active { color: var(--ink); }
+.tag {
+    flex-shrink: 0;
+    padding: 0 0.35rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    white-space: nowrap;
+}
 
 .content { flex: 1; min-width: 0; padding: 1.25rem 1rem 2.5rem; }
 .page-head {
@@ -267,7 +277,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
     padding-bottom: 0.875rem;
     border-bottom: 1px solid var(--line);
 }
-.page-head__title { font-size: 1.375rem; margin: 0; }
+.page-head__title { font-size: 1.5rem; font-weight: 600; margin: 0; }
 .help-btn {
     width: 1.75rem;
     height: 1.75rem;
@@ -303,7 +313,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 }
 .stat { background: var(--white); padding: 1rem 1.1rem; }
 .stat__value { font-size: 1.875rem; font-weight: 700; margin: 0; line-height: 1.2; }
-.stat__label { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.8125rem; }
+.stat__label { margin: 0.25rem 0 0; color: var(--ink-soft); font-size: 0.875rem; }
 .stat--muted .stat__value { color: #98a3ae; }
 
 .card { background: var(--white); border: 1px solid var(--line); padding: 1.25rem; margin-bottom: 1.5rem; }
@@ -333,3 +343,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
     .sidebar { position: sticky; transform: none; height: calc(100vh - var(--topbar-h)); flex-shrink: 0; }
     .sidebar-scrim { display: none !important; }
 }
+
+/* ---------- Hướng dẫn nhanh trên bảng điều khiển ---------- */
+.guide { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 1.5rem; }
+.guide__item { display: block; background: var(--white); padding: 1rem 1.1rem; text-decoration: none; }
+.guide__item:hover { background: #fbfbfc; }
+.guide__item:hover .guide__title { color: var(--brand); }
+.guide__title { font-weight: 600; margin: 0 0 0.2rem; }
+.guide__text { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
+@media (min-width: 48rem) { .guide { grid-template-columns: repeat(3, 1fr); } }

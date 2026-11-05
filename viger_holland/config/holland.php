@@ -41,6 +41,17 @@ return [
         'ADMIN' => 'Quản trị viên',
     ],
 
+    // Danh sách font admin được chọn (Google Fonts, đều hỗ trợ tiếng Việt).
+    // Tên font => [kiểu dự phòng, các độ đậm cần tải]
+    'fonts' => [
+        'Work Sans' => ['sans-serif', '400;500;600;700'],
+        'Playfair Display' => ['serif', '400;600;700'],
+        'Be Vietnam Pro' => ['sans-serif', '400;500;600;700'],
+        'Roboto' => ['sans-serif', '400;500;700'],
+        'Montserrat' => ['sans-serif', '400;500;600;700'],
+        'Lora' => ['serif', '400;600;700'],
+    ],
+
     // Thư mục dữ liệu mẫu dùng cho seeder
     'seed_path' => database_path('seeders/data/holland'),
 

@@ -3,7 +3,22 @@
 @section('title', 'Bảng điều khiển')
 
 @section('content')
-    <p class="lead">Xin chào {{ auth()->user()->name }}! Đây là tình hình bài test hiện tại.</p>
+    <p class="lead">Xin chào {{ auth()->user()->name }}! Đây là tình hình bài test hiện tại. Chọn một mục ở menu bên trái để bắt đầu; mỗi trang đều có nút <strong>?</strong> cạnh tiêu đề để xem hướng dẫn.</p>
+
+    <div class="guide">
+        <a class="guide__item" href="{{ route('admin.section', 'question-sets') }}">
+            <p class="guide__title">Sửa câu hỏi bài test</p>
+            <p class="guide__text">Thêm, sửa, bật/tắt câu hỏi Holland.</p>
+        </a>
+        <a class="guide__item" href="{{ route('admin.section', 'intro') }}">
+            <p class="guide__title">Đổi chữ, ảnh trang giới thiệu</p>
+            <p class="guide__text">Tiêu đề, mô tả, banner, nút "Bắt đầu".</p>
+        </a>
+        <a class="guide__item" href="{{ route('home') }}" target="_blank" rel="noopener">
+            <p class="guide__title">Xem trang như khách</p>
+            <p class="guide__text">Mở trang bài test ở tab mới để kiểm tra.</p>
+        </a>
+    </div>
 
     <div class="stats">
         <div class="stat">

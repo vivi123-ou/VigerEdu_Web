@@ -72,9 +72,12 @@
                     @foreach ($group['items'] as $item)
                         <li>
                             <a href="{{ AdminMenu::url($item) }}"
-                               @class(['sidebar__link', 'is-active' => $item['key'] === $currentKey, 'is-pending' => isset($item['stage'])])
+                               @class(['sidebar__link', 'is-active' => $item['key'] === $currentKey])
                                @if ($item['key'] === $currentKey) aria-current="page" @endif>
-                                {{ $item['label'] }}
+                                <span>{{ $item['label'] }}</span>
+                                @isset($item['stage'])
+                                    <span class="tag">Sắp có</span>
+                                @endisset
                             </a>
                         </li>
                     @endforeach
