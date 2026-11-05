@@ -1,6 +1,6 @@
 @extends('layouts.admin', ['menuKey' => 'question-sets'])
 
-@section('title', 'Bộ câu hỏi (Phần B)')
+@section('title', 'Bộ câu hỏi')
 
 @section('content')
     <p class="lead">Mỗi bộ câu là một bài test Holland riêng. Khách mở link chung sẽ làm <strong>bộ mặc định</strong>; bộ khác có link riêng (gửi cho từng nhóm khách hoặc gắn quảng cáo).</p>

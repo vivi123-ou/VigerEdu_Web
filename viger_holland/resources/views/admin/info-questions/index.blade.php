@@ -1,6 +1,6 @@
 @extends('layouts.admin', ['menuKey' => 'info-form'])
 
-@section('title', 'Form thông tin khách (Phần A)')
+@section('title', 'Form thông tin khách')
 
 @section('content')
     <p class="lead">Khách điền form này ở bước cuối (sau khi làm xong câu Holland) để nhận kết quả. Câu bắt buộc hiện trước; câu không bắt buộc nằm trong phần "Thêm thông tin" (thu gọn); ô đồng ý luôn ở cuối.</p>

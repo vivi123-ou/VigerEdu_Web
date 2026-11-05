@@ -7,7 +7,7 @@
 
     <section class="card">
         <h2 class="card__title">1. Tải bộ câu hỏi</h2>
-        <p class="muted">File gồm câu thông tin khách (Phần A) và câu Holland (Phần B) của bộ bạn chọn, kèm tab HUONG_DAN.</p>
+        <p class="muted">File gồm câu hỏi thông tin khách và câu hỏi Holland của bộ bạn chọn, kèm tab HUONG_DAN (hướng dẫn sửa file).</p>
         <ul class="history">
             @foreach ($sets as $set)
                 <li class="history__item">
@@ -29,7 +29,7 @@
                         <option value="{{ $set->id }}" @selected((string) old('question_set_id') === (string) $set->id)>{{ $set->name }}</option>
                     @endforeach
                 </select>
-                <p class="field__hint">Câu Phần B mới (ô Mã câu để trống) được thêm vào bộ này.</p>
+                <p class="field__hint">Câu hỏi Holland mới (ô Mã câu để trống) được thêm vào bộ này.</p>
                 @error('question_set_id')<p class="field__error">{{ $message }}</p>@enderror
             </div>
             <div class="field">

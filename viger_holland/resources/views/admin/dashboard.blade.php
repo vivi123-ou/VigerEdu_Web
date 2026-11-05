@@ -23,11 +23,11 @@
     <div class="stats">
         <div class="stat">
             <p class="stat__value">{{ $partACount }}</p>
-            <p class="stat__label">Câu hỏi thông tin khách (Phần A) đang bật</p>
+            <p class="stat__label">Câu hỏi thông tin khách đang bật</p>
         </div>
         <div class="stat">
             <p class="stat__value">{{ $partBCount }}</p>
-            <p class="stat__label">Câu hỏi Holland (Phần B) đang bật</p>
+            <p class="stat__label">Câu hỏi Holland đang bật</p>
         </div>
         <div class="stat">
             <p class="stat__value">{{ $sets->count() }}</p>

@@ -21,9 +21,9 @@ return [
     [
         'title' => 'Bài test',
         'items' => [
-            ['key' => 'question-sets', 'label' => 'Bộ câu hỏi (Phần B)', 'route' => 'admin.question-sets.index', 'icon' => 'list',
+            ['key' => 'question-sets', 'label' => 'Bộ câu hỏi', 'route' => 'admin.question-sets.index', 'icon' => 'list',
                 'help' => 'Mỗi bộ câu là một bài test (ví dụ THPT, Sinh viên). Bấm tên bộ để thêm, sửa, tắt, kéo thả sắp xếp câu hỏi. "Dán nhiều câu" để thêm cả loạt (mỗi dòng một câu, đầu dòng ghi nhóm, ví dụ "R | Tôi thích sửa xe"). "Nhân bản" để tạo bộ mới từ bộ cũ. Mỗi bộ có link làm bài riêng để gửi khách. Xóa nhầm thì khôi phục ở mục Thùng rác cuối trang.'],
-            ['key' => 'info-form', 'label' => 'Form thông tin khách (Phần A)', 'route' => 'admin.info-questions.index', 'icon' => 'form',
+            ['key' => 'info-form', 'label' => 'Form thông tin khách', 'route' => 'admin.info-questions.index', 'icon' => 'form',
                 'help' => 'Các câu khách điền ở bước cuối "Nhận kết quả". Bấm "+ Thêm câu", chọn kiểu trả lời và "Gửi sang CRM vào trường…" (trường có sẵn hoặc tự đặt mã mới). Câu mới hiện ngay trên form và tự gửi sang CRM. "Chỉ hiện khi…" để chỉ hỏi một nhóm khách. Kéo thả biểu tượng ⋮⋮ rồi bấm "Lưu thứ tự" để sắp xếp.'],
             ['key' => 'scoring', 'label' => 'Cấu hình chấm điểm', 'route' => 'admin.scoring.edit', 'icon' => 'sliders',
                 'help' => 'Đổi trọng số, ngưỡng và tên nhãn, số ngành gợi ý. Bấm "Chạy thử" để xem một học sinh mẫu được gợi ý ngành nào với giá trị mới (chưa lưu) so với hiện tại. Hài lòng thì bấm "Lưu". Lượt làm bài cũ không bị chấm lại. Sửa nhầm thì bấm "Quay lại bản này" ở Lịch sử thay đổi.'],
