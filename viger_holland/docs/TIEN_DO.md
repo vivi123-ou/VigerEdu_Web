@@ -25,6 +25,13 @@
 - **Chặn `migrate:fresh` / `migrate:reset` / `db:wipe` khi production** (làm sớm từ giai đoạn 6).
 - **Test:** 26 test / 179 kiểm tra đều đạt. Pint sạch; `pint.json` bỏ qua `database/seeders/data`.
 
+### Chỉnh giao diện (theo góp ý của Vân)
+- Font **Be Vietnam Pro** cho cả trang khách và admin (bỏ Inter + Playfair).
+- Phong cách tham khảo web các đại học Đức: phẳng, góc vuông, căn trái, đường kẻ mảnh, nút chữ nhật "→", bảng thông tin nhanh; một màu nhấn (đỏ thương hiệu).
+- Bỏ toàn bộ emoji, thay bằng icon SVG nét mảnh (`partials/icon.blade.php`). Thanh trên admin trên điện thoại chỉ còn icon.
+- Đã kiểm tra bằng ảnh chụp ở khổ điện thoại 390px và máy tính 1366px.
+- Phần bên phải trang giới thiệu đang trống: giai đoạn 3 thêm **ảnh banner** do admin tải lên.
+
 ### Lưu ý
 - Lần chạy Pint đầu tiên đã định dạng lại `database/seeders/data/holland/holland_engine_reference.php` (chỉ dấu cách, xuống dòng; công thức không đổi, file vẫn chạy). Từ nay Pint bỏ qua thư mục này. Nếu Vân muốn giữ đúng bản gốc thì chép đè lại file từ gói tài liệu.
 - Đã clone web chính vào `D:\OU\_ref\VigerEdu_Web` để tham khảo màu/font (chỉ đọc).
