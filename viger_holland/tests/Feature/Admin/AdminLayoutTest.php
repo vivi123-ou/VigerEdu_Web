@@ -35,7 +35,7 @@ class AdminLayoutTest extends TestCase
         }
 
         $this->assertSame(54, $response->viewData('partBCount'));
-        $this->assertSame(18, $response->viewData('partACount'));
+        $this->assertSame(21, $response->viewData('partACount'));
     }
 
     public function test_every_pending_menu_item_opens_a_coming_soon_page_with_help(): void

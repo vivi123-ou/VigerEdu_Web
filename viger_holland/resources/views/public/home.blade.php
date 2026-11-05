@@ -23,11 +23,12 @@
                     </ul>
                 @endif
 
-                {{-- Giai đoạn 3a: nút dẫn tới trang làm bài. Tạm thời báo đang hoàn thiện. --}}
-                <button class="btn btn--primary btn--lg" type="button" disabled aria-describedby="sap-mo">
+                <a class="btn btn--primary btn--lg" href="{{ route('test.show', array_filter(request()->only(['bo', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']))) }}">
                     {{ setting('intro_button_text', 'Bắt đầu') }} <span class="btn__arrow" aria-hidden="true">→</span>
-                </button>
-                <p id="sap-mo" class="hero__note">{{ setting('intro_coming_soon') ?: setting('intro_button_note') }}</p>
+                </a>
+                @if (filled(setting('intro_button_note')))
+                    <p class="hero__note">{{ setting('intro_button_note') }}</p>
+                @endif
             </div>
 
             @if (filled(setting('steps_title')))

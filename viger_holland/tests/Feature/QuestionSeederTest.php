@@ -20,7 +20,8 @@ class QuestionSeederTest extends TestCase
     {
         $this->seed(QuestionSeeder::class);
 
-        $this->assertSame(18, Question::part('A')->count(), '15 câu gốc + A16, A17, A18 tách ra');
+        $this->assertSame(22, Question::part('A')->count(), '15 câu gốc + A16–A18 tách ra + A19–A22 mới');
+        $this->assertSame(21, Question::part('A')->active()->count(), 'A03 năm sinh tắt (tự điền từ ngày sinh)');
         $this->assertSame(54, Question::part('B')->count());
 
         foreach (['R', 'I', 'A', 'S', 'E', 'C'] as $group) {
@@ -42,7 +43,7 @@ class QuestionSeederTest extends TestCase
 
         $this->seed(QuestionSeeder::class);
 
-        $this->assertSame(72, Question::withTrashed()->count());
+        $this->assertSame(76, Question::withTrashed()->count());
         $this->assertSame(1, QuestionSet::count());
         $this->assertSame('Câu Thầy đã sửa', Question::where('code', 'B01')->sole()->text);
         $this->assertTrue(Question::onlyTrashed()->where('code', 'B02')->exists(), 'Câu đã xóa không bị tạo lại');
@@ -57,13 +58,27 @@ class QuestionSeederTest extends TestCase
             'A06' => 'parent_name', 'A16' => 'parent_phone', 'A07' => 'current_level', 'A08' => 'gpa',
             'A09' => 'english_level', 'A17' => 'german_level', 'A10' => 'desired_level', 'A11' => 'country',
             'A18' => 'region', 'A12' => 'budget', 'A13' => 'timing', 'A14' => 'interested_major', 'A15' => 'consent',
+            'A20' => 'current_school', 'A21' => 'province',
+            // Trường mới ngoài lead/1 gửi trong extra_fields
+            'A19' => 'extra_fields.birth_date', 'A22' => 'extra_fields.parent_email',
         ];
 
-        $actual = Question::part('A')->pluck('lead_field', 'code')->all();
+        $actual = Question::part('A')->get()->mapWithKeys(fn (Question $question) => [$question->code => $question->crmKey()])->all();
 
         ksort($expected);
         ksort($actual);
         $this->assertSame($expected, $actual);
+    }
+
+    public function test_province_list_has_34_provinces_plus_abroad(): void
+    {
+        $this->seed(QuestionSeeder::class);
+
+        $options = Question::where('code', 'A21')->sole()->options;
+
+        $this->assertCount(35, $options);
+        $this->assertContains('Hà Nội', array_column($options, 'value'));
+        $this->assertContains('Ngoài Việt Nam', array_column($options, 'value'));
     }
 
     public function test_option_values_match_standard_choice_list(): void
@@ -87,10 +102,15 @@ class QuestionSeederTest extends TestCase
     {
         $this->seed(QuestionSeeder::class);
 
-        $this->assertEqualsCanonicalizing(['A01', 'A15'], Question::part('A')->where('is_required', true)->pluck('code')->all());
+        $this->assertEqualsCanonicalizing(
+            ['A02', 'A19', 'A05', 'A04', 'A01', 'A07', 'A20', 'A21', 'A15'],
+            Question::part('A')->where('is_required', true)->pluck('code')->all(),
+            'Họ tên, ngày sinh, email, SĐT, vai trò, lớp, trường, tỉnh, đồng ý',
+        );
         $this->assertSame(AnswerType::Consent, Question::where('code', 'A15')->sole()->answer_type);
-        $this->assertSame(['question' => 'A01', 'in' => ['HS']], Question::where('code', 'A06')->sole()->show_if);
-        $this->assertSame(['question' => 'A01', 'in' => ['HS']], Question::where('code', 'A16')->sole()->show_if);
+        foreach (['A06', 'A16', 'A22'] as $code) {
+            $this->assertSame(['question' => 'A01', 'in' => ['HS']], Question::where('code', $code)->sole()->show_if, "{$code} chỉ hiện khi học sinh tự làm");
+        }
     }
 
     public function test_admin_seeder_creates_admin_once_without_overwriting_password(): void
@@ -125,7 +145,7 @@ class QuestionSeederTest extends TestCase
         $this->seed(DatabaseSeeder::class);
         $this->seed(DatabaseSeeder::class);
 
-        $this->assertSame(72, Question::count());
+        $this->assertSame(76, Question::count());
         $this->assertSame(1, User::count());
     }
 }

@@ -49,7 +49,7 @@ return [
     [
         'title' => 'Dữ liệu',
         'items' => [
-            ['key' => 'attempts', 'label' => 'Lượt làm bài', 'stage' => 3, 'icon' => 'users',
+            ['key' => 'attempts', 'label' => 'Lượt làm bài', 'route' => 'admin.attempts.index', 'icon' => 'users',
                 'help' => 'Danh sách lượt làm bài, xem bài làm từng câu và bảng xếp hạng ngành. Không có danh sách khách (xem ở CRM).'],
             ['key' => 'outbox', 'label' => 'Hàng đợi gửi CRM', 'stage' => 4, 'icon' => 'send',
                 'help' => 'Các lượt chưa gửi được sang CRM (CRM tắt hoặc lỗi) và nút gửi lại.'],

@@ -19,8 +19,8 @@
 ## 2. Repo này làm gì
 
 - **Trang khách** (thiết kế cho điện thoại trước):
-  - giới thiệu → **Phần A** (form thông tin, động, admin tự thêm câu) → **Phần B** (bộ câu Holland, mặc định 54 câu: 6 nhóm × 9);
-  - **trang kết quả**: biểu đồ 6 nhóm, mã 3 chữ, lĩnh vực và ngành gợi ý; **không hiện điểm FIT dạng số, không hiện GREEN/YELLOW/RED, không hứa đậu**; nút đặt lịch, Gọi / Zalo;
+  - giới thiệu → **Phần B** (bộ câu Holland, không giới hạn thời gian, không hiện số câu) → **Phần A** (form "Nhận kết quả", động, admin tự thêm câu; điền xong mới xem kết quả) — *đổi thứ tự theo quyết định của Vân 05/11/2026*;
+  - **trang kết quả**: biểu đồ 6 nhóm, mã 3 chữ, lĩnh vực và ngành gợi ý; **không hiện điểm FIT dạng số, không hiện GREEN/YELLOW/RED, không hứa đậu**; **không có nút đặt lịch** (tư vấn viên đặt lịch trong CRM rồi email cho khách), khối "chuyên viên sẽ liên hệ" + Gọi / Zalo;
   - trang kết quả `noindex`.
 - **Admin** (`/admin`), theo bố cục `docs/anh_mau_quan_tri/H19_admin_holland.png`:
   - bộ câu hỏi (sửa trên web hoặc qua Excel), form Phần A, cấu hình chấm điểm (có nút "Chạy thử");
@@ -87,9 +87,9 @@
 
 ## 7. Giai đoạn (chi tiết ở `docs/PROMPT_2_HOLLAND.md` mục 8)
 
-- [ ] 1. Khởi tạo Laravel 13, Laravel Boost, layout mobile-first, đăng nhập admin, seeder 69 câu
-- [ ] 2. Contracts + `RiasecFitEngineV2` + `JsonMajorCatalog` + unit test theo `test_cases.json` + test engine giả
-- [ ] 3. Form Phần A động, nhiều bộ câu, cấu hình chấm điểm trên admin, trang làm bài, kết quả, email, đặt lịch, quản trị nội dung trang, khối nhúng
+- [x] 1. Khởi tạo Laravel 13, Laravel Boost, layout mobile-first, đăng nhập admin, seeder 69 câu
+- [x] 2. Contracts + `RiasecFitEngineV2` + `JsonMajorCatalog` + unit test theo `test_cases.json` + test engine giả
+- [ ] 3. Form Phần A động, nhiều bộ câu, cấu hình chấm điểm trên admin, trang làm bài, kết quả, email, quản trị nội dung trang, khối nhúng
 - [ ] 4. Kết nối CRM: catalog, lead sink, outbox + retry + scheduler (test bằng `Http::fake()`)
 - [ ] 5. API v1 + `docs/API_HOLLAND.md` (curl + Python `requests` cho bạn Ý)
 - [ ] 6. An toàn dữ liệu: backup / restore, chặn lệnh xóa database, gỡ / cài lại

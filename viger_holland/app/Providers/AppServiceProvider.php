@@ -6,8 +6,11 @@ use App\Catalogs\JsonMajorCatalog;
 use App\Contracts\MajorCatalog;
 use App\Contracts\ScoringEngine;
 use App\Data\ScoringConfig;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 
@@ -37,5 +40,12 @@ class AppServiceProvider extends ServiceProvider
     {
         // An toàn dữ liệu: chặn migrate:fresh / migrate:reset / db:wipe khi chạy thật.
         DB::prohibitDestructiveCommands($this->app->isProduction());
+
+        // Form công khai: tối đa 5 lần nộp bài / phút / địa chỉ IP, báo lỗi tiếng Việt.
+        RateLimiter::for('submit-test', fn (Request $request) => Limit::perMinute(5)
+            ->by($request->ip())
+            ->response(fn () => back()->withInput()->withErrors([
+                'submit' => 'Bạn vừa gửi quá nhiều lần. Vui lòng đợi 1 phút rồi bấm "Xem kết quả" lại.',
+            ])));
     }
 }

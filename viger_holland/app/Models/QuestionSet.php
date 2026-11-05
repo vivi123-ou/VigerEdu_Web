@@ -47,4 +47,22 @@ class QuestionSet extends Model
     {
         $query->where('is_active', true);
     }
+
+    /**
+     * Thang trả lời của bộ: nhãn admin đặt, không có thì thang mặc định của kiểu trả lời.
+     *
+     * @return list<array{value: int|float, label: string}>
+     */
+    public function scaleOptions(): array
+    {
+        return ! empty($this->scale) ? $this->scale : $this->answer_type->defaultScale();
+    }
+
+    /**
+     * Phiên bản bộ câu gửi CRM (ngày sửa gần nhất).
+     */
+    public function version(): string
+    {
+        return ($this->updated_at ?? now())->format('Y-m-d');
+    }
 }

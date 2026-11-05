@@ -33,10 +33,10 @@
             <p class="stat__value">{{ $sets->count() }}</p>
             <p class="stat__label">Bộ câu hỏi</p>
         </div>
-        <div class="stat stat--muted">
-            <p class="stat__value">–</p>
-            <p class="stat__label">Lượt làm bài (có từ giai đoạn 3)</p>
-        </div>
+        <a class="stat" href="{{ route('admin.attempts.index') }}" style="text-decoration:none">
+            <p class="stat__value">{{ $attemptsToday }}</p>
+            <p class="stat__label">Lượt làm bài hôm nay · tổng {{ $attemptsTotal }}</p>
+        </a>
     </div>
 
     <section class="card">

@@ -66,5 +66,33 @@
 ### Câu hỏi cho Vân
 - Đã đổi câu lý do thành "AIS ↔ IAS · **bạn đạt** I 67%…" (Vân duyệt 05/11/2026), sửa cả mẫu trong `HOP_DONG_KET_NOI.md` và `CLAUDE.md`. **Cần báo bạn Ý (chatbot).**
 
-## Tiếp theo: Giai đoạn 3a
-Form Phần A động → các trang câu hỏi Phần B (lưu tạm trong trình duyệt) → nộp bài (lưu attempt, chấm, đưa lead vào outbox) → trang kết quả (biểu đồ 6 nhóm, mã, ngành gợi ý, đặt lịch, Gọi/Zalo) → email kết quả.
+## Giai đoạn 3a – Khách làm bài và xem kết quả (xong ngày 05/11/2026)
+
+### Quyết định của Vân (khác đặc tả gốc)
+- **Làm câu Holland trước, điền thông tin sau**: làm xong bài mới hiện form "Nhận kết quả của bạn", điền xong mới xem kết quả.
+- **Bỏ nút đặt lịch** trên trang kết quả: tư vấn viên đặt lịch trong CRM rồi email cho khách. Trang kết quả có khối "Chuyên viên sẽ liên hệ" + Gọi / Zalo.
+- Trang giới thiệu **không ghi số câu, không ghi thời gian**; lời mời viết kiểu marketing.
+- Thang 5 mức hiển thị **5 ô số có nhãn** (tham khảo UEH), nhãn mặc định: Không đúng với tôi → Hoàn toàn đúng.
+- Form thông tin: bắt buộc Họ tên, **Ngày sinh**, Email, SĐT, Bạn là, Đang học lớp/năm, **Trường**, **Tỉnh/Thành** + đồng ý. Thông tin phụ huynh / người giám hộ (họ tên, SĐT, **email**) không bắt buộc, chỉ hiện khi học sinh tự làm.
+
+### Đã xong
+- Bảng `attempts` (contact **mã hóa**), `outbox` (payload **mã hóa**). Model `Attempt`, `OutboxMessage`.
+- Phần A mới: thêm A19 Ngày sinh, A20 Trường, A21 Tỉnh/Thành (34 tỉnh sau sắp xếp 2025 + "Ngoài Việt Nam"), A22 Email phụ huynh; A03 Năm sinh tắt (tự điền từ ngày sinh). Câu bắt buộc lên trước, câu không bắt buộc thu gọn.
+- `/lam-bai` (`?bo=` chọn bộ câu): chia trang theo bộ, thanh tiến độ không ghi số, lưu tạm câu trả lời trên máy (không lưu thông tin cá nhân), câu điều kiện ẩn/hiện, chép utm_ từ link, không JS vẫn làm được.
+- `POST /nop-bai` (5 lần/phút/IP): kiểm tra dựng động từ bảng câu hỏi (câu admin thêm tự được kiểm tra), chuẩn hóa SĐT, bắt buộc SĐT hoặc email → chấm → lưu → **gói `lead/1` vào outbox** (chờ gửi, giai đoạn 4 gửi thật) → email kết quả gửi sau khi trả trang.
+- `/ket-qua/{token}` (noindex): lời chào, mã + giải thích 3 chữ, biểu đồ 6 nhóm (%), cảnh báo hồ sơ phẳng / bằng điểm, 3 lĩnh vực, 5 ngành đại học + 3 nghề (tên, tên tiếng Đức, mô tả, nhãn) — **không FIT số, không GREEN/YELLOW/RED**.
+- Email kết quả (`TestResultMail`): chữ lấy từ settings. Máy Vân: `.env` gửi vào **Mailpit** (`http://localhost:8025`).
+- Admin: **Lượt làm bài** (danh sách, lọc theo mã) + **chi tiết** (`view_url` gửi CRM): điểm 6 nhóm, xếp hạng đủ 75 ngành có FIT, lọc đại học / học nghề / lĩnh vực, bài làm từng câu, thông tin không nhạy cảm (SĐT/email/họ tên xem ở CRM). Bảng điều khiển đếm lượt hôm nay / tổng.
+- Mọi chữ trên trang làm bài, form, trang kết quả, email nằm trong settings (nhóm `test`, `result`, `email`).
+- **Test: 76 test đều đạt** (nộp hợp lệ → attempt + kết quả + outbox; gói đúng `lead/1`; câu admin thêm → `extra_fields`; thiếu đồng ý / thiếu SĐT+email → lỗi, không lưu; câu ẩn bị bỏ qua; bộ câu thang 5 mức chấm đúng; token sai 404; trang kết quả không có FIT/GREEN; email; SĐT không lộ trong DB/log; giới hạn 5 lần/phút; admin xem được, cần đăng nhập).
+- Đã thử thật trên máy: nộp bài → kết quả AIS / N043 → email tới Mailpit.
+
+### Việc Vân cần làm
+- Thêm 2 dòng vào `TU_DIEN_DU_LIEU_CHUNG.xlsx` tab 2 (nhóm "Mở rộng"): `extra_fields.birth_date` (A19, ngày sinh, ngày) và `extra_fields.parent_email` (A22, email phụ huynh / người giám hộ). Thêm các mã câu A19–A22.
+- Báo bạn Ý: câu lý do giờ là "bạn đạt…".
+
+### Câu hỏi cho Vân
+- Đặc tả ghi mặc định `MAIL_MAILER=log`, nhưng chế độ này **ghi cả địa chỉ email của khách vào file log**, trái quy tắc "không ghi SĐT/email vào log". Máy Vân mình đã chuyển sang Mailpit. Trên server thật cần một tài khoản gửi email (SMTP của tên miền hoặc Gmail/Google Workspace). Vân hỏi Thầy giúp email gửi đi là địa chỉ nào?
+
+## Tiếp theo: Giai đoạn 3b – Admin quản lý câu hỏi
+Sửa câu trên web (bảng, thêm, kéo thả, bật/tắt, xem như khách) · dán nhiều câu cùng lúc · nhập/xuất Excel đúng cột CAU_HOI (ô chọn sổ xuống, xem trước lỗi theo dòng) · nhân bản bộ câu · form Phần A (thêm câu, điều kiện hiện, "gửi sang CRM vào trường") · cấu hình chấm điểm có "Chạy thử".
