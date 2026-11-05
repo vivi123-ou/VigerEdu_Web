@@ -2,25 +2,32 @@
 
 @section('title', 'Liên Hệ')
 
+@use('App\Support\ContactPage')
+
 @php
+  // Nội dung trang lấy từ admin (Filament > Trang Liên hệ), rỗng thì dùng mặc định
+  $c = ContactPage::all();
+  $phoneHref = 'tel:'.preg_replace('/[^0-9+]/', '', (string) $c['contact_phone']);
+
   // 3 thẻ thông tin đầu tiên. 'icon' là phần bên trong thẻ <svg>.
   $contactCards = [
     [
       'label' => 'Điện thoại',
-      'value' => '(084) 819949968',
+      'value' => $c['contact_phone'],
+      'href'  => $phoneHref,
       'size'  => '1.2rem',
       'icon'  => '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>',
     ],
     [
       'label' => 'Email',
-      'value' => 'info@spn.com.vn',
-      'href'  => 'mailto:info@spn.com.vn',
+      'value' => $c['contact_email'],
+      'href'  => 'mailto:'.$c['contact_email'],
       'size'  => '1.1rem',
       'icon'  => '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>',
     ],
     [
       'label' => 'Địa chỉ',
-      'value' => '6 Phùng Khắc Khoan,<br />Phường Sài Gòn, TP.HCM', // HTML tĩnh, có <br>
+      'value' => nl2br(e($c['contact_address']), false), // đã escape, giữ xuống dòng
       'raw'   => true,
       'size'  => '1rem',
       'icon'  => '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>',
@@ -29,9 +36,9 @@
 
   // Mạng xã hội: [url, path của icon]
   $socials = [
-    ['https://www.facebook.com/duhocVIGER', 'M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951'],
-    ['https://www.tiktok.com/@spn.invest', 'M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3V0Z'],
-    ['https://www.youtube.com/@SPN.Invest', 'M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.052-.072 1.953l-.008.106-.022.26-.01.104c-.048.519-.119 1.023-.22 1.402a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z'],
+    [$c['social_facebook'], 'M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951'],
+    [$c['social_tiktok'], 'M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3V0Z'],
+    [$c['social_youtube'], 'M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.052-.072 1.953l-.008.106-.022.26-.01.104c-.048.519-.119 1.023-.22 1.402a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z'],
   ];
 
   // Style dùng chung cho các ô nhập liệu của form
@@ -53,7 +60,7 @@
           rgba(193, 18, 31, 0.85) 50%,
           rgba(255, 183, 3, 0.7) 100%
         ),
-        url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80');
+        url('{{ ContactPage::imageUrl($c['contact_hero_image'], ContactPage::DEFAULT_HERO_IMAGE) }}');
       background-size: cover;
       background-position: center;
       border-bottom: 4px solid var(--accent-alt);
@@ -63,13 +70,12 @@
       <div class="text-center animate-hidden">
         <div class="section-pretitle" style="justify-content: center; margin-bottom: 1rem">
           <span style="color: var(--accent-alt); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;"
-            >Liên hệ với chúng tôi</span
+            >{{ $c['contact_hero_pretitle'] }}</span
           >
         </div>
-        <h1 class="hero-heading" style="color: white">KẾT NỐI VỚI VIGER EDU</h1>
+        <h1 class="hero-heading" style="color: white">{{ $c['contact_hero_title'] }}</h1>
         <p class="cta-desc" style="max-width: 600px; margin: 1.5rem auto 0; font-weight: 300">
-          Đội ngũ VIGER EDU luôn sẵn sàng hỗ trợ và giải đáp mọi thắc mắc của bạn
-          về lộ trình du học.
+          {{ $c['contact_hero_description'] }}
         </p>
       </div>
     </div>
@@ -85,8 +91,8 @@
             class="about-heading"
             style="font-size: clamp(2.5rem, 4vw, 3rem); line-height: 1.25; margin-bottom: 3rem; color: var(--text-primary);"
           >
-            Liên Hệ Ngay<br />
-            <span style="color: var(--accent-main)">VIGER EDU</span>
+            {{ $c['contact_heading'] }}<br />
+            <span style="color: var(--accent-main)">{{ $c['contact_heading_highlight'] }}</span>
           </h2>
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
@@ -136,7 +142,7 @@
                 </p>
                 <div style="display: flex; gap: 1rem">
                   @foreach ($socials as [$url, $path])
-                    <a href="{{ $url }}" class="contact-social-btn">
+                    <a href="{{ $url }}" class="contact-social-btn" target="_blank" rel="noopener">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="18"
@@ -156,9 +162,8 @@
 
         <!-- Cột phải: Hình ảnh nhân vật chỉ tay -->
         <div class="hero-image animate-hidden delay-100" style="text-align: center">
-          {{-- Nên đổi tên file "contact man.png" thành "contact-man.png" (tránh dấu cách trong URL) --}}
           <img
-            src="{{ asset('img/contact man.png') }}"
+            src="{{ ContactPage::imageUrl($c['contact_side_image'], ContactPage::DEFAULT_SIDE_IMAGE) }}"
             alt="contact man"
             style="border: none; box-shadow: none; border-radius: 0"
           />
@@ -173,15 +178,12 @@
       <div class="cta-content">
         <div class="section-pretitle" style="justify-content: center; margin-bottom: 1rem">
           <span style="color: var(--accent-alt); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;"
-            >Bắt đầu hành trình của riêng bạn</span
+            >{{ $c['contact_form_pretitle'] }}</span
           >
         </div>
-        <h2 class="cta-title">
-          <span style="color: var(--accent-alt)">Đức</span> đang chờ bạn.<br />
-          Viger <span style="color: var(--accent-alt)">EDU</span> cũng vậy.
-        </h2>
+        <h2 class="cta-title">{!! ContactPage::highlight($c['contact_form_title']) !!}</h2>
         <p class="cta-desc">
-          Để lại email — chúng tôi sẽ liên hệ tư vấn miễn phí trong 24 giờ.
+          {{ $c['contact_form_description'] }}
         </p>
       </div>
 
@@ -219,7 +221,7 @@
 
           <div style="text-align: center; margin-top: 2rem">
             <button type="submit" class="btn-red" style="width: 100%; padding: 14px 40px; font-size: 1.05rem">
-              Đăng ký ngay
+              {{ $c['contact_form_button'] }}
             </button>
           </div>
         </form>
@@ -228,6 +230,8 @@
   </section>
 
   <!-- MAP SECTION -->
+  @php $mapSrc = ContactPage::mapSrc($c['contact_map_url']); @endphp
+  @if ($c['contact_show_map'] === '1' && $mapSrc)
   <section style="padding: 6rem 0; background-color: var(--bg-white)">
     <div class="page-container">
       <div
@@ -235,7 +239,7 @@
         style="border-radius: var(--radius-2xl); overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid var(--border-light); height: 450px;"
       >
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.3500190135123!2d106.69857019999999!3d10.7844813!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f35e7dcdebb%3A0x9f036d91414b18fa!2zNiBQaMO5bmcgS2jhuq9jIEtob2FuLCBTw6BpIEfDsm4sIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2sus!4v1791193058666!5m2!1svi!2sus"
+          src="{{ $mapSrc }}"
           width="100%"
           height="100%"
           style="border: 0"
@@ -246,6 +250,7 @@
       </div>
     </div>
   </section>
+  @endif
 @endsection
 
 @push('scripts')

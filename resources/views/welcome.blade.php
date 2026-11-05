@@ -206,6 +206,13 @@ html.fx-text .fx-cursor-ring {
   </style>
 @endpush
 
+@use('App\Support\HomePage')
+
+@php
+  // Nội dung lấy từ admin (Filament > Trang chủ), rỗng thì dùng mặc định
+  $h = HomePage::all();
+@endphp
+
 @section('content')
   <div class="mouse-glow" data-glow-speed="0.07">
   <main class="main-content">
@@ -215,7 +222,7 @@ html.fx-text .fx-cursor-ring {
       style="
         background:
           linear-gradient(rgba(18, 38, 63, 0.85), rgba(18, 38, 63, 0.9)),
-          url('https://images.unsplash.com/photo-1618259278412-2819cbdea4dc?q=80&w=1121&auto=format&fit=crop')
+          url('{{ HomePage::image('home_hero_background') }}')
             no-repeat center center;
         background-size: cover;
         color: white;
@@ -225,71 +232,58 @@ html.fx-text .fx-cursor-ring {
         <div class="hero-grid">
           <div class="hero-text animate-hidden">
             <h1 class="hero-heading" style="color: white">
-              <span data-i18n="idx-hero-heading">Hành trình của bạn</span>
+              <span>{{ $h['home_hero_heading'] }}</span>
             </h1>
             <h1 class="hero-subheading" style="color: var(--accent-alt)">
-              <span data-i18n="idx-hero-subheading">Bắt đầu từ nước Đức...</span>
+              <span>{{ $h['home_hero_subheading'] }}</span>
             </h1>
             <p class="hero-desc" style="color: rgba(255, 255, 255, 0.9)">
-              <span data-i18n="idx-hero-desc"
-                >Viger EDU đồng hành cùng bạn từ lựa chọn ngành học, chuẩn bị hồ
-                sơ đến khi đặt chân đến giảng đường Đức — với đội ngũ chuyên gia
-                đã từng học tập và làm việc tại đây.</span
-              >
+              <span>{{ $h['home_hero_description'] }}</span>
             </p>
             <div class="hero-stats" id="counter-section">
-              <div class="hero-stat">
-                <p class="stat-number">
-                  <span class="counter-value" data-target="500">0</span>+
-                </p>
-                <p class="stat-label" data-i18n="idx-stat-students">Học viên nhập học</p>
-              </div>
-              <div class="hero-stat">
-                <p class="stat-number">
-                  <span class="counter-value" data-target="95">0</span>%
-                </p>
-                <p class="stat-label" data-i18n="idx-stat-visa">Xin Visa thành công</p>
-              </div>
-              <div class="hero-stat">
-                <p class="stat-number">
-                  <span class="counter-value" data-target="10">0</span>+
-                </p>
-                <p class="stat-label" data-i18n="idx-stat-years">Năm kinh nghiệm</p>
-              </div>
+              @foreach ($h['home_hero_stats'] as $stat)
+                <div class="hero-stat">
+                  <p class="stat-number">
+                    <span class="counter-value" data-target="{{ (int) ($stat['number'] ?? 0) }}">0</span>{{ $stat['suffix'] ?? '' }}
+                  </p>
+                  <p class="stat-label">{{ $stat['label'] ?? '' }}</p>
+                </div>
+              @endforeach
             </div>
             <div class="hero-buttons">
-              <a href="/lien-he"
-                ><button class="btn-red" data-i18n="idx-btn-consult">
-                  Đặt lịch tư vấn miễn phí
+              <a href="{{ $h['home_hero_button_url'] }}"
+                ><button class="btn-red">
+                  {{ $h['home_hero_button_text'] }}
                 </button></a
               >
               <a
                 href="#"
                 id="btn-roadmap"
                 class="btn-outline-custom"
-                data-i18n="idx-btn-roadmap"
-                >Xem lộ trình du học</a
+                >{{ $h['home_roadmap_button_text'] }}</a
               >
             </div>
           </div>
           <div class="hero-image animate-hidden delay-200">
-            <img src="{{ asset('img/trangchu.png') }}" alt="Du học sinh Đức" />
+            <img src="{{ HomePage::image('home_hero_image') }}" alt="{{ $h['home_hero_heading'] }}" />
           </div>
         </div>
       </div>
     </section>
+    
 
     <!-- 2. PARTNER BANNER -->
     <div class="yellow-banner">
       <div class="partner-list">
-        <span>Technical University of Munich (TUM)</span>
-        <span>Ludwig-Maximilians-Universität München (LMU)</span>
-        <span>Ruprecht-Karls-Universität Heidelberg</span>
-        <span>Freie Universität Berlin</span>
-        <span>Technical University of Munich (TUM)</span>
-        <span>Ludwig-Maximilians-Universität München (LMU)</span>
+        @foreach ([1, 2] as $copy)
+          @foreach ($h['home_partners'] as $partner)
+            <span @if ($copy === 2) aria-hidden="true" @endif>{{ is_array($partner) ? ($partner['name'] ?? '') : $partner }}</span>
+          @endforeach
+        @endforeach
       </div>
     </div>
+
+     @include('partials.hero-slider')
 
     <!-- 3. ABOUT SECTION -->
     <section class="about-section">
@@ -297,45 +291,34 @@ html.fx-text .fx-cursor-ring {
         <div class="about-grid">
           <div class="about-text animate-hidden">
             <div class="about-label">
-              <span class="about-label-text" data-i18n="idx-about-label"
-                >✨ Về chúng tôi</span
-              >
+              <span class="about-label-text">{{ $h['home_about_label'] }}</span>
             </div>
             <h2 class="about-heading">
-              <span data-i18n="idx-about-heading"
-                >Người bạn đồng hành đáng tin cậy nhất trên con đường đến Đức</span
-              >
+              <span>{{ $h['home_about_heading'] }}</span>
             </h2>
             <p class="about-desc">
-              <span data-i18n="idx-about-desc"
-                >Chúng tôi không chỉ tư vấn — chúng tôi đồng hành. Đội ngũ Viger
-                EDU gồm các chuyên gia tốt nghiệp từ các trường đại học Đức hàng
-                đầu, hiểu rõ từng bước của hành trình từ ngày đầu đến ngày nhập
-                học.</span
-              >
+              <span>{{ $h['home_about_description'] }}</span>
             </p>
-            <a href="/ve-chung-toi" class="link-custom" data-i18n="idx-about-link"
-              >Tìm hiểu về chúng tôi</a
-            >
+            <a href="{{ $h['home_about_link_url'] }}" class="link-custom">{{ $h['home_about_link_text'] }}</a>
           </div>
           <div class="about-images animate-hidden delay-200">
             <div class="grid-images">
               <img
-                src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80"
+                src="{{ HomePage::image('home_about_image_1') }}"
                 class="grid-img"
                 alt="Trường Đức 1"
               />
               <img
-                src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=600&auto=format&fit=crop"
+                src="{{ HomePage::image('home_about_image_2') }}"
                 class="grid-img"
                 alt="Trường Đức 2"
               />
               <div class="stat-box">
-                <h3>300+</h3>
-                <p data-i18n="idx-stat-partners">Đối tác trường Đại học</p>
+                <h3>{{ $h['home_about_stat_number'] }}</h3>
+                <p>{{ $h['home_about_stat_label'] }}</p>
               </div>
               <img
-                src="https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?q=80&w=600&auto=format&fit=crop"
+                src="{{ HomePage::image('home_about_image_3') }}"
                 class="grid-img"
                 alt="Khuôn viên trường"
               />
@@ -350,58 +333,23 @@ html.fx-text .fx-cursor-ring {
       <div class="page-container">
         <div class="text-center animate-hidden">
           <div class="section-pretitle" style="margin: 0 auto 1rem">
-            <span data-i18n="idx-process-pretitle">✨ Quy trình du học</span>
+            <span>{{ $h['home_process_pretitle'] }}</span>
           </div>
-          <h2 class="section-title" data-i18n="idx-process-title">
-            05 bước đến giảng đường nước Đức
-          </h2>
+          <h2 class="section-title">{{ $h['home_process_title'] }}</h2>
         </div>
         <div class="timeline-wrap">
           <div class="timeline-grid">
-            <div class="timeline-step animate-hidden delay-100">
-              <div class="circle-step">01</div>
-              <h4 class="step-title" data-i18n="idx-step1-title">Tư vấn miễn phí</h4>
-              <p class="step-desc" data-i18n="idx-step1-desc">
-                Đánh giá hồ sơ và định hướng lộ trình phù hợp
-              </p>
-            </div>
-            <div class="timeline-step animate-hidden delay-200">
-              <div class="circle-step">02</div>
-              <h4 class="step-title" data-i18n="idx-step2-title">Luyện tiếng Đức</h4>
-              <p class="step-desc" data-i18n="idx-step2-desc">
-                Đạt trình độ ngôn ngữ theo yêu cầu của trường
-              </p>
-            </div>
-            <div class="timeline-step animate-hidden delay-300">
-              <div class="circle-step">03</div>
-              <h4 class="step-title" data-i18n="idx-step3-title">Chuẩn bị hồ sơ</h4>
-              <p class="step-desc" data-i18n="idx-step3-desc">
-                Hoàn thiện đầy đủ giấy tờ và nộp đơn
-              </p>
-            </div>
-            <div class="timeline-step animate-hidden delay-400">
-              <div class="circle-step">04</div>
-              <h4 class="step-title" data-i18n="idx-step4-title">Xin visa</h4>
-              <p class="step-desc" data-i18n="idx-step4-desc">
-                Hỗ trợ toàn bộ thủ tục visa sinh viên
-              </p>
-            </div>
-            <div class="timeline-step animate-hidden delay-500">
-              <div class="circle-step">05</div>
-              <h4 class="step-title" data-i18n="idx-step5-title">Nhập học &amp; ổn định</h4>
-              <p class="step-desc" data-i18n="idx-step5-desc">
-                Đồng hành từ ngày đầu đến Đức
-              </p>
-            </div>
+            @foreach (array_values($h['home_process_steps']) as $i => $step)
+              <div class="timeline-step animate-hidden delay-{{ min(($i + 1) * 100, 500) }}">
+                <div class="circle-step">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</div>
+                <h4 class="step-title">{{ $step['title'] ?? '' }}</h4>
+                <p class="step-desc">{{ $step['description'] ?? '' }}</p>
+              </div>
+            @endforeach
           </div>
         </div>
         <div class="text-center animate-hidden">
-          <a
-            href="/tu-van/quy-trinh-tu-van"
-            class="link-more"
-            data-i18n="idx-process-link"
-            >Xem lộ trình chi tiết</a
-          >
+          <a href="{{ $h['home_process_link_url'] }}" class="link-more">{{ $h['home_process_link_text'] }}</a>
         </div>
       </div>
     </section>
@@ -409,43 +357,31 @@ html.fx-text .fx-cursor-ring {
     <!-- 5. TESTIMONIALS -->
     <section class="testimonial-section">
       <div class="page-container">
-        <h2 class="section-title animate-hidden" data-i18n="idx-testimonial-title">
-          Những hành trình đáng tự hào
-        </h2>
+        <h2 class="section-title animate-hidden">{{ $h['home_testimonial_title'] }}</h2>
         <div class="testimonial-grid">
-          <div class="testimonial-item animate-hidden delay-100">
-            <div class="testimonial-card">
-              <p class="testimonial-text" data-i18n="idx-testimonial-1">
-                Nhờ có VIGER EDU, em đã tìm được ngôi trường đại học phù hợp nhất
-                tại Đức cho ngành kỹ thuật của mình, sự hỗ trợ từ các anh chị thực
-                sự tuyệt vời!
-              </p>
-              <div class="author-box">
-                <img
-                  src="{{ asset('img/duc_nguyen.jpg') }}"
-                  alt="Duc Nguyen"
-                  style="width: 36px; height: 36px; border-radius: var(--radius-full)"
-                />
-                <span>Duc Nguyen</span>
+          @foreach ($h['home_testimonials'] as $t)
+            @php
+              $avatar = HomePage::imageUrl($t['avatar'] ?? null, $t['default_avatar'] ?? null);
+              $initial = mb_strtoupper(mb_substr(trim($t['name'] ?? '?'), 0, 1));
+            @endphp
+            <div class="testimonial-item animate-hidden delay-100">
+              <div class="testimonial-card">
+                <p class="testimonial-text">{{ $t['content'] ?? '' }}</p>
+                <div class="author-box">
+                  @if ($avatar)
+                    <img
+                      src="{{ $avatar }}"
+                      alt="{{ $t['name'] ?? '' }}"
+                      style="width: 36px; height: 36px; border-radius: var(--radius-full); object-fit: cover"
+                    />
+                  @else
+                    <span style="width: 36px; height: 36px; border-radius: var(--radius-full); background: var(--accent-main); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700">{{ $initial }}</span>
+                  @endif
+                  <span>{{ $t['name'] ?? '' }}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="testimonial-item animate-hidden delay-100">
-            <div class="testimonial-card">
-              <p class="testimonial-text" data-i18n="idx-testimonial-2">
-                Em chưa từng nghĩ việc du học lại có thể dễ dàng đến thế! VIGER
-                EDU đã giúp mọi thủ tục trở nên vô cùng nhanh chóng và nhẹ nhàng.
-              </p>
-              <div class="author-box">
-                <img
-                  src="{{ asset('img/mai_tran.jpg') }}"
-                  alt="Mai Tran"
-                  style="width: 36px; height: 36px; border-radius: var(--radius-full)"
-                />
-                <span>Mai Tran</span>
-              </div>
-            </div>
-          </div>
+          @endforeach
         </div>
       </div>
     </section>
@@ -454,16 +390,11 @@ html.fx-text .fx-cursor-ring {
     <section class="cta-section animate-hidden">
       <div class="page-container">
         <div class="section-pretitle" style="justify-content: center">
-          <span data-i18n="idx-cta-pretitle">✨ Bắt đầu hành trình của riêng bạn</span>
+          <span>{{ $h['home_cta_pretitle'] }}</span>
         </div>
-        <h2 class="cta-title" data-i18n="idx-cta-title">
-          Khởi đầu hành trình chinh phục tương lai
-        </h2>
-        <p class="cta-desc" data-i18n="idx-cta-desc">
-          Liên hệ với chúng tôi ngay hôm nay để được tư vấn lộ trình học tập và
-          sự nghiệp vững chắc tại nước ngoài.
-        </p>
-        <a class="cta-pill" href="/lien-he" data-i18n="idx-cta-btn">Bắt đầu ngay</a>
+        <h2 class="cta-title">{{ $h['home_cta_title'] }}</h2>
+        <p class="cta-desc">{{ $h['home_cta_description'] }}</p>
+        <a class="cta-pill" href="{{ $h['home_cta_button_url'] }}">{{ $h['home_cta_button_text'] }}</a>
       </div>
     </section>
   </main>
@@ -554,7 +485,7 @@ html.fx-text .fx-cursor-ring {
   <div id="roadmap-modal">
     <div id="roadmap-modal-inner">
       <button id="roadmap-modal-close" aria-label="Đóng">&times;</button>
-      <img src="{{ asset('img/lttv.jpg') }}" alt="Lộ trình tư vấn" />
+      <img src="{{ HomePage::image('home_roadmap_image') }}" alt="Lộ trình tư vấn" />
     </div>
   </div>
 @endsection

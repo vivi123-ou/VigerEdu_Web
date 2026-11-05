@@ -433,11 +433,9 @@
 
 @section('content')
   @php
-    // Link breadcrumb tới trang chuyên mục (route đặt tên category.{slug}), không có thì về /blog
+    // Link breadcrumb tới trang chuyên mục, không có chuyên mục thì về /blog
     $category = $post->category;
-    $categoryUrl = $category && Route::has('category.' . $category->slug)
-        ? route('category.' . $category->slug)
-        : url('/blog');
+    $categoryUrl = $category ? $category->pageUrl() : url('/blog');
   @endphp
 
   <main class="post-detail-wrapper">

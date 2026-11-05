@@ -3,6 +3,9 @@
 @section('title', 'Giáo dục tại Đức')
 
 @php
+  $page = \App\Models\Page::where('slug', 'giao-duc-tai-duc')->first();
+  $bannerImg = ($page && $page->bannerImageUrl) ? $page->bannerImageUrl : 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80';
+
   // Dữ liệu 4 card ưu điểm. 'icon' là phần bên trong thẻ <svg>.
   $features = [
     [
@@ -39,7 +42,7 @@
         padding: 10rem 0 6rem;
         background-image:
           linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(193, 18, 31, 0.8) 100%),
-          url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80');
+          url('{{ $bannerImg }}');
         background-size: cover;
         background-position: center;
         border-bottom: 4px solid var(--accent-alt);
@@ -53,11 +56,10 @@
             >
           </div>
           <h1 class="hero-heading" style="color: white; margin-bottom: 1rem">
-            GIÁO DỤC TẠI ĐỨC
+            {{ $page->title ?? 'GIÁO DỤC TẠI ĐỨC' }}
           </h1>
           <p class="cta-desc" style="max-width: 750px; margin: 1.5rem auto 0; font-weight: 300;">
-            Nền giáo dục đẳng cấp thế giới, miễn 100% học phí tại trường công
-            lập và cơ hội định cư làm việc rộng mở tại trái tim của Châu Âu.
+            {{ $page->subtitle ?? 'Nền giáo dục đẳng cấp thế giới, miễn 100% học phí tại trường công lập và cơ hội định cư làm việc rộng mở tại trái tim của Châu Âu.' }}
           </p>
         </div>
       </div>
@@ -78,19 +80,25 @@
               Điểm Đến Học Thuật Tuyệt Vời Nhất Thế Giới
             </h2>
 
-            <p class="about-desc">
-              Đức không chỉ là một cường quốc về kinh tế và công nghiệp, mà còn
-              là một trong những điểm đến du học hấp dẫn nhất trên toàn cầu dành
-              cho sinh viên quốc tế. Sự kết hợp hoàn hảo giữa chất lượng giảng
-              dạy xuất sắc và đời sống văn hóa phong phú biến nơi đây thành
-              "miền đất hứa" cho những người trẻ.
-            </p>
+            @if ($page && !empty($page->content))
+              <div class="about-desc">
+                {!! $page->content !!}
+              </div>
+            @else
+              <p class="about-desc">
+                Đức không chỉ là một cường quốc về kinh tế và công nghiệp, mà còn
+                là một trong những điểm đến du học hấp dẫn nhất trên toàn cầu dành
+                cho sinh viên quốc tế. Sự kết hợp hoàn hảo giữa chất lượng giảng
+                dạy xuất sắc và đời sống văn hóa phong phú biến nơi đây thành
+                "miền đất hứa" cho những người trẻ.
+              </p>
 
-            <p class="about-desc" style="margin-bottom: 0">
-              Bằng cấp từ các trường đại học tại Đức được công nhận trên toàn thế
-              giới, mang lại cho bạn lợi thế cạnh tranh vô cùng lớn trên thị
-              trường lao động toàn cầu.
-            </p>
+              <p class="about-desc" style="margin-bottom: 0">
+                Bằng cấp từ các trường đại học tại Đức được công nhận trên toàn thế
+                giới, mang lại cho bạn lợi thế cạnh tranh vô cùng lớn trên thị
+                trường lao động toàn cầu.
+              </p>
+            @endif
           </div>
 
           <!-- Cột phải: Hình ảnh -->

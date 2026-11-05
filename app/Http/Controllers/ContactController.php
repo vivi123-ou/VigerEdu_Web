@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ContactMessage;
+use App\Support\ContactPage;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -30,6 +31,6 @@ class ContactController extends Controller
         ContactMessage::create($data);
 
         return redirect(url('/lien-he').'#dang-ky')
-            ->with('status', 'Cảm ơn bạn! VIGER EDU sẽ liên hệ trong vòng 24 giờ.');
+            ->with('status', ContactPage::get('contact_success_message'));
     }
 }

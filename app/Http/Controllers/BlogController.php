@@ -31,6 +31,26 @@ class BlogController extends Controller
         ]);
     }
 
+    /**
+     * Trang chuyên mục thêm từ admin (chưa có view riêng):
+     * /giao-duc-tai-duc/{slug}, /tu-van/{slug}, /blog/{slug}. $group truyền qua ->defaults().
+     */
+    public function groupCategory(string $slug, string $group)
+    {
+        $category = Category::where('menu_group', $group)->where('slug', $slug)->firstOrFail();
+
+        $posts = Post::published()
+            ->where('category_id', $category->id)
+            ->latest()
+            ->paginate(6);
+
+        return view('category', [
+            'category' => $category,
+            'posts' => $posts,
+            'latestPosts' => $this->latestPosts(),
+        ]);
+    }
+
     /** Chi tiết bài viết: /bai-viet/{slug} */
     public function show(string $slug)
     {

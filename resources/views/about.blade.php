@@ -2,41 +2,28 @@
 
 @section('title', 'Về chúng tôi')
 
+@use('App\Support\AboutPage')
+
 @php
-  // Dữ liệu accordion: thêm/sửa mục tại đây thay vì lặp HTML 4 lần
-  $accordionItems = [
-    [
-      'title' => 'Cam Kết Của Chúng Tôi Đối Với Sự Thành Công Của Bạn',
-      'body' => 'Sứ mệnh của VIGER EDU là tiếp sức cho các bạn trẻ thông qua những quyết định sáng suốt về lộ trình học tập và sự nghiệp, từ đó kiến tạo một tương lai bền vững trong môi trường toàn cầu.',
-    ],
-    [
-      'title' => 'Tầm Nhìn Về Một Tương Lai Với Nhiều Cơ Hội Toàn Cầu',
-      'body' => 'Chúng tôi hướng tới mục tiêu trở thành đơn vị tư vấn du học hàng đầu tại Việt Nam, là cầu nối đưa học viên đến với các trường đại học quốc tế danh tiếng, đồng thời thúc đẩy sự phát triển cá nhân và thành công trong sự nghiệp.',
-    ],
-    [
-      'title' => 'Triết Lý Dẫn Đường Trong Công Việc Của Chúng Tôi',
-      'body' => 'Các giá trị cốt lõi của VIGER EDU bao gồm sự chính trực, dịch vụ cá nhân hóa, cam kết hướng tới sự xuất sắc và niềm đam mê đồng hành cùng học viên đạt được các mục tiêu học tập cũng như sự nghiệp.',
-    ],
-    [
-      'title' => 'Ghi Nhận Cho Sự Xuất Sắc Của Chúng Tôi',
-      'body' => 'VIGER EDU đã nhận được nhiều lời tán dương và đánh giá cao cho những đóng góp nổi bật đối với sự thành công của học viên cũng như trong lĩnh vực tư vấn giáo dục quốc tế tại Việt Nam.',
-    ],
-  ];
+  $about = AboutPage::all();
+  $heroImg = AboutPage::imageUrl($about['about_hero_image'], AboutPage::DEFAULT_HERO_IMAGE);
+  $introImg = AboutPage::imageUrl($about['about_intro_image'], AboutPage::DEFAULT_INTRO_IMAGE);
+  $historyImg = AboutPage::imageUrl($about['about_history_image'], AboutPage::DEFAULT_HISTORY_IMAGE);
+  $accordionItems = $about['about_values_items'] ?? [];
 @endphp
 
 @section('content')
   <main class="main-content">
     <!-- PAGE HEADER SECTION -->
-    <section class="cta-section animate-hidden" style="margin: 0; border-radius: 0; padding: 10rem 0 6rem; background-image: linear-gradient(rgba(18, 38, 63, 0.8), rgba(18, 38, 63, 0.9)), url('https://viger.edu.vn/wp-content/uploads/2026/04/pexels-photo-7972313.jpeg'); background-size: cover; background-position: center; border-bottom: 4px solid var(--accent-main);">
+    <section class="cta-section animate-hidden" style="margin: 0; border-radius: 0; padding: 10rem 0 6rem; background-image: linear-gradient(rgba(18, 38, 63, 0.8), rgba(18, 38, 63, 0.9)), url('{{ $heroImg }}'); background-size: cover; background-position: center; border-bottom: 4px solid var(--accent-main);">
       <div class="page-container">
         <div class="text-center animate-hidden">
           <div class="section-pretitle" style="justify-content: center; margin-bottom: 1rem;">
-            <span style="color: var(--accent-alt); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Câu chuyện của chúng tôi</span>
+            <span style="color: var(--accent-alt); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">{{ $about['about_hero_pretitle'] }}</span>
           </div>
-          <h1 class="hero-heading" style="color: white;">VỀ CHÚNG TÔI</h1>
+          <h1 class="hero-heading" style="color: white;">{{ $about['about_hero_title'] }}</h1>
           <p class="cta-desc" style="max-width: 700px; margin: 1.5rem auto 0; font-weight: 300;">
-            Đối Tác Tin Cậy Trên Hành Trình Giáo Dục Quốc Tế Cùng
-            <span style="color: var(--accent-alt); font-weight: 600;">VIGER EDU</span>
+            {{ $about['about_hero_description'] }}
           </p>
         </div>
       </div>
@@ -49,34 +36,29 @@
           <!-- Cột trái: Hình ảnh -->
           <div class="hero-image animate-hidden">
             <img
-              src="https://viger.edu.vn/wp-content/uploads/2026/04/pexels-photo-34475611.jpeg"
-              alt="Khám Phá Lộ Trình Bước Vào Giáo Dục Bậc Cao"
+              src="{{ $introImg }}"
+              alt="{{ $about['about_intro_heading'] }}"
             />
           </div>
 
           <!-- Cột phải: Text -->
           <div class="hero-text animate-hidden delay-100">
             <div class="section-pretitle">
-              <span style="color: var(--accent-alt-hover); background-color: #fff9e6; padding: 0.35rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">KHÁM PHÁ LỘ TRÌNH</span>
+              <span style="color: var(--accent-alt-hover); background-color: #fff9e6; padding: 0.35rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">{{ $about['about_intro_label'] }}</span>
             </div>
             <h2 class="about-heading" style="margin-top: 1.5rem;">
-              Khám Phá Lộ Trình Bước Vào Giáo Dục Bậc Cao
+              {{ $about['about_intro_heading'] }}
             </h2>
 
             <div style="background: var(--bg-white); padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); margin-bottom: 1.5rem; border-left: 4px solid var(--accent-main);">
               <p class="about-desc" style="margin-bottom: 0;">
-                <strong style="color: var(--accent-main);">VIGER EDU</strong> là
-                đơn vị tư vấn du học chuyên sâu, tập trung vào các lộ trình giáo
-                dục bậc cao tại Châu Âu, đặc biệt là CHLB Đức.
+                {!! AboutPage::highlight($about['about_intro_highlight'], 'var(--accent-main); font-weight: 700') !!}
               </p>
             </div>
 
-            <p class="about-desc">
-              Tại VIGER EDU, chúng tôi đã đồng hành và giúp đỡ vô số học viên
-              hiện thực hóa ước mơ của mình bằng cách cung cấp các lộ trình giáo
-              dục cá nhân hóa, sự hướng dẫn chuyên sâu và quy trình nộp hồ sơ đại
-              học thành công, mang lại tỷ lệ đỗ cao vào các trường quốc tế.
-            </p>
+            @foreach (AboutPage::paragraphs($about['about_intro_description']) as $paragraph)
+              <p class="about-desc">{{ $paragraph }}</p>
+            @endforeach
           </div>
         </div>
       </div>
@@ -90,13 +72,9 @@
           <div class="hero-text animate-hidden">
             <div style="width: 50px; height: 4px; background: var(--accent-main); margin-bottom: 1.5rem; border-radius: 2px;"></div>
             <h2 class="about-heading" style="font-size: clamp(2rem, 3vw, 2.8rem);">
-              NÂNG BƯỚC HỌC VIÊN<br />BẰNG SỰ ĐỒNG HÀNH<br />CHUYÊN BIỆT
+              {!! nl2br(e($about['about_values_heading']), false) !!}
             </h2>
-            <p class="about-desc">
-              Chúng tôi thiết kế dịch vụ phù hợp với nhu cầu riêng biệt của từng
-              học viên, hỗ trợ các bạn nhập học thành công tại các học viện uy
-              tín khắp Châu Âu và xây dựng sự nghiệp bền vững.
-            </p>
+            <p class="about-desc">{{ $about['about_values_description'] }}</p>
           </div>
 
           <!-- Cột phải: Accordion -->
@@ -104,12 +82,12 @@
             @foreach ($accordionItems as $item)
               <div class="acc-item" style="background: var(--bg-white); border-radius: var(--radius-xl); margin-bottom: 1.25rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); overflow: hidden;">
                 <button class="acc-header" style="width: 100%; text-align: left; background: none; border: none; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 1.05rem; font-weight: 600; color: var(--text-primary); font-family: inherit;">
-                  <span style="padding-right: 1rem;">{{ $item['title'] }}</span>
+                  <span style="padding-right: 1rem;">{{ $item['title'] ?? '' }}</span>
                   <span class="acc-icon" style="font-size: 1.8rem; font-weight: 300; transition: transform 0.3s ease; color: var(--text-muted);">+</span>
                 </button>
                 <div class="acc-content" style="max-height: 0; padding: 0 2rem; opacity: 0; overflow: hidden; transition: all 0.4s ease;">
                   <p class="about-desc" style="margin: 0; padding-bottom: 1.5rem;">
-                    {{ $item['body'] }}
+                    {{ $item['body'] ?? '' }}
                   </p>
                 </div>
               </div>
@@ -126,30 +104,22 @@
           <!-- Cột trái: Text -->
           <div class="hero-text animate-hidden">
             <div class="section-pretitle">
-              <span style="color: var(--accent-alt-hover); background-color: #fff9e6; padding: 0.35rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">HÀNH TRÌNH PHÁT TRIỂN</span>
+              <span style="color: var(--accent-alt-hover); background-color: #fff9e6; padding: 0.35rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">{{ $about['about_history_label'] }}</span>
             </div>
             <h2 class="about-heading" style="margin-top: 1.5rem;">
-              Di Sản Kiến Tạo Tương Lai Qua Đường Giáo Dục
+              {{ $about['about_history_heading'] }}
             </h2>
 
-            <p class="about-desc">
-              Kể từ khi thành lập, VIGER EDU luôn cống hiến hết mình để định
-              hướng cho học viên Việt Nam đạt được những thành tựu học thuật xuất
-              sắc và các cơ hội nghề nghiệp quốc tế giá trị.
-            </p>
-
-            <p class="about-desc">
-              Với nhiều năm kinh nghiệm, chúng tôi đã khẳng định uy tín vững chắc
-              trong việc đồng hành cùng học viên suốt chặng đường, mang lại vô số
-              kết quả nhập học thành công tại Đức và Châu Âu.
-            </p>
+            @foreach (AboutPage::paragraphs($about['about_history_description']) as $paragraph)
+              <p class="about-desc">{{ $paragraph }}</p>
+            @endforeach
           </div>
 
           <!-- Cột phải: Hình ảnh -->
           <div class="hero-image animate-hidden delay-100">
             <img
-              src="https://viger.edu.vn/wp-content/uploads/2026/08/173095770936.webp"
-              alt="Hành Trình Trong Lĩnh Vực Tư Vấn Giáo Dục"
+              src="{{ $historyImg }}"
+              alt="{{ $about['about_history_heading'] }}"
             />
           </div>
         </div>
@@ -160,14 +130,11 @@
     <section class="cta-section animate-hidden">
       <div class="page-container">
         <div class="section-pretitle" style="justify-content: center;">
-          <span>✨ Bắt đầu hành trình của riêng bạn</span>
+          <span>{{ $about['about_cta_pretitle'] }}</span>
         </div>
-        <h2 class="cta-title">Khởi đầu hành trình chinh phục tương lai</h2>
-        <p class="cta-desc">
-          Liên hệ với chúng tôi ngay hôm nay để được tư vấn lộ trình học tập và
-          sự nghiệp vững chắc tại nước ngoài.
-        </p>
-        <a class="cta-pill" href="/lien-he">Bắt đầu ngay</a>
+        <h2 class="cta-title">{{ $about['about_cta_title'] }}</h2>
+        <p class="cta-desc">{{ $about['about_cta_description'] }}</p>
+        <a class="cta-pill" href="{{ $about['about_cta_button_url'] }}">{{ $about['about_cta_button_text'] }}</a>
       </div>
     </section>
   </main>

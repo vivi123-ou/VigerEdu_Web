@@ -1,0 +1,51 @@
+/* CKEditor 5 trong Filament: khôi phục style nội dung bị Tailwind preflight reset */
+.vg-ckeditor .ck-editor__editable_inline {
+  min-height: var(--vg-ck-min-height, 420px);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.vg-ckeditor .ck.ck-editor__main > .ck-editor__editable {
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+.vg-ckeditor .ck.ck-toolbar {
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+.vg-ckeditor .ck-content h2 { font-size: 1.5em; font-weight: 700; margin: 0.8em 0 0.4em; }
+.vg-ckeditor .ck-content h3 { font-size: 1.25em; font-weight: 700; margin: 0.8em 0 0.4em; }
+.vg-ckeditor .ck-content h4 { font-size: 1.1em; font-weight: 600; margin: 0.8em 0 0.4em; }
+.vg-ckeditor .ck-content p { margin: 0 0 0.8em; }
+.vg-ckeditor .ck-content ul { list-style: disc; padding-left: 1.6em; margin: 0 0 0.8em; }
+.vg-ckeditor .ck-content ol { list-style: decimal; padding-left: 1.6em; margin: 0 0 0.8em; }
+.vg-ckeditor .ck-content a { color: #2563eb; text-decoration: underline; }
+.vg-ckeditor .ck-content blockquote {
+  border-left: 4px solid #cbd5e1;
+  padding-left: 1em;
+  margin: 0 0 0.8em;
+  font-style: italic;
+  color: #475569;
+}
+.vg-ckeditor .ck-content img { display: inline-block; }
+
+/* Dark mode của Filament */
+.dark .vg-ckeditor {
+  --ck-color-base-background: #18181b;
+  --ck-color-base-foreground: #27272a;
+  --ck-color-base-border: #3f3f46;
+  --ck-color-text: #e4e4e7;
+  --ck-color-toolbar-background: #27272a;
+  --ck-color-toolbar-border: #3f3f46;
+  --ck-color-button-default-hover-background: #3f3f46;
+  --ck-color-button-on-background: #3f3f46;
+  --ck-color-button-on-hover-background: #52525b;
+  --ck-color-dropdown-panel-background: #27272a;
+  --ck-color-dropdown-panel-border: #3f3f46;
+  --ck-color-list-background: #27272a;
+  --ck-color-list-button-hover-background: #3f3f46;
+  --ck-color-input-background: #18181b;
+  --ck-color-input-border: #3f3f46;
+  --ck-color-input-text: #e4e4e7;
+  --ck-color-panel-background: #27272a;
+  --ck-color-panel-border: #3f3f46;
+  --ck-color-labeled-field-label-background: #27272a;
+}
+.dark .vg-ckeditor .ck-content blockquote { color: #a1a1aa; border-color: #52525b; }
