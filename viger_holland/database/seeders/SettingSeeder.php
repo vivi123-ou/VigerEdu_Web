@@ -45,8 +45,8 @@ class SettingSeeder extends Seeder
                 'footer_social_heading' => 'Theo dõi',
             ],
             'intro' => [
-                'intro_title' => 'Khám phá ngành học phù hợp với em',
-                'intro_subtitle' => 'Bài trắc nghiệm Holland (RIASEC) miễn phí, khoảng 10–15 phút. Trả lời theo cảm nhận thật của em để nhận gợi ý lĩnh vực và ngành học phù hợp.',
+                'intro_title' => 'Khám phá ngành học phù hợp với bạn',
+                'intro_subtitle' => 'Bài trắc nghiệm Holland (RIASEC) miễn phí, khoảng 10–15 phút. Trả lời theo cảm nhận thật của bạn để nhận gợi ý lĩnh vực và ngành học phù hợp.',
                 'intro_button_text' => 'Bắt đầu làm bài',
                 'intro_fact_questions' => 'Số câu hỏi',
                 'intro_fact_time_label' => 'Thời gian',
