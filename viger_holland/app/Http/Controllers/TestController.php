@@ -16,10 +16,12 @@ class TestController extends Controller
      */
     public function show(Request $request): View
     {
-        $form = TestForm::resolve($request->query('bo'));
+        $isAdminPreview = $request->boolean('xem_truoc') && $request->user()?->canAccessAdmin() === true;
+        $form = TestForm::resolve($request->query('bo'), includeInactive: $isAdminPreview);
 
         return view('public.test', [
             'form' => $form,
+            'isAdminPreview' => $isAdminPreview,
             'pages' => $form->pages(),
             'scale' => $form->set->scaleOptions(),
             'sections' => $form->infoSections(),

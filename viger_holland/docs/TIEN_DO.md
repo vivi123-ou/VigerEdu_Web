@@ -10,12 +10,12 @@
 | 2. Thuật toán chấm điểm `RiasecFitEngineV2` | ✅ Xong |
 | 3a. Khách làm bài → điền thông tin → xem kết quả, email, lượt làm bài trong admin | ✅ Xong |
 | Cập nhật dữ liệu 05/11 (16 bang + Wien, từ điển mới) | ✅ Xong |
-| 3b. Admin quản lý câu hỏi, Excel, form Phần A, cấu hình chấm điểm | ⏳ Đã gửi kế hoạch, **chờ Vân đồng ý** |
+| 3b. Admin quản lý câu hỏi, Excel, form Phần A, cấu hình chấm điểm | ✅ Xong (chưa thử bằng trình duyệt trên máy Vân) |
 | 3c. Admin nội dung trang (banner, chữ, email, chân trang), khối nhúng | Chưa làm |
 | 4. Kết nối CRM (gửi thật, thử lại, danh mục ngành từ CRM) | Chưa làm |
 | 5–7. API v1, an toàn dữ liệu, Excel kết quả, Cài đặt, SEO, `/install`, tài liệu | Chưa làm |
 
-**Con số hiện tại:** 76 câu hỏi (22 câu Phần A, 21 đang bật + 54 câu Phần B mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **77 test đều đạt** · nhánh `dev`, **chưa push**.
+**Con số hiện tại:** 76 câu hỏi (22 câu Phần A, 21 đang bật + 54 câu Phần B mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **115 test đều đạt** · nhánh `dev`, **chưa push**.
 
 **Chạy trên máy Vân:** mở `D:\laragon\laragon.exe` → **Start All** → trong thư mục dự án gõ `php artisan serve`.
 - Trang khách: http://127.0.0.1:8000 · Admin: http://127.0.0.1:8000/admin (tài khoản `SPN`)
@@ -26,12 +26,16 @@
 2. Báo bạn Ý (chatbot): câu lý do kết quả ngành là **"bạn đạt…"** (bản hợp đồng Ý gửi 05/11 vẫn ghi "em đạt").
 3. Xóa gói cập nhật khi không cần nữa: `D:\OU\Cap_nhat_Holland_05-11.zip` và thư mục `D:\OU\Holland\docs\Cap_nhat_Holland_05-11\`.
 4. Khi đưa lên server thật: **đổi mật khẩu** tài khoản `SPN` (mật khẩu hiện tại đã gõ trong khung chat).
+5. Sau khi lấy code giai đoạn 3b: bật Laragon (Start All) rồi chạy `php artisan migrate` (thêm bảng `admin_activities` – nhật ký thay đổi).
 
 ### Câu hỏi cho Vân / Thầy
 1. **Email gửi đi** khi chạy thật là địa chỉ nào (ví dụ `tuvan@viger.edu.vn`) và thông tin SMTP? Đặc tả ghi `MAIL_MAILER=log` nhưng chế độ đó ghi email khách vào file log, trái quy tắc bảo mật → máy Vân đang dùng Mailpit.
 2. **Hotline, Zalo, địa chỉ, giờ làm việc** để hiện ở chân trang và nút Gọi / Zalo trên trang kết quả (đang để trống, các ô trống tự ẩn).
 3. Có chép thêm vào `docs/` sheet mẫu mới (`3_Mau_GoogleSheet_Viger_Holland_v2.xlsx`, chỉ khác mã trường) và file `DU_LIEU_16_BANG_390_TRUONG_DA_CHUAN_HOA.xlsx` không?
 4. Ảnh banner cho trang giới thiệu (phần bên phải đang trống trên máy tính) – nếu có ảnh sẵn.
+5. **Excel câu hỏi – cột "Bắt buộc trước khi chuyển tư vấn"**: đang dùng làm "Bắt buộc trả lời" của câu Phần A trên form. Đúng ý Thầy không, hay cột này chỉ dành cho chatbot (khi đó form cần cột riêng)?
+6. **Excel câu hỏi – cột "Ghi vào cột"**: file mẫu ghi kiểu `DS_KHACH.Vai trò`; web Holland ghi mã trường CRM (`role`, `extra_fields.truong_chuyen`) vì đó là chỗ dữ liệu thật sự được gửi. Giữ như vậy được không? Các cột "Loại", "Dùng chấm xếp loại?", "AI cần thu" được giữ cho giống mẫu nhưng web không dùng.
+7. **Chọn bộ câu theo câu trả lời Phần A** (đặc tả mục 0b.2): vì đã đổi thứ tự (làm câu Holland trước, điền thông tin sau) nên không làm được; hiện chọn bộ bằng link `?bo=mã`. Đồng ý không?
 
 ### Các quyết định đã chốt (khác hoặc bổ sung so với đặc tả gốc)
 | Ngày | Quyết định |
@@ -49,6 +53,7 @@
 | 05/11 | Ngày sinh và email phụ huynh gửi CRM trong `extra_fields` (không đổi hợp đồng `lead/1`) |
 | 05/11 | Khu vực (A18): ô chọn 16 bang từ `regions.json`, **gửi CRM bằng tên bang** ("Hessen") cho nhân viên dễ đọc |
 | 05/11 | Nhập câu hỏi (3b): sửa trên web, dán nhiều câu, Excel, nhân bản bộ câu (Google Sheets để sau) |
+| 05/11 | Vân đồng ý kế hoạch 3b ("tiếp tục giai đoạn đang làm") |
 
 ### Lịch sử commit (nhánh `dev`)
 | Commit | Nội dung |
@@ -117,12 +122,30 @@ Nguồn: `D:\OU\Cap_nhat_Holland_05-11.zip` (giống bản giải nén ở `D:\O
 - Câu A18 thành **ô chọn 16 bang** (chỉ khu vực đang bật), gửi CRM bằng tên bang. Database máy Vân đã làm lại riêng câu A18 (lượt làm bài cũ vẫn còn).
 - Mã trường: web Holland không dùng (ô "Trường đang học" là ô chữ) → không phải sửa.
 
-## Tiếp theo: Giai đoạn 3b – Admin quản lý câu hỏi (chờ Vân đồng ý)
+## Giai đoạn 3b – Admin quản lý câu hỏi (xong 05/11/2026)
 
-1. **Bộ câu hỏi (Phần B):** thêm bộ, nhân bản bộ, bật/tắt, kiểu trả lời (Đúng/Không, 3 hoặc 5 mức) và nhãn từng mức, số câu mỗi trang; trong bộ: sửa chữ, chọn nhóm "R – Kỹ thuật…", bật/tắt, kéo thả thứ tự, thùng rác, "Xem như khách".
-2. **Dán nhiều câu cùng lúc** (mỗi dòng một câu, mã tự đặt).
-3. **Excel** (`openspout`): tải file đúng cột tab `CAU_HOI` có ô chọn sổ xuống; nhập lại có xem trước, báo lỗi theo dòng, khớp theo mã câu, câu thiếu chỉ bị tắt, lưu lịch sử nhập.
-4. **Form thông tin (Phần A):** thêm/sửa câu, kiểu, lựa chọn, bắt buộc, điều kiện hiện, "Gửi sang CRM vào trường…" (trường chuẩn hoặc mã tùy biến → `extra_fields`).
-5. **Cấu hình chấm điểm:** trọng số, ngưỡng và tên nhãn, số ngành, ngưỡng hồ sơ phẳng, nút "Chạy thử".
-6. **Mô tả 6 nhóm** R I A S E C.
-7. **Test chấp nhận của đặc tả:** thêm câu "Trường chuyên?" (`truong_chuyen`) + bộ 30 câu thang 5 mức trên admin → khách thấy, chấm đúng, CRM nhận `extra_fields.truong_chuyen` – không sửa code.
+Menu trái: 5 mục bỏ nhãn "Sắp có" – Bộ câu hỏi, Form thông tin khách, Cấu hình chấm điểm, Mô tả 6 nhóm Holland, Xuất / nhập Excel. Mỗi trang có nút "?" hướng dẫn.
+
+- **Bộ câu hỏi (Phần B)** `/admin/question-sets`: thêm bộ (mã tự tạo từ tên), sửa tên / mã / kiểu trả lời (Đúng-Không, 3 mức, 5 mức) / **nhãn từng mức** / số câu mỗi trang / bật-tắt / bộ mặc định; **nhân bản** (bộ mới đang tắt, mã câu mới); xóa vào **thùng rác** + khôi phục; không tắt / xóa được bộ mặc định. Mỗi bộ có **link làm bài + nút "Chép link"**, đếm câu theo nhóm R I A S E C.
+  - Đổi kiểu trả lời: nhãn đặt lại như mặc định, điểm tối đa các câu theo thang mới (chấm theo % nên vẫn đúng).
+- **Câu Holland**: thêm (mã tự đặt B55, B56…; nút "Lưu và thêm câu khác"), sửa (chữ, nhóm R–C có tên nhóm, tùy chọn nâng cao: thang riêng, điểm tối đa, thứ tự), bật/tắt một bấm, **kéo thả ⋮⋮ + "Lưu thứ tự"**, thùng rác.
+  - **Dán nhiều câu**: mỗi dòng một câu, đầu dòng "R | …" hoặc chọn nhóm chung; dòng thiếu nhóm báo đúng số dòng, có lỗi thì không thêm câu nào.
+- **"Xem như khách"**: admin đang đăng nhập mở `/lam-bai?bo=…&xem_truoc=1`, xem được cả bộ đang tắt, có dòng báo "Đang xem trước" (khách không thấy).
+- **Form thông tin (Phần A)** `/admin/info-form`: thêm / sửa câu (9 kiểu), lựa chọn mỗi dòng một ("Chữ hiển thị = mã"), chữ gợi ý, chú thích, bắt buộc, **"Chỉ hiện khi…"** (chọn câu + câu trả lời), **"Gửi sang CRM vào trường…"** (20 trường chuẩn `lead/1` có tên tiếng Việt, hoặc "Trường mới" → `extra_fields.{mã}`, mã tự chuyển không dấu). Chặn 2 câu cùng gửi một trường. Ô đồng ý không tắt / xóa được, chỉ sửa chữ. Câu mới tự đứng trước ô đồng ý.
+- **Cấu hình chấm điểm** `/admin/scoring`: nhập theo % (trọng số khớp mã / khớp điểm phải cộng 100; ngưỡng + tên nhãn, tối đa 6 dòng, cần 1 nhãn 0%; số ngành đại học / nghề; ngưỡng hồ sơ phẳng; cách xưng hô câu lý do). **"Chạy thử"**: chọn học sinh mẫu (5 em trong test_cases.json) hoặc tự nhập % 6 nhóm → so sánh cạnh nhau "cấu hình đang dùng" và "với các con số vừa gõ", **không lưu**. "Đặt lại như ban đầu". Lưu trong `settings.scoring_config`; engine, trang kết quả, trang lượt làm bài đều đọc từ đây.
+- **Mô tả 6 nhóm** `/admin/groups`: tên + giải thích R I A S E C (trang kết quả, email).
+- **Excel** `/admin/excel`: "Tải bộ câu hỏi" theo bộ → tab `CAU_HOI` **đúng 13 cột, đúng thứ tự** của sheet mẫu (Phần A + Phần B của bộ) + tab `HUONG_DAN`; **ô chọn sổ xuống** cho Phần, Kiểu trả lời, Nhóm, is_active, Bắt buộc (openspout không có tính năng này → tự chèn vào file sau khi ghi, không thêm package). "Nhập bộ câu hỏi" → **xem trước** (số câu thêm / sửa / tắt / dòng lỗi; từng dòng: lỗi đỏ hoặc mục thay đổi) → "Xác nhận nhập". Khớp theo mã câu, ô mã trống = câu mới, câu thiếu trong file **chỉ bị tắt**, ô đồng ý không bao giờ bị tắt, còn một dòng lỗi là không ghi gì. Lịch sử nhập hiện trên trang.
+- **Nhật ký + quay lại bản cũ**: bảng mới `admin_activities` (ai, lúc nào, sửa gì, bản trước). Trang sửa câu, bộ câu, cấu hình chấm điểm, mô tả nhóm có khối "Lịch sử thay đổi" + nút **"Quay lại bản này"**. Thao tác lớn (xóa, nhân bản, lưu cấu hình, nhập Excel) hỏi xác nhận.
+- **Test (38 test mới):** đủ các việc trên, gồm **test chấp nhận bắt buộc** của đặc tả mục 0b.5 (`OpenAdminAcceptanceTest`: chỉ dùng trang admin thêm câu "Trường chuyên?" → `truong_chuyen` + bộ 30 câu thang 5 mức → khách thấy câu mới, mã AIS chấm đúng thang 0–4, gói CRM có `extra_fields.truong_chuyen`); Excel theo yêu cầu giai đoạn 7 (file xuất đúng tab + cột như mẫu; file có dòng sai → báo đúng dòng, không ghi; file đúng → cập nhật, không xóa câu thiếu; file xuất nhập lại không đổi gì).
+
+**Chưa làm / để sau:** vai trò marketing (`EDITOR`) – làm cùng 3c; Google Sheets; xuất Excel kết quả làm bài (giai đoạn 7); chưa chụp ảnh màn hình kiểm tra giao diện các trang mới (máy chưa bật MySQL) – Vân mở thử giúp.
+
+### Bảng nghiệm thu – việc đã làm được đến giai đoạn 3b
+| Vai trò | # | Việc | Trạng thái |
+|---|---|---|---|
+| Sếp | 4 | Sửa 1 câu hỏi Holland, thêm 1 câu Phần A "Trường chuyên?" → khách thấy câu mới, CRM nhận câu trả lời | ✅ Thử được (CRM: gói nằm trong hàng đợi, giai đoạn 4 mới gửi thật) |
+| Sếp | 5 | Đổi chữ trên trang kết quả Holland | Một phần: tên + mô tả 6 nhóm (3b); các chữ khác ở 3c |
+
+## Tiếp theo: Giai đoạn 3c – Nội dung trang
+
+Trang giới thiệu & banner (có xem trước + lịch sử), trang kết quả, email, menu / chân trang / màu, khối nhúng cho web chính; vai trò `EDITOR` cho marketing.

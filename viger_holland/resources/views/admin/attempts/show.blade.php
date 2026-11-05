@@ -17,7 +17,7 @@
         </div>
         <div class="stat">
             <p class="stat__value">{{ number_format($result['di3'], 2, ',', '') }}</p>
-            <p class="stat__label">Độ rõ hồ sơ (di3){{ $result['di3'] < config('holland.scoring.di3_threshold') ? ' – hồ sơ phẳng' : '' }}</p>
+            <p class="stat__label">Độ rõ hồ sơ (di3){{ $result['di3'] < \App\Data\ScoringConfig::current()->di3Threshold ? ' – hồ sơ phẳng' : '' }}</p>
         </div>
         <div class="stat">
             <p class="stat__value">{{ $result['has_tie'] ? 'Có' : 'Không' }}</p>

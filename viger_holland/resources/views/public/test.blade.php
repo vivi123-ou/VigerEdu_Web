@@ -13,6 +13,13 @@
         $infoHasErrors = collect($errors->keys())->contains(fn ($key) => str_starts_with($key, 'info.') || $key === 'submit');
     @endphp
 
+    @if ($isAdminPreview ?? false)
+        {{-- Chỉ người quản trị đang đăng nhập mới thấy dòng này --}}
+        <div class="preview-banner" role="status">
+            Đang xem trước bộ "{{ $form->set->name }}"@if (! $form->set->is_active) (bộ đang TẮT: khách chưa mở được, nộp bài sẽ báo lỗi)@endif.
+        </div>
+    @endif
+
     <div class="test">
         <div class="container container--narrow">
             <form method="post" action="{{ route('test.submit') }}" id="test-form" class="test-form" novalidate

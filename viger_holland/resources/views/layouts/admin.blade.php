@@ -98,6 +98,13 @@
                 <div class="alert alert--success" role="status">{{ session('status') }}</div>
             @endif
 
+            {{-- Lỗi của thao tác (không gắn với một ô nhập cụ thể) --}}
+            @foreach (['question', 'set', 'order', 'file'] as $errorKey)
+                @error($errorKey)
+                    <div class="alert alert--error" role="alert">{{ $message }}</div>
+                @enderror
+            @endforeach
+
             @yield('content')
         </main>
     </div>

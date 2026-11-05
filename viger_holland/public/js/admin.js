@@ -31,4 +31,117 @@
             if (!details.contains(event.target)) details.removeAttribute('open');
         });
     });
+
+    // Hỏi xác nhận trước thao tác lớn: <form data-confirm="…"> hoặc <button data-confirm="…">.
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        var submitter = event.submitter;
+        var message = (submitter && submitter.getAttribute('data-confirm')) || form.getAttribute('data-confirm');
+        if (message && !window.confirm(message)) event.preventDefault();
+    });
+
+    // Nút "Chép link".
+    document.querySelectorAll('[data-copy]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var input = button.parentElement.querySelector('[data-copy-source]');
+            if (!input) return;
+            input.select();
+            var done = function () {
+                var text = button.textContent;
+                button.textContent = 'Đã chép';
+                setTimeout(function () { button.textContent = text; }, 1500);
+            };
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(input.value).then(done, function () { document.execCommand('copy'); done(); });
+            } else {
+                document.execCommand('copy');
+                done();
+            }
+        });
+    });
+
+    // Kéo thả để sắp xếp: kéo ô ⋮⋮, rồi bấm "Lưu thứ tự".
+    document.querySelectorAll('[data-sortable]').forEach(function (body) {
+        var card = body.closest('.card');
+        var saveForm = card ? card.querySelector('[data-reorder-form]') : null;
+        var dragging = null;
+
+        body.addEventListener('dragstart', function (event) {
+            var row = event.target.closest('tr');
+            if (!row || !event.target.classList.contains('drag')) return;
+            dragging = row;
+            row.classList.add('is-dragging');
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', row.getAttribute('data-id'));
+        });
+
+        body.addEventListener('dragover', function (event) {
+            if (!dragging) return;
+            event.preventDefault();
+            var target = event.target.closest('tr');
+            if (!target || target === dragging) return;
+            var box = target.getBoundingClientRect();
+            var after = event.clientY > box.top + box.height / 2;
+            body.insertBefore(dragging, after ? target.nextSibling : target);
+        });
+
+        body.addEventListener('dragend', function () {
+            if (!dragging) return;
+            dragging.classList.remove('is-dragging');
+            dragging = null;
+            if (saveForm) saveForm.hidden = false;
+        });
+
+        if (saveForm) {
+            saveForm.addEventListener('submit', function () {
+                saveForm.querySelectorAll('input[name="order[]"]').forEach(function (input) { input.remove(); });
+                body.querySelectorAll('tr[data-id]').forEach(function (row) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'order[]';
+                    input.value = row.getAttribute('data-id');
+                    saveForm.appendChild(input);
+                });
+            });
+        }
+    });
+
+    // Form câu Phần A: ẩn/hiện ô theo kiểu trả lời, trường CRM và câu điều kiện.
+    var infoForm = document.querySelector('[data-info-form]');
+    if (infoForm) {
+        var typeSelect = infoForm.querySelector('[data-answer-type]');
+        var targetSelect = infoForm.querySelector('[data-crm-target]');
+        var conditionSelect = infoForm.querySelector('[data-condition-question]');
+
+        var refresh = function () {
+            var type = typeSelect ? typeSelect.value : '';
+            infoForm.querySelectorAll('[data-show-for]').forEach(function (el) {
+                el.hidden = el.getAttribute('data-show-for').split(' ').indexOf(type) === -1;
+            });
+            infoForm.querySelectorAll('[data-show-for-target]').forEach(function (el) {
+                el.hidden = !targetSelect || targetSelect.value !== el.getAttribute('data-show-for-target');
+            });
+            infoForm.querySelectorAll('[data-condition-for]').forEach(function (el) {
+                var active = conditionSelect && conditionSelect.value === el.getAttribute('data-condition-for');
+                el.hidden = !active;
+                el.querySelectorAll('input').forEach(function (input) { input.disabled = !active; });
+            });
+        };
+
+        [typeSelect, targetSelect, conditionSelect].forEach(function (el) { if (el) el.addEventListener('change', refresh); });
+        refresh();
+    }
+
+    // Chạy thử chấm điểm: chọn học sinh mẫu thì điền sẵn % 6 nhóm.
+    var sample = document.querySelector('[data-trial-sample]');
+    if (sample) {
+        sample.addEventListener('change', function () {
+            if (!sample.value) return;
+            var percent = JSON.parse(sample.value);
+            Object.keys(percent).forEach(function (group) {
+                var input = document.querySelector('[data-trial-group="' + group + '"]');
+                if (input) input.value = percent[group];
+            });
+        });
+    }
 })();

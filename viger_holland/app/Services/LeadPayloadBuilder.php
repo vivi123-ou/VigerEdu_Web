@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Attempt;
 use App\Models\Question;
+use App\Support\LeadFields;
 use Illuminate\Support\Carbon;
 
 /**
@@ -13,19 +14,13 @@ final class LeadPayloadBuilder
 {
     public const SCHEMA_VERSION = 'lead/1';
 
-    /** Trường chuẩn của lead/1 (luôn có mặt, null nếu khách không trả lời). */
-    private const STANDARD_FIELDS = [
-        'role', 'student_name', 'birth_year', 'phone', 'email', 'parent_name', 'parent_phone', 'province',
-        'current_level', 'current_school', 'gpa', 'english_level', 'german_level', 'desired_level',
-        'country', 'region', 'interested_major', 'budget', 'timing', 'appointment_at',
-    ];
-
     /**
      * @return array<string, mixed>
      */
     public function build(Attempt $attempt): array
     {
-        $fields = array_fill_keys(self::STANDARD_FIELDS, null);
+        // Trường chuẩn của lead/1: luôn có mặt, null nếu khách không trả lời.
+        $fields = array_fill_keys(LeadFields::standard(), null);
         $extra = [];
         $contact = $attempt->contact ?? [];
 

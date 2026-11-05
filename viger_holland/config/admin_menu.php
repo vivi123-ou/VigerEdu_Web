@@ -21,14 +21,14 @@ return [
     [
         'title' => 'Bài test',
         'items' => [
-            ['key' => 'question-sets', 'label' => 'Bộ câu hỏi (Phần B)', 'stage' => 3, 'icon' => 'list',
-                'help' => 'Thêm, sửa, bật/tắt câu hỏi Holland; tạo nhiều bộ câu (THPT, Sinh viên…); đổi kiểu trả lời Đúng/Không hoặc thang 3–5 mức.'],
-            ['key' => 'info-form', 'label' => 'Form thông tin khách (Phần A)', 'stage' => 3, 'icon' => 'form',
-                'help' => 'Thêm, sửa, ẩn câu hỏi thông tin khách (họ tên, SĐT, lớp…) và chọn "Gửi sang CRM vào trường…".'],
-            ['key' => 'scoring', 'label' => 'Cấu hình chấm điểm', 'stage' => 3, 'icon' => 'sliders',
-                'help' => 'Trọng số khớp mã / khớp điểm, ngưỡng và tên nhãn, số ngành gợi ý. Có nút "Chạy thử".'],
-            ['key' => 'groups', 'label' => 'Mô tả 6 nhóm & kết quả', 'stage' => 3, 'icon' => 'hexagon',
-                'help' => 'Sửa chữ giải thích 6 nhóm R, I, A, S, E, C hiện trên trang kết quả.'],
+            ['key' => 'question-sets', 'label' => 'Bộ câu hỏi (Phần B)', 'route' => 'admin.question-sets.index', 'icon' => 'list',
+                'help' => 'Mỗi bộ câu là một bài test (ví dụ THPT, Sinh viên). Bấm tên bộ để thêm, sửa, tắt, kéo thả sắp xếp câu hỏi. "Dán nhiều câu" để thêm cả loạt (mỗi dòng một câu, đầu dòng ghi nhóm, ví dụ "R | Tôi thích sửa xe"). "Nhân bản" để tạo bộ mới từ bộ cũ. Mỗi bộ có link làm bài riêng để gửi khách. Xóa nhầm thì khôi phục ở mục Thùng rác cuối trang.'],
+            ['key' => 'info-form', 'label' => 'Form thông tin khách (Phần A)', 'route' => 'admin.info-questions.index', 'icon' => 'form',
+                'help' => 'Các câu khách điền ở bước cuối "Nhận kết quả". Bấm "+ Thêm câu", chọn kiểu trả lời và "Gửi sang CRM vào trường…" (trường có sẵn hoặc tự đặt mã mới). Câu mới hiện ngay trên form và tự gửi sang CRM. "Chỉ hiện khi…" để chỉ hỏi một nhóm khách. Kéo thả biểu tượng ⋮⋮ rồi bấm "Lưu thứ tự" để sắp xếp.'],
+            ['key' => 'scoring', 'label' => 'Cấu hình chấm điểm', 'route' => 'admin.scoring.edit', 'icon' => 'sliders',
+                'help' => 'Đổi trọng số, ngưỡng và tên nhãn, số ngành gợi ý. Bấm "Chạy thử" để xem một học sinh mẫu được gợi ý ngành nào với giá trị mới (chưa lưu) so với hiện tại. Hài lòng thì bấm "Lưu". Lượt làm bài cũ không bị chấm lại. Sửa nhầm thì bấm "Quay lại bản này" ở Lịch sử thay đổi.'],
+            ['key' => 'groups', 'label' => 'Mô tả 6 nhóm Holland', 'route' => 'admin.groups.edit', 'icon' => 'hexagon',
+                'help' => 'Tên và đoạn giải thích 6 nhóm R, I, A, S, E, C. Chữ này hiện trên trang kết quả và email gửi khách.'],
         ],
     ],
     [
@@ -53,8 +53,8 @@ return [
                 'help' => 'Danh sách lượt làm bài, xem bài làm từng câu và bảng xếp hạng ngành. Không có danh sách khách (xem ở CRM).'],
             ['key' => 'outbox', 'label' => 'Hàng đợi gửi CRM', 'stage' => 4, 'icon' => 'send',
                 'help' => 'Các lượt chưa gửi được sang CRM (CRM tắt hoặc lỗi) và nút gửi lại.'],
-            ['key' => 'excel', 'label' => 'Xuất / nhập Excel', 'stage' => 7, 'icon' => 'table',
-                'help' => 'Tải bộ câu hỏi ra Excel, sửa rồi nhập lại (có xem trước lỗi); xuất kết quả làm bài.'],
+            ['key' => 'excel', 'label' => 'Xuất / nhập Excel', 'route' => 'admin.excel.index', 'icon' => 'table',
+                'help' => 'Bấm "Tải bộ câu hỏi" để lấy file Excel, sửa trong Excel rồi "Nhập bộ câu hỏi". Trước khi lưu luôn có bước xem trước: dòng nào sai được báo rõ và chưa ghi gì cả. Câu xóa khỏi file chỉ bị tắt, không mất. (Xuất kết quả làm bài: sắp có.)'],
         ],
     ],
     [

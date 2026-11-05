@@ -59,6 +59,23 @@ class QuestionSet extends Model
     }
 
     /**
+     * Link làm bài với bộ câu này (gửi cho khách / gắn quảng cáo).
+     */
+    public function testUrl(): string
+    {
+        return $this->is_default ? route('test.show') : route('test.show', ['bo' => $this->code]);
+    }
+
+    /**
+     * Đặt bộ này làm bộ mặc định (chỉ một bộ mặc định).
+     */
+    public function makeDefault(): void
+    {
+        static::query()->whereKeyNot($this->getKey())->update(['is_default' => false]);
+        $this->forceFill(['is_default' => true, 'is_active' => true])->save();
+    }
+
+    /**
      * Phiên bản bộ câu gửi CRM (ngày sửa gần nhất).
      */
     public function version(): string

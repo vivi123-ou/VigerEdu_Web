@@ -25,9 +25,12 @@ final class TestForm
     /**
      * @throws ModelNotFoundException khi không có bộ câu nào đang bật
      */
-    public static function resolve(?string $setCode = null): self
+    public static function resolve(?string $setCode = null, bool $includeInactive = false): self
     {
-        $sets = QuestionSet::active();
+        // Người quản trị "Xem như khách" được xem cả bộ đang tắt.
+        $sets = $includeInactive && filled($setCode) && QuestionSet::where('code', $setCode)->exists()
+            ? QuestionSet::query()
+            : QuestionSet::active();
 
         $set = filled($setCode)
             ? (clone $sets)->where('code', $setCode)->first()

@@ -21,6 +21,9 @@ class Question extends Model
 {
     use SoftDeletes;
 
+    /** Sửa câu thì "phiên bản bộ câu" (ngày sửa) gửi CRM cũng đổi theo. */
+    protected $touches = ['questionSet'];
+
     public const PART_INFO = 'A';
 
     public const PART_HOLLAND = 'B';
@@ -117,6 +120,33 @@ class Question extends Model
         }
 
         return (float) max(array_column($this->scale($set), 'value') ?: [1]);
+    }
+
+    /**
+     * Mã câu tiếp theo của một phần (A23, B55…), tính cả câu trong thùng rác để không trùng mã cũ.
+     */
+    public static function nextCode(string $part, int $offset = 0): string
+    {
+        $max = static::withTrashed()
+            ->where('code', 'like', $part.'%')
+            ->pluck('code')
+            ->map(fn (string $code) => preg_match('/^'.$part.'(\d+)$/', $code, $match) ? (int) $match[1] : 0)
+            ->max() ?? 0;
+
+        return $part.str_pad((string) ($max + 1 + $offset), 2, '0', STR_PAD_LEFT);
+    }
+
+    public function isHolland(): bool
+    {
+        return $this->part === self::PART_HOLLAND;
+    }
+
+    /**
+     * Tên ngắn để ghi nhật ký: "B12 – Người thích…".
+     */
+    public function shortLabel(): string
+    {
+        return $this->code.' – '.mb_strimwidth($this->text, 0, 60, '…');
     }
 
     /**

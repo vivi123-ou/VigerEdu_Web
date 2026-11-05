@@ -196,3 +196,4 @@
     .majors-grid { grid-template-columns: 1.4fr 1fr; gap: 2.5rem; }
     .contact-box { padding: 2.5rem; }
 }
+.preview-banner { background: #fff7e0; border-bottom: 1px solid #f0d58c; padding: 0.6rem 1rem; text-align: center; font-size: 0.9rem; }

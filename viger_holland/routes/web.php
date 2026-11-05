@@ -2,7 +2,14 @@
 
 use App\Http\Controllers\Admin\AttemptController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GroupController;
+use App\Http\Controllers\Admin\HollandQuestionController;
+use App\Http\Controllers\Admin\InfoQuestionController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\QuestionExcelController;
+use App\Http\Controllers\Admin\QuestionSetController;
+use App\Http\Controllers\Admin\ScoringController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ResultController;
@@ -29,6 +36,51 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
 
         Route::get('attempts', [AttemptController::class, 'index'])->name('attempts.index');
         Route::get('attempts/{attempt}', [AttemptController::class, 'show'])->name('attempts.show');
+
+        // Bộ câu hỏi Phần B
+        Route::get('question-sets', [QuestionSetController::class, 'index'])->name('question-sets.index');
+        Route::get('question-sets/create', [QuestionSetController::class, 'create'])->name('question-sets.create');
+        Route::post('question-sets', [QuestionSetController::class, 'store'])->name('question-sets.store');
+        Route::get('question-sets/{questionSet}', [QuestionSetController::class, 'show'])->name('question-sets.show');
+        Route::get('question-sets/{questionSet}/edit', [QuestionSetController::class, 'edit'])->name('question-sets.edit');
+        Route::put('question-sets/{questionSet}', [QuestionSetController::class, 'update'])->name('question-sets.update');
+        Route::post('question-sets/{questionSet}/duplicate', [QuestionSetController::class, 'duplicate'])->name('question-sets.duplicate');
+        Route::delete('question-sets/{questionSet}', [QuestionSetController::class, 'destroy'])->name('question-sets.destroy');
+        Route::post('question-sets/{id}/restore', [QuestionSetController::class, 'restore'])->whereNumber('id')->name('question-sets.restore');
+
+        // Câu Holland trong bộ
+        Route::get('question-sets/{questionSet}/questions/create', [HollandQuestionController::class, 'create'])->name('question-sets.questions.create');
+        Route::post('question-sets/{questionSet}/questions', [HollandQuestionController::class, 'store'])->name('question-sets.questions.store');
+        Route::post('question-sets/{questionSet}/questions/bulk', [HollandQuestionController::class, 'bulkStore'])->name('question-sets.questions.bulk');
+        Route::get('holland-questions/{question}/edit', [HollandQuestionController::class, 'edit'])->name('holland-questions.edit');
+        Route::put('holland-questions/{question}', [HollandQuestionController::class, 'update'])->name('holland-questions.update');
+
+        // Form thông tin khách Phần A
+        Route::get('info-form', [InfoQuestionController::class, 'index'])->name('info-questions.index');
+        Route::get('info-form/create', [InfoQuestionController::class, 'create'])->name('info-questions.create');
+        Route::post('info-form', [InfoQuestionController::class, 'store'])->name('info-questions.store');
+        Route::get('info-form/{question}/edit', [InfoQuestionController::class, 'edit'])->name('info-questions.edit');
+        Route::put('info-form/{question}', [InfoQuestionController::class, 'update'])->name('info-questions.update');
+
+        // Dùng chung cho câu Phần A và B
+        Route::patch('questions/{question}/toggle', [QuestionController::class, 'toggle'])->name('questions.toggle');
+        Route::delete('questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+        Route::post('questions/{id}/restore', [QuestionController::class, 'restore'])->whereNumber('id')->name('questions.restore');
+        Route::post('questions/reorder', [QuestionController::class, 'reorder'])->name('questions.reorder');
+        Route::post('history/{activity}/revert', [QuestionController::class, 'revert'])->name('history.revert');
+
+        // Cấu hình chấm điểm, mô tả 6 nhóm
+        Route::get('scoring', [ScoringController::class, 'edit'])->name('scoring.edit');
+        Route::put('scoring', [ScoringController::class, 'update'])->name('scoring.update');
+        Route::post('scoring/reset', [ScoringController::class, 'reset'])->name('scoring.reset');
+        Route::get('groups', [GroupController::class, 'edit'])->name('groups.edit');
+        Route::put('groups', [GroupController::class, 'update'])->name('groups.update');
+
+        // Excel bộ câu hỏi
+        Route::get('excel', [QuestionExcelController::class, 'index'])->name('excel.index');
+        Route::get('excel/export/{questionSet}', [QuestionExcelController::class, 'export'])->name('excel.export');
+        Route::post('excel/preview', [QuestionExcelController::class, 'preview'])->name('excel.preview');
+        Route::post('excel/import', [QuestionExcelController::class, 'import'])->name('excel.import');
 
         Route::get('{section}', SectionController::class)
             ->whereIn('section', AdminMenu::pendingKeys())

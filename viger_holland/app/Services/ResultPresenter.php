@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\MajorCatalog;
+use App\Data\ScoringConfig;
 use App\Models\Attempt;
 use App\Models\Question;
 
@@ -43,7 +44,7 @@ final class ResultPresenter
             'name_de' => $majors->get($row['major_code'])?->nameDe,
         ];
 
-        $di3Threshold = (float) config('holland.scoring.di3_threshold', 0.15);
+        $di3Threshold = ScoringConfig::current()->di3Threshold;
 
         return [
             'code' => $result['code'],

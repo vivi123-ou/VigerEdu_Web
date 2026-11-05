@@ -18,7 +18,8 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(ScoringConfig::class, fn () => ScoringConfig::fromArray(config('holland.scoring', [])));
+        // Tham số chấm điểm: mặc định trong config, admin sửa trên trang "Cấu hình chấm điểm".
+        $this->app->bind(ScoringConfig::class, fn () => ScoringConfig::current());
 
         // Chọn engine theo cấu hình: đổi thuật toán không cần sửa code nơi gọi.
         $this->app->bind(ScoringEngine::class, function (Application $app): ScoringEngine {

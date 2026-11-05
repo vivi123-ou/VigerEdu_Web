@@ -57,6 +57,43 @@ final readonly class ScoringConfig
         );
     }
 
+    /**
+     * Cấu hình đang dùng: giá trị mặc định (config/holland.php) được ghi đè bởi giá trị admin lưu
+     * ở trang "Cấu hình chấm điểm" (settings.scoring_config, dạng JSON).
+     */
+    public static function current(): self
+    {
+        $saved = json_decode((string) setting(self::SETTING_KEY, ''), true);
+
+        return self::fromArray(array_replace(config('holland.scoring', []), is_array($saved) ? $saved : []));
+    }
+
+    public const SETTING_KEY = 'scoring_config';
+
+    /**
+     * Bản mặc định (bản chốt), dùng cho nút "Đặt lại như ban đầu".
+     */
+    public static function defaults(): self
+    {
+        return self::fromArray(config('holland.scoring', []));
+    }
+
+    /**
+     * @return array{weight_code_match: float, weight_score_match: float, labels: list<array{min: float, label: string}>, top_university: int, top_vocational: int, di3_threshold: float, reason_subject: string}
+     */
+    public function toArray(): array
+    {
+        return [
+            'weight_code_match' => $this->weightCodeMatch,
+            'weight_score_match' => $this->weightScoreMatch,
+            'labels' => $this->labels,
+            'top_university' => $this->topUniversity,
+            'top_vocational' => $this->topVocational,
+            'di3_threshold' => $this->di3Threshold,
+            'reason_subject' => $this->reasonSubject,
+        ];
+    }
+
     public function labelFor(float $fit): string
     {
         foreach ($this->labels as $row) {
