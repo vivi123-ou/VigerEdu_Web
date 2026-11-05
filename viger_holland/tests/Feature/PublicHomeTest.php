@@ -25,7 +25,7 @@ class PublicHomeTest extends TestCase
             ->assertSee('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">', false)
             ->assertSee('<html lang="vi">', false)
             ->assertSee('Khám phá ngành học phù hợp với em')
-            ->assertSee('<strong>54</strong>', false)
+            ->assertSee('<dd>54</dd>', false)
             ->assertSee('Về trang chủ')
             ->assertSee('https://viger.edu.vn', false)
             ->assertSee('<div id="viger-chatbot"></div>', false);

@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Đăng nhập quản trị – {{ setting('test_name') }}</title>
     <link rel="icon" href="{{ asset(setting('favicon_path', 'img/favicon.png')) }}">
+    @include('partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <style>:root { --brand: {{ setting('primary_color', '#c1121f') }}; --ink: {{ setting('text_color', '#12263f') }}; }</style>
 </head>

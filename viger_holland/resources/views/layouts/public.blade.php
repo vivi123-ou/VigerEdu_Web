@@ -13,6 +13,7 @@
     <meta property="og:description" content="@yield('description', setting('seo_home_description'))">
     <meta property="og:type" content="website">
     <link rel="icon" href="{{ asset(setting('favicon_path', 'img/favicon.png')) }}">
+    @include('partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>:root { --brand: {{ setting('primary_color', '#c1121f') }}; --ink: {{ setting('text_color', '#12263f') }}; }</style>
     @stack('styles')

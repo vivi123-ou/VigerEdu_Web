@@ -12,29 +12,31 @@
     <meta name="robots" content="noindex, nofollow">
     <title>@yield('title', 'Quản trị') – {{ setting('test_name') }}</title>
     <link rel="icon" href="{{ asset(setting('favicon_path', 'img/favicon.png')) }}">
+    @include('partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <style>:root { --brand: {{ setting('primary_color', '#c1121f') }}; --ink: {{ setting('text_color', '#12263f') }}; }</style>
 </head>
 <body class="admin">
     <header class="topbar">
-        <button class="topbar__burger" type="button" data-toggle-sidebar aria-controls="sidebar" aria-expanded="false" aria-label="Mở menu">☰</button>
+        <button class="topbar__burger" type="button" data-toggle-sidebar aria-controls="sidebar" aria-expanded="false" aria-label="Mở menu">@include('partials.icon', ['name' => 'menu', 'size' => 22])</button>
 
         <a class="topbar__brand" href="{{ route('admin.dashboard') }}">
             <img src="{{ asset(setting('logo_path', 'img/logo.png')) }}" alt="" width="28" height="28">
-            <span>{{ setting('test_name') }}</span>
+            <span class="topbar__brand-text">{{ setting('test_name') }}</span>
         </a>
 
         <form class="topbar__search" role="search" onsubmit="return false">
+            @include('partials.icon', ['name' => 'search', 'size' => 16])
             <input type="search" placeholder="Tìm lượt làm bài (sắp có)" aria-label="Tìm lượt làm bài" disabled>
         </form>
 
         <nav class="topbar__actions" aria-label="Công cụ">
-            <a class="topbar__btn topbar__btn--primary" href="{{ route('home') }}" target="_blank" rel="noopener">Xem trang test như khách</a>
+            <a class="topbar__btn topbar__btn--primary" href="{{ route('home') }}" target="_blank" rel="noopener">Xem trang test như khách @include('partials.icon', ['name' => 'external', 'size' => 15])</a>
 
-            <span class="topbar__btn topbar__bell" title="Lượt chưa gửi CRM (sắp có)" aria-label="Thông báo">🔔</span>
+            <span class="topbar__btn topbar__bell" title="Lượt chưa gửi CRM (sắp có)" aria-label="Thông báo">@include('partials.icon', ['name' => 'bell', 'size' => 19])</span>
 
             <details class="dropdown">
-                <summary class="topbar__btn">Công cụ ▾</summary>
+                <summary class="topbar__btn" aria-label="Công cụ">@include('partials.icon', ['name' => 'grid', 'size' => 18, 'class' => 'topbar__mobile-icon'])<span class="topbar__label">Công cụ</span> @include('partials.icon', ['name' => 'chevron-down', 'size' => 16])</summary>
                 <div class="dropdown__menu">
                     @if (filled(setting('main_site_url')))
                         <a href="{{ setting('main_site_url') }}" target="_blank" rel="noopener">Web chính</a>
@@ -48,7 +50,7 @@
             </details>
 
             <details class="dropdown dropdown--right">
-                <summary class="topbar__btn">{{ auth()->user()->name }} ▾</summary>
+                <summary class="topbar__btn" aria-label="Tài khoản">@include('partials.icon', ['name' => 'user', 'size' => 18, 'class' => 'topbar__mobile-icon'])<span class="topbar__label">{{ auth()->user()->name }}</span> @include('partials.icon', ['name' => 'chevron-down', 'size' => 16])</summary>
                 <div class="dropdown__menu">
                     <span class="dropdown__muted">{{ auth()->user()->username }} · {{ auth()->user()->roleLabel() }}</span>
                     <form method="post" action="{{ route('admin.logout') }}">
