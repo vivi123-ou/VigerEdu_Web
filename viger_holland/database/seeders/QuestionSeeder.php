@@ -55,7 +55,7 @@ class QuestionSeeder extends Seeder
         'A17' => ['sort' => 121, 'type' => 'single', 'lead' => 'german_level', 'options' => 'german_level', 'text' => 'Trình độ tiếng Đức hiện tại'],
         'A08' => ['sort' => 130, 'type' => 'number', 'lead' => 'gpa', 'text' => 'Điểm trung bình gần nhất (thang 10)', 'placeholder' => 'Ví dụ: 8.2'],
         'A11' => ['sort' => 140, 'type' => 'single', 'lead' => 'country', 'options' => [['value' => 'Đức', 'label' => 'Đức']], 'text' => 'Quốc gia muốn đi học'],
-        'A18' => ['sort' => 141, 'type' => 'text', 'lead' => 'region', 'text' => 'Khu vực / thành phố mong muốn', 'placeholder' => 'Ví dụ: Bayern, Berlin… (để trống nếu chưa rõ)'],
+        'A18' => ['sort' => 141, 'type' => 'single', 'lead' => 'region', 'options' => 'regions', 'text' => 'Bang / khu vực mong muốn', 'help' => 'Để trống nếu chưa rõ.'],
         'A12' => ['sort' => 150, 'type' => 'single', 'lead' => 'budget', 'options' => 'budget', 'text' => 'Ngân sách dự kiến mỗi năm'],
         'A13' => ['sort' => 160, 'type' => 'single', 'lead' => 'timing', 'options' => 'timing', 'text' => 'Dự định đi học khi nào'],
         'A15' => ['sort' => 200, 'type' => 'consent', 'lead' => 'consent', 'required' => true],
@@ -79,6 +79,7 @@ class QuestionSeeder extends Seeder
         $source = collect($this->readJson(config('holland.seed_path').'/questions.json'))->keyBy('code');
         $choices = $this->readJson(base_path('docs/lua_chon_chuan.json'));
         $choices['provinces'] = array_map(fn (string $name) => ['value' => $name, 'label' => $name], self::PROVINCES);
+        $choices['regions'] = $this->regionChoices();
 
         $this->seedPartA($source->all(), $choices);
         $this->seedPartB($source->where('part', Question::PART_HOLLAND)->values()->all());
@@ -175,6 +176,22 @@ class QuestionSeeder extends Seeder
             'value' => (string) $option['value'],
             'label' => (string) $option['label'],
         ], $options);
+    }
+
+    /**
+     * Khu vực từ regions.json (dữ liệu thật do Ý thu thập, chốt 05/11/2026): chỉ khu vực đang bật.
+     * Lưu và gửi CRM bằng TÊN bang (ví dụ "Hessen") cho nhân viên dễ đọc; mã bang (HE…) nằm trong regions.json.
+     *
+     * @return list<array{value: string, label: string}>
+     */
+    private function regionChoices(): array
+    {
+        $regions = $this->readJson(config('holland.seed_path').'/regions.json');
+
+        return array_values(array_map(
+            fn (array $region) => ['value' => (string) $region['name'], 'label' => (string) $region['name']],
+            array_filter($regions, fn (array $region) => (bool) ($region['is_active'] ?? true)),
+        ));
     }
 
     /**

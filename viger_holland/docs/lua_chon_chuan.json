@@ -314,5 +314,49 @@
    "label": "Chưa đủ điều kiện (< 5)",
    "lead_points": null
   }
+ ],
+ "school_type": [
+  {
+   "value": "UNI",
+   "label": "ĐH Nghiên cứu (Universität)",
+   "lead_points": null
+  },
+  {
+   "value": "HAW",
+   "label": "ĐH Ứng dụng (Hochschule/FH)",
+   "lead_points": null
+  },
+  {
+   "value": "ART",
+   "label": "ĐH Nghệ thuật – Âm nhạc",
+   "lead_points": null
+  },
+  {
+   "value": "ADMIN",
+   "label": "ĐH Hành chính",
+   "lead_points": null
+  },
+  {
+   "value": "SPECIAL",
+   "label": "ĐH Đặc thù",
+   "lead_points": null
+  }
+ ],
+ "school_ownership": [
+  {
+   "value": "public",
+   "label": "Công lập",
+   "lead_points": null
+  },
+  {
+   "value": "private",
+   "label": "Tư thục",
+   "lead_points": null
+  },
+  {
+   "value": "church",
+   "label": "Tôn giáo",
+   "lead_points": null
+  }
  ]
 }

@@ -70,7 +70,8 @@
 
 - `database/seeders/data/holland/`:
   - `questions.json`: 69 câu, gồm A01–A15 và B01–B54 (**câu B là câu mẫu**, Thầy sẽ thay);
-  - `holland_config.json`, `majors.json` (75 ngành / nghề, bản dự phòng khi chưa có CRM), `test_cases.json`, `holland_engine_reference.php`.
+  - `holland_config.json`, `majors.json` (75 ngành / nghề, bản dự phòng khi chưa có CRM), `test_cases.json`, `holland_engine_reference.php`;
+  - regions.json là dữ liệu thật (Ý thu thập, đã chốt 05/11).
 - `docs/`:
   - `HOP_DONG_KET_NOI.md`, `TU_DIEN_DU_LIEU_CHUNG.xlsx`, `lua_chon_chuan.json`, `TIEU_CHI_DE_DUNG_VA_NGHIEM_THU.md`;
   - `3_Mau_GoogleSheet_Viger_Holland_v2.xlsx` (tab CAU_HOI = cột của file Excel câu hỏi);

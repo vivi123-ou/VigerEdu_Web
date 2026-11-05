@@ -94,5 +94,24 @@
 ### Câu hỏi cho Vân
 - Đặc tả ghi mặc định `MAIL_MAILER=log`, nhưng chế độ này **ghi cả địa chỉ email của khách vào file log**, trái quy tắc "không ghi SĐT/email vào log". Máy Vân mình đã chuyển sang Mailpit. Trên server thật cần một tài khoản gửi email (SMTP của tên miền hoặc Gmail/Google Workspace). Vân hỏi Thầy giúp email gửi đi là địa chỉ nào?
 
+## Cập nhật dữ liệu 05/11/2026 (16 bang + Wien, 390 trường – Ý chốt)
+
+Nguồn: `D:\OU\Cap_nhat_Holland_05-11.zip` (giống bản giải nén ở `D:\OU\Holland\docs\Cap_nhat_Holland_05-11\`).
+
+### Đã làm
+- Thay `docs/TU_DIEN_DU_LIEU_CHUNG.xlsx`, `docs/lua_chon_chuan.json` (thêm `school_type`, `school_ownership` cho CRM; danh sách cũ không đổi), thêm `database/seeders/data/holland/regions.json` (16 bang + Wien đang tắt).
+- `docs/HOP_DONG_KET_NOI.md`: bản mới chỉ khác dòng mẫu câu lý do ("em đạt"); **giữ "bạn đạt"** theo quyết định của Vân → file không đổi.
+- `questions.json` bản mới giống hệt bản cũ → không chép, không gộp gì.
+- Câu A18 "Bang / khu vực mong muốn": đổi từ ô chữ sang **ô chọn 16 bang** lấy từ `regions.json` (chỉ khu vực đang bật). **Lưu và gửi CRM bằng tên bang** (ví dụ "Hessen") cho nhân viên dễ đọc, khớp hợp đồng `lead/1`. Seeder vẫn idempotent theo mã câu; DB máy Vân đã làm lại riêng A18.
+- Mã trường (T + mã HRK 3 số): web Holland không dùng mã trường (ô "Trường đang học" là ô chữ) → không phải sửa.
+- `CLAUDE.md` mục 5 ghi chú regions.json. Test 77 đạt.
+
+### Chưa chép (không có trong danh sách cần thay)
+- `3_Mau_GoogleSheet_Viger_Holland_v2.xlsx` bản mới (chỉ khác mã trường, tab CAU_HOI không đổi) và `DU_LIEU_16_BANG_390_TRUONG_DA_CHUAN_HOA.xlsx` (dữ liệu cho CRM).
+
+### Dọn dẹp (Vân tự xóa khi không cần nữa)
+- `D:\OU\Cap_nhat_Holland_05-11.zip`
+- `D:\OU\Holland\docs\Cap_nhat_Holland_05-11\`
+
 ## Tiếp theo: Giai đoạn 3b – Admin quản lý câu hỏi
 Sửa câu trên web (bảng, thêm, kéo thả, bật/tắt, xem như khách) · dán nhiều câu cùng lúc · nhập/xuất Excel đúng cột CAU_HOI (ô chọn sổ xuống, xem trước lỗi theo dòng) · nhân bản bộ câu · form Phần A (thêm câu, điều kiện hiện, "gửi sang CRM vào trường") · cấu hình chấm điểm có "Chạy thử".

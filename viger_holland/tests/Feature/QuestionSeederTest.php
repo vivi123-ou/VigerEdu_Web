@@ -70,6 +70,23 @@ class QuestionSeederTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function test_region_question_uses_active_regions_from_regions_json(): void
+    {
+        $this->seed(QuestionSeeder::class);
+
+        $regions = json_decode((string) file_get_contents(database_path('seeders/data/holland/regions.json')), true);
+        $question = Question::where('code', 'A18')->sole();
+        $values = array_column($question->options, 'value');
+
+        $this->assertCount(17, $regions, '16 bang Đức + Wien');
+        $this->assertSame(AnswerType::Single, $question->answer_type);
+        $this->assertSame('region', $question->lead_field);
+        $this->assertCount(16, $values, 'Wien đang tắt nên không hiện');
+        $this->assertContains('Hessen', $values, 'Gửi CRM bằng tên bang');
+        $this->assertContains('Thüringen', $values);
+        $this->assertNotContains('Wien', $values);
+    }
+
     public function test_province_list_has_34_provinces_plus_abroad(): void
     {
         $this->seed(QuestionSeeder::class);
