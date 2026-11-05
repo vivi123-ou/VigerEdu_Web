@@ -29,7 +29,8 @@ class QuestionSeeder extends Seeder
 
     /**
      * Cấu hình Phần A (form "Nhận kết quả của bạn", hiện SAU khi làm xong câu hỏi).
-     * Câu bắt buộc hiện ngay; câu không bắt buộc nằm trong phần "Thêm thông tin" (thu gọn); ô đồng ý ở cuối.
+     * Câu hiện theo thứ tự sort; ô đồng ý ở cuối. Câu nhu cầu du học (GPA, ngoại ngữ, ngân sách…) tắt sẵn:
+     * chatbot / tư vấn viên hỏi (Vân chốt 05/11); bật lại trong admin nếu muốn hỏi trên form.
      * text = null nghĩa là lấy câu chữ từ questions.json.
      * options: tên danh sách trong lua_chon_chuan.json (hoặc 'provinces'), hoặc mảng [{value, label}].
      * lead: trường chuẩn của lead/1; extra: mã trường tùy biến gửi trong extra_fields.
@@ -49,15 +50,15 @@ class QuestionSeeder extends Seeder
         'A06' => ['sort' => 90, 'type' => 'text', 'lead' => 'parent_name', 'text' => 'Họ tên phụ huynh / người giám hộ', 'show_if' => ['question' => 'A01', 'in' => ['HS']]],
         'A16' => ['sort' => 91, 'type' => 'phone', 'lead' => 'parent_phone', 'text' => 'Số điện thoại phụ huynh / người giám hộ', 'show_if' => ['question' => 'A01', 'in' => ['HS']], 'placeholder' => 'Ví dụ: 0987 654 321'],
         'A22' => ['sort' => 92, 'type' => 'email', 'extra' => 'parent_email', 'text' => 'Email phụ huynh / người giám hộ', 'show_if' => ['question' => 'A01', 'in' => ['HS']]],
-        'A14' => ['sort' => 100, 'type' => 'text', 'lead' => 'interested_major', 'text' => 'Ngành bạn đang quan tâm', 'placeholder' => 'Ví dụ: Cơ khí, Y khoa… hoặc "Chưa biết"'],
-        'A10' => ['sort' => 110, 'type' => 'single', 'lead' => 'desired_level', 'options' => 'desired_level', 'text' => 'Bậc học muốn theo'],
-        'A09' => ['sort' => 120, 'type' => 'single', 'lead' => 'english_level', 'options' => 'english_level', 'text' => 'Trình độ tiếng Anh hiện tại'],
-        'A17' => ['sort' => 121, 'type' => 'single', 'lead' => 'german_level', 'options' => 'german_level', 'text' => 'Trình độ tiếng Đức hiện tại'],
-        'A08' => ['sort' => 130, 'type' => 'number', 'lead' => 'gpa', 'text' => 'Điểm trung bình gần nhất (thang 10)', 'placeholder' => 'Ví dụ: 8.2'],
-        'A11' => ['sort' => 140, 'type' => 'single', 'lead' => 'country', 'options' => [['value' => 'Đức', 'label' => 'Đức']], 'text' => 'Quốc gia muốn đi học'],
-        'A18' => ['sort' => 141, 'type' => 'single', 'lead' => 'region', 'options' => 'regions', 'text' => 'Bang / khu vực mong muốn', 'help' => 'Để trống nếu chưa rõ.'],
-        'A12' => ['sort' => 150, 'type' => 'single', 'lead' => 'budget', 'options' => 'budget', 'text' => 'Ngân sách dự kiến mỗi năm'],
-        'A13' => ['sort' => 160, 'type' => 'single', 'lead' => 'timing', 'options' => 'timing', 'text' => 'Dự định đi học khi nào'],
+        'A14' => ['sort' => 100, 'active' => false, 'type' => 'text', 'lead' => 'interested_major', 'text' => 'Ngành bạn đang quan tâm', 'placeholder' => 'Ví dụ: Cơ khí, Y khoa… hoặc "Chưa biết"'],
+        'A10' => ['sort' => 110, 'active' => false, 'type' => 'single', 'lead' => 'desired_level', 'options' => 'desired_level', 'text' => 'Bậc học muốn theo'],
+        'A09' => ['sort' => 120, 'active' => false, 'type' => 'single', 'lead' => 'english_level', 'options' => 'english_level', 'text' => 'Trình độ tiếng Anh hiện tại'],
+        'A17' => ['sort' => 121, 'active' => false, 'type' => 'single', 'lead' => 'german_level', 'options' => 'german_level', 'text' => 'Trình độ tiếng Đức hiện tại'],
+        'A08' => ['sort' => 130, 'active' => false, 'type' => 'number', 'lead' => 'gpa', 'text' => 'Điểm trung bình gần nhất (thang 10)', 'placeholder' => 'Ví dụ: 8.2'],
+        'A11' => ['sort' => 140, 'active' => false, 'type' => 'single', 'lead' => 'country', 'options' => [['value' => 'Đức', 'label' => 'Đức']], 'text' => 'Quốc gia muốn đi học'],
+        'A18' => ['sort' => 141, 'active' => false, 'type' => 'single', 'lead' => 'region', 'options' => 'regions', 'text' => 'Bang / khu vực mong muốn', 'help' => 'Để trống nếu chưa rõ.'],
+        'A12' => ['sort' => 150, 'active' => false, 'type' => 'single', 'lead' => 'budget', 'options' => 'budget', 'text' => 'Ngân sách dự kiến mỗi năm'],
+        'A13' => ['sort' => 160, 'active' => false, 'type' => 'single', 'lead' => 'timing', 'options' => 'timing', 'text' => 'Dự định đi học khi nào'],
         'A15' => ['sort' => 200, 'type' => 'consent', 'lead' => 'consent', 'required' => true],
     ];
 

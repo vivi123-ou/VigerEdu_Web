@@ -95,7 +95,6 @@ class SettingSeeder extends Seeder
                 // Form "Nhận kết quả"
                 'info_title' => 'Bạn đã hoàn thành!',
                 'info_intro' => 'Chỉ một bước nữa thôi. Cho chúng tôi biết đôi chút về bạn để xem kết quả và nhận gợi ý ngành học phù hợp.',
-                'info_extra_title' => 'Thêm thông tin để được tư vấn sát hơn (không bắt buộc)',
                 'info_privacy' => 'Thông tin của bạn chỉ dùng để gửi kết quả và tư vấn du học, không chia sẻ cho bên thứ ba.',
                 'info_submit' => 'Xem kết quả',
                 'info_error_summary' => 'Vui lòng kiểm tra lại các ô được đánh dấu.',

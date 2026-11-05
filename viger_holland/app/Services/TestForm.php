@@ -58,17 +58,17 @@ final class TestForm
     }
 
     /**
-     * @return array{required: Collection<int, Question>, optional: Collection<int, Question>, consent: Collection<int, Question>}
+     * Câu thông tin theo thứ tự admin xếp; ô đồng ý luôn tách ra để ở cuối form.
+     *
+     * @return array{fields: Collection<int, Question>, consent: Collection<int, Question>}
      */
     public function infoSections(): array
     {
-        $consent = $this->infoQuestions->filter(fn (Question $q) => $q->answer_type->value === 'consent');
-        $others = $this->infoQuestions->reject(fn (Question $q) => $q->answer_type->value === 'consent');
+        $isConsent = fn (Question $q) => $q->answer_type->value === 'consent';
 
         return [
-            'required' => $others->where('is_required', true)->values(),
-            'optional' => $others->where('is_required', false)->values(),
-            'consent' => $consent->values(),
+            'fields' => $this->infoQuestions->reject($isConsent)->values(),
+            'consent' => $this->infoQuestions->filter($isConsent)->values(),
         ];
     }
 }

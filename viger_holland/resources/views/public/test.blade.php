@@ -97,22 +97,12 @@
                     <h2 class="test__title">{{ setting('info_title') }}</h2>
                     <p class="test__lead">{{ setting('info_intro') }}</p>
 
+                    {{-- Hiện đúng thứ tự admin xếp; câu không bắt buộc không có dấu * --}}
                     <div class="info-grid">
-                        @foreach ($sections['required'] as $question)
+                        @foreach ($sections['fields'] as $question)
                             @include('public.partials.info-field', ['question' => $question])
                         @endforeach
                     </div>
-
-                    @if ($sections['optional']->isNotEmpty())
-                        <details class="extra" @if (collect($sections['optional'])->contains(fn ($q) => filled(old('info.'.$q->code)) || $errors->has('info.'.$q->code))) open @endif>
-                            <summary class="extra__summary">{{ setting('info_extra_title') }}</summary>
-                            <div class="info-grid">
-                                @foreach ($sections['optional'] as $question)
-                                    @include('public.partials.info-field', ['question' => $question])
-                                @endforeach
-                            </div>
-                        </details>
-                    @endif
 
                     @foreach ($sections['consent'] as $question)
                         @include('public.partials.info-field', ['question' => $question])

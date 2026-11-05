@@ -21,7 +21,7 @@ class QuestionSeederTest extends TestCase
         $this->seed(QuestionSeeder::class);
 
         $this->assertSame(22, Question::part('A')->count(), '15 câu gốc + A16–A18 tách ra + A19–A22 mới');
-        $this->assertSame(21, Question::part('A')->active()->count(), 'A03 năm sinh tắt (tự điền từ ngày sinh)');
+        $this->assertSame(12, Question::part('A')->active()->count(), 'A03 năm sinh tắt (tự điền từ ngày sinh) + 9 câu nhu cầu du học tắt (chatbot / tư vấn viên hỏi)');
         $this->assertSame(54, Question::part('B')->count());
 
         foreach (['R', 'I', 'A', 'S', 'E', 'C'] as $group) {
