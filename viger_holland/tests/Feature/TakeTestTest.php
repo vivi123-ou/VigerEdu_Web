@@ -34,7 +34,7 @@ class TakeTestTest extends TestCase
     {
         $response = $this->get(route('test.show'))->assertOk();
 
-        $response->assertSeeInOrder(['Người thích làm việc bằng tay', 'Bạn đã hoàn thành!', 'Họ và tên', 'Xem kết quả']);
+        $response->assertSeeInOrder(['Người thích làm việc bằng tay', 'Bạn đã trả lời xong', 'Họ và tên', 'Xem kết quả']);
         $response->assertDontSee('/54')->assertDontSee('phút');
         $response->assertSee('name="answers[B01]"', false);
         $response->assertSee('name="info[A02]"', false);

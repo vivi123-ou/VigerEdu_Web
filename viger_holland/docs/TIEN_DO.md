@@ -15,7 +15,7 @@
 | 4. Kết nối CRM (gửi thật, thử lại, danh mục ngành từ CRM) | Chưa làm |
 | 5–7. API v1, an toàn dữ liệu, Excel kết quả, Cài đặt, SEO, `/install`, tài liệu | Chưa làm |
 
-**Con số hiện tại:** 76 câu hỏi (22 câu Phần A, 21 đang bật + 54 câu Phần B mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **115 test đều đạt** · nhánh `dev`, **chưa push**.
+**Con số hiện tại:** 76 câu hỏi (22 câu Phần A, 21 đang bật + 54 câu Phần B mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **128 test đều đạt** · nhánh `dev`, **chưa push**.
 
 **Chạy trên máy Vân:** mở `D:\laragon\laragon.exe` → **Start All** → trong thư mục dự án gõ `php artisan serve`.
 - Trang khách: http://127.0.0.1:8000 · Admin: http://127.0.0.1:8000/admin (tài khoản `SPN`)
@@ -145,6 +145,19 @@ Menu trái: 5 mục bỏ nhãn "Sắp có" – Bộ câu hỏi, Form thông tin 
 |---|---|---|---|
 | Sếp | 4 | Sửa 1 câu hỏi Holland, thêm 1 câu Phần A "Trường chuyên?" → khách thấy câu mới, CRM nhận câu trả lời | ✅ Thử được (CRM: gói nằm trong hàng đợi, giai đoạn 4 mới gửi thật) |
 | Sếp | 5 | Đổi chữ trên trang kết quả Holland | Một phần: tên + mô tả 6 nhóm (3b); các chữ khác ở 3c |
+
+## Bổ sung 05/11/2026 – Câu hỏi kiểu Google Form, form gọn hơn, văn phong
+
+- **Form "Nhận kết quả":** bỏ khối thu gọn "Thêm thông tin…"; câu hiện theo thứ tự admin xếp. 9 câu nhu cầu du học (GPA, ngoại ngữ, ngân sách, thời điểm…) **tắt sẵn** – chatbot / tư vấn viên hỏi; bật lại trên admin được.
+- **Câu Holland kiểu Google Form:** mỗi câu chọn kiểu riêng – Đúng / Không, Thang 3 / 5 mức, **Thang mức tự đặt**, **Chọn 1**, **Chọn nhiều** (mỗi lựa chọn gắn nhóm + điểm, giới hạn số ô); hiện dạng **ô số hoặc ngôi sao**, chọn 1 dạng nút hoặc danh sách sổ xuống; **câu không bắt buộc**; bộ câu có **xáo trộn thứ tự câu** và kiểu hiện mặc định.
+  - Chấm điểm: mọi kiểu quy về "điểm đạt / tối đa từng nhóm" (`AnswerScorer`) rồi dùng **đúng công thức cũ**. Câu không bắt buộc bỏ trống thì không tính.
+  - Gói CRM: `quiz.answers` **thêm** `type`, `answer`, `scores` (không đổi trường cũ) – đã ghi vào `HOP_DONG_KET_NOI.md`.
+  - Excel: câu chọn ghi `Sửa xe = R:1 | Vẽ tranh = A:2`; cột "Bắt buộc…" dùng cho cả câu Holland.
+- **Form thông tin khách:** thêm kiểu Đoạn văn, Đánh giá (ngôi sao); lựa chọn "Khác (ghi rõ)"; số nhỏ nhất / lớn nhất do admin đặt (bỏ ghi cứng GPA 0–10); ô **"Thông tin riêng tư"** (SĐT, email luôn ẩn) thay cho danh sách ẩn ghi cứng ở trang Lượt làm bài.
+- **Văn phong:** viết lại chữ trang giới thiệu, làm bài, kết quả, email, SEO, chân trang theo giọng đơn vị tư vấn du học (rõ, lịch sự, không sáo rỗng, bỏ câu cảm thán và câu hỏi tu từ); **bỏ "miễn học phí"** ở chân trang (không đúng ở mọi bang, đặc tả yêu cầu không hứa). Database máy Vân đã cập nhật (chỉ thay chữ còn là bản mặc định).
+- Migration chỉ thêm cột: `questions.display`, `questions.config`, `question_sets.display`. **128 test đều đạt.**
+
+**Việc Vân cần làm:** báo bạn Ý về 3 trường mới trong `quiz.answers` (xem `HOP_DONG_KET_NOI.md`).
 
 ## Tiếp theo: Giai đoạn 3c – Nội dung trang
 

@@ -44,7 +44,7 @@
         {{-- Biểu đồ 6 nhóm --}}
         <section class="section">
             <div class="container">
-                <h2 class="section__title">{{ setting('result_chart_title', 'Mức độ sở thích theo 6 nhóm') }}</h2>
+                <h2 class="section__title">{{ setting('result_chart_title', 'Mức độ hứng thú theo 6 nhóm') }}</h2>
 
                 @if ($result['isFlat'] && filled(setting('result_flat_note')))
                     <p class="note">{{ setting('result_flat_note') }}</p>
@@ -70,7 +70,7 @@
         <section class="section section--soft">
             <div class="container">
                 @if ($result['fields'])
-                    <h2 class="section__title">{{ setting('result_fields_title', 'Lĩnh vực hợp với bạn') }}</h2>
+                    <h2 class="section__title">{{ setting('result_fields_title', 'Lĩnh vực phù hợp') }}</h2>
                     <ol class="fields">
                         @foreach ($result['fields'] as $field)
                             <li class="fields__item"><span class="fields__num">{{ $loop->iteration }}</span> {{ $field['field'] }}</li>
@@ -114,7 +114,7 @@
                     <p class="contact-box__text">{{ setting('result_contact_text') }}</p>
                     <div class="contact-box__actions">
                         @if (filled($hotline))
-                            <a class="btn btn--primary" href="tel:{{ preg_replace('/[^0-9+]/', '', $hotline) }}">{{ setting('result_call_text', 'Gọi ngay') }} · {{ $hotline }}</a>
+                            <a class="btn btn--primary" href="tel:{{ preg_replace('/[^0-9+]/', '', $hotline) }}">{{ setting('result_call_text', 'Gọi tư vấn') }} · {{ $hotline }}</a>
                         @endif
                         @if (filled($zalo))
                             <a class="btn" href="https://zalo.me/{{ preg_replace('/[^0-9]/', '', $zalo) }}" target="_blank" rel="noopener">{{ setting('result_zalo_text', 'Nhắn Zalo') }}</a>
