@@ -37,8 +37,8 @@ return [
         'top_university' => 5,
         'top_vocational' => 3,
         'di3_threshold' => 0.15,
-        // Chữ trong câu lý do: "AIS ↔ IAS · em đạt I 67%…" (theo hợp đồng kết nối)
-        'reason_subject' => 'em',
+        // Chữ trong câu lý do: "AIS ↔ IAS · bạn đạt I 67%…"
+        'reason_subject' => 'bạn',
     ],
 
     // Danh mục ngành dự phòng khi chưa có / không gọi được CRM

@@ -103,7 +103,7 @@ Ra (**HollandResult**):
   "code":"AIS", "di3":0.39, "consistency":2, "has_tie":false,
   "top_university":[{"major_code":"N043","name":"Ngôn ngữ và Văn học Đức","code_used":"IAS",
      "code_match":0.7222,"score_match":0.9193,"fit":0.8011,"label":"Rất phù hợp",
-     "reason":"AIS ↔ IAS · em đạt I 67%, A 89%, S 56%"}],
+     "reason":"AIS ↔ IAS · bạn đạt I 67%, A 89%, S 56%"}],
   "top_vocational":[ … ],
   "fields":[{"field":"Ngôn ngữ – Văn hóa – Truyền thông","score":0.8011,"best_major_code":"N043"}],
   "testas":[{"group":"G4","score":0.8011}] }

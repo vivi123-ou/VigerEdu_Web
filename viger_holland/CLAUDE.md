@@ -61,7 +61,7 @@
 7. `FIT = 0,6·code_match + 0,4·score_match` (trọng số sửa được trên admin). Ngành có 1–3 mã thì lấy mã cho FIT cao nhất.
 8. Nhãn: ≥ 0,80 Rất phù hợp · ≥ 0,65 Phù hợp · ≥ 0,50 Có thể cân nhắc · còn lại Ít phù hợp.
 9. Xếp hạng ngành đang bật, tách đại học / học nghề, sắp theo FIT → code_match → mã; lấy top 5 + top 3.
-10. Điểm lĩnh vực / nhóm TestAS = FIT cao nhất trong nhóm. `reason` có dạng `"AIS ↔ IAS · em đạt I 67%, A 89%, S 56%"`.
+10. Điểm lĩnh vực / nhóm TestAS = FIT cao nhất trong nhóm. `reason` có dạng `"AIS ↔ IAS · bạn đạt I 67%, A 89%, S 56%"`.
 11. Kết quả trả về theo cấu trúc **`holland-result/1`** (`docs/HOP_DONG_KET_NOI.md` mục 4).
 
 **Kiểm tra:** unit test theo `database/seeders/data/holland/test_cases.json`, sai số 0,001. Ví dụ HS01: mã AIS, ngành đầu tiên N043 (Ngôn ngữ và Văn học Đức) FIT ≈ 0,8011.

@@ -247,7 +247,7 @@ final class RiasecFitEngineV2 implements ScoringEngine
     }
 
     /**
-     * Ví dụ: "AIS ↔ IAS · em đạt I 67%, A 89%, S 56%".
+     * Ví dụ: "AIS ↔ IAS · bạn đạt I 67%, A 89%, S 56%".
      *
      * @param  array<string, float>  $p
      */

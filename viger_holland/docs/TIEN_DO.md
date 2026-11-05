@@ -64,7 +64,7 @@
   - Bằng điểm, hồ sơ phẳng, ngành 3 mã, ngành tắt, thang Likert, nhãn, trọng số từ cấu hình, cấu trúc `holland-result/1`, engine giả thay qua cấu hình.
 
 ### Câu hỏi cho Vân
-- Câu lý do đang giữ đúng hợp đồng: `"AIS ↔ IAS · em đạt I 67%, A 89%, S 56%"`. Muốn đổi thành **"bạn đạt"** thì chỉ cần sửa `config('holland.scoring.reason_subject')` (giai đoạn 3 sửa trên admin) + mẫu trong `HOP_DONG_KET_NOI.md`. Vân quyết giúp.
+- Đã đổi câu lý do thành "AIS ↔ IAS · **bạn đạt** I 67%…" (Vân duyệt 05/11/2026), sửa cả mẫu trong `HOP_DONG_KET_NOI.md` và `CLAUDE.md`. **Cần báo bạn Ý (chatbot).**
 
 ## Tiếp theo: Giai đoạn 3a
 Form Phần A động → các trang câu hỏi Phần B (lưu tạm trong trình duyệt) → nộp bài (lưu attempt, chấm, đưa lead vào outbox) → trang kết quả (biểu đồ 6 nhóm, mã, ngành gợi ý, đặt lịch, Gọi/Zalo) → email kết quả.

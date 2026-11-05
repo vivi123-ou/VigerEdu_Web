@@ -26,7 +26,7 @@ final readonly class ScoringConfig
         public int $topUniversity = 5,
         public int $topVocational = 3,
         public float $di3Threshold = 0.15,
-        public string $reasonSubject = 'em',
+        public string $reasonSubject = 'bạn',
     ) {
         if ($topUniversity < 0 || $topVocational < 0) {
             throw new InvalidArgumentException('Số ngành hiển thị không được âm.');

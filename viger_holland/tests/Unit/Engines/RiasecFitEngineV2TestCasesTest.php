@@ -68,7 +68,7 @@ class RiasecFitEngineV2TestCasesTest extends TestCase
         $this->assertSame('IAS', $first->codeUsed);
         $this->assertEqualsWithDelta(0.8011, $first->fit, self::DELTA);
         $this->assertSame('Rất phù hợp', $first->label);
-        $this->assertSame('AIS ↔ IAS · em đạt I 67%, A 89%, S 56%', $first->reason);
+        $this->assertSame('AIS ↔ IAS · bạn đạt I 67%, A 89%, S 56%', $first->reason);
     }
 
     /**
