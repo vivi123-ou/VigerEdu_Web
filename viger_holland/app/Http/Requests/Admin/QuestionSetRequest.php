@@ -25,6 +25,8 @@ class QuestionSetRequest extends FormRequest
             'code' => Str::slug(Str::ascii($code)),
             'is_active' => $this->boolean('is_active'),
             'is_default' => $this->boolean('is_default'),
+            'shuffle_groups' => $this->boolean('shuffle_groups'),
+            'display' => $this->input('display') ?: null,
         ]);
     }
 
@@ -46,6 +48,8 @@ class QuestionSetRequest extends FormRequest
             'per_page' => ['required', 'integer', 'between:1,30'],
             'is_active' => ['boolean'],
             'is_default' => ['boolean'],
+            'shuffle_groups' => ['boolean'],
+            'display' => ['nullable', Rule::in(['buttons', 'stars'])],
         ];
     }
 

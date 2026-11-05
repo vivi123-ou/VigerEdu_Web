@@ -30,14 +30,14 @@
         </div>
 
         <div class="field">
-            <label for="answer_type">Kiểu trả lời</label>
+            <label for="answer_type">Kiểu câu mặc định</label>
             <select id="answer_type" name="answer_type">
                 @foreach (['yes_no', 'likert3', 'likert5'] as $type)
                     @php $answerType = \App\Enums\AnswerType::from($type); @endphp
                     <option value="{{ $type }}" @selected(old('answer_type', $set->answer_type?->value) === $type)>{{ $answerType->label() }} ({{ collect($answerType->defaultScale())->pluck('label')->implode(' / ') }})</option>
                 @endforeach
             </select>
-            <p class="field__hint">Áp dụng cho mọi câu trong bộ. Điểm được tính theo % nên đổi kiểu trả lời vẫn chấm đúng.@if ($set->exists) Đổi kiểu thì nhãn các mức được đặt lại như mặc định.@endif</p>
+            <p class="field__hint">Dùng cho câu "Dán nhiều câu" và câu mới thêm. Từng câu vẫn chọn kiểu riêng được (chọn 1, chọn nhiều, thang tự đặt…). Điểm tính theo % nên trộn nhiều kiểu vẫn chấm đúng.@if ($set->exists) Đổi kiểu thì nhãn các mức được đặt lại như mặc định.@endif</p>
         </div>
 
         @if ($set->exists)
@@ -54,11 +54,25 @@
         @endif
 
         <div class="field">
+            <label for="display">Thang mức hiện dạng</label>
+            <select id="display" name="display">
+                <option value="buttons" @selected(old('display', $set->display ?? 'buttons') === 'buttons')>Ô số có nhãn</option>
+                <option value="stars" @selected(old('display', $set->display) === 'stars')>Ngôi sao</option>
+            </select>
+            <p class="field__hint">Áp dụng cho các câu thang 3 / 5 mức trong bộ (từng câu vẫn đổi riêng được). Câu Đúng / Không luôn hiện 2 nút.</p>
+        </div>
+
+        <div class="field">
             <label for="per_page">Số câu mỗi trang</label>
             <input id="per_page" name="per_page" type="number" min="1" max="30" value="{{ old('per_page', $set->per_page) }}" class="input--short">
             <p class="field__hint">Trên điện thoại nên 6–9 câu một trang.</p>
             @error('per_page')<p class="field__error">{{ $message }}</p>@enderror
         </div>
+
+        <label class="check">
+            <input type="checkbox" name="shuffle_groups" value="1" @checked(old('shuffle_groups', $set->shuffle_groups))>
+            <span>Xáo trộn thứ tự câu (mỗi khách một thứ tự khác nhau)</span>
+        </label>
 
         <label class="check">
             <input type="checkbox" name="is_active" value="1" @checked(old('is_active', $set->is_active))>

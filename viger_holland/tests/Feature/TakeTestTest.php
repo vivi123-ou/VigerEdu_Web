@@ -87,7 +87,10 @@ class TakeTestTest extends TestCase
 
         $this->assertSame($attempt->uuid, $payload['quiz']['attempt_id']);
         $this->assertCount(54, $payload['quiz']['answers']);
-        $this->assertSame(['code' => 'B01', 'group' => 'R', 'text' => 'Người thích làm việc bằng tay, sửa chữa đồ vật', 'value' => 1, 'max' => 1], $payload['quiz']['answers'][0]);
+        $this->assertSame([
+            'code' => 'B01', 'type' => 'yes_no', 'text' => 'Người thích làm việc bằng tay, sửa chữa đồ vật', 'answer' => 'Đúng',
+            'group' => 'R', 'value' => 1, 'max' => 1, 'scores' => [['group' => 'R', 'value' => 1, 'max' => 1]],
+        ], $payload['quiz']['answers'][0], 'Giữ code / group / text / value / max như trước, thêm type / answer / scores');
         $this->assertSame(route('admin.attempts.show', $attempt), $payload['quiz']['view_url']);
     }
 

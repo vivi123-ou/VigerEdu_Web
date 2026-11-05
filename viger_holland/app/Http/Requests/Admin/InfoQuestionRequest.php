@@ -26,9 +26,15 @@ class InfoQuestionRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $number = fn (string $key) => $this->filled($key) ? str_replace(',', '.', (string) $this->input($key)) : null;
+
         $this->merge([
             'is_required' => $this->boolean('is_required'),
             'is_active' => $this->boolean('is_active'),
+            'allow_other' => $this->boolean('allow_other'),
+            'is_private' => $this->boolean('is_private'),
+            'min' => $number('min'),
+            'max' => $number('max'),
             'extra_field_key' => $this->filled('extra_field_key')
                 ? Str::of((string) $this->input('extra_field_key'))->ascii()->lower()->replaceMatches('/[^a-z0-9]+/', '_')->trim('_')->value()
                 : null,
@@ -54,6 +60,11 @@ class InfoQuestionRequest extends FormRequest
             'show_if_values' => ['nullable', 'array'],
             'show_if_values.*' => ['string', 'max:255'],
             'note' => ['nullable', 'string', 'max:255'],
+            'display' => ['nullable', Rule::in([Question::DISPLAY_BUTTONS, Question::DISPLAY_STARS, Question::DISPLAY_DROPDOWN])],
+            'allow_other' => ['boolean'],
+            'is_private' => ['boolean'],
+            'min' => ['nullable', 'numeric'],
+            'max' => ['nullable', 'numeric'],
         ];
     }
 
@@ -73,6 +84,14 @@ class InfoQuestionRequest extends FormRequest
 
             if (in_array($type, [AnswerType::Single, AnswerType::Multi], true) && $this->options() === []) {
                 $validator->errors()->add('options_text', 'Câu chọn cần ít nhất một lựa chọn (mỗi dòng một lựa chọn).');
+            }
+
+            if ($this->filled('min') && $this->filled('max') && (float) $this->input('max') < (float) $this->input('min')) {
+                $validator->errors()->add('max', 'Số lớn nhất phải lớn hơn hoặc bằng số nhỏ nhất.');
+            }
+
+            if ($type === AnswerType::Rating && $this->filled('options_text') && count(ChoiceList::parseScale($this->input('options_text')) ?? []) < 2) {
+                $validator->errors()->add('options_text', 'Cần ít nhất 2 mức, mỗi dòng "Nhãn = điểm" (ví dụ: Rất hài lòng = 5).');
             }
 
             if ($this->input('crm_target') === self::CUSTOM && ! LeadFields::isValidExtraKey((string) $this->input('extra_field_key'))) {
@@ -108,7 +127,11 @@ class InfoQuestionRequest extends FormRequest
     {
         $type = AnswerType::tryFrom((string) $this->input('answer_type'));
 
-        return in_array($type, [AnswerType::Single, AnswerType::Multi], true) ? ChoiceList::parse($this->input('options_text')) : [];
+        return match (true) {
+            $type?->isChoice() === true => ChoiceList::parse($this->input('options_text')),
+            $type === AnswerType::Rating => (array) ChoiceList::parseScale($this->input('options_text')),
+            default => [],
+        };
     }
 
     public function leadField(): ?string
@@ -162,7 +185,22 @@ class InfoQuestionRequest extends FormRequest
             'extra_field_key' => $this->extraFieldKey(),
             'show_if' => $this->showIf(),
             'note' => $this->input('note'),
+            'display' => in_array($type, [AnswerType::Single, AnswerType::Rating], true) ? ($this->input('display') ?: null) : null,
+            'config' => $this->config($type) ?: null,
         ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function config(AnswerType $type): array
+    {
+        return array_filter([
+            'allow_other' => $type->isChoice() && $this->boolean('allow_other') ? true : null,
+            'min' => $type === AnswerType::Number && $this->filled('min') ? (float) $this->input('min') : null,
+            'max' => $type === AnswerType::Number && $this->filled('max') ? (float) $this->input('max') : null,
+            'private' => $this->boolean('is_private') ? true : null,
+        ], fn ($value) => $value !== null);
     }
 
     /**

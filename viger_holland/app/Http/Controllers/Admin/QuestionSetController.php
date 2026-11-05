@@ -38,7 +38,7 @@ class QuestionSetController extends Controller
         $type = AnswerType::from($request->input('answer_type'));
 
         $set = QuestionSet::create([
-            ...$request->safe()->only(['name', 'code', 'description', 'per_page', 'is_active']),
+            ...$request->safe()->only(['name', 'code', 'description', 'per_page', 'is_active', 'display', 'shuffle_groups']),
             'answer_type' => $type,
             'scale' => $type->defaultScale(),
             'is_default' => false,
@@ -61,7 +61,7 @@ class QuestionSetController extends Controller
             'set' => $questionSet,
             'questions' => $questionSet->questions()->orderBy('code')->get()->sortBy('sort_order')->values(),
             'trashed' => Question::onlyTrashed()->where('question_set_id', $questionSet->id)->latest('deleted_at')->get(),
-            'groupCounts' => $questionSet->questions()->where('is_active', true)->selectRaw('riasec, count(*) as total')->groupBy('riasec')->pluck('total', 'riasec'),
+            'groupCounts' => $questionSet->questions()->where('is_active', true)->get()->flatMap(fn (Question $question) => $question->scoredGroups())->countBy(),
             'activities' => AdminActivity::forSubject(AdminActivity::SUBJECT_SET, $questionSet->id, 5),
         ]);
     }
@@ -80,15 +80,19 @@ class QuestionSetController extends Controller
             return back()->withInput()->withErrors(['is_active' => 'Không tắt được bộ mặc định. Hãy chọn bộ khác làm mặc định trước.']);
         }
 
-        DB::transaction(function () use ($request, $questionSet, $type, $typeChanged): void {
-            $questionSet->fill($request->safe()->only(['name', 'code', 'description', 'per_page', 'is_active']));
+        $oldType = $questionSet->answer_type;
+
+        DB::transaction(function () use ($request, $questionSet, $type, $typeChanged, $oldType): void {
+            $questionSet->fill($request->safe()->only(['name', 'code', 'description', 'per_page', 'is_active', 'display', 'shuffle_groups']));
             $questionSet->answer_type = $type;
             $questionSet->scale = $typeChanged ? $type->defaultScale() : $this->scaleWithLabels($questionSet, (array) $request->input('scale_labels', []));
             $questionSet->save();
 
-            // Đổi kiểu trả lời: điểm tối đa của câu theo thang mới (bỏ điểm tối đa cũ của các câu dùng thang chung).
+            // Đổi kiểu mặc định: các câu đang dùng thang chung của bộ đổi theo, điểm tối đa theo thang mới.
+            // Câu có kiểu / thang riêng (chọn 1, chọn nhiều, thang tự đặt…) giữ nguyên.
             if ($typeChanged) {
-                $questionSet->questions()->whereNull('options')->update(['max_score' => null, 'answer_type' => $type->value]);
+                $questionSet->questions()->whereNull('options')->where('answer_type', $oldType->value)
+                    ->update(['max_score' => null, 'answer_type' => $type->value]);
             }
 
             AdminActivity::recordModelChange($questionSet, AdminActivity::SUBJECT_SET, 'Sửa bộ câu "'.$questionSet->name.'"');

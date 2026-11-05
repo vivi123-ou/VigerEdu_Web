@@ -63,8 +63,18 @@ class SubmitTestRequest extends FormRequest
         $rules = ['bo' => ['nullable', 'string', 'max:50']];
 
         foreach ($this->testForm()->hollandQuestions as $question) {
-            $values = array_map('strval', array_column($question->scale($this->testForm()->set), 'value'));
-            $rules["answers.{$question->code}"] = ['required', Rule::in($values)];
+            $key = "answers.{$question->code}";
+            $presence = $question->is_required ? 'required' : 'nullable';
+
+            if ($question->answer_type === AnswerType::Multi) {
+                $rules[$key] = [$presence, 'array', ...$this->selectCountRules($question)];
+                $rules["{$key}.*"] = [Rule::in($this->choiceValues($question))];
+            } elseif ($question->answer_type === AnswerType::Single) {
+                $rules[$key] = [$presence, Rule::in($this->choiceValues($question))];
+            } else {
+                $values = array_map('strval', array_column($question->scale($this->testForm()->set), 'value'));
+                $rules[$key] = [$presence, Rule::in($values)];
+            }
         }
 
         foreach ($this->testForm()->infoQuestions as $question) {
@@ -83,7 +93,7 @@ class SubmitTestRequest extends FormRequest
     private function infoRules(Question $question): array
     {
         $presence = $question->is_required ? 'required' : 'nullable';
-        $options = array_map('strval', array_column($question->options ?? [], 'value'));
+        $options = $this->choiceValues($question);
 
         return match ($question->answer_type) {
             AnswerType::Consent => ['accepted'],
@@ -94,14 +104,43 @@ class SubmitTestRequest extends FormRequest
                 }
             }],
             AnswerType::Date => [$presence, 'date_format:Y-m-d', 'after:1900-01-01', 'before:today'],
-            AnswerType::Number => $question->lead_field === 'gpa'
-                ? [$presence, 'numeric', 'between:0,10']
-                : [$presence, 'numeric'],
+            AnswerType::Number => array_values(array_filter([
+                $presence, 'numeric',
+                is_numeric($question->configValue('min')) ? 'min:'.$question->configValue('min') : null,
+                is_numeric($question->configValue('max')) ? 'max:'.$question->configValue('max') : null,
+            ])),
             AnswerType::Single => [$presence, Rule::in($options)],
-            AnswerType::Multi => [$presence, 'array'],
+            AnswerType::Multi => [$presence, 'array', ...$this->selectCountRules($question)],
             AnswerType::Boolean => [$presence, Rule::in(['0', '1'])],
+            AnswerType::Rating => [$presence, Rule::in(array_map('strval', array_column($question->scale(), 'value')))],
+            AnswerType::Textarea => [$presence, 'string', 'max:2000'],
             default => [$presence, 'string', 'max:255'],
         };
+    }
+
+    /**
+     * Giá trị hợp lệ của câu chọn (kèm "Khác…" nếu admin bật).
+     *
+     * @return list<string>
+     */
+    private function choiceValues(Question $question): array
+    {
+        $values = array_map('strval', array_column($question->choices(), 'value'));
+
+        return $question->allowsOther() ? [...$values, Question::OTHER] : $values;
+    }
+
+    /**
+     * Số ô tối thiểu / tối đa của câu chọn nhiều (admin đặt).
+     *
+     * @return list<string>
+     */
+    private function selectCountRules(Question $question): array
+    {
+        return array_values(array_filter([
+            (int) $question->configValue('min_select') > 0 ? 'min:'.(int) $question->configValue('min_select') : null,
+            (int) $question->configValue('max_select') > 0 ? 'max:'.(int) $question->configValue('max_select') : null,
+        ]));
     }
 
     /**
@@ -112,6 +151,13 @@ class SubmitTestRequest extends FormRequest
     public function after(): array
     {
         return [function (Validator $validator): void {
+            // Chọn "Khác…" thì phải ghi rõ.
+            foreach ($this->testForm()->infoQuestions as $question) {
+                if ($question->allowsOther() && $this->choseOther($question) && blank($this->otherText($question))) {
+                    $validator->errors()->add("info.{$question->code}", 'Vui lòng ghi rõ ở ô "Khác".');
+                }
+            }
+
             $contactQuestions = $this->testForm()->infoQuestions->whereIn('lead_field', ['phone', 'email']);
 
             if ($contactQuestions->isEmpty()) {
@@ -136,8 +182,12 @@ class SubmitTestRequest extends FormRequest
         $messages = [];
 
         foreach ($this->testForm()->hollandQuestions as $question) {
-            $messages["answers.{$question->code}.required"] = 'Bạn chưa trả lời câu này.';
-            $messages["answers.{$question->code}.in"] = 'Câu trả lời không hợp lệ, vui lòng chọn lại.';
+            $key = "answers.{$question->code}";
+            $messages["{$key}.required"] = 'Bạn chưa trả lời câu này.';
+            $messages["{$key}.in"] = 'Câu trả lời không hợp lệ, vui lòng chọn lại.';
+            $messages["{$key}.*.in"] = 'Câu trả lời không hợp lệ, vui lòng chọn lại.';
+            $messages["{$key}.min"] = 'Vui lòng chọn ít nhất :min ô.';
+            $messages["{$key}.max"] = 'Chỉ chọn tối đa :max ô.';
         }
 
         foreach ($this->testForm()->infoQuestions as $question) {
@@ -153,7 +203,17 @@ class SubmitTestRequest extends FormRequest
             $messages["{$key}.numeric"] = 'Vui lòng nhập số.';
             $messages["{$key}.between"] = 'Vui lòng nhập số từ 0 đến 10.';
             $messages["{$key}.in"] = 'Lựa chọn không hợp lệ, vui lòng chọn lại.';
-            $messages["{$key}.max"] = 'Nội dung quá dài.';
+            $messages["{$key}.*.in"] = 'Lựa chọn không hợp lệ, vui lòng chọn lại.';
+
+            if ($question->answer_type === AnswerType::Multi) {
+                $messages["{$key}.min"] = 'Vui lòng chọn ít nhất :min ô.';
+                $messages["{$key}.max"] = 'Chỉ chọn tối đa :max ô.';
+            } elseif ($question->answer_type === AnswerType::Number) {
+                $messages["{$key}.min"] = 'Số nhỏ nhất là :min.';
+                $messages["{$key}.max"] = 'Số lớn nhất là :max.';
+            } else {
+                $messages["{$key}.max"] = 'Nội dung quá dài.';
+            }
         }
 
         return $messages;
@@ -166,13 +226,39 @@ class SubmitTestRequest extends FormRequest
      */
     public function infoAnswers(): array
     {
-        return collect((array) $this->validated('info', []))
-            ->filter(fn ($value) => $value !== null && $value !== '')
+        $answers = (array) $this->validated('info', []);
+
+        // "Khác…": thay bằng chữ khách ghi.
+        foreach ($this->testForm()->infoQuestions as $question) {
+            if (! $question->allowsOther() || ! array_key_exists($question->code, $answers)) {
+                continue;
+            }
+
+            $other = mb_substr(trim((string) $this->otherText($question)), 0, 255);
+            $answers[$question->code] = is_array($answers[$question->code])
+                ? array_values(array_map(fn ($value) => $value === Question::OTHER ? $other : $value, $answers[$question->code]))
+                : ($answers[$question->code] === Question::OTHER ? $other : $answers[$question->code]);
+        }
+
+        return collect($answers)
+            ->filter(fn ($value) => $value !== null && $value !== '' && $value !== [])
             ->all();
     }
 
+    private function choseOther(Question $question): bool
+    {
+        return in_array(Question::OTHER, array_map('strval', (array) $this->input("info.{$question->code}")), true);
+    }
+
+    private function otherText(Question $question): ?string
+    {
+        $text = $this->input("info_other.{$question->code}");
+
+        return is_string($text) ? $text : null;
+    }
+
     /**
-     * @return array<string, string>
+     * @return array<string, string|list<string>>
      */
     public function hollandAnswers(): array
     {

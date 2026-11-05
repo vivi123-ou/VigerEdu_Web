@@ -96,14 +96,19 @@
         <h2 class="card__title">Bài làm từng câu</h2>
         <div class="table-wrap">
             <table class="table table--wrap">
-                <thead><tr><th>Mã</th><th>Nhóm</th><th>Câu hỏi</th><th>Trả lời</th></tr></thead>
+                <thead><tr><th>Mã</th><th>Câu hỏi</th><th>Khách chọn</th><th>Điểm theo nhóm</th></tr></thead>
                 <tbody>
                     @foreach ($attempt->answers as $answer)
                         <tr>
                             <td>{{ $answer['code'] }}</td>
-                            <td>{{ $answer['group'] }}</td>
                             <td>{{ $answer['text'] }}</td>
-                            <td>{{ $answer['value'] }} / {{ $answer['max'] }}</td>
+                            <td>{{ $answer['answer'] ?? '–' }}</td>
+                            <td>
+                                {{-- Lượt làm bài cũ (trước khi có nhiều kiểu câu) chỉ có group / value / max --}}
+                                @foreach ($answer['scores'] ?? [['group' => $answer['group'], 'value' => $answer['value'], 'max' => $answer['max']]] as $score)
+                                    {{ $score['group'] }}: {{ $score['value'] }} / {{ $score['max'] }}@unless ($loop->last) · @endunless
+                                @endforeach
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

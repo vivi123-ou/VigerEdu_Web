@@ -458,3 +458,7 @@ tr.is-error td { background: #fdf2f2; }
 .stat--danger .stat__value { color: var(--danger); }
 .field .check input, .field input[type="checkbox"], .field input[type="radio"] { width: 1.05rem; min-height: 0; padding: 0; }
 .field input[type="file"] { border: 0; padding: 0.4rem 0; }
+.input--tiny { max-width: 5rem; }
+.choices td:first-child { min-width: 14rem; }
+.choices select { width: 100%; min-height: 2.5rem; padding: 0.35rem 0.5rem; border: 1px solid #b9c0c8; border-radius: 2px; font: inherit; background: var(--white); }
+.check-hint { margin: -0.9rem 0 1.1rem 1.6rem; }

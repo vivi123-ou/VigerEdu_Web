@@ -38,8 +38,8 @@ class QuestionSeeder extends Seeder
      * @var array<string, array<string, mixed>>
      */
     private const PART_A = [
-        'A02' => ['sort' => 10, 'type' => 'text', 'lead' => 'student_name', 'required' => true, 'text' => 'Họ và tên', 'placeholder' => 'Ví dụ: Nguyễn Văn An', 'help' => 'Nếu phụ huynh điền giúp, vui lòng ghi tên của con.'],
-        'A19' => ['sort' => 20, 'type' => 'date', 'extra' => 'birth_date', 'required' => true, 'text' => 'Ngày sinh'],
+        'A02' => ['sort' => 10, 'config' => ['private' => true], 'type' => 'text', 'lead' => 'student_name', 'required' => true, 'text' => 'Họ và tên', 'placeholder' => 'Ví dụ: Nguyễn Văn An', 'help' => 'Nếu phụ huynh điền giúp, vui lòng ghi tên của con.'],
+        'A19' => ['sort' => 20, 'config' => ['private' => true], 'type' => 'date', 'extra' => 'birth_date', 'required' => true, 'text' => 'Ngày sinh'],
         'A03' => ['sort' => 21, 'type' => 'number', 'lead' => 'birth_year', 'active' => false, 'note' => 'Tự điền từ Ngày sinh (A19), không hỏi khách.'],
         'A05' => ['sort' => 30, 'type' => 'email', 'lead' => 'email', 'required' => true, 'text' => 'Email', 'placeholder' => 'Ví dụ: ten@gmail.com', 'help' => 'Kết quả và tư vấn chi tiết sẽ được gửi vào email này.'],
         'A04' => ['sort' => 40, 'type' => 'phone', 'lead' => 'phone', 'required' => true, 'text' => 'Số điện thoại', 'placeholder' => 'Ví dụ: 0912 345 678'],
@@ -47,14 +47,14 @@ class QuestionSeeder extends Seeder
         'A07' => ['sort' => 60, 'type' => 'single', 'lead' => 'current_level', 'options' => 'current_level', 'required' => true, 'text' => 'Hiện bạn (hoặc con) đang là'],
         'A20' => ['sort' => 70, 'type' => 'text', 'lead' => 'current_school', 'required' => true, 'text' => 'Trường đang học', 'placeholder' => 'Ví dụ: THPT Lê Hồng Phong', 'help' => 'Đã tốt nghiệp thì ghi trường gần nhất.'],
         'A21' => ['sort' => 80, 'type' => 'single', 'lead' => 'province', 'options' => 'provinces', 'required' => true, 'text' => 'Tỉnh / Thành phố'],
-        'A06' => ['sort' => 90, 'type' => 'text', 'lead' => 'parent_name', 'text' => 'Họ tên phụ huynh / người giám hộ', 'show_if' => ['question' => 'A01', 'in' => ['HS']]],
+        'A06' => ['sort' => 90, 'config' => ['private' => true], 'type' => 'text', 'lead' => 'parent_name', 'text' => 'Họ tên phụ huynh / người giám hộ', 'show_if' => ['question' => 'A01', 'in' => ['HS']]],
         'A16' => ['sort' => 91, 'type' => 'phone', 'lead' => 'parent_phone', 'text' => 'Số điện thoại phụ huynh / người giám hộ', 'show_if' => ['question' => 'A01', 'in' => ['HS']], 'placeholder' => 'Ví dụ: 0987 654 321'],
         'A22' => ['sort' => 92, 'type' => 'email', 'extra' => 'parent_email', 'text' => 'Email phụ huynh / người giám hộ', 'show_if' => ['question' => 'A01', 'in' => ['HS']]],
         'A14' => ['sort' => 100, 'active' => false, 'type' => 'text', 'lead' => 'interested_major', 'text' => 'Ngành bạn đang quan tâm', 'placeholder' => 'Ví dụ: Cơ khí, Y khoa… hoặc "Chưa biết"'],
         'A10' => ['sort' => 110, 'active' => false, 'type' => 'single', 'lead' => 'desired_level', 'options' => 'desired_level', 'text' => 'Bậc học muốn theo'],
         'A09' => ['sort' => 120, 'active' => false, 'type' => 'single', 'lead' => 'english_level', 'options' => 'english_level', 'text' => 'Trình độ tiếng Anh hiện tại'],
         'A17' => ['sort' => 121, 'active' => false, 'type' => 'single', 'lead' => 'german_level', 'options' => 'german_level', 'text' => 'Trình độ tiếng Đức hiện tại'],
-        'A08' => ['sort' => 130, 'active' => false, 'type' => 'number', 'lead' => 'gpa', 'text' => 'Điểm trung bình gần nhất (thang 10)', 'placeholder' => 'Ví dụ: 8.2'],
+        'A08' => ['sort' => 130, 'active' => false, 'config' => ['min' => 0, 'max' => 10], 'type' => 'number', 'lead' => 'gpa', 'text' => 'Điểm trung bình gần nhất (thang 10)', 'placeholder' => 'Ví dụ: 8.2'],
         'A11' => ['sort' => 140, 'active' => false, 'type' => 'single', 'lead' => 'country', 'options' => [['value' => 'Đức', 'label' => 'Đức']], 'text' => 'Quốc gia muốn đi học'],
         'A18' => ['sort' => 141, 'active' => false, 'type' => 'single', 'lead' => 'region', 'options' => 'regions', 'text' => 'Bang / khu vực mong muốn', 'help' => 'Để trống nếu chưa rõ.'],
         'A12' => ['sort' => 150, 'active' => false, 'type' => 'single', 'lead' => 'budget', 'options' => 'budget', 'text' => 'Ngân sách dự kiến mỗi năm'],
@@ -114,6 +114,7 @@ class QuestionSeeder extends Seeder
                 'sort_order' => $spec['sort'],
                 'is_active' => $spec['active'] ?? (bool) ($original['is_active'] ?? true),
                 'note' => $spec['note'] ?? null,
+                'config' => $spec['config'] ?? null,
             ]);
         }
     }

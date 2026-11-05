@@ -110,10 +110,17 @@ final class QuestionWorkbook
      */
     private function hollandRow(Question $question, QuestionSet $set): array
     {
+        $type = $question->answer_type ?? $set->answer_type;
+
+        // Chọn 1 / chọn nhiều: "Sửa xe = R:1 | Vẽ tranh = A:1", cột nhóm để trống (nhóm nằm trong từng lựa chọn).
+        $options = $type->isChoice()
+            ? ChoiceList::formatScoredChoices($question->choices(), self::SEPARATOR)
+            : ChoiceList::format($question->scale($set), self::SEPARATOR);
+
         return [
-            $question->code, 'B', 'Holland', $question->text, ($question->answer_type ?? $set->answer_type)->label(),
-            ChoiceList::format($question->scale($set), self::SEPARATOR), '', 'Không', (string) $question->riasec,
-            $question->sort_order, $question->is_active ? 1 : 0, '', '',
+            $question->code, 'B', 'Holland', $question->text, $type->label(),
+            $options, '', 'Không', $type->isChoice() ? '' : (string) $question->riasec,
+            $question->sort_order, $question->is_active ? 1 : 0, '', $question->is_required ? 'Có' : 'Không',
         ];
     }
 
@@ -419,34 +426,66 @@ final class QuestionWorkbook
      */
     private function hollandAttributes(array $cells, QuestionSet $set, ?Question $question, array &$errors): array
     {
+        $typeCell = trim((string) ($cells['Kiểu trả lời'] ?? ''));
+        $type = $typeCell === '' ? $set->answer_type : $this->answerType($typeCell);
+        $optionsText = trim((string) ($cells['Lựa chọn / Điểm'] ?? ''));
+        $required = mb_strtolower(trim((string) ($cells['Bắt buộc trước khi chuyển tư vấn'] ?? '')));
+        $isRequired = $required === '' || str_starts_with($required, 'có');
+
+        if ($type === null || ! $type->isHollandType()) {
+            $errors[] = 'Câu Holland dùng một trong các kiểu: '.implode(', ', AnswerType::hollandOptions()).'.';
+
+            return [];
+        }
+
+        // Chọn 1 / chọn nhiều: mỗi lựa chọn gắn nhóm + điểm.
+        if ($type->isChoice()) {
+            $choices = ChoiceList::parseScoredChoices($optionsText, '|');
+
+            if ($choices === null) {
+                $errors[] = 'Cột "Lựa chọn / Điểm" của câu chọn cần dạng "Nhãn = nhóm:điểm", ví dụ: Sửa xe = R:1 | Vẽ tranh = A:1.';
+            } elseif (count($choices) < 2 || ! collect($choices)->contains(fn (array $choice) => $choice['group'] !== null)) {
+                $errors[] = 'Câu chọn cần ít nhất 2 lựa chọn và ít nhất một lựa chọn gắn nhóm Holland (ví dụ: Sửa xe = R:1).';
+            }
+
+            return [
+                'text' => trim((string) $cells['Nội dung câu hỏi']),
+                'riasec' => null,
+                'answer_type' => $type,
+                'options' => $choices ?: null,
+                'max_score' => null,
+                'is_required' => $isRequired,
+            ];
+        }
+
         $group = mb_strtoupper(trim((string) ($cells['Nhóm RIASEC / Đối tượng'] ?? '')));
 
         if (! in_array($group, self::RIASEC, true)) {
             $errors[] = 'Thiếu nhóm RIASEC (ghi R, I, A, S, E hoặc C).';
         }
 
-        $type = $this->answerType((string) ($cells['Kiểu trả lời'] ?? ''));
-        if ($type !== null && ! $type->isScored()) {
-            $errors[] = 'Câu Holland chỉ dùng kiểu Đúng / Không, Thang 3 mức hoặc Thang 5 mức.';
-        }
-
-        $optionsText = trim((string) ($cells['Lựa chọn / Điểm'] ?? ''));
         $scale = $optionsText === '' ? null : ChoiceList::parseScale($optionsText, '|');
 
         if ($optionsText !== '' && empty($scale)) {
             $errors[] = 'Cột "Lựa chọn / Điểm" cần dạng "Nhãn = điểm | Nhãn = điểm", ví dụ: Đúng = 1 | Không = 0.';
         }
 
-        if ($scale !== null && ChoiceList::same($scale, $set->scaleOptions())) {
+        if ($type === AnswerType::Scale && $optionsText === '') {
+            $errors[] = 'Thang mức tự đặt cần ghi các mức ở cột "Lựa chọn / Điểm", ví dụ: Không thích = 0 | Rất thích = 2.';
+        }
+
+        // Thang giống thang mặc định (của bộ nếu cùng kiểu, không thì của kiểu câu) thì không lưu riêng.
+        $inherited = $set->answer_type === $type ? $set->scaleOptions() : $type->defaultScale();
+        if ($scale !== null && $type !== AnswerType::Scale && ChoiceList::same($scale, $inherited)) {
             $scale = null;
         }
 
         $attributes = [
             'text' => trim((string) $cells['Nội dung câu hỏi']),
             'riasec' => $group,
-            'answer_type' => $scale === null ? $set->answer_type : ($type ?? $set->answer_type),
+            'answer_type' => $type,
             'options' => $scale ?: null,
-            'is_required' => true,
+            'is_required' => $isRequired,
         ];
 
         // Đổi thang riêng thì điểm tối đa đi theo thang mới.
@@ -473,12 +512,15 @@ final class QuestionWorkbook
             return [];
         }
 
-        if ($type->isScored()) {
-            $errors[] = 'Câu Phần A không dùng kiểu '.$type->label().'.';
+        if (! array_key_exists($type->value, AnswerType::partAOptions())) {
+            $errors[] = 'Câu thông tin khách (Phần A) không dùng kiểu '.$type->label().'.';
         }
 
-        $options = ChoiceList::parse((string) ($cells['Lựa chọn / Điểm'] ?? ''), '|');
-        if (in_array($type, [AnswerType::Single, AnswerType::Multi], true) && $options === []) {
+        $optionsText = (string) ($cells['Lựa chọn / Điểm'] ?? '');
+        $options = $type === AnswerType::Rating
+            ? (array) ChoiceList::parseScale($optionsText, '|')
+            : ChoiceList::parse($optionsText, '|');
+        if ($type->isChoice() && $options === []) {
             $errors[] = 'Câu chọn cần có lựa chọn, ví dụ: Học sinh = HS | Phụ huynh = PH.';
         }
 
@@ -513,7 +555,7 @@ final class QuestionWorkbook
         return [
             'text' => trim((string) $cells['Nội dung câu hỏi']),
             'answer_type' => $type,
-            'options' => in_array($type, [AnswerType::Single, AnswerType::Multi], true) ? $options : ($question?->options),
+            'options' => ($type->isChoice() || $type === AnswerType::Rating) ? ($options ?: null) : ($question?->options),
             'lead_field' => $leadField,
             'extra_field_key' => $extraKey,
             'is_required' => $type === AnswerType::Consent || str_starts_with($required, 'có'),
@@ -555,7 +597,7 @@ final class QuestionWorkbook
 
             $current = $question->{$key};
             $same = match ($key) {
-                'options' => ChoiceList::same($current, $value),
+                'options' => ChoiceList::same($current, $value) && ChoiceList::formatScoredChoices($current) === ChoiceList::formatScoredChoices($value),
                 'answer_type' => $current === $value,
                 default => (string) ($current instanceof \BackedEnum ? $current->value : (is_bool($current) ? (int) $current : $current))
                     === (string) (is_bool($value) ? (int) $value : $value),

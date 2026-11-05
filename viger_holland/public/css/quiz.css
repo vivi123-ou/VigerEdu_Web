@@ -59,7 +59,7 @@
 
 .options { display: grid; gap: 0.5rem; }
 .options--yesno { grid-template-columns: repeat(2, 1fr); max-width: 22rem; }
-.options--scale { grid-template-columns: repeat(5, 1fr); }
+.options--scale { grid-template-columns: repeat(var(--cols, 5), 1fr); }
 .opt {
     position: relative;
     display: flex;
@@ -197,3 +197,21 @@
     .contact-box { padding: 2.5rem; }
 }
 .preview-banner { background: #fff7e0; border-bottom: 1px solid #f0d58c; padding: 0.6rem 1rem; text-align: center; font-size: 0.9rem; }
+
+/* ---------- Câu hỏi kiểu Google Form: chọn 1 / chọn nhiều, ngôi sao, không bắt buộc ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.q__optional { font-weight: 400; font-size: 0.875rem; color: var(--muted); }
+.q__hint { margin: 0 0 0.6rem; font-size: 0.875rem; color: var(--muted); }
+.q.is-missing .choice__item, .q.is-missing .q__select { border-color: var(--brand); }
+.choice-list { display: grid; gap: 0.5rem; }
+.choice__item--block { display: flex; padding: 0.75rem 0.9rem; }
+.choice__item input { accent-color: var(--ink); width: 1.05rem; height: 1.05rem; flex-shrink: 0; }
+.q__select { width: 100%; max-width: 28rem; min-height: 2.75rem; padding: 0.5rem 0.75rem; border: 1px solid var(--line); font: inherit; background: #fff; }
+.other-input { width: 100%; max-width: 28rem; min-height: 2.5rem; margin-top: 0.5rem; padding: 0.45rem 0.75rem; border: 1px solid var(--line); font: inherit; }
+.stars { display: inline-flex; flex-direction: row-reverse; gap: 0.15rem; }
+.stars input { position: absolute; opacity: 0; pointer-events: none; }
+.stars label { font-size: 2.25rem; line-height: 1; color: #c9d0d8; cursor: pointer; padding: 0 0.1rem; }
+.stars input:checked ~ label, .stars label:hover, .stars label:hover ~ label { color: var(--brand); }
+.stars input:focus-visible + label { outline: 3px solid var(--focus); outline-offset: 2px; }
+.stars__ends { display: flex; justify-content: space-between; max-width: 15rem; margin: 0.35rem 0 0; font-size: 0.75rem; color: var(--muted); }
+@media (max-width: 30rem) { .options--scale { grid-template-columns: repeat(min(var(--cols, 5), 5), 1fr); } }

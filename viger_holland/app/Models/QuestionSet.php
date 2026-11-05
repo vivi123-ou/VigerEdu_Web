@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Bộ câu hỏi Phần B (Holland). Có thể có nhiều bộ, mỗi bộ một thang trả lời.
  */
-#[Fillable(['code', 'name', 'description', 'answer_type', 'scale', 'per_page', 'shuffle_groups', 'is_default', 'is_active', 'sort_order'])]
+#[Fillable(['code', 'name', 'description', 'answer_type', 'scale', 'display', 'per_page', 'shuffle_groups', 'is_default', 'is_active', 'sort_order'])]
 class QuestionSet extends Model
 {
     use SoftDeletes;

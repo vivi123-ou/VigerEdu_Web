@@ -61,11 +61,23 @@ Ai sở hữu dữ liệu gì:
   "quiz": {                                                // tùy chọn – bài làm chi tiết (Holland gửi)
     "attempt_id": "9f2c…", "completed_at": "2026-11-03T15:20:00+07:00",
     "question_set_version": "2026-11-03",
-    "answers": [ {"code":"B01","group":"R","text":"Người thích làm việc bằng tay…","value":1,"max":1}, … ],
+    "answers": [
+      {"code":"B01","type":"yes_no","text":"Người thích làm việc bằng tay…","answer":"Đúng",
+       "group":"R","value":1,"max":1,"scores":[{"group":"R","value":1,"max":1}]},
+      {"code":"B60","type":"multi","text":"Bạn thích hoạt động nào?","answer":"Bán hàng, Sắp xếp sổ sách",
+       "group":null,"value":3,"max":4,"scores":[{"group":"E","value":1,"max":2},{"group":"C","value":2,"max":2}]},
+      …
+    ],
     "view_url": "https://holland.viger.edu.vn/admin/attempts/9f2c…"     // link xem bài gốc (cần đăng nhập Holland)
   }
 }
 ```
+**`quiz.answers` (bổ sung 05/11/2026, chỉ thêm trường, không đổi trường cũ):**
+- `type`: kiểu câu – `yes_no`, `likert3`, `likert5`, `scale` (thang mức tự đặt), `single` (chọn 1), `multi` (chọn nhiều).
+- `answer`: chữ khách đã chọn (câu chọn nhiều: các lựa chọn cách nhau bằng dấu phẩy).
+- `scores`: điểm theo từng nhóm `[{group, value, max}]`. Câu chọn 1 / chọn nhiều có thể cộng cho nhiều nhóm.
+- `group` / `value` / `max` giữ như cũ: `group` là chữ nhóm khi câu chỉ cộng cho một nhóm, `null` khi cộng cho nhiều nhóm (xem `scores`); `value` / `max` là tổng.
+- Câu không bắt buộc mà khách bỏ trống thì không có trong `answers`.
 Trả về:
 ```json
 { "customer_code": "KH0001", "is_new": true, "lead_tier": "GREEN", "handoff_now": true }

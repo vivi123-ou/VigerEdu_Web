@@ -68,6 +68,47 @@ final class ChoiceList
     }
 
     /**
+     * Lựa chọn của câu Holland chọn 1 / chọn nhiều: "Nhãn = R:1" (nhóm R, 1 điểm), "Nhãn = R" (1 điểm), "Nhãn" (không tính điểm).
+     * Trả null nếu có phần sau dấu = không đúng dạng.
+     *
+     * @return list<array{value: string, label: string, group: string|null, points: int|float}>|null
+     */
+    public static function parseScoredChoices(?string $text, string $separator = "\n"): ?array
+    {
+        $choices = [];
+
+        foreach (self::parse($text, $separator) as $index => $choice) {
+            $group = null;
+            $points = 0;
+
+            if ($choice['value'] !== $choice['label']) {
+                if (! preg_match('/^([RIASEC])\s*(?::\s*(\d+(?:[.,]\d+)?))?$/iu', $choice['value'], $match)) {
+                    return null;
+                }
+                $group = mb_strtoupper($match[1]);
+                $number = isset($match[2]) ? (float) str_replace(',', '.', $match[2]) : 1.0;
+                $points = floor($number) === $number ? (int) $number : $number;
+            }
+
+            $choices[] = ['value' => (string) ($index + 1), 'label' => $choice['label'], 'group' => $group, 'points' => $points];
+        }
+
+        return $choices;
+    }
+
+    /**
+     * @param  list<array<string, mixed>>|null  $choices
+     */
+    public static function formatScoredChoices(?array $choices, string $separator = "\n"): string
+    {
+        return collect($choices ?? [])
+            ->map(fn (array $choice) => filled($choice['group'] ?? null) && (float) ($choice['points'] ?? 0) > 0
+                ? $choice['label'].' = '.$choice['group'].':'.$choice['points']
+                : (string) $choice['label'])
+            ->implode($separator);
+    }
+
+    /**
      * @param  list<array<string, mixed>>|null  $choices
      */
     public static function format(?array $choices, string $separator = "\n"): string

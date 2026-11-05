@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\HollandQuestionRequest;
 use App\Models\AdminActivity;
 use App\Models\Question;
 use App\Models\QuestionSet;
-use App\Support\ChoiceList;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -23,7 +22,13 @@ class HollandQuestionController extends Controller
     {
         return view('admin.holland-questions.form', [
             'set' => $questionSet,
-            'question' => new Question(['is_active' => true, 'riasec' => request('nhom')]),
+            'question' => new Question([
+                'is_active' => true,
+                'is_required' => true,
+                'riasec' => request('nhom'),
+                // Câu mới theo kiểu vừa dùng (khi bấm "Lưu và thêm câu khác"), không thì theo kiểu mặc định của bộ.
+                'answer_type' => request('kieu') ?: $questionSet->answer_type,
+            ]),
             'activities' => collect(),
         ]);
     }
@@ -31,18 +36,17 @@ class HollandQuestionController extends Controller
     public function store(HollandQuestionRequest $request, QuestionSet $questionSet): RedirectResponse
     {
         $question = Question::create([
-            ...$this->attributes($request, $questionSet),
+            ...$request->questionAttributes($questionSet),
             'code' => Question::nextCode(Question::PART_HOLLAND),
             'part' => Question::PART_HOLLAND,
             'question_set_id' => $questionSet->id,
-            'is_required' => true,
             'sort_order' => $request->filled('sort_order') ? (int) $request->input('sort_order') : $this->nextSortOrder($questionSet),
         ]);
 
         AdminActivity::record(AdminActivity::ACTION_CREATE, AdminActivity::SUBJECT_QUESTION, $question->id, 'Thêm câu '.$question->shortLabel().' vào bộ "'.$questionSet->name.'"');
 
         if ($request->boolean('add_another')) {
-            return redirect()->route('admin.question-sets.questions.create', [$questionSet, 'nhom' => $question->riasec])
+            return redirect()->route('admin.question-sets.questions.create', [$questionSet, 'nhom' => $question->riasec, 'kieu' => $question->answer_type->value])
                 ->with('status', 'Đã thêm câu '.$question->code.'. Nhập câu tiếp theo.');
         }
 
@@ -97,37 +101,13 @@ class HollandQuestionController extends Controller
         abort_unless($question->isHolland(), 404);
 
         $question->fill([
-            ...$this->attributes($request, $question->questionSet),
+            ...$request->questionAttributes($question->questionSet),
             'sort_order' => $request->filled('sort_order') ? (int) $request->input('sort_order') : $question->sort_order,
         ])->save();
 
         AdminActivity::recordModelChange($question, AdminActivity::SUBJECT_QUESTION, 'Sửa câu '.$question->shortLabel());
 
         return redirect()->route('admin.question-sets.show', $question->question_set_id)->with('status', 'Đã lưu câu '.$question->code.'.');
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function attributes(HollandQuestionRequest $request, ?QuestionSet $set): array
-    {
-        $scale = $request->scale();
-
-        // Thang riêng giống hệt thang của bộ thì không lưu riêng (để câu đi theo bộ khi bộ đổi thang).
-        if ($scale !== null && $set !== null && ChoiceList::same($scale, $set->scaleOptions())) {
-            $scale = null;
-        }
-
-        return [
-            'text' => $request->input('text'),
-            'riasec' => $request->input('riasec'),
-            'form' => $request->input('form'),
-            'max_score' => $request->input('max_score'),
-            'options' => $scale,
-            'answer_type' => $set?->answer_type,
-            'is_active' => $request->boolean('is_active'),
-            'note' => $request->input('note'),
-        ];
     }
 
     private function nextSortOrder(QuestionSet $set): int

@@ -48,7 +48,7 @@ class QuestionSetAdminTest extends TestCase
     {
         $question = Question::where('code', 'B01')->sole();
 
-        $this->get(route('admin.question-sets.create'))->assertOk()->assertSee('Kiểu trả lời');
+        $this->get(route('admin.question-sets.create'))->assertOk()->assertSee('Kiểu câu mặc định')->assertSee('Xáo trộn thứ tự câu');
         $this->get(route('admin.question-sets.edit', $this->set))->assertOk()->assertSee('Nhãn từng mức');
         $this->get(route('admin.question-sets.questions.create', $this->set))->assertOk()->assertSee('Lưu và thêm câu khác');
         $this->get(route('admin.holland-questions.edit', $question))->assertOk()->assertSee('Tùy chọn nâng cao');
@@ -135,7 +135,7 @@ class QuestionSetAdminTest extends TestCase
     public function test_add_holland_question_gets_next_code(): void
     {
         $this->post(route('admin.question-sets.questions.store', $this->set), [
-            'text' => 'Tôi thích lắp ráp mô hình', 'riasec' => 'R', 'is_active' => '1',
+            'text' => 'Tôi thích lắp ráp mô hình', 'answer_type' => 'yes_no', 'riasec' => 'R', 'is_active' => '1', 'is_required' => '1',
         ])->assertRedirect(route('admin.question-sets.show', $this->set));
 
         $question = Question::where('code', 'B55')->sole();
@@ -174,7 +174,7 @@ class QuestionSetAdminTest extends TestCase
         $question = Question::where('code', 'B01')->sole();
         $original = $question->text;
 
-        $this->put(route('admin.holland-questions.update', $question), ['text' => 'Câu đã sửa', 'riasec' => 'R', 'is_active' => '1'])
+        $this->put(route('admin.holland-questions.update', $question), ['text' => 'Câu đã sửa', 'answer_type' => 'yes_no', 'riasec' => 'R', 'is_active' => '1', 'is_required' => '1'])
             ->assertRedirect(route('admin.question-sets.show', $this->set));
         $this->assertSame('Câu đã sửa', $question->fresh()->text);
 

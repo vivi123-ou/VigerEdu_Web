@@ -48,7 +48,12 @@
                             <p class="test__lead">{{ setting('test_instruction') }}</p>
                         @endif
 
-                        @unless ($isYesNo)
+                        @php
+                            // Bảng "Cách chọn" chỉ khi trang có câu dùng thang ô số của bộ.
+                            $pageUsesSetScale = $page->contains(fn ($q) => $q->answer_type === $form->set->answer_type && empty($q->options)
+                                && $q->displayStyle($form->set) === \App\Models\Question::DISPLAY_BUTTONS);
+                        @endphp
+                        @if (! $isYesNo && $pageUsesSetScale)
                             <div class="legend">
                                 <p class="legend__title">{{ setting('test_scale_title', 'Cách chọn') }}</p>
                                 <ol class="legend__list">
@@ -57,28 +62,10 @@
                                     @endforeach
                                 </ol>
                             </div>
-                        @endunless
+                        @endif
 
                         @foreach ($page as $question)
-                            @php $name = "answers.{$question->code}"; @endphp
-                            <fieldset @class(['q', 'has-error' => $errors->has($name)]) data-question="{{ $question->code }}">
-                                <legend class="q__text">{{ $question->text }}</legend>
-                                <div @class(['options', 'options--yesno' => $isYesNo, 'options--scale' => ! $isYesNo])>
-                                    @foreach ($question->scale($form->set) as $option)
-                                        <label class="opt">
-                                            <input type="radio" name="answers[{{ $question->code }}]" value="{{ $option['value'] }}"
-                                                   @checked((string) old($name) === (string) $option['value'])>
-                                            @unless ($isYesNo)
-                                                <span class="opt__num">{{ $loop->iteration }}</span>
-                                            @endunless
-                                            <span class="opt__label">{{ $option['label'] }}</span>
-                                        </label>
-                                    @endforeach
-                                </div>
-                                @error($name)
-                                    <p class="field__error">{{ $message }}</p>
-                                @enderror
-                            </fieldset>
+                            @include('public.partials.holland-question', ['question' => $question, 'set' => $form->set])
                         @endforeach
 
                         <p class="step__warning" data-step-warning hidden>{{ setting('test_unanswered') }}</p>

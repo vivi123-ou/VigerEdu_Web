@@ -13,11 +13,6 @@ use Illuminate\View\View;
  */
 class AttemptController extends Controller
 {
-    /** Trường liên hệ không hiện trong admin Holland (xem ở CRM). */
-    private const PRIVATE_FIELDS = ['student_name', 'phone', 'email', 'parent_name', 'parent_phone', 'consent'];
-
-    private const PRIVATE_EXTRA = ['parent_email', 'birth_date'];
-
     public function index(Request $request): View
     {
         $attempts = Attempt::query()
@@ -46,9 +41,9 @@ class AttemptController extends Controller
             ->when(filled($field), fn ($rows) => $rows->where('field', $field))
             ->values();
 
+        // Câu "thông tin riêng tư" (họ tên, SĐT, email…) không hiện ở đây, xem ở CRM.
         $infoQuestions = Question::withTrashed()->part(Question::PART_INFO)->ordered()->get()
-            ->reject(fn (Question $question) => in_array($question->lead_field, self::PRIVATE_FIELDS, true)
-                || in_array($question->extra_field_key, self::PRIVATE_EXTRA, true));
+            ->reject(fn (Question $question) => $question->isPrivate());
 
         return view('admin.attempts.show', [
             'attempt' => $attempt,
@@ -63,8 +58,10 @@ class AttemptController extends Controller
 
     private function displayValue(Question $question, mixed $value): string
     {
-        $label = collect($question->options ?? [])->firstWhere('value', (string) $value)['label'] ?? null;
+        $labels = collect($question->options ?? [])->mapWithKeys(fn (array $option) => [(string) $option['value'] => $option['label']]);
 
-        return (string) ($label ?? (is_array($value) ? implode(', ', $value) : $value));
+        return collect((array) $value)
+            ->map(fn ($item) => $labels[(string) $item] ?? (string) $item)
+            ->implode(', ');
     }
 }

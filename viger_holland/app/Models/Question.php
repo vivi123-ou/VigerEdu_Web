@@ -10,11 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Câu hỏi. Phần A: form thông tin khách (lead_field / extra_field_key cho biết gửi sang CRM vào trường nào).
- * Phần B: câu Holland, thuộc một bộ câu, có nhóm RIASEC và điểm tối đa.
+ * Câu hỏi kiểu Google Form. Phần A: form thông tin khách (lead_field / extra_field_key cho biết gửi sang CRM vào trường nào).
+ * Phần B: câu Holland, thuộc một bộ câu. Câu thang mức cộng điểm cho nhóm `riasec`; câu chọn 1 / chọn nhiều
+ * cộng điểm theo từng lựa chọn (options[].group, options[].points).
+ *
+ * config: min, max (câu số), min_select, max_select (chọn nhiều), allow_other ("Khác…"), private (không hiện ở trang Lượt làm bài).
  */
 #[Fillable([
-    'code', 'part', 'question_set_id', 'text', 'help_text', 'placeholder', 'form', 'answer_type', 'options',
+    'code', 'part', 'question_set_id', 'text', 'help_text', 'placeholder', 'form', 'answer_type', 'options', 'display', 'config',
     'is_required', 'show_if', 'lead_field', 'extra_field_key', 'riasec', 'max_score', 'sort_order', 'is_active', 'note',
 ])]
 class Question extends Model
@@ -28,6 +31,15 @@ class Question extends Model
 
     public const PART_HOLLAND = 'B';
 
+    /** Giá trị của lựa chọn "Khác (ghi rõ)…". */
+    public const OTHER = '__other';
+
+    public const DISPLAY_BUTTONS = 'buttons';
+
+    public const DISPLAY_STARS = 'stars';
+
+    public const DISPLAY_DROPDOWN = 'dropdown';
+
     /**
      * @return array<string, string>
      */
@@ -36,6 +48,7 @@ class Question extends Model
         return [
             'answer_type' => AnswerType::class,
             'options' => 'array',
+            'config' => 'array',
             'show_if' => 'array',
             'is_required' => 'boolean',
             'is_active' => 'boolean',
@@ -95,7 +108,8 @@ class Question extends Model
     }
 
     /**
-     * Thang trả lời của câu Phần B: lựa chọn riêng của câu, nếu không thì theo bộ câu.
+     * Thang trả lời của câu kiểu thang mức: thang riêng của câu; không có thì theo bộ câu (nếu cùng kiểu với bộ),
+     * không nữa thì thang mặc định của kiểu.
      *
      * @return list<array{value: int|float, label: string}>
      */
@@ -107,7 +121,80 @@ class Question extends Model
 
         $set ??= $this->questionSet;
 
-        return $set?->scaleOptions() ?? $this->answer_type->defaultScale();
+        if ($set !== null && $set->answer_type === $this->answer_type) {
+            return $set->scaleOptions();
+        }
+
+        return $this->answer_type->defaultScale();
+    }
+
+    /**
+     * Lựa chọn của câu chọn 1 / chọn nhiều: [{value, label, group?, points?}].
+     *
+     * @return list<array{value: string, label: string, group?: string|null, points?: int|float}>
+     */
+    public function choices(): array
+    {
+        return array_values($this->options ?? []);
+    }
+
+    /**
+     * Cách hiện: ô số / nút (buttons), ngôi sao (stars), danh sách sổ xuống (dropdown).
+     * Câu không đặt riêng thì theo bộ câu (câu thang mức), không nữa thì nút.
+     */
+    public function displayStyle(?QuestionSet $set = null): string
+    {
+        if (filled($this->display)) {
+            return $this->display;
+        }
+
+        $set ??= $this->questionSet;
+
+        if ($this->answer_type->isScale() && filled($set?->display)) {
+            return $set->display;
+        }
+
+        return $this->answer_type === AnswerType::Rating ? self::DISPLAY_STARS : self::DISPLAY_BUTTONS;
+    }
+
+    public function configValue(string $key, mixed $default = null): mixed
+    {
+        return $this->config[$key] ?? $default;
+    }
+
+    public function allowsOther(): bool
+    {
+        return $this->answer_type->isChoice() && (bool) $this->configValue('allow_other', false);
+    }
+
+    /**
+     * Thông tin riêng tư: không hiện ở trang Lượt làm bài (xem ở CRM).
+     * SĐT, email, ô đồng ý luôn riêng tư; câu khác do admin tick "Thông tin riêng tư".
+     */
+    public function isPrivate(): bool
+    {
+        return self::isAlwaysPrivate($this->answer_type) || (bool) $this->configValue('private', false);
+    }
+
+    public static function isAlwaysPrivate(?AnswerType $type): bool
+    {
+        return in_array($type, [AnswerType::Phone, AnswerType::Email, AnswerType::Consent], true);
+    }
+
+    /**
+     * Các nhóm Holland mà câu này cộng điểm.
+     *
+     * @return list<string>
+     */
+    public function scoredGroups(): array
+    {
+        if (! $this->answer_type->isChoice()) {
+            return filled($this->riasec) ? [$this->riasec] : [];
+        }
+
+        return collect($this->choices())
+            ->filter(fn (array $choice) => filled($choice['group'] ?? null) && (float) ($choice['points'] ?? 0) > 0)
+            ->pluck('group')->unique()->values()->all();
     }
 
     /**

@@ -44,14 +44,49 @@
                 <p class="field__hint">"Có / Không" hiện ô chọn Có hoặc Không. "Chọn 1": nhiều lựa chọn, chọn một.</p>
             </div>
 
-            <div class="field" data-show-for="single multi">
+            <div class="field" data-show-for="single multi rating">
                 <label for="options_text">Các lựa chọn (mỗi dòng một lựa chọn)</label>
                 <textarea id="options_text" name="options_text" rows="6" placeholder="Lớp 10&#10;Lớp 11&#10;Phụ huynh = PH" @error('options_text') aria-invalid="true" @enderror>{{ old('options_text', ChoiceList::format($question->options)) }}</textarea>
-                <p class="field__hint">Mỗi dòng một lựa chọn. Muốn CRM nhận mã khác chữ hiển thị thì ghi "Chữ hiển thị = mã", ví dụ "Phụ huynh = PH". Lựa chọn của trường chuẩn nên giữ đúng mã trong từ điển dữ liệu chung.</p>
+                <p class="field__hint">Mỗi dòng một lựa chọn. Muốn CRM nhận mã khác chữ hiển thị thì ghi "Chữ hiển thị = mã", ví dụ "Phụ huynh = PH". Lựa chọn của trường chuẩn nên giữ đúng mã trong từ điển dữ liệu chung. Kiểu "Đánh giá": mỗi dòng "Nhãn = điểm", để trống = 1 đến 5 sao.</p>
                 @error('options_text')<p class="field__error">{{ $message }}</p>@enderror
             </div>
 
-            <div class="field" data-show-for="text number phone email date">
+            <div class="field" data-show-for="single">
+                <label for="display-single">Hiện dạng</label>
+                <select id="display-single" name="display">
+                    <option value="">Tự động (ít lựa chọn → nút bấm, nhiều → danh sách sổ xuống)</option>
+                    <option value="buttons" @selected(old('display', $question->display) === 'buttons')>Nút bấm</option>
+                    <option value="dropdown" @selected(old('display', $question->display) === 'dropdown')>Danh sách sổ xuống</option>
+                </select>
+            </div>
+
+            <div class="field" data-show-for="rating">
+                <label for="display-rating">Hiện dạng</label>
+                <select id="display-rating" name="display">
+                    <option value="stars" @selected(old('display', $question->display ?? 'stars') === 'stars')>Ngôi sao</option>
+                    <option value="buttons" @selected(old('display', $question->display) === 'buttons')>Nút bấm có nhãn</option>
+                </select>
+            </div>
+
+            <label class="check" data-show-for="single multi">
+                <input type="checkbox" name="allow_other" value="1" @checked(old('allow_other', $question->configValue('allow_other')))>
+                <span>Thêm lựa chọn "Khác" (khách tự ghi)</span>
+            </label>
+
+            <div class="grid-2" data-show-for="number">
+                <div class="field">
+                    <label for="min">Số nhỏ nhất</label>
+                    <input id="min" name="min" value="{{ old('min', $question->configValue('min')) }}" inputmode="decimal" class="input--short">
+                </div>
+                <div class="field">
+                    <label for="max">Số lớn nhất</label>
+                    <input id="max" name="max" value="{{ old('max', $question->configValue('max')) }}" inputmode="decimal" class="input--short">
+                    <p class="field__hint">Để trống = không giới hạn. Ví dụ điểm trung bình: 0 đến 10.</p>
+                    @error('max')<p class="field__error">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
+            <div class="field" data-show-for="text textarea number phone email date">
                 <label for="placeholder">Chữ gợi ý trong ô</label>
                 <input id="placeholder" name="placeholder" value="{{ old('placeholder', $question->placeholder) }}" maxlength="255">
                 <p class="field__hint">Chữ mờ hiện trong ô khi chưa điền, ví dụ "Ví dụ: 0912 345 678".</p>
@@ -123,6 +158,12 @@
                 <input type="checkbox" name="is_required" value="1" @checked(old('is_required', $question->is_required))>
                 <span>Bắt buộc trả lời</span>
             </label>
+
+            <label class="check">
+                <input type="checkbox" name="is_private" value="1" @checked(old('is_private', $question->configValue('private')))>
+                <span>Thông tin riêng tư (không hiện ở trang Lượt làm bài, chỉ xem ở CRM)</span>
+            </label>
+            <p class="field__hint check-hint">Nên tick với họ tên, ngày sinh, thông tin phụ huynh. Số điện thoại và email luôn được ẩn.</p>
 
             <label class="check">
                 <input type="checkbox" name="is_active" value="1" @checked(old('is_active', $question->is_active ?? true))>

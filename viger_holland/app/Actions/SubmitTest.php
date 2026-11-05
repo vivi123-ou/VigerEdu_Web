@@ -8,6 +8,7 @@ use App\Mail\TestResultMail;
 use App\Models\Attempt;
 use App\Models\OutboxMessage;
 use App\Models\Question;
+use App\Services\AnswerScorer;
 use App\Services\LeadPayloadBuilder;
 use App\Services\TestForm;
 use Illuminate\Support\Facades\DB;
@@ -27,24 +28,24 @@ final class SubmitTest
         private readonly ScoringEngine $engine,
         private readonly MajorCatalog $catalog,
         private readonly LeadPayloadBuilder $leadBuilder,
+        private readonly AnswerScorer $scorer,
     ) {}
 
     /**
-     * @param  array<string, string>  $hollandAnswers  [mã câu B => giá trị]
+     * @param  array<string, string|list<string>>  $hollandAnswers  [mã câu B => giá trị, hoặc danh sách giá trị với câu chọn nhiều]
      * @param  array<string, mixed>  $info  [mã câu A => câu trả lời]
      * @param  array<string, string>  $utm
      */
     public function handle(TestForm $form, array $hollandAnswers, array $info, array $utm = [], string $source = 'web'): Attempt
     {
-        $quizAnswers = $form->hollandQuestions->map(fn (Question $question) => [
-            'code' => $question->code,
-            'group' => $question->riasec,
-            'text' => $question->text,
-            'value' => self::number($hollandAnswers[$question->code]),
-            'max' => self::number($question->maxPoints($form->set)),
-        ])->values()->all();
+        // Mọi kiểu câu quy về điểm từng nhóm; câu không bắt buộc bỏ trống thì không tính.
+        $quizAnswers = $form->hollandQuestions
+            ->map(fn (Question $question) => $this->scorer->entry($question, $form->set, $hollandAnswers[$question->code] ?? null))
+            ->filter()
+            ->values()
+            ->all();
 
-        $result = $this->engine->score($quizAnswers, $this->catalog->all());
+        $result = $this->engine->score(AnswerScorer::engineInput($quizAnswers), $this->catalog->all());
 
         $attempt = DB::transaction(function () use ($form, $quizAnswers, $info, $utm, $source, $result): Attempt {
             $attempt = Attempt::create([
@@ -72,13 +73,6 @@ final class SubmitTest
         $this->sendResultEmail($attempt, $emailCode ? ($info[$emailCode] ?? null) : null);
 
         return $attempt;
-    }
-
-    private static function number(float|int|string $value): int|float
-    {
-        $number = (float) $value;
-
-        return floor($number) === $number ? (int) $number : $number;
     }
 
     public function queueLead(Attempt $attempt): OutboxMessage

@@ -15,7 +15,7 @@
                 · {{ $set->answer_type->label() }}: {{ collect($set->scaleOptions())->pluck('label')->implode(' / ') }} · {{ $set->per_page }} câu mỗi trang
             </p>
             @if (filled($set->description))<p class="muted">{{ $set->description }}</p>@endif
-            <p class="group-counts">Câu đang bật theo nhóm:
+            <p class="group-counts">Số câu cộng điểm cho từng nhóm:
                 @foreach ($groupNames as $letter => $name)
                     <span class="tag" title="{{ $name }}">{{ $letter }}: {{ $groupCounts[$letter] ?? 0 }}</span>
                 @endforeach
@@ -74,7 +74,7 @@
                             <th></th>
                             <th>Mã</th>
                             <th>Câu hỏi</th>
-                            <th>Nhóm</th>
+                            <th>Nhóm · Kiểu</th>
                             <th>Trạng thái</th>
                             <th></th>
                         </tr>
@@ -85,7 +85,7 @@
                                 <td class="drag" draggable="true" title="Kéo để đổi thứ tự" aria-label="Kéo để đổi thứ tự">⋮⋮</td>
                                 <td>{{ $question->code }}</td>
                                 <td>{{ $question->text }} @if (! empty($question->options))<span class="tag">Thang riêng</span>@endif</td>
-                                <td title="{{ $groupNames[$question->riasec] ?? '' }}">{{ $question->riasec }}</td>
+                                <td>{{ implode(', ', $question->scoredGroups()) ?: '–' }}<br><span class="muted">{{ $question->answer_type->label() }}@unless ($question->is_required) · không bắt buộc @endunless</span></td>
                                 <td>
                                     <form method="post" action="{{ route('admin.questions.toggle', $question) }}">
                                         @csrf @method('PATCH')

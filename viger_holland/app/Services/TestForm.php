@@ -6,6 +6,8 @@ use App\Models\Question;
 use App\Models\QuestionSet;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Random\Engine\Mt19937;
+use Random\Randomizer;
 
 /**
  * Bộ câu khách sẽ làm: bộ Phần B (theo ?bo=…, mặc định bộ is_default) + form Phần A đang bật.
@@ -38,9 +40,17 @@ final class TestForm
 
         $set ??= (clone $sets)->orderByDesc('is_default')->orderBy('sort_order')->firstOrFail();
 
+        $hollandQuestions = $set->questions()->where('is_active', true)->orderBy('sort_order')->orderBy('code')->get();
+
+        // "Xáo trộn thứ tự câu": mỗi khách một thứ tự, giữ nguyên trong cùng phiên (tải lại trang không bị đảo lại).
+        if ($set->shuffle_groups && app()->bound('session')) {
+            $randomizer = new Randomizer(new Mt19937(crc32((string) session()->getId())));
+            $hollandQuestions = new Collection($randomizer->shuffleArray($hollandQuestions->all()));
+        }
+
         return new self(
             set: $set,
-            hollandQuestions: $set->questions()->where('is_active', true)->orderBy('sort_order')->orderBy('code')->get(),
+            hollandQuestions: $hollandQuestions,
             infoQuestions: Question::part(Question::PART_INFO)->active()->ordered()->get(),
         );
     }

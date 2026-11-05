@@ -19,10 +19,14 @@
         try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (e) { return {}; }
     }
 
+    // answers: { "answers[B01]": ["1"], "answers[B60][]": ["a", "c"] } – nút chọn, ô tick nhiều, danh sách sổ xuống.
     function save() {
         var data = { answers: {}, step: current };
-        form.querySelectorAll('input[type=radio][name^="answers["]:checked').forEach(function (input) {
-            data.answers[input.name] = input.value;
+        form.querySelectorAll('input[name^="answers["]:checked').forEach(function (input) {
+            (data.answers[input.name] = data.answers[input.name] || []).push(input.value);
+        });
+        form.querySelectorAll('select[name^="answers["]').forEach(function (select) {
+            if (select.value) data.answers[select.name] = [select.value];
         });
         try { localStorage.setItem(storageKey, JSON.stringify(data)); } catch (e) {}
     }
@@ -30,8 +34,14 @@
     function restore() {
         var data = load();
         Object.keys(data.answers || {}).forEach(function (name) {
-            var input = form.querySelector('input[name="' + name.replace(/"/g, '') + '"][value="' + String(data.answers[name]).replace(/"/g, '') + '"]');
-            if (input) input.checked = true;
+            var safeName = name.replace(/"/g, '');
+            [].concat(data.answers[name]).forEach(function (value) {
+                var safeValue = String(value).replace(/"/g, '');
+                var input = form.querySelector('input[name="' + safeName + '"][value="' + safeValue + '"]');
+                if (input) { input.checked = true; return; }
+                var select = form.querySelector('select[name="' + safeName + '"]');
+                if (select) select.value = safeValue;
+            });
         });
         return typeof data.step === 'number' ? Math.min(data.step, steps.length - 1) : 0;
     }
@@ -50,8 +60,10 @@
     }
 
     function unansweredIn(step) {
-        return Array.prototype.slice.call(step.querySelectorAll('fieldset.q')).filter(function (fieldset) {
-            return !fieldset.querySelector('input:checked');
+        // Câu không bắt buộc (data-optional) được bỏ trống.
+        return Array.prototype.slice.call(step.querySelectorAll('fieldset.q:not([data-optional])')).filter(function (fieldset) {
+            var select = fieldset.querySelector('select');
+            return !fieldset.querySelector('input:checked') && !(select && select.value);
         });
     }
 
