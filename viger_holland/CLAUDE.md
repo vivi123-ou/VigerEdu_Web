@@ -90,7 +90,7 @@
 
 - [x] 1. Khởi tạo Laravel 13, Laravel Boost, layout mobile-first, đăng nhập admin, seeder 69 câu
 - [x] 2. Contracts + `RiasecFitEngineV2` + `JsonMajorCatalog` + unit test theo `test_cases.json` + test engine giả
-- [ ] 3. Form Phần A động, nhiều bộ câu, cấu hình chấm điểm trên admin, trang làm bài, kết quả, email, quản trị nội dung trang, khối nhúng
+- [x] 3. Form Phần A động, nhiều bộ câu, cấu hình chấm điểm trên admin, trang làm bài, kết quả, email, quản trị nội dung trang, khối nhúng
 - [ ] 4. Kết nối CRM: catalog, lead sink, outbox + retry + scheduler (test bằng `Http::fake()`)
 - [ ] 5. API v1 + `docs/API_HOLLAND.md` (curl + Python `requests` cho bạn Ý)
 - [ ] 6. An toàn dữ liệu: backup / restore, chặn lệnh xóa database, gỡ / cài lại
