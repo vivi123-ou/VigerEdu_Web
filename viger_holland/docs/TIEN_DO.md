@@ -15,7 +15,7 @@
 | 4. Kết nối CRM (gửi thật, thử lại, danh mục ngành từ CRM) | Chưa làm |
 | 5–7. API v1, an toàn dữ liệu, Excel kết quả, Cài đặt, SEO, `/install`, tài liệu | Chưa làm |
 
-**Con số hiện tại:** 76 câu hỏi (22 câu thông tin khách, 12 đang bật + 54 câu Holland mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **153 test đều đạt** · nhánh `dev`, **chưa push**.
+**Con số hiện tại:** 76 câu hỏi (22 câu thông tin khách, 12 đang bật + 54 câu Holland mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **160 test đều đạt** · nhánh `dev`, **chưa push**.
 
 **Chạy trên máy Vân:** mở `D:\laragon\laragon.exe` → **Start All** → trong thư mục dự án gõ `php artisan serve`.
 - Trang khách: http://127.0.0.1:8000 · Admin: http://127.0.0.1:8000/admin (tài khoản `SPN`)
@@ -37,6 +37,7 @@
 5. **Excel câu hỏi – cột "Bắt buộc trước khi chuyển tư vấn"**: đang dùng làm "Bắt buộc trả lời" của câu Phần A trên form. Đúng ý Thầy không, hay cột này chỉ dành cho chatbot (khi đó form cần cột riêng)?
 6. **Excel câu hỏi – cột "Ghi vào cột"**: file mẫu ghi kiểu `DS_KHACH.Vai trò`; web Holland ghi mã trường CRM (`role`, `extra_fields.truong_chuyen`) vì đó là chỗ dữ liệu thật sự được gửi. Giữ như vậy được không? Các cột "Loại", "Dùng chấm xếp loại?", "AI cần thu" được giữ cho giống mẫu nhưng web không dùng.
 7. **Chọn bộ câu theo câu trả lời Phần A** (đặc tả mục 0b.2): vì đã đổi thứ tự (làm câu Holland trước, điền thông tin sau) nên không làm được; hiện chọn bộ bằng link `?bo=mã`. Đồng ý không?
+8. **Dữ liệu ngành có mã Holland trùng hệt nhau** (kiểm tra 100 hồ sơ, 06/11): 8 ngành đại học cùng mã IRC, 6 ngành ICR, 5 ngành ISE, 3 ngành RIE. Cùng mã thì cùng điểm phù hợp, công thức xếp theo mã ngành nên **Tin sinh học (N019), Hóa sinh (N051), Công nghệ thực phẩm (N053) không bao giờ được gợi ý**, kể cả cho học sinh hợp nhất. Đề nghị Thầy / Ý bổ sung mã thứ 2 – 3 hoặc chỉnh mã các ngành này trong danh mục ngành (không phải sửa code).
 
 ### Các quyết định đã chốt (khác hoặc bổ sung so với đặc tả gốc)
 | Ngày | Quyết định |
@@ -200,6 +201,15 @@ Vân dùng thử thấy admin còn khó với người không làm IT (sửa b�
 - **153 test đều đạt** (7 test mới cho thẻ câu hỏi, thêm nhanh, tự lưu, sửa trên trang, quyền).
 
 **Nên làm tiếp:** cho Thầy thử 3 việc (đổi tiêu đề trang giới thiệu, thêm câu hỏi, đổi hotline) không hướng dẫn trước, ghi lại chỗ vướng vào `docs/NGHIEM_THU.md`.
+
+## Đợt 2 (06/11/2026): giao diện admin đỏ – vàng, kiểm tra 100 hồ sơ, ~100 tình huống
+
+- **Bỏ học sinh mẫu khỏi giao diện:** trang Cấu hình chấm điểm tự nhập % để chạy thử; xem trước / sửa trên trang hiện "[Tên khách]". Test tự động theo `test_cases.json` vẫn giữ (CLAUDE.md mục 4).
+- **100 hồ sơ giả lập** (`ScoringHundredProfilesTest`, cố định): mã đúng 3 nhóm cao nhất, top 5 / top 3 sắp đúng, nhãn đúng ngưỡng, ngành đầu luôn chung chữ với mã học sinh (100/100), hồ sơ có nhóm nổi trội luôn được gợi ý ngành chứa nhóm đó (30/30), 67 / 75 ngành – nghề có lúc được gợi ý. Phát hiện: dữ liệu ngành có nhiều mã trùng (câu hỏi 8 ở trên).
+  - **Đã chỉnh:** câu nhắc "bằng điểm" trước hiện cho 70/100 học sinh (bài 54 câu rất hay bằng điểm) → chỉ hiện khi nhóm thứ 3 và 4 bằng nhau (chữ cuối của mã chưa chắc). Cờ `has_tie` gửi CRM giữ nguyên. Công thức không đổi.
+- **Giao diện admin theo ảnh mẫu, tông đỏ – vàng của web chính** (đỏ `#c1121f`, đỏ đậm `#780000`, vàng `#ffb703`): menu trái nền tối có biểu tượng + khung người dùng, thanh trên màu đỏ, tiêu đề trang kèm đường dẫn (Trang chủ › nhóm › trang), nút "?" vàng, hộp nội dung viền đỏ trên. Trang danh sách dạng bảng: tiêu đề bảng đỏ, thanh công cụ (tìm / lọc / "+ Thêm mới" vàng), **công tắc Hiển thị**, nút biểu tượng xem / sửa (vàng) / xóa (đỏ) – áp dụng cho Bộ câu hỏi, Lượt làm bài (lọc theo mã, bộ câu, thời gian), Các khối nội dung. Bảng điều khiển: 6 ô "việc hay làm" có biểu tượng, lọc theo vai trò. Soạn câu hỏi giữ dạng thẻ Google Form.
+- **Kiểm thử ~100 tình huống** (`QualityScenariosTest`): quản trị viên mở 34 trang không lỗi; marketing đúng quyền ở 34 trang; 10 đường dẫn khách / sai; 18 tình huống khách nhập sai (bỏ trống, email / SĐT / ngày sai, sửa lựa chọn, quá dài, thiếu câu, SĐT +84 / dấu chấm / dấu cách vẫn nhận, gửi dồn bị chặn); 12 tình huống mã độc (`<script>`, link `javascript:`, file giả ảnh, khóa lạ, chưa đăng nhập). Không phát hiện lỗi mới ngoài 2 lỗi đã sửa trong đợt (phần tử ẩn vẫn hiện, câu nhắc bằng điểm).
+- **160 test đều đạt.** Chưa kiểm được bằng tay các thao tác cần chuột thật (kéo thả, tự lưu, chọn ảnh) – Vân / Thầy thử giúp.
 
 ## Tiếp theo: Giai đoạn 4 – Kết nối CRM
 
