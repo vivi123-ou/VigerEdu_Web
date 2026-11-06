@@ -17,22 +17,22 @@
         {{-- Mở đầu: lời chào + mã Holland --}}
         <section class="result-hero">
             <div class="container">
-                <p class="eyebrow">{{ setting('result_title', 'Kết quả trắc nghiệm của bạn') }}</p>
+                <p class="eyebrow">{{ ed('result_title', 'Kết quả trắc nghiệm của bạn', 'Dòng chữ nhỏ') }}</p>
                 <h1 class="result-hero__title">
-                    {{ setting('result_greeting', 'Chào') }}{{ $result['name'] ? ' '.$result['name'] : '' }},
+                    {{ ed('result_greeting', 'Chào', 'Lời chào') }}{{ $result['name'] ? ' '.$result['name'] : '' }},
                 </h1>
-                <p class="result-hero__intro">{{ setting('result_intro') }}</p>
+                <p class="result-hero__intro">{{ ed('result_intro', null, 'Đoạn mở đầu') }}</p>
 
                 <div class="code">
-                    <p class="code__label">{{ setting('result_code_label', 'Mã Holland của bạn') }}</p>
+                    <p class="code__label">{{ ed('result_code_label', 'Mã Holland của bạn', 'Chữ trên mã Holland') }}</p>
                     <p class="code__value">{{ $result['code'] }}</p>
                     <ul class="code__letters">
                         @foreach ($result['codeLetters'] as $letter)
                             <li class="code__letter">
                                 <span class="code__char">{{ $letter['letter'] }}</span>
                                 <div>
-                                    <p class="code__name">{{ $letter['name'] }}</p>
-                                    <p class="code__desc">{{ $letter['description'] }}</p>
+                                    <p class="code__name">{{ ed('group_name_'.$letter['letter'], $letter['letter'], 'Tên nhóm') }}</p>
+                                    <p class="code__desc">{{ ed('group_desc_'.$letter['letter'], null, 'Mô tả nhóm') }}</p>
                                 </div>
                             </li>
                         @endforeach
@@ -44,9 +44,13 @@
         {{-- Biểu đồ 6 nhóm --}}
         <section class="section">
             <div class="container">
-                <h2 class="section__title">{{ setting('result_chart_title', 'Mức độ hứng thú theo 6 nhóm') }}</h2>
+                <h2 class="section__title">{{ ed('result_chart_title', 'Mức độ hứng thú theo 6 nhóm', 'Tiêu đề biểu đồ') }}</h2>
 
-                @if ($result['isFlat'] && filled(setting('result_flat_note')))
+                @if (\App\Support\PageEditor::active())
+                    {{-- Chế độ sửa: hiện cả hai câu nhắc (bình thường chỉ hiện khi điểm các nhóm khá đều / bằng nhau) --}}
+                    <p class="note"><span class="ed-hint">Hiện khi điểm các nhóm khá đều:</span> {{ ed('result_flat_note', null, 'Câu nhắc') }}</p>
+                    <p class="note"><span class="ed-hint">Hiện khi có nhóm bằng điểm:</span> {{ ed('result_tie_note', null, 'Câu nhắc') }}</p>
+                @elseif ($result['isFlat'] && filled(setting('result_flat_note')))
                     <p class="note">{{ setting('result_flat_note') }}</p>
                 @elseif ($result['hasTie'] && filled(setting('result_tie_note')))
                     <p class="note">{{ setting('result_tie_note') }}</p>
@@ -70,7 +74,7 @@
         <section class="section section--soft">
             <div class="container">
                 @if ($result['fields'])
-                    <h2 class="section__title">{{ setting('result_fields_title', 'Lĩnh vực phù hợp') }}</h2>
+                    <h2 class="section__title">{{ ed('result_fields_title', 'Lĩnh vực phù hợp', 'Tiêu đề lĩnh vực') }}</h2>
                     <ol class="fields">
                         @foreach ($result['fields'] as $field)
                             <li class="fields__item"><span class="fields__num">{{ $loop->iteration }}</span> {{ $field['field'] }}</li>
@@ -79,7 +83,7 @@
                 @endif
 
                 <div class="majors-grid">
-                    @foreach ([['key' => 'university', 'title' => setting('result_university_title', 'Ngành đại học gợi ý')], ['key' => 'vocational', 'title' => setting('result_vocational_title', 'Nghề gợi ý')]] as $block)
+                    @foreach ([['key' => 'university', 'title' => ed('result_university_title', 'Ngành đại học gợi ý', 'Tiêu đề ngành đại học')], ['key' => 'vocational', 'title' => ed('result_vocational_title', 'Nghề gợi ý', 'Tiêu đề học nghề')]] as $block)
                         @if (! empty($result[$block['key']]))
                             <div>
                                 <h3 class="majors__title">{{ $block['title'] }}</h3>
@@ -110,14 +114,14 @@
         <section class="section">
             <div class="container">
                 <div class="contact-box">
-                    <h2 class="contact-box__title">{{ setting('result_contact_title') }}</h2>
-                    <div class="contact-box__text rich">{!! rich_text(setting('result_contact_text')) !!}</div>
+                    <h2 class="contact-box__title">{{ ed('result_contact_title', null, 'Tiêu đề khối liên hệ') }}</h2>
+                    <div class="contact-box__text rich">{{ ed_rich('result_contact_text', 'Nội dung khối liên hệ') }}</div>
                     <div class="contact-box__actions">
                         @if (filled($hotline))
-                            <a class="btn btn--primary" href="tel:{{ preg_replace('/[^0-9+]/', '', $hotline) }}">{{ setting('result_call_text', 'Gọi tư vấn') }} · {{ $hotline }}</a>
+                            <a class="btn btn--primary" href="tel:{{ preg_replace('/[^0-9+]/', '', $hotline) }}">{{ ed('result_call_text', 'Gọi tư vấn', 'Chữ nút gọi') }} · {{ $hotline }}</a>
                         @endif
                         @if (filled($zalo))
-                            <a class="btn" href="https://zalo.me/{{ preg_replace('/[^0-9]/', '', $zalo) }}" target="_blank" rel="noopener">{{ setting('result_zalo_text', 'Nhắn Zalo') }}</a>
+                            <a class="btn" href="https://zalo.me/{{ preg_replace('/[^0-9]/', '', $zalo) }}" target="_blank" rel="noopener">{{ ed('result_zalo_text', 'Nhắn Zalo', 'Chữ nút Zalo') }}</a>
                         @endif
                         @if (filled(setting('main_site_url')))
                             <a class="btn btn--ghost" href="{{ setting('main_site_url') }}">{{ setting('main_site_link_text', 'Về trang chủ') }}</a>
@@ -125,8 +129,8 @@
                     </div>
                 </div>
 
-                <p class="disclaimer">{{ setting('result_disclaimer') }}</p>
-                <p class="retake"><a href="{{ route('test.show', ['bo' => $attempt->questionSet?->code]) }}">{{ setting('result_retake', 'Làm lại bài trắc nghiệm') }}</a></p>
+                <p class="disclaimer">{{ ed('result_disclaimer', null, 'Lưu ý cuối trang') }}</p>
+                <p class="retake"><a href="{{ route('test.show', ['bo' => $attempt->questionSet?->code]) }}">{{ ed('result_retake', 'Làm lại bài trắc nghiệm', 'Chữ link làm lại') }}</a></p>
             </div>
         </section>
     </div>

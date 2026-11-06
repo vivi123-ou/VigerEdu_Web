@@ -14,9 +14,9 @@
                     <td style="padding:28px 28px 8px;">
                         <p style="margin:0 0 4px;font-size:13px;color:#6b7a8a;">{{ setting('site_name') }} · {{ setting('test_name') }}</p>
                         <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;">
-                            {{ setting('email_greeting', 'Chào') }}{{ $result['name'] ? ' '.$result['name'] : '' }},
+                            {{ ed('email_greeting', 'Chào', 'Lời chào') }}{{ $result['name'] ? ' '.$result['name'] : '' }},
                         </h1>
-                        <div style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#3d4f63;">{!! rich_text(setting('email_intro')) !!}</div>
+                        <div style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#3d4f63;">{{ ed_rich('email_intro', 'Lời mở đầu') }}</div>
 
                         <p style="margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#6b7a8a;">{{ setting('result_code_label', 'Mã Holland của bạn') }}</p>
                         <p style="margin:0 0 12px;font-size:34px;font-weight:bold;letter-spacing:6px;color:{{ setting('primary_color', '#c1121f') }};">{{ $result['code'] }}</p>
@@ -30,11 +30,11 @@
                         </table>
 
                         <p style="margin:0 0 24px;">
-                            <a href="{{ $resultUrl }}" style="display:inline-block;background:{{ setting('primary_color', '#c1121f') }};color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 22px;">{{ setting('email_button_text', 'Xem đầy đủ kết quả') }}</a>
+                            <a href="{{ $resultUrl }}" style="display:inline-block;background:{{ setting('primary_color', '#c1121f') }};color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 22px;">{{ ed('email_button_text', 'Xem đầy đủ kết quả', 'Chữ nút') }}</a>
                         </p>
 
-                        <div style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#3d4f63;">{!! rich_text(setting('email_closing')) !!}</div>
-                        <p style="margin:0 0 28px;font-size:15px;line-height:1.6;white-space:pre-line;">{{ setting('email_signature', setting('site_name')) }}</p>
+                        <div style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#3d4f63;">{{ ed_rich('email_closing', 'Lời kết') }}</div>
+                        <p style="margin:0 0 28px;font-size:15px;line-height:1.6;white-space:pre-line;">{{ ed('email_signature', setting('site_name'), 'Chữ ký') }}</p>
                     </td>
                 </tr>
                 <tr>

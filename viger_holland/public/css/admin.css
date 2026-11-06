@@ -541,3 +541,4 @@ tr.is-error td { background: #fdf2f2; }
 
 /* Phần tử có thuộc tính hidden luôn ẩn (không bị display: flex/grid đè) */
 [hidden] { display: none !important; }
+.tabs__item--strong { color: var(--brand); font-weight: 600; }

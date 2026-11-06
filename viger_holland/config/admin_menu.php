@@ -34,12 +34,12 @@ return [
     [
         'title' => 'Nội dung trang',
         'items' => [
-            ['key' => 'intro', 'label' => 'Trang giới thiệu', 'route' => 'admin.content.edit', 'params' => ['page' => 'intro'], 'icon' => 'image', 'editor' => true,
-                'help' => 'Tab "Banner": tiêu đề, đoạn giới thiệu, nút bắt đầu, ảnh banner. Tab "Các khối nội dung": thêm, sửa, bật/tắt, kéo thả sắp xếp các khối (cách làm bài, 6 nhóm Holland, chữ + ảnh, câu hỏi thường gặp, cảm nhận). Luôn có nút "Xem trước" trước khi lưu.'],
-            ['key' => 'result-page', 'label' => 'Trang kết quả', 'route' => 'admin.content.edit', 'params' => ['page' => 'result-page'], 'icon' => 'chart', 'editor' => true,
-                'help' => 'Lời chào, đoạn mở đầu, câu nhắc khi điểm các nhóm khá đều, khối liên hệ tư vấn. "Xem trước" hiện trang kết quả của một học sinh mẫu. Tên và mô tả 6 nhóm sửa ở mục "Mô tả 6 nhóm Holland".'],
-            ['key' => 'email', 'label' => 'Email gửi khách', 'route' => 'admin.content.edit', 'params' => ['page' => 'email'], 'icon' => 'mail', 'editor' => true,
-                'help' => 'Tiêu đề, lời mở đầu, lời kết và chữ ký của email gửi kết quả. "Xem trước" hiện email mẫu.'],
+            ['key' => 'intro', 'label' => 'Trang giới thiệu', 'route' => 'admin.page-editor.show', 'params' => ['page' => 'trang-gioi-thieu'], 'icon' => 'image', 'editor' => true,
+                'help' => 'Trang mở ra đúng như khách thấy. Bấm vào chữ có viền chấm để gõ sửa, bấm vào ảnh để đổi ảnh, mỗi khối có nút Lên / Xuống / Ẩn. Sửa xong bấm "Lưu thay đổi" trên thanh đen. Muốn thêm khối mới hoặc thêm / bớt câu hỏi thường gặp: bấm "Thêm / bớt dòng…" trên khối, hoặc vào mục này rồi chọn tab "Các khối nội dung".'],
+            ['key' => 'result-page', 'label' => 'Trang kết quả', 'route' => 'admin.page-editor.show', 'params' => ['page' => 'trang-ket-qua'], 'icon' => 'chart', 'editor' => true,
+                'help' => 'Trang kết quả của một học sinh mẫu mở ra đúng như khách thấy. Bấm vào chữ có viền chấm để gõ sửa (lời chào, đoạn mở đầu, tên và mô tả nhóm, khối liên hệ…), rồi bấm "Lưu thay đổi". Tên ngành và điểm là của học sinh mẫu, không sửa ở đây.'],
+            ['key' => 'email', 'label' => 'Email gửi khách', 'route' => 'admin.page-editor.show', 'params' => ['page' => 'email'], 'icon' => 'mail', 'editor' => true,
+                'help' => 'Email mẫu mở ra đúng như khách nhận. Bấm vào chữ có viền chấm để sửa tiêu đề, lời chào, lời mở đầu, lời kết, chữ ký, rồi bấm "Lưu thay đổi".'],
             ['key' => 'embed', 'label' => 'Nhúng vào web chính', 'route' => 'admin.content.edit', 'params' => ['page' => 'embed'], 'icon' => 'code', 'editor' => true,
                 'help' => 'Nội dung khối "Trắc nghiệm Holland" hiện trên web chính, tên miền được phép nhúng và đoạn mã để gửi người làm web chính.'],
             ['key' => 'appearance', 'label' => 'Giao diện & chân trang', 'route' => 'admin.content.edit', 'params' => ['page' => 'appearance'], 'icon' => 'palette',

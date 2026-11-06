@@ -15,7 +15,7 @@
 | 4. Kết nối CRM (gửi thật, thử lại, danh mục ngành từ CRM) | Chưa làm |
 | 5–7. API v1, an toàn dữ liệu, Excel kết quả, Cài đặt, SEO, `/install`, tài liệu | Chưa làm |
 
-**Con số hiện tại:** 76 câu hỏi (22 câu thông tin khách, 12 đang bật + 54 câu Holland mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **146 test đều đạt** · nhánh `dev`, **chưa push**.
+**Con số hiện tại:** 76 câu hỏi (22 câu thông tin khách, 12 đang bật + 54 câu Holland mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **153 test đều đạt** · nhánh `dev`, **chưa push**.
 
 **Chạy trên máy Vân:** mở `D:\laragon\laragon.exe` → **Start All** → trong thư mục dự án gõ `php artisan serve`.
 - Trang khách: http://127.0.0.1:8000 · Admin: http://127.0.0.1:8000/admin (tài khoản `SPN`)
@@ -175,7 +175,7 @@ Mọi chữ, ảnh, màu khách thấy sửa được trên admin. Mỗi trang c
 - **Trình soạn thảo:** CKEditor 5 bản 41.4.2 qua CDN (giống web chính), chỉ bật cho ô "chữ có định dạng". HTML được **lọc an toàn** (`HtmlSanitizer`: chỉ giữ đoạn, đậm, nghiêng, link http/https/mailto/tel, danh sách; bỏ script, sự kiện, iframe…) khi lưu và khi hiển thị.
 - **Khối nhúng cho web chính:** `GET /api/v1/public/intro` (JSON theo hợp đồng, cache 5 phút, chỉ tên miền cho phép gọi từ trình duyệt, 60 lần/phút), `GET /embed` (khung rút gọn, header `frame-ancestors` theo danh sách tên miền), `GET /embed.js` (tự chèn iframe, tự co chiều cao). Bấm nút trong khung mở trang Holland ở **tab mới** (làm bài trên trang Holland, không làm bài trong iframe – đỡ lỗi đăng nhập / cookie giữa 2 tên miền).
 - **Vai trò marketing (`EDITOR`):** chỉ thấy Bảng điều khiển, Mô tả 6 nhóm, Trang giới thiệu, Trang kết quả, Email, Nhúng vào web chính, Thư viện ảnh, Lượt làm bài. Vào mục khác → báo không có quyền; không quay lại được thay đổi câu hỏi / chấm điểm. Tài khoản mẫu tạo từ `.env` (trang quản lý tài khoản: giai đoạn 6).
-- Migration chỉ thêm: bảng `media`. **146 test đều đạt** (18 test mới). Đã chụp ảnh kiểm tra trang giới thiệu ở 1366px và 496px, khối nhúng.
+- Migration chỉ thêm: bảng `media`. **153 test đều đạt** (18 test mới). Đã chụp ảnh kiểm tra trang giới thiệu ở 1366px và 496px, khối nhúng.
 
 **Chưa làm / để sau:** SEO + ô "Mã nhúng chatbot" thuộc trang Cài đặt (giai đoạn 7); câu báo lỗi cho khách ("Vui lòng điền…") vẫn trong code – đưa vào admin ở giai đoạn 7 cùng Cài đặt.
 
@@ -187,6 +187,19 @@ Mọi chữ, ảnh, màu khách thấy sửa được trên admin. Mỗi trang c
 | Sếp | 5 | Đổi chữ trên trang kết quả Holland | ✅ Có xem trước |
 | Sếp | 7 | Tài khoản marketing chỉ thấy phần của mình | Một phần: vai trò đã chặn đúng; tạo tài khoản trên web ở giai đoạn 6 |
 | Marketing | 2 | Thay banner | ✅ Phía web Holland (ảnh banner máy tính + điện thoại); hẹn giờ banner là việc của web chính |
+
+## Đợt "Dễ dùng" A + B + C + D (xong 06/11/2026)
+
+Vân dùng thử thấy admin còn khó với người không làm IT (sửa bằng cột ô trống, nhiều từ kỹ thuật, sửa câu phải vào ra từng trang). Đã làm:
+
+- **A. Sửa trực tiếp trên trang** (`/admin/sua-trang/…`): menu "Trang giới thiệu", "Trang kết quả", "Email gửi khách" mở đúng trang khách thấy với thanh đen trên cùng. Chữ sửa được có **viền chấm** → bấm vào gõ; ảnh → bấm để chọn từ thư viện; đoạn có định dạng có thanh nhỏ (đậm, nghiêng, link, danh sách); mỗi khối có **Lên / Xuống / Ẩn khối / Thêm-bớt dòng**. Sửa được cả tên + mô tả 6 nhóm, câu hỏi thường gặp, đầu trang, chân trang (hotline, Zalo, email, địa chỉ – chỉ quản trị viên). "Lưu thay đổi" ghi lịch sử như cũ (quay lại được), nhắc khi rời trang chưa lưu. Trang kết quả dùng học sinh mẫu; hiện cả 2 câu nhắc để sửa. Form cũ vẫn còn ("Sửa dạng biểu mẫu").
+- **B. Câu hỏi như Google Form**: trang bộ câu và form thông tin khách thành **danh sách thẻ** – bấm thẻ mở form ngay tại chỗ, **sửa đến đâu tự lưu đến đó** (báo "Đã lưu ✓" / dòng đỏ nếu thiếu), **thêm nhanh** (gõ câu + Enter), **Nhân đôi**, **Xóa** (vào thùng rác), kéo thả tự lưu. Lịch sử gộp các lần tự lưu liên tiếp (3 phút) thành một dòng.
+- **C. Form gọn**: chỉ hiện ô cần (câu hỏi, cách trả lời, nhóm / lựa chọn, bắt buộc, hiện); phần kỹ thuật (mục lưu hồ sơ khách, điều kiện, riêng tư, ghi chú…) vào "Tùy chọn nâng cao". Câu mới **tự tạo mục lưu trong hồ sơ khách** theo câu hỏi (không cần biết "mã trường"). Tên nhóm hiện chữ: "Kỹ thuật (R)".
+- **D. Link**: gõ `viger.edu.vn/…` tự thành `https://…` (menu, mạng xã hội, nút khối, CKEditor); câu báo lỗi dễ hiểu hơn.
+- Sửa lỗi: phần tử có `hidden` vẫn hiện do CSS (`[hidden] { display: none !important }`).
+- **153 test đều đạt** (7 test mới cho thẻ câu hỏi, thêm nhanh, tự lưu, sửa trên trang, quyền).
+
+**Nên làm tiếp:** cho Thầy thử 3 việc (đổi tiêu đề trang giới thiệu, thêm câu hỏi, đổi hotline) không hướng dẫn trước, ghi lại chỗ vướng vào `docs/NGHIEM_THU.md`.
 
 ## Tiếp theo: Giai đoạn 4 – Kết nối CRM
 

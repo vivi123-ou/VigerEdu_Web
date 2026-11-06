@@ -4,8 +4,8 @@
         <a class="brand" href="{{ route('home') }}">
             <img class="brand__logo" src="{{ media_url(setting('logo_path', 'img/logo.png')) }}" alt="{{ setting('site_name') }}" width="44" height="44">
             <span class="brand__text">
-                <span class="brand__name">{{ setting('site_name') }}</span>
-                <span class="brand__tagline">{{ setting('test_name') }}</span>
+                <span class="brand__name">{{ ed('site_name', null, 'Tên đơn vị') }}</span>
+                <span class="brand__tagline">{{ ed('test_name', null, 'Tên bài test') }}</span>
             </span>
         </a>
 

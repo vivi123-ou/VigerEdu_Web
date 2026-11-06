@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\InfoQuestionController;
 use App\Http\Controllers\Admin\IntroBlockController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\PageEditorController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\QuestionExcelController;
 use App\Http\Controllers\Admin\QuestionSetController;
@@ -50,6 +51,11 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
 
         // Quay lại bản cũ: controller kiểm tra quyền theo loại nội dung
         Route::post('history/{activity}/revert', [QuestionController::class, 'revert'])->name('history.revert');
+
+        // Sửa trực tiếp trên trang (controller kiểm tra quyền theo từng trang / từng ô)
+        Route::get('sua-trang/{page}', [PageEditorController::class, 'show'])
+            ->whereIn('page', array_keys(PageEditorController::PAGES))->name('page-editor.show');
+        Route::post('sua-trang', [PageEditorController::class, 'save'])->name('page-editor.save');
 
         // Nội dung trang (config/admin_content.php): controller kiểm tra quyền theo từng trang
         $contentPages = array_keys(config('admin_content'));
