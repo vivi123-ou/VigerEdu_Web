@@ -19,6 +19,37 @@ class InfoQuestionRequest extends FormRequest
 {
     public const CUSTOM = '_custom';
 
+    /** Tự tạo mục mới trong hồ sơ khách theo câu hỏi (mặc định cho câu mới). */
+    public const AUTO = '_auto';
+
+    /**
+     * Mã trường tùy biến tạo từ câu hỏi, không trùng câu khác: "Trường chuyên?" → truong_chuyen.
+     */
+    private function autoKey(): string
+    {
+        /** @var Question|null $current */
+        $current = $this->route('question');
+
+        if ($current !== null && filled($current->extra_field_key)) {
+            return $current->extra_field_key;
+        }
+
+        $base = Str::of((string) $this->input('text'))->ascii()->lower()->replaceMatches('/[^a-z0-9]+/', '_')->trim('_')->limit(40, '')->trim('_')->value();
+        $base = preg_match('/^[a-z]/', $base) ? $base : 'cau_'.$base;
+        $base = strlen($base) >= 2 ? $base : 'cau_hoi';
+
+        $used = Question::withTrashed()->part(Question::PART_INFO)->whereNotNull('extra_field_key')
+            ->when($current, fn ($query) => $query->whereKeyNot($current->id))
+            ->pluck('extra_field_key')->all();
+
+        $key = $base;
+        for ($suffix = 2; in_array($key, $used, true); $suffix++) {
+            $key = $base.'_'.$suffix;
+        }
+
+        return $key;
+    }
+
     public function authorize(): bool
     {
         return true;
@@ -27,6 +58,11 @@ class InfoQuestionRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $number = fn (string $key) => $this->filled($key) ? str_replace(',', '.', (string) $this->input($key)) : null;
+
+        // "Tự động": tạo mục mới trong hồ sơ khách, mã lấy từ câu hỏi (người dùng không cần biết mã).
+        if ($this->input('crm_target') === self::AUTO) {
+            $this->merge(['crm_target' => self::CUSTOM, 'extra_field_key' => $this->autoKey()]);
+        }
 
         $this->merge([
             'is_required' => $this->boolean('is_required'),

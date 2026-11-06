@@ -150,7 +150,7 @@ class HollandQuestionRequest extends FormRequest
             'answer_type' => $type,
             'riasec' => $type->isChoice() ? null : $this->input('riasec'),
             'display' => $this->input('display') ?: null,
-            'form' => $this->input('form'),
+            'form' => $this->has('form') ? $this->input('form') : $this->route('question')?->form,
             'help_text' => $this->input('help_text'),
             'max_score' => $type->isChoice() ? null : $this->input('max_score'),
             'options' => $options ?: null,

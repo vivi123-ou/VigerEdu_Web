@@ -5,10 +5,10 @@
         <select name="choices[{{ $index }}][group]" aria-label="Nhóm của lựa chọn">
             <option value="">Không tính điểm</option>
             @foreach ($groups as $letter => $name)
-                <option value="{{ $letter }}" @selected(($choice['group'] ?? null) === $letter)>{{ $letter }} – {{ $name }}</option>
+                <option value="{{ $letter }}" @selected(($choice['group'] ?? null) === $letter)>{{ $name }} ({{ $letter }})</option>
             @endforeach
         </select>
     </td>
     <td><input name="choices[{{ $index }}][points]" value="{{ $choice['points'] ?? '' }}" inputmode="decimal" class="input--tiny" aria-label="Điểm" placeholder="1"></td>
-    <td><button class="link-danger" type="button" data-remove-choice aria-label="Bỏ lựa chọn này">Bỏ</button></td>
+    <td><button class="link-danger" type="button" data-remove-row aria-label="Bỏ lựa chọn này">Bỏ</button></td>
 </tr>

@@ -7,6 +7,7 @@ use App\Models\AdminActivity;
 use App\Models\Setting;
 use App\Support\HtmlSanitizer;
 use App\Support\IntroBlocks;
+use App\Support\LinkNormalizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -126,8 +127,9 @@ class IntroBlockController extends Controller
             default => [],
         };
 
+        $request->merge(['button_url' => LinkNormalizer::normalize($request->input('button_url'))]);
         $data = $request->validate($rules, [
-            'button_url.url' => 'Địa chỉ nút cần bắt đầu bằng https://',
+            'button_url.url' => 'Địa chỉ nút chưa đúng. Ví dụ: viger.edu.vn/du-hoc-duc',
             'button_url.required_with' => 'Có chữ trên nút thì cần nhập địa chỉ nút.',
             'image.regex' => 'Ảnh chưa đúng, vui lòng bấm "Chọn ảnh" để chọn lại.',
             '*.max' => 'Nội dung quá dài.',

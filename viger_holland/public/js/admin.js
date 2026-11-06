@@ -60,72 +60,72 @@
         });
     });
 
-    // Kéo thả để sắp xếp: kéo ô ⋮⋮, rồi bấm "Lưu thứ tự".
+    // Kéo thả để sắp xếp: kéo ô ⋮⋮ rồi thả – thứ tự tự lưu ngay.
     document.querySelectorAll('[data-sortable]').forEach(function (body) {
-        var card = body.closest('.card');
-        var saveForm = card ? card.querySelector('[data-reorder-form]') : null;
+        var holder = body.closest('.card, [data-sort-holder]') || document;
+        var saveForm = holder.querySelector('[data-reorder-form]');
         var dragging = null;
+        var rowOf = function (el) {
+            var row = el && el.closest('[data-id]');
+            return row && row.parentElement === body ? row : null;
+        };
 
         body.addEventListener('dragstart', function (event) {
-            var row = event.target.closest('tr');
-            if (!row || !event.target.classList.contains('drag')) return;
-            dragging = row;
-            row.classList.add('is-dragging');
+            if (!event.target.classList || !event.target.classList.contains('drag')) return;
+            dragging = rowOf(event.target);
+            if (!dragging) return;
+            dragging.classList.add('is-dragging');
             event.dataTransfer.effectAllowed = 'move';
-            event.dataTransfer.setData('text/plain', row.getAttribute('data-id'));
+            event.dataTransfer.setData('text/plain', dragging.getAttribute('data-id'));
         });
 
         body.addEventListener('dragover', function (event) {
             if (!dragging) return;
             event.preventDefault();
-            var target = event.target.closest('tr');
+            var target = rowOf(event.target);
             if (!target || target === dragging) return;
             var box = target.getBoundingClientRect();
-            var after = event.clientY > box.top + box.height / 2;
-            body.insertBefore(dragging, after ? target.nextSibling : target);
+            body.insertBefore(dragging, event.clientY > box.top + box.height / 2 ? target.nextSibling : target);
         });
 
         body.addEventListener('dragend', function () {
             if (!dragging) return;
             dragging.classList.remove('is-dragging');
             dragging = null;
-            if (saveForm) saveForm.hidden = false;
-        });
-
-        if (saveForm) {
-            saveForm.addEventListener('submit', function () {
-                saveForm.querySelectorAll('input[name="order[]"]').forEach(function (input) { input.remove(); });
-                body.querySelectorAll('tr[data-id]').forEach(function (row) {
-                    var input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'order[]';
-                    input.value = row.getAttribute('data-id');
-                    saveForm.appendChild(input);
-                });
+            if (!saveForm) return;
+            saveForm.querySelectorAll('input[name="order[]"]').forEach(function (input) { input.remove(); });
+            Array.prototype.forEach.call(body.children, function (row) {
+                if (!row.hasAttribute('data-id')) return;
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'order[]';
+                input.value = row.getAttribute('data-id');
+                saveForm.appendChild(input);
             });
-        }
+            saveForm.submit();
+        });
     });
 
-    // Form câu hỏi (Holland và thông tin khách): ẩn/hiện ô theo kiểu câu, trường CRM và câu điều kiện.
-    // Ô đang ẩn bị tắt để không gửi nhầm (ví dụ 2 ô "Hiện dạng" cho 2 kiểu câu khác nhau).
-    var infoForm = document.querySelector('[data-info-form], [data-type-form]');
-    if (infoForm) {
-        var typeSelect = infoForm.querySelector('[data-answer-type]');
-        var targetSelect = infoForm.querySelector('[data-crm-target]');
-        var conditionSelect = infoForm.querySelector('[data-condition-question]');
+    // Form câu hỏi: ẩn/hiện ô theo kiểu câu, mục lưu hồ sơ khách và câu điều kiện.
+    // Ô đang ẩn bị tắt để không gửi nhầm (ví dụ 2 ô "các mức" cho 2 kiểu câu khác nhau).
+    function initTypeForm(form) {
+        if (form.hasAttribute('data-type-ready')) return;
+        form.setAttribute('data-type-ready', '');
+        var typeSelect = form.querySelector('[data-answer-type]');
+        var targetSelect = form.querySelector('[data-crm-target]');
+        var conditionSelect = form.querySelector('[data-condition-question]');
 
         var refresh = function () {
             var type = typeSelect ? typeSelect.value : '';
-            infoForm.querySelectorAll('[data-show-for]').forEach(function (el) {
+            form.querySelectorAll('[data-show-for]').forEach(function (el) {
                 var visible = el.getAttribute('data-show-for').split(' ').indexOf(type) !== -1;
                 el.hidden = !visible;
                 el.querySelectorAll('input, select, textarea').forEach(function (input) { input.disabled = !visible; });
-                if (el.matches('input, select, textarea')) el.disabled = !visible;
             });
-            infoForm.querySelectorAll('[data-show-for-target]').forEach(function (el) {
+            form.querySelectorAll('[data-show-for-target]').forEach(function (el) {
                 el.hidden = !targetSelect || targetSelect.value !== el.getAttribute('data-show-for-target');
             });
-            infoForm.querySelectorAll('[data-condition-for]').forEach(function (el) {
+            form.querySelectorAll('[data-condition-for]').forEach(function (el) {
                 var active = conditionSelect && conditionSelect.value === el.getAttribute('data-condition-for');
                 el.hidden = !active;
                 el.querySelectorAll('input').forEach(function (input) { input.disabled = !active; });
@@ -134,56 +134,39 @@
 
         [typeSelect, targetSelect, conditionSelect].forEach(function (el) { if (el) el.addEventListener('change', refresh); });
         refresh();
-
-        // Lựa chọn của câu chọn 1 / chọn nhiều: "+ Thêm lựa chọn", "Bỏ".
-        var choiceBody = infoForm.querySelector('[data-choices]');
-        var choiceTemplate = infoForm.querySelector('[data-choice-template]');
-        var addChoice = infoForm.querySelector('[data-add-choice]');
-        if (choiceBody && choiceTemplate && addChoice) {
-            var nextIndex = choiceBody.querySelectorAll('tr').length;
-            addChoice.addEventListener('click', function () {
-                var html = choiceTemplate.innerHTML.replace(/__i__/g, String(nextIndex++));
-                choiceBody.insertAdjacentHTML('beforeend', html);
-                var inputs = choiceBody.querySelectorAll('tr:last-child input');
-                if (inputs[0]) inputs[0].focus();
-            });
-            choiceBody.addEventListener('click', function (event) {
-                var remove = event.target.closest('[data-remove-choice]');
-                if (!remove) return;
-                var row = remove.closest('tr');
-                if (choiceBody.querySelectorAll('tr').length > 1) {
-                    row.remove();
-                } else {
-                    row.querySelectorAll('input').forEach(function (input) { input.value = ''; });
-                }
-            });
-        }
     }
+    document.querySelectorAll('[data-type-form]').forEach(initTypeForm);
+    window.HollandAdmin = { initTypeForm: initTypeForm };
 
-    // Danh sách dòng dùng chung (link menu, mạng xã hội, câu hỏi thường gặp…): "+ Thêm", "Bỏ".
-    document.querySelectorAll('[data-add-row]').forEach(function (button) {
-        var holder = button.parentElement;
-        var body = holder.querySelector('[data-rows]');
-        var template = holder.querySelector('[data-row-template]');
-        if (!body || !template) return;
-        var nextIndex = body.children.length + 100;
-        button.addEventListener('click', function () {
-            body.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__i__/g, String(nextIndex++)));
+    // Danh sách dòng dùng chung (lựa chọn, link, câu hỏi thường gặp…): "+ Thêm", "Bỏ". Chạy cả với phần thêm sau.
+    var rowCounter = 1000;
+    document.addEventListener('click', function (event) {
+        var add = event.target.closest('[data-add-row]');
+        if (add) {
+            var holder = add.parentElement;
+            var body = holder.querySelector('[data-rows]');
+            var template = holder.querySelector('[data-row-template]');
+            if (!body || !template) return;
+            body.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__i__/g, String(rowCounter++)));
             var first = body.lastElementChild && body.lastElementChild.querySelector('input, textarea');
             if (first) first.focus();
-        });
-        body.addEventListener('click', function (event) {
-            var remove = event.target.closest('[data-remove-row]');
-            if (!remove) return;
-            var row = remove.closest('tr, [data-row]');
-            if (body.children.length > 1) {
-                row.remove();
-            } else {
-                row.querySelectorAll('input, textarea').forEach(function (input) {
-                    if (input.type === 'checkbox') input.checked = false; else input.value = '';
-                });
-            }
-        });
+            body.dispatchEvent(new Event('input', { bubbles: true }));
+            return;
+        }
+
+        var remove = event.target.closest('[data-remove-row]');
+        if (!remove) return;
+        var row = remove.closest('tr, [data-row]');
+        var rows = row && row.parentElement;
+        if (!rows) return;
+        if (rows.children.length > 1) {
+            row.remove();
+        } else {
+            row.querySelectorAll('input, textarea').forEach(function (input) {
+                if (input.type === 'checkbox') input.checked = false; else input.value = '';
+            });
+        }
+        rows.dispatchEvent(new Event('change', { bubbles: true }));
     });
 
     // Ô màu: bảng màu và mã màu đi cùng nhau.

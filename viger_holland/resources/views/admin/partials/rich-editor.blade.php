@@ -6,7 +6,7 @@
         ClassicEditor.create(textarea, {
             toolbar: ['bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
             language: 'vi',
-            link: { addTargetToExternalLinks: true }
+            link: { addTargetToExternalLinks: true, defaultProtocol: 'https://' }
         }).catch(function () { /* Không tải được trình soạn thảo: vẫn gõ chữ thường trong ô được. */ });
     });
 </script>

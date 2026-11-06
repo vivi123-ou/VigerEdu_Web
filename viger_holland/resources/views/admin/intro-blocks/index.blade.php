@@ -5,7 +5,7 @@
 @section('content')
     @include('admin.intro-blocks.tabs', ['active' => 'blocks'])
 
-    <p class="lead">Các khối hiện bên dưới banner, theo đúng thứ tự trong danh sách. Kéo biểu tượng ⋮⋮ để đổi thứ tự rồi bấm "Lưu thứ tự". Khối đang tắt không hiện cho khách.</p>
+    <p class="lead">Các khối hiện bên dưới banner, theo đúng thứ tự trong danh sách. Kéo biểu tượng ⋮⋮ để đổi thứ tự, thả ra là tự lưu. Khối đang tắt không hiện cho khách.</p>
 
     <section class="card">
         @if (empty($blocks))

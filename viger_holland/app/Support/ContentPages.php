@@ -66,7 +66,7 @@ final class ContentPages
                 $rules["{$key}.*.label"] = ['nullable', 'string', 'max:60'];
                 $rules["{$key}.*.new_tab"] = ['nullable', 'boolean'];
                 $rules["{$key}.*.url"] = ['nullable', 'required_with:'.$key.'.*.label', 'url:http,https', 'max:255'];
-                $messages["{$key}.*.url.url"] = 'Địa chỉ link cần bắt đầu bằng https:// (ví dụ https://viger.edu.vn).';
+                $messages["{$key}.*.url.url"] = 'Địa chỉ link chưa đúng. Ví dụ: viger.edu.vn hoặc viger.edu.vn/du-hoc-duc';
                 $messages["{$key}.*.url.required_with"] = 'Vui lòng nhập địa chỉ cho link này.';
             }
         }
@@ -74,11 +74,22 @@ final class ContentPages
         $messages += [
             'required' => 'Vui lòng điền ô :attribute.',
             'regex' => 'Ô :attribute chưa đúng dạng.',
-            'url' => 'Ô :attribute cần là địa chỉ web đầy đủ, bắt đầu bằng https://',
+            'url' => 'Ô :attribute chưa phải địa chỉ web. Ví dụ: viger.edu.vn',
             'email' => 'Email chưa đúng (ví dụ: ten@viger.edu.vn).',
             'in' => 'Lựa chọn ở ô :attribute không hợp lệ.',
             'max' => 'Ô :attribute quá dài.',
         ];
+
+        // Link gõ thiếu https:// thì tự thêm (ví dụ "viger.edu.vn").
+        foreach (self::fields($page) as $field) {
+            $key = $field['key'];
+            if ($field['type'] === 'url' && array_key_exists($key, $input)) {
+                $input[$key] = LinkNormalizer::normalize($input[$key]);
+            }
+            if ($field['type'] === 'links' && is_array($input[$key] ?? null)) {
+                $input[$key] = array_map(fn ($row) => is_array($row) ? [...$row, 'url' => LinkNormalizer::normalize($row['url'] ?? '')] : $row, $input[$key]);
+            }
+        }
 
         $validated = Validator::make($input, $rules, $messages, $attributes)->validate();
 

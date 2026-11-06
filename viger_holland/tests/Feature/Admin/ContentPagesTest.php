@@ -91,7 +91,7 @@ class ContentPagesTest extends TestCase
         $this->assertSame('<p>Gọi <strong>ngay</strong></p>', setting('result_contact_text'));
 
         $this->put(route('admin.content.update', 'appearance'), $this->form('appearance', [
-            'header_menu' => [['label' => 'Du học Đức', 'url' => 'https://viger.edu.vn/du-hoc-duc', 'new_tab' => '1'], ['label' => '', 'url' => '']],
+            'header_menu' => [['label' => 'Du học Đức', 'url' => 'viger.edu.vn/du-hoc-duc', 'new_tab' => '1'], ['label' => '', 'url' => '']],
             'hotline' => '0909 123 456',
         ]))->assertSessionHasNoErrors();
 
@@ -105,7 +105,7 @@ class ContentPagesTest extends TestCase
             'primary_color' => 'đỏ', 'header_menu' => [['label' => 'Sai', 'url' => 'viger']], 'site_name' => '',
         ]))->assertSessionHasErrors([
             'primary_color' => 'Ô "Màu chủ đạo" chưa đúng dạng.',
-            'header_menu.0.url' => 'Địa chỉ link cần bắt đầu bằng https:// (ví dụ https://viger.edu.vn).',
+            'header_menu.0.url' => 'Địa chỉ link chưa đúng. Ví dụ: viger.edu.vn hoặc viger.edu.vn/du-hoc-duc',
             'site_name' => 'Vui lòng điền ô "Tên đơn vị (đầu trang)".',
         ]);
     }
@@ -180,7 +180,7 @@ class ContentPagesTest extends TestCase
         $block = collect(IntroBlocks::all())->firstWhere('type', 'text_image');
 
         $this->put(route('admin.intro-blocks.update', $block['id']), ['title' => 'Vì sao du học Đức', 'button_text' => 'Tìm hiểu', 'button_url' => 'abc'])
-            ->assertSessionHasErrors(['button_url' => 'Địa chỉ nút cần bắt đầu bằng https://']);
+            ->assertSessionHasErrors(['button_url' => 'Địa chỉ nút chưa đúng. Ví dụ: viger.edu.vn/du-hoc-duc']);
 
         $this->put(route('admin.intro-blocks.update', $block['id']), [
             'title' => 'Vì sao du học Đức', 'body' => '<p>Nhiều trường <strong>công lập</strong></p><script>x</script>', 'enabled' => '1',

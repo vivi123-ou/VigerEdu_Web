@@ -11,7 +11,7 @@
     </div>
 
     <section class="card">
-        <p class="muted">Kéo biểu tượng ⋮⋮ để đổi thứ tự rồi bấm "Lưu thứ tự".</p>
+        <p class="muted">Kéo biểu tượng ⋮⋮ để đổi thứ tự, thả ra là tự lưu.</p>
         <div class="table-wrap">
             <table class="table table--wrap">
                 <thead>
