@@ -8,6 +8,8 @@ use App\Http\Requests\Admin\HollandQuestionRequest;
 use App\Models\AdminActivity;
 use App\Models\Question;
 use App\Models\QuestionSet;
+use App\Support\QuestionSummary;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -33,7 +35,35 @@ class HollandQuestionController extends Controller
         ]);
     }
 
-    public function store(HollandQuestionRequest $request, QuestionSet $questionSet): RedirectResponse
+    /**
+     * Form sửa trong thẻ câu hỏi (danh sách kiểu Google Form), tải khi bấm mở thẻ.
+     */
+    public function card(Question $question): View
+    {
+        abort_unless($question->isHolland(), 404);
+
+        return view('admin.partials.question-card-form', [
+            'action' => route('admin.holland-questions.update', $question),
+            'fieldsView' => 'admin.holland-questions.fields',
+            'fieldsData' => ['question' => $question, 'set' => $question->questionSet, 'uid' => 'q'.$question->id],
+        ]);
+    }
+
+    /**
+     * HTML thẻ câu hỏi (dùng khi thêm câu / nhân đôi câu trên trang danh sách).
+     */
+    public static function cardHtml(Question $question): string
+    {
+        return view('admin.partials.question-card', [
+            'question' => $question,
+            'meta' => QuestionSummary::holland($question),
+            'formUrl' => route('admin.holland-questions.card', $question),
+            'duplicateUrl' => route('admin.questions.duplicate', $question),
+            'canDelete' => true,
+        ])->render();
+    }
+
+    public function store(HollandQuestionRequest $request, QuestionSet $questionSet): RedirectResponse|JsonResponse
     {
         $question = Question::create([
             ...$request->questionAttributes($questionSet),
@@ -44,6 +74,10 @@ class HollandQuestionController extends Controller
         ]);
 
         AdminActivity::record(AdminActivity::ACTION_CREATE, AdminActivity::SUBJECT_QUESTION, $question->id, 'Thêm câu '.$question->shortLabel().' vào bộ "'.$questionSet->name.'"');
+
+        if ($request->wantsJson()) {
+            return response()->json(['card' => self::cardHtml($question)]);
+        }
 
         if ($request->boolean('add_another')) {
             return redirect()->route('admin.question-sets.questions.create', [$questionSet, 'nhom' => $question->riasec, 'kieu' => $question->answer_type->value])
@@ -96,7 +130,7 @@ class HollandQuestionController extends Controller
         ]);
     }
 
-    public function update(HollandQuestionRequest $request, Question $question): RedirectResponse
+    public function update(HollandQuestionRequest $request, Question $question): RedirectResponse|JsonResponse
     {
         abort_unless($question->isHolland(), 404);
 
@@ -105,7 +139,12 @@ class HollandQuestionController extends Controller
             'sort_order' => $request->filled('sort_order') ? (int) $request->input('sort_order') : $question->sort_order,
         ])->save();
 
-        AdminActivity::recordModelChange($question, AdminActivity::SUBJECT_QUESTION, 'Sửa câu '.$question->shortLabel());
+        AdminActivity::recordModelChange($question, AdminActivity::SUBJECT_QUESTION, 'Sửa câu '.$question->shortLabel(), mergeRecent: $request->wantsJson());
+
+        // Thẻ câu hỏi tự lưu: trả về dòng tóm tắt mới.
+        if ($request->wantsJson()) {
+            return response()->json(['text' => $question->text, 'meta' => QuestionSummary::holland($question), 'is_active' => $question->is_active]);
+        }
 
         return redirect()->route('admin.question-sets.show', $question->question_set_id)->with('status', 'Đã lưu câu '.$question->code.'.');
     }

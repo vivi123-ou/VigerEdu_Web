@@ -78,7 +78,7 @@ class AdminActivity extends Model
     /**
      * Ghi lại việc sửa một model vừa lưu: chỉ các cột đã đổi (giá trị thô trước và sau).
      */
-    public static function recordModelChange(Model $model, string $subjectType, string $description): ?self
+    public static function recordModelChange(Model $model, string $subjectType, string $description, bool $mergeRecent = false): ?self
     {
         $changed = array_keys(collect($model->getChanges())->except(['updated_at', 'created_at'])->all());
 
@@ -90,6 +90,25 @@ class AdminActivity extends Model
         $previous = $model->getPrevious();
         $before = collect($changed)->mapWithKeys(fn (string $key) => [$key => $previous[$key] ?? null])->all();
         $after = collect($changed)->mapWithKeys(fn (string $key) => [$key => $model->getAttributes()[$key] ?? null])->all();
+
+        // Tự lưu khi đang gõ: gộp vào dòng lịch sử vừa ghi (cùng người, cùng đối tượng, trong 3 phút),
+        // giữ giá trị "trước" của lần đầu để "Quay lại bản này" về đúng bản trước khi sửa.
+        if ($mergeRecent) {
+            $recent = static::query()
+                ->where('user_id', auth()->id())->where('subject_type', $subjectType)->where('subject_id', $model->getKey())
+                ->where('action', self::ACTION_UPDATE)->where('created_at', '>=', now()->subMinutes(3))
+                ->latest('id')->first();
+
+            if ($recent !== null && $recent->id === static::query()->where('subject_type', $subjectType)->where('subject_id', $model->getKey())->max('id')) {
+                $recent->update([
+                    'description' => mb_substr($description, 0, 255),
+                    'before' => array_replace($before, (array) $recent->before),
+                    'after' => array_replace((array) $recent->after, $after),
+                ]);
+
+                return $recent;
+            }
+        }
 
         return static::record(self::ACTION_UPDATE, $subjectType, (int) $model->getKey(), $description, $before, $after);
     }

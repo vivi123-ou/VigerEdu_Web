@@ -506,3 +506,38 @@ tr.is-error td { background: #fdf2f2; }
 .copy-code { display: flex; align-items: flex-start; margin-top: 0.4rem; }
 .copy-code textarea { flex: 1; min-width: 0; font-family: Consolas, monospace; font-size: 0.8125rem; padding: 0.5rem; border: 1px solid var(--line); background: var(--bg); resize: none; }
 .table--form td input:not([type="checkbox"]) { width: 100%; }
+
+/* ---------- Thẻ câu hỏi (kiểu Google Form) ---------- */
+.qcards-wrap { max-width: 56rem; margin-bottom: 1.5rem; }
+.qcards { display: grid; gap: 0.6rem; counter-reset: q; margin-bottom: 0.75rem; }
+.qcard { background: var(--white); border: 1px solid var(--line); border-left: 4px solid transparent; counter-increment: q; }
+.qcard.is-open { border-left-color: var(--brand); box-shadow: 0 6px 20px -12px rgba(18, 38, 63, 0.35); }
+.qcard.is-off .qcard__text { color: #98a3ae; }
+.qcard.is-dragging { opacity: 0.6; }
+.qcard__head { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem 0.35rem 0.25rem; }
+.qcard__head .drag { padding: 0.5rem; }
+.qcard__summary { flex: 1; min-width: 0; display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; row-gap: 0.1rem; text-align: left; border: 0; background: none; font: inherit; color: inherit; padding: 0.55rem 0; cursor: pointer; }
+.qcard__num { grid-row: span 2; font-weight: 700; color: var(--muted); min-width: 1.75rem; }
+.qcard__num::before { content: counter(q) "."; }
+.qcard__text { font-weight: 500; }
+.qcard__meta { font-size: 0.8125rem; color: var(--muted); }
+.qcard__summary:hover .qcard__text { color: var(--brand); }
+.qcard__status { font-size: 0.8125rem; color: var(--muted); white-space: nowrap; }
+.qcard__status.is-ok { color: var(--ok); }
+.qcard__status.is-error { color: var(--danger); }
+.qcard__body { padding: 0.25rem 1.25rem 0.5rem; border-top: 1px solid var(--line); }
+.qcard__form { max-width: none; padding-top: 1rem; }
+.qcard__tools { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-top: 1px solid var(--line); background: var(--bg); }
+.qcard__hint { margin-left: auto; font-size: 0.8125rem; }
+.qcard__errors { margin-bottom: 0.75rem; }
+.qcard--add { counter-increment: none; border-style: dashed; padding: 0.75rem; }
+.quick-add { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.quick-add input { flex: 1 1 18rem; min-height: 2.75rem; padding: 0.5rem 0.75rem; border: 1px solid #b9c0c8; border-radius: 2px; font: inherit; }
+.quick-add select { min-height: 2.75rem; padding: 0.5rem; border: 1px solid #b9c0c8; border-radius: 2px; font: inherit; background: var(--white); }
+.qcard--add .field__hint, .qcard--add .field__error { margin: 0.4rem 0 0; }
+.check-row { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+.more-menu .dropdown__menu form { margin: 0; }
+.bulk { margin-top: 0.75rem; }
+
+/* Phần tử có thuộc tính hidden luôn ẩn (không bị display: flex/grid đè) */
+[hidden] { display: none !important; }

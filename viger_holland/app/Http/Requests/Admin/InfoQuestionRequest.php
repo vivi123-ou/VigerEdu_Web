@@ -34,7 +34,12 @@ class InfoQuestionRequest extends FormRequest
             return $current->extra_field_key;
         }
 
-        $base = Str::of((string) $this->input('text'))->ascii()->lower()->replaceMatches('/[^a-z0-9]+/', '_')->trim('_')->limit(40, '')->trim('_')->value();
+        $base = Str::of((string) $this->input('text'))->ascii()->lower()->replaceMatches('/[^a-z0-9]+/', '_')->trim('_')->value();
+        // Tối đa 40 ký tự, cắt ở ranh giới từ ("truong_thpt_dang_hoc_co_phai_truong").
+        if (strlen($base) > 40) {
+            $cut = substr($base, 0, 41);
+            $base = rtrim(str_contains($cut, '_') ? substr($cut, 0, (int) strrpos($cut, '_')) : substr($base, 0, 40), '_');
+        }
         $base = preg_match('/^[a-z]/', $base) ? $base : 'cau_'.$base;
         $base = strlen($base) >= 2 ? $base : 'cau_hoi';
 
@@ -58,6 +63,11 @@ class InfoQuestionRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $number = fn (string $key) => $this->filled($key) ? str_replace(',', '.', (string) $this->input($key)) : null;
+
+        // Thêm nhanh câu chọn: tạo sẵn 2 lựa chọn mẫu, người dùng mở thẻ để sửa.
+        if ($this->boolean('quick_add') && in_array($this->input('answer_type'), ['single', 'multi'], true) && blank($this->input('options_text'))) {
+            $this->merge(['options_text' => "Lựa chọn 1\nLựa chọn 2"]);
+        }
 
         // "Tự động": tạo mục mới trong hồ sơ khách, mã lấy từ câu hỏi (người dùng không cần biết mã).
         if ($this->input('crm_target') === self::AUTO) {

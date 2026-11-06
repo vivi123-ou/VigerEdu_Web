@@ -98,6 +98,7 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
             Route::post('question-sets/{questionSet}/questions', [HollandQuestionController::class, 'store'])->name('question-sets.questions.store');
             Route::post('question-sets/{questionSet}/questions/bulk', [HollandQuestionController::class, 'bulkStore'])->name('question-sets.questions.bulk');
             Route::get('holland-questions/{question}/edit', [HollandQuestionController::class, 'edit'])->name('holland-questions.edit');
+            Route::get('holland-questions/{question}/card', [HollandQuestionController::class, 'card'])->name('holland-questions.card');
             Route::put('holland-questions/{question}', [HollandQuestionController::class, 'update'])->name('holland-questions.update');
 
             // Form thông tin khách Phần A
@@ -105,11 +106,13 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
             Route::get('info-form/create', [InfoQuestionController::class, 'create'])->name('info-questions.create');
             Route::post('info-form', [InfoQuestionController::class, 'store'])->name('info-questions.store');
             Route::get('info-form/{question}/edit', [InfoQuestionController::class, 'edit'])->name('info-questions.edit');
+            Route::get('info-form/{question}/card', [InfoQuestionController::class, 'card'])->name('info-questions.card');
             Route::put('info-form/{question}', [InfoQuestionController::class, 'update'])->name('info-questions.update');
 
             // Dùng chung cho câu Phần A và B
             Route::patch('questions/{question}/toggle', [QuestionController::class, 'toggle'])->name('questions.toggle');
             Route::delete('questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+            Route::post('questions/{question}/duplicate', [QuestionController::class, 'duplicate'])->name('questions.duplicate');
             Route::post('questions/{id}/restore', [QuestionController::class, 'restore'])->whereNumber('id')->name('questions.restore');
             Route::post('questions/reorder', [QuestionController::class, 'reorder'])->name('questions.reorder');
         });

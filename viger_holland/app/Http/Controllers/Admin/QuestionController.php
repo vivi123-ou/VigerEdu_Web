@@ -9,6 +9,7 @@ use App\Models\QuestionSet;
 use App\Models\Setting;
 use App\Support\IntroBlocks;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,16 +31,55 @@ class QuestionController extends Controller
         return back()->with('status', ($question->is_active ? 'Đã bật' : 'Đã tắt').' câu '.$question->code.'.');
     }
 
-    public function destroy(Question $question): RedirectResponse
+    public function destroy(Request $request, Question $question): RedirectResponse|JsonResponse
     {
         if ($question->lead_field === 'consent') {
-            return back()->withErrors(['question' => 'Không xóa được ô đồng ý: thiếu ô này thì không được lưu thông tin khách.']);
+            $message = 'Không xóa được ô đồng ý: thiếu ô này thì không được lưu thông tin khách.';
+
+            return $request->wantsJson() ? response()->json(['message' => $message], 422) : back()->withErrors(['question' => $message]);
         }
 
         $question->delete();
         AdminActivity::record(AdminActivity::ACTION_DELETE, AdminActivity::SUBJECT_QUESTION, $question->id, 'Đưa câu '.$question->shortLabel().' vào thùng rác');
 
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Đã đưa câu vào thùng rác.']);
+        }
+
         return back()->with('status', 'Đã đưa câu '.$question->code.' vào thùng rác. Có thể khôi phục ở cuối trang.');
+    }
+
+    /**
+     * Nhân đôi câu (như Google Form): bản sao đứng ngay sau câu gốc, mã câu mới.
+     */
+    public function duplicate(Request $request, Question $question): RedirectResponse|JsonResponse
+    {
+        abort_if($question->lead_field === 'consent', 422, 'Không nhân đôi được ô đồng ý.');
+
+        $copy = DB::transaction(function () use ($question): Question {
+            $siblings = Question::query()->where('part', $question->part)
+                ->when($question->isHolland(), fn ($query) => $query->where('question_set_id', $question->question_set_id))
+                ->where('sort_order', '>', $question->sort_order);
+            $siblings->increment('sort_order');
+
+            $copy = $question->replicate();
+            $copy->code = Question::nextCode($question->part);
+            $copy->sort_order = $question->sort_order + 1;
+            // Mục lưu hồ sơ khách không được trùng: bản sao của câu thông tin khách chưa lưu vào CRM, admin chọn lại.
+            $copy->lead_field = null;
+            $copy->extra_field_key = null;
+            $copy->save();
+
+            return $copy;
+        });
+
+        AdminActivity::record(AdminActivity::ACTION_CREATE, AdminActivity::SUBJECT_QUESTION, $copy->id, 'Nhân đôi câu '.$question->shortLabel());
+
+        if ($request->wantsJson()) {
+            return response()->json(['card' => $copy->isHolland() ? HollandQuestionController::cardHtml($copy) : InfoQuestionController::cardHtml($copy)]);
+        }
+
+        return back()->with('status', 'Đã nhân đôi câu.');
     }
 
     public function restore(int $id): RedirectResponse

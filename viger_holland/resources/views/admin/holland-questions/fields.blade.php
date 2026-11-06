@@ -82,12 +82,13 @@
 <div class="grid-2" data-show-for="multi">
     <div class="field">
         <label for="min-{{ $uid }}">Chọn ít nhất (ô)</label>
-        <input id="min-{{ $uid }}" name="min_select" type="number" min="0" max="30" value="{{ $old('min_select', $question->configValue('min_select')) }}" class="input--short" placeholder="Không giới hạn">
+        <input id="min-{{ $uid }}" name="min_select" type="number" min="0" max="30" value="{{ $old('min_select', $question->configValue('min_select')) }}" class="input--short">
     </div>
     <div class="field">
         <label for="max-{{ $uid }}">Chọn nhiều nhất (ô)</label>
-        <input id="max-{{ $uid }}" name="max_select" type="number" min="0" max="30" value="{{ $old('max_select', $question->configValue('max_select')) }}" class="input--short" placeholder="Không giới hạn">
+        <input id="max-{{ $uid }}" name="max_select" type="number" min="0" max="30" value="{{ $old('max_select', $question->configValue('max_select')) }}" class="input--short">
         @if ($err('max_select'))<p class="field__error">{{ $err('max_select') }}</p>@endif
+        <p class="field__hint">Để trống = không giới hạn.</p>
     </div>
 </div>
 

@@ -58,6 +58,31 @@ class QuestionSetAdminTest extends TestCase
         $this->get(route('admin.holland-questions.edit', Question::where('code', 'A02')->sole()))->assertNotFound();
     }
 
+    public function test_question_cards_quick_add_duplicate_and_delete(): void
+    {
+        $this->get(route('admin.question-sets.show', $this->set))->assertOk()
+            ->assertSee('data-qcard', false)->assertSee('Đúng / Không · cộng điểm cho Kỹ thuật');
+
+        $b01 = Question::where('code', 'B01')->sole();
+        $this->get(route('admin.holland-questions.card', $b01))->assertOk()->assertSee('data-autosave', false)->assertSee('Câu này cộng điểm cho nhóm');
+
+        $this->postJson(route('admin.question-sets.questions.store', $this->set), [
+            'text' => 'Tôi thích lắp ráp mô hình', 'riasec' => 'R', 'answer_type' => 'yes_no', 'is_active' => '1', 'is_required' => '1',
+        ])->assertOk()->assertJsonPath('card', fn (string $html) => str_contains($html, 'Tôi thích lắp ráp mô hình'));
+
+        $copy = $this->postJson(route('admin.questions.duplicate', $b01))->assertOk();
+        $duplicate = Question::where('text', $b01->text)->where('id', '!=', $b01->id)->sole();
+        $this->assertSame($b01->sort_order + 1, $duplicate->sort_order);
+        $this->assertSame($this->set->id, $duplicate->question_set_id);
+        $this->assertStringContainsString((string) $duplicate->id, $copy->json('card'));
+
+        $this->deleteJson(route('admin.questions.destroy', $duplicate))->assertOk();
+        $this->assertSoftDeleted($duplicate);
+
+        $this->putJson(route('admin.holland-questions.update', $b01), ['text' => 'Câu sửa trong thẻ', 'answer_type' => 'single', 'is_active' => '1'])
+            ->assertStatus(422)->assertJsonValidationErrors('choices');
+    }
+
     public function test_create_set_with_likert5_scale(): void
     {
         $response = $this->post(route('admin.question-sets.store'), [

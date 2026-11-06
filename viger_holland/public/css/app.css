@@ -402,3 +402,5 @@ a:focus-visible, button:focus-visible {
     .embed-card__img { height: 100%; min-height: 12rem; }
 }
 .faq-wrap { max-width: 46rem; }
+
+[hidden] { display: none !important; }

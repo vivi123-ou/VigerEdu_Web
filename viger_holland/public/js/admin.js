@@ -288,3 +288,169 @@
         });
     }
 })();
+
+// ---------- Thẻ câu hỏi (kiểu Google Form): bấm để sửa tại chỗ, tự lưu, nhân đôi, xóa, thêm nhanh ----------
+(function () {
+    'use strict';
+
+    var csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content;
+    var timers = new WeakMap();
+
+    function request(url, method, body) {
+        return fetch(url, {
+            method: method,
+            body: body || null,
+            credentials: 'same-origin',
+            headers: { Accept: 'application/json', 'X-CSRF-TOKEN': csrf, 'X-Requested-With': 'XMLHttpRequest' }
+        }).then(function (response) {
+            return response.json().catch(function () { return {}; }).then(function (json) { return { ok: response.ok, status: response.status, json: json }; });
+        });
+    }
+
+    function setStatus(card, text, kind) {
+        var status = card.querySelector('[data-qcard-status]');
+        if (!status) return;
+        status.textContent = text;
+        status.className = 'qcard__status' + (kind ? ' is-' + kind : '');
+    }
+
+    function showErrors(card, errors) {
+        var box = card.querySelector('[data-qcard-errors]');
+        if (!box) return;
+        var messages = [];
+        Object.keys(errors || {}).forEach(function (key) { messages = messages.concat(errors[key]); });
+        box.hidden = !messages.length;
+        box.innerHTML = '';
+        messages.slice(0, 5).forEach(function (message) {
+            var p = document.createElement('p');
+            p.className = 'field__error';
+            p.textContent = message;
+            box.appendChild(p);
+        });
+    }
+
+    function save(form) {
+        var card = form.closest('[data-qcard]');
+        setStatus(card, 'Đang lưu…');
+        request(form.action, 'POST', new FormData(form)).then(function (result) {
+            if (result.ok) {
+                showErrors(card, {});
+                setStatus(card, 'Đã lưu ✓', 'ok');
+                card.querySelector('[data-qcard-text]').textContent = result.json.text;
+                card.querySelector('[data-qcard-meta]').textContent = result.json.meta;
+                card.classList.toggle('is-off', !result.json.is_active);
+            } else if (result.status === 422) {
+                showErrors(card, result.json.errors || { x: [result.json.message] });
+                setStatus(card, 'Chưa lưu – xem dòng đỏ', 'error');
+            } else {
+                setStatus(card, 'Chưa lưu được, thử lại sau', 'error');
+            }
+        }).catch(function () { setStatus(card, 'Mất kết nối, chưa lưu', 'error'); });
+    }
+
+    function queueSave(form) {
+        clearTimeout(timers.get(form));
+        setStatus(form.closest('[data-qcard]'), 'Đang sửa…');
+        timers.set(form, setTimeout(function () { save(form); }, 900));
+    }
+
+    function openCard(card) {
+        var body = card.querySelector('[data-qcard-body]');
+        var tools = card.querySelector('[data-qcard-tools]');
+        var toggle = card.querySelector('[data-qcard-toggle]');
+        var show = function () {
+            body.hidden = false;
+            tools.hidden = false;
+            toggle.setAttribute('aria-expanded', 'true');
+            card.classList.add('is-open');
+            var first = body.querySelector('textarea, input:not([type=hidden])');
+            if (first) first.focus({ preventScroll: true });
+        };
+        if (body.childElementCount) { show(); return; }
+        setStatus(card, 'Đang mở…');
+        fetch(card.getAttribute('data-form-url'), { credentials: 'same-origin', headers: { Accept: 'text/html' } })
+            .then(function (response) { return response.text(); })
+            .then(function (html) {
+                body.innerHTML = html;
+                var form = body.querySelector('form');
+                if (form && window.HollandAdmin) window.HollandAdmin.initTypeForm(form);
+                setStatus(card, '');
+                show();
+            })
+            .catch(function () { setStatus(card, 'Không mở được, thử lại', 'error'); });
+    }
+
+    function closeCard(card) {
+        var form = card.querySelector('[data-autosave]');
+        if (form && timers.get(form)) { clearTimeout(timers.get(form)); save(form); }
+        card.querySelector('[data-qcard-body]').hidden = true;
+        card.querySelector('[data-qcard-tools]').hidden = true;
+        card.querySelector('[data-qcard-toggle]').setAttribute('aria-expanded', 'false');
+        card.classList.remove('is-open');
+    }
+
+    document.addEventListener('click', function (event) {
+        var toggle = event.target.closest('[data-qcard-toggle]');
+        if (toggle) {
+            var card = toggle.closest('[data-qcard]');
+            if (card.classList.contains('is-open')) closeCard(card); else openCard(card);
+            return;
+        }
+
+        var close = event.target.closest('[data-qcard-close]');
+        if (close) { closeCard(close.closest('[data-qcard]')); return; }
+
+        var action = event.target.closest('[data-qcard-action]');
+        if (!action) return;
+        var question = action.getAttribute('data-confirm');
+        if (question && !window.confirm(question)) return;
+        var owner = action.closest('[data-qcard]');
+        var method = action.getAttribute('data-method') || 'POST';
+        request(action.getAttribute('data-qcard-action'), method).then(function (result) {
+            if (!result.ok) { setStatus(owner, result.json.message || 'Không làm được, thử lại', 'error'); return; }
+            if (method === 'DELETE') {
+                owner.remove();
+            } else if (result.json.card) {
+                owner.insertAdjacentHTML('afterend', result.json.card);
+                openCard(owner.nextElementSibling);
+            }
+        });
+    });
+
+    // Tự lưu khi sửa trong thẻ (gõ xong khoảng 1 giây thì lưu).
+    ['input', 'change'].forEach(function (type) {
+        document.addEventListener(type, function (event) {
+            var form = event.target.closest && event.target.closest('form[data-autosave]');
+            if (form) queueSave(form);
+        });
+    });
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        if (form.matches('form[data-autosave]')) {
+            event.preventDefault();
+            clearTimeout(timers.get(form));
+            save(form);
+        }
+        if (form.matches('form[data-quick-add]')) {
+            event.preventDefault();
+            var error = form.querySelector('[data-quick-add-error]');
+            request(form.action, 'POST', new FormData(form)).then(function (result) {
+                if (!result.ok) {
+                    var errors = result.json.errors || {};
+                    var first = Object.keys(errors).map(function (key) { return errors[key][0]; })[0];
+                    error.textContent = first || result.json.message || 'Chưa thêm được, vui lòng thử lại.';
+                    error.hidden = false;
+                    return;
+                }
+                error.hidden = true;
+                var list = form.parentElement.querySelector('[data-qcards]');
+                list.insertAdjacentHTML('beforeend', result.json.card);
+                form.querySelector('[name="text"]').value = '';
+                var card = list.lastElementChild;
+                setStatus(card, 'Đã thêm ✓', 'ok');
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                form.querySelector('[name="text"]').focus();
+            });
+        }
+    });
+})();
