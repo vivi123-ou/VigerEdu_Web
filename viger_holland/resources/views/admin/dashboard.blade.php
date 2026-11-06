@@ -5,22 +5,30 @@
 @section('content')
     <p class="lead">Xin chào {{ auth()->user()->name }}! Đây là tình hình bài test hiện tại. Chọn một mục ở menu bên trái để bắt đầu; mỗi trang đều có nút <strong>?</strong> cạnh tiêu đề để xem hướng dẫn.</p>
 
+    @php
+        // Việc hay làm (≤ 3 lần bấm), chỉ hiện việc thuộc vai trò của người đăng nhập.
+        $shortcuts = collect([
+            ['question-sets', 'Sửa câu hỏi bài test', 'Thêm, sửa, bật/tắt câu hỏi Holland.'],
+            ['intro', 'Đổi chữ, ảnh trang giới thiệu', 'Tiêu đề, mô tả, banner, các khối nội dung.'],
+            ['result-page', 'Đổi chữ trang kết quả', 'Lời chào, khối liên hệ tư vấn.'],
+        ])->filter(fn ($item) => auth()->user()->canAccessMenu($item[0]))->take(2);
+    @endphp
     <div class="guide">
-        <a class="guide__item" href="{{ route('admin.section', 'question-sets') }}">
-            <p class="guide__title">Sửa câu hỏi bài test</p>
-            <p class="guide__text">Thêm, sửa, bật/tắt câu hỏi Holland.</p>
-        </a>
-        <a class="guide__item" href="{{ route('admin.section', 'intro') }}">
-            <p class="guide__title">Đổi chữ, ảnh trang giới thiệu</p>
-            <p class="guide__text">Tiêu đề, mô tả, banner, nút "Bắt đầu".</p>
-        </a>
+        @foreach ($shortcuts as [$key, $title, $text])
+            <a class="guide__item" href="{{ \App\Support\AdminMenu::url(\App\Support\AdminMenu::find($key)) }}">
+                <p class="guide__title">{{ $title }}</p>
+                <p class="guide__text">{{ $text }}</p>
+            </a>
+        @endforeach
         <a class="guide__item" href="{{ route('home') }}" target="_blank" rel="noopener">
             <p class="guide__title">Xem trang như khách</p>
             <p class="guide__text">Mở trang bài test ở tab mới để kiểm tra.</p>
         </a>
     </div>
 
+    @php $canEditQuestions = auth()->user()->canAccessMenu('question-sets'); @endphp
     <div class="stats">
+        @if ($canEditQuestions)
         <div class="stat">
             <p class="stat__value">{{ $partACount }}</p>
             <p class="stat__label">Câu hỏi thông tin khách đang bật</p>
@@ -33,12 +41,14 @@
             <p class="stat__value">{{ $sets->count() }}</p>
             <p class="stat__label">Bộ câu hỏi</p>
         </div>
+        @endif
         <a class="stat" href="{{ route('admin.attempts.index') }}" style="text-decoration:none">
             <p class="stat__value">{{ $attemptsToday }}</p>
             <p class="stat__label">Lượt làm bài hôm nay · tổng {{ $attemptsTotal }}</p>
         </a>
     </div>
 
+    @if ($canEditQuestions)
     <section class="card">
         <h2 class="card__title">Bộ câu hỏi</h2>
         <div class="table-wrap">
@@ -61,4 +71,5 @@
             </table>
         </div>
     </section>
+    @endif
 @endsection

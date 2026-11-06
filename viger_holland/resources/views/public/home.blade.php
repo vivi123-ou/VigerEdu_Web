@@ -1,20 +1,30 @@
 @extends('layouts.public')
 
 @php
-    $groups = ['R' => 'Realistic', 'I' => 'Investigative', 'A' => 'Artistic', 'S' => 'Social', 'E' => 'Enterprising', 'C' => 'Conventional'];
+    use App\Support\IntroBlocks;
+
+    $blocks = $blocks ?? IntroBlocks::enabled();
+    $bannerImage = media_url(setting('banner_image'));
+    $bannerMobile = media_url(setting('banner_image_mobile')) ?? $bannerImage;
+    // Khối "Cách làm bài" đầu tiên được đặt cạnh banner (khi admin chọn và không có ảnh banner).
+    $heroSteps = $bannerImage ? null : collect($blocks)->first(fn ($block) => $block['type'] === 'steps' && ($block['data']['in_hero'] ?? false));
+    $sectionBlocks = collect($blocks)->reject(fn ($block) => $heroSteps && $block['id'] === $heroSteps['id'])->values();
+    $benefits = array_filter([setting('intro_benefit_1'), setting('intro_benefit_2'), setting('intro_benefit_3')]);
 @endphp
 
 @section('content')
     <section class="hero">
-        <div class="container hero__grid">
+        <div @class(['container', 'hero__grid', 'hero__grid--single' => ! $bannerImage && ! $heroSteps])>
             <div class="hero__main">
+                @if ($bannerMobile)
+                    <img class="hero__image hero__image--mobile" src="{{ $bannerMobile }}" alt="">
+                @endif
                 <p class="eyebrow">{{ setting('intro_eyebrow', setting('test_name')) }}</p>
                 <h1 class="hero__title">{{ setting('intro_title') }}</h1>
-                <p class="hero__subtitle">{{ setting('intro_subtitle') }}</p>
+                @if (filled(setting('intro_subtitle')))
+                    <p class="hero__subtitle">{{ setting('intro_subtitle') }}</p>
+                @endif
 
-                @php
-                    $benefits = array_filter([setting('intro_benefit_1'), setting('intro_benefit_2'), setting('intro_benefit_3')]);
-                @endphp
                 @if ($benefits)
                     <ul class="benefits">
                         @foreach ($benefits as $benefit)
@@ -31,50 +41,17 @@
                 @endif
             </div>
 
-            @if (filled(setting('steps_title')))
-                <aside class="steps" aria-labelledby="cach-lam">
-                    <h2 id="cach-lam" class="steps__title">{{ setting('steps_title') }}</h2>
-                    <ol class="steps__list">
-                        @foreach ([1, 2, 3] as $step)
-                            @if (filled(setting("step_{$step}_title")))
-                                <li class="steps__item">
-                                    <span class="steps__number">{{ $step }}</span>
-                                    <div>
-                                        <p class="steps__name">{{ setting("step_{$step}_title") }}</p>
-                                        <p class="steps__text">{{ setting("step_{$step}_text") }}</p>
-                                    </div>
-                                </li>
-                            @endif
-                        @endforeach
-                    </ol>
-                    @if (filled(setting('intro_parent_note')))
-                        <p class="steps__note">{{ setting('intro_parent_note') }}</p>
-                    @endif
-                </aside>
+            @if ($bannerImage)
+                <div class="hero__media">
+                    <img class="hero__image hero__image--desktop" src="{{ $bannerImage }}" alt="">
+                </div>
+            @elseif ($heroSteps)
+                @include('public.blocks.steps', ['block' => $heroSteps, 'inHero' => true])
             @endif
         </div>
     </section>
 
-    @if (filled(setting('groups_title')))
-        <section class="section section--soft" aria-labelledby="phuong-phap">
-            <div class="container">
-                <div class="section__head">
-                    <h2 id="phuong-phap" class="section__title">{{ setting('groups_title') }}</h2>
-                    <p class="section__lead">{{ setting('groups_intro') }}</p>
-                </div>
-
-                <ul class="groups">
-                    @foreach ($groups as $letter => $english)
-                        <li class="group">
-                            <span class="group__letter" aria-hidden="true">{{ $letter }}</span>
-                            <div>
-                                <h3 class="group__name">{{ setting("group_name_{$letter}") }} <span class="group__en">{{ $english }}</span></h3>
-                                <p class="group__desc">{{ setting("group_desc_{$letter}") }}</p>
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </section>
-    @endif
+    @foreach ($sectionBlocks as $block)
+        @include('public.blocks.'.$block['type'], ['block' => $block, 'inHero' => false, 'soft' => $loop->odd])
+    @endforeach
 @endsection

@@ -16,6 +16,7 @@ class SectionController extends Controller
         $item = AdminMenu::find($section);
 
         abort_if($item === null, 404);
+        abort_unless(auth()->user()?->canAccessMenu($section), 403, 'Tài khoản của bạn không có quyền vào mục này.');
 
         return view('admin.coming-soon', ['item' => $item]);
     }

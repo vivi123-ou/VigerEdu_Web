@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
     <title>Đăng nhập quản trị – {{ setting('test_name') }}</title>
-    <link rel="icon" href="{{ asset(setting('favicon_path', 'img/favicon.png')) }}">
+    <link rel="icon" href="{{ media_url(setting('favicon_path', 'img/favicon.png')) }}">
     @include('partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <style>:root { --brand: {{ setting('primary_color', '#c1121f') }}; --ink: {{ setting('text_color', '#12263f') }}; }</style>
 </head>
 <body class="auth">
     <main class="auth-card">
-        <img class="auth-card__logo" src="{{ asset(setting('logo_path', 'img/logo.png')) }}" alt="{{ setting('site_name') }}" width="56" height="56">
+        <img class="auth-card__logo" src="{{ media_url(setting('logo_path', 'img/logo.png')) }}" alt="{{ setting('site_name') }}" width="56" height="56">
         <h1>Đăng nhập quản trị</h1>
         <p class="auth-card__sub">{{ setting('test_name') }} · {{ setting('site_name') }}</p>
 

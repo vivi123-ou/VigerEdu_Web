@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
     <title>@yield('title', 'Quản trị') – {{ setting('test_name') }}</title>
-    <link rel="icon" href="{{ asset(setting('favicon_path', 'img/favicon.png')) }}">
+    <link rel="icon" href="{{ media_url(setting('favicon_path', 'img/favicon.png')) }}">
     @include('partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <style>:root { --brand: {{ setting('primary_color', '#c1121f') }}; --ink: {{ setting('text_color', '#12263f') }}; }</style>
@@ -21,7 +21,7 @@
         <button class="topbar__burger" type="button" data-toggle-sidebar aria-controls="sidebar" aria-expanded="false" aria-label="Mở menu">@include('partials.icon', ['name' => 'menu', 'size' => 22])</button>
 
         <a class="topbar__brand" href="{{ route('admin.dashboard') }}">
-            <img src="{{ asset(setting('logo_path', 'img/logo.png')) }}" alt="" width="28" height="28">
+            <img src="{{ media_url(setting('logo_path', 'img/logo.png')) }}" alt="" width="28" height="28">
             <span class="topbar__brand-text">{{ setting('test_name') }}</span>
         </a>
 
@@ -65,11 +65,14 @@
     <div class="layout">
         <aside id="sidebar" class="sidebar" aria-label="Menu quản trị">
             @foreach (AdminMenu::groups() as $group)
+                {{-- Mỗi người chỉ thấy mục của vai trò mình --}}
+                @php $visibleItems = array_filter($group['items'], fn ($item) => auth()->user()->canAccessMenu($item['key'])); @endphp
+                @continue(empty($visibleItems))
                 @isset($group['title'])
                     <p class="sidebar__title">{{ $group['title'] }}</p>
                 @endisset
                 <ul class="sidebar__list">
-                    @foreach ($group['items'] as $item)
+                    @foreach ($visibleItems as $item)
                         <li>
                             <a href="{{ AdminMenu::url($item) }}"
                                @class(['sidebar__link', 'is-active' => $item['key'] === $currentKey])
@@ -118,5 +121,6 @@
     @endif
 
     <script src="{{ asset('js/admin.js') }}" defer></script>
+    @stack('scripts')
 </body>
 </html>

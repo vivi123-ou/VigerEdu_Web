@@ -326,3 +326,79 @@ a:focus-visible, button:focus-visible {
     .steps { padding: 1.75rem; margin-top: 0.5rem; }
     .groups { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ---------- Giai đoạn 3c: banner có ảnh, menu đầu trang, các khối nội dung, khối nhúng ---------- */
+.container--narrow { max-width: 46rem; }
+.btn--ghost { border-color: var(--line); }
+.btn--ghost:hover { border-color: var(--ink); background: #fff; color: var(--ink); }
+
+.site-header__inner { position: relative; }
+.site-nav { margin-left: auto; }
+.site-nav__toggle { list-style: none; display: inline-flex; padding: 0.4rem; cursor: pointer; color: var(--ink-soft); }
+.site-nav__toggle::-webkit-details-marker { display: none; }
+.site-nav__list { position: absolute; top: 100%; right: 0; left: 0; z-index: 20; display: grid; background: #fff; border-bottom: 1px solid var(--line); padding: 0.5rem 1.25rem 1rem; }
+.site-nav__list a { padding: 0.6rem 0; text-decoration: none; font-weight: 500; border-bottom: 1px solid var(--line); }
+.site-nav__list a:hover { color: var(--brand); }
+@media (min-width: 64rem) {
+    .site-nav { display: contents; }
+    .site-nav__toggle { display: none; }
+    .site-nav__list { position: static; display: flex; gap: 1.75rem; margin-left: auto; padding: 0; border: 0; background: none; }
+    .site-nav:not([open]) > .site-nav__list { display: flex; }
+    .site-nav__list a { border: 0; padding: 0; font-size: 0.9375rem; }
+}
+
+.hero__image { display: block; width: 100%; height: auto; object-fit: cover; }
+.hero__image--mobile { margin-bottom: 1.5rem; max-height: 16rem; }
+.hero__image--desktop { display: none; }
+@media (min-width: 64rem) {
+    .hero__image--mobile { display: none; }
+    .hero__image--desktop { display: block; max-height: 30rem; }
+    .hero__grid--single { grid-template-columns: minmax(0, 46rem); }
+}
+
+.steps--section { max-width: 46rem; background: none; border: 0; padding: 0; }
+
+.rich p { margin: 0 0 0.9rem; }
+.rich p:last-child { margin-bottom: 0; }
+.rich ul, .rich ol { margin: 0 0 0.9rem; padding-left: 1.25rem; }
+.rich a { color: var(--brand); }
+
+.text-image { display: grid; gap: 2rem; align-items: center; }
+.text-image__body .section__title { margin-bottom: 1rem; }
+.text-image__body .btn { margin-top: 1.25rem; }
+.text-image__img { width: 100%; height: auto; display: block; }
+@media (min-width: 48rem) {
+    .text-image { grid-template-columns: 1fr 1fr; gap: 3.5rem; }
+    .text-image--left .text-image__img { order: -1; }
+    .text-image--no-image { grid-template-columns: minmax(0, 46rem); }
+}
+
+.faq { margin-top: 1.5rem; border-top: 1px solid var(--line); }
+.faq__item { border-bottom: 1px solid var(--line); }
+.faq__question { list-style: none; cursor: pointer; padding: 1rem 2rem 1rem 0; font-weight: 600; position: relative; }
+.faq__question::-webkit-details-marker { display: none; }
+.faq__question::after { content: "+"; position: absolute; right: 0.25rem; top: 0.9rem; font-weight: 400; font-size: 1.25rem; color: var(--muted); }
+.faq__item[open] .faq__question::after { content: "\2212"; }
+.faq__answer { padding: 0 0 1.1rem; color: var(--ink-soft); }
+
+.quotes { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 1.25rem; }
+.quote { background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--brand); padding: 1.5rem; }
+.quote__text { margin: 0 0 1rem; font-size: 1.0625rem; line-height: 1.6; }
+.quote__author { margin: 0; font-size: 0.9375rem; display: grid; }
+.quote__author span { color: var(--muted); font-size: 0.875rem; }
+@media (min-width: 48rem) { .quotes { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64rem) { .quotes { grid-template-columns: repeat(3, 1fr); } }
+
+.site-footer__address { white-space: pre-line; }
+
+.embed { margin: 0; }
+.embed-card { display: grid; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--brand); }
+.embed-card__img { width: 100%; height: 12rem; object-fit: cover; display: block; }
+.embed-card__body { padding: 1.5rem; }
+.embed-card__title { font-family: var(--font-heading); font-size: 1.5rem; line-height: 1.25; margin: 0 0 0.6rem; }
+.embed-card__text { color: var(--ink-soft); margin: 0 0 1.25rem; }
+@media (min-width: 40rem) {
+    .embed-card:not(.embed-card--no-image) { grid-template-columns: 2fr 3fr; }
+    .embed-card__img { height: 100%; min-height: 12rem; }
+}
+.faq-wrap { max-width: 46rem; }

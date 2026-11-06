@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\AdminMenu;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -17,6 +18,9 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     public const ROLE_ADMIN = 'ADMIN';
+
+    /** Marketing: chỉ sửa nội dung trang, xem lượt làm bài. */
+    public const ROLE_EDITOR = 'EDITOR';
 
     /**
      * @return array<string, string>
@@ -42,6 +46,19 @@ class User extends Authenticatable
     public function canAccessAdmin(): bool
     {
         return $this->is_active && array_key_exists((string) $this->role, config('holland.roles'));
+    }
+
+    /**
+     * Được vào một mục menu admin không. Quản trị viên: mọi mục. Marketing (EDITOR): mục có 'editor' => true
+     * trong config/admin_menu.php (nội dung trang, thư viện ảnh, mô tả 6 nhóm, lượt làm bài).
+     */
+    public function canAccessMenu(string $key): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return (bool) (AdminMenu::find($key)['editor'] ?? false);
     }
 
     public function roleLabel(): string

@@ -42,9 +42,24 @@ class Setting extends Model
         });
     }
 
+    /**
+     * Giá trị tạm thời cho nút "Xem trước" (chỉ trong request hiện tại, không lưu).
+     *
+     * @var array<string, string|null>
+     */
+    private static array $overrides = [];
+
+    /**
+     * @param  array<string, string|null>  $values
+     */
+    public static function preview(array $values): void
+    {
+        static::$overrides = $values;
+    }
+
     public static function get(string $key, mixed $default = null): mixed
     {
-        $value = static::allCached()[$key] ?? null;
+        $value = array_key_exists($key, static::$overrides) ? static::$overrides[$key] : (static::allCached()[$key] ?? null);
 
         return ($value === null || $value === '') ? $default : $value;
     }

@@ -11,11 +11,11 @@
 | 3a. Khách làm bài → điền thông tin → xem kết quả, email, lượt làm bài trong admin | ✅ Xong |
 | Cập nhật dữ liệu 05/11 (16 bang + Wien, từ điển mới) | ✅ Xong |
 | 3b. Admin quản lý câu hỏi, Excel, form Phần A, cấu hình chấm điểm | ✅ Xong (chưa thử bằng trình duyệt trên máy Vân) |
-| 3c. Admin nội dung trang (banner, chữ, email, chân trang), khối nhúng | Chưa làm |
+| 3c. Nội dung trang (banner, khối, kết quả, email, giao diện, chân trang), thư viện ảnh, khối nhúng, vai trò marketing | ✅ Xong |
 | 4. Kết nối CRM (gửi thật, thử lại, danh mục ngành từ CRM) | Chưa làm |
 | 5–7. API v1, an toàn dữ liệu, Excel kết quả, Cài đặt, SEO, `/install`, tài liệu | Chưa làm |
 
-**Con số hiện tại:** 76 câu hỏi (22 câu Phần A, 21 đang bật + 54 câu Phần B mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **128 test đều đạt** · nhánh `dev`, **chưa push**.
+**Con số hiện tại:** 76 câu hỏi (22 câu thông tin khách, 12 đang bật + 54 câu Holland mẫu) · 1 bộ câu `thpt` · 75 ngành/nghề · **146 test đều đạt** · nhánh `dev`, **chưa push**.
 
 **Chạy trên máy Vân:** mở `D:\laragon\laragon.exe` → **Start All** → trong thư mục dự án gõ `php artisan serve`.
 - Trang khách: http://127.0.0.1:8000 · Admin: http://127.0.0.1:8000/admin (tài khoản `SPN`)
@@ -26,7 +26,8 @@
 2. Báo bạn Ý (chatbot): câu lý do kết quả ngành là **"bạn đạt…"** (bản hợp đồng Ý gửi 05/11 vẫn ghi "em đạt").
 3. Xóa gói cập nhật khi không cần nữa: `D:\OU\Cap_nhat_Holland_05-11.zip` và thư mục `D:\OU\Holland\docs\Cap_nhat_Holland_05-11\`.
 4. Khi đưa lên server thật: **đổi mật khẩu** tài khoản `SPN` (mật khẩu hiện tại đã gõ trong khung chat).
-5. Sau khi lấy code giai đoạn 3b: bật Laragon (Start All) rồi chạy `php artisan migrate` (thêm bảng `admin_activities` – nhật ký thay đổi).
+5. Mỗi lần lấy code mới: bật Laragon (Start All) rồi chạy `php artisan migrate` và `php artisan db:seed --class=SettingSeeder` (seeder chỉ thêm ô mới, không ghi đè chữ đã sửa). Lần này có thêm bảng `media` (thư viện ảnh) và các ô nội dung mới. Máy Vân đã chạy `php artisan storage:link`.
+6. Muốn thử vai trò marketing: thêm `HOLLAND_EDITOR_USERNAME` + `HOLLAND_EDITOR_PASSWORD` vào `.env` rồi chạy `php artisan db:seed --class=AdminSeeder`.
 
 ### Câu hỏi cho Vân / Thầy
 1. **Email gửi đi** khi chạy thật là địa chỉ nào (ví dụ `tuvan@viger.edu.vn`) và thông tin SMTP? Đặc tả ghi `MAIL_MAILER=log` nhưng chế độ đó ghi email khách vào file log, trái quy tắc bảo mật → máy Vân đang dùng Mailpit.
@@ -159,6 +160,34 @@ Menu trái: 5 mục bỏ nhãn "Sắp có" – Bộ câu hỏi, Form thông tin 
 
 **Việc Vân cần làm:** báo bạn Ý về 3 trường mới trong `quiz.answers` (xem `HOP_DONG_KET_NOI.md`).
 
-## Tiếp theo: Giai đoạn 3c – Nội dung trang
+## Giai đoạn 3c – Nội dung trang (xong 06/11/2026)
 
-Trang giới thiệu & banner (có xem trước + lịch sử), trang kết quả, email, menu / chân trang / màu, khối nhúng cho web chính; vai trò `EDITOR` cho marketing.
+Mọi chữ, ảnh, màu khách thấy sửa được trên admin. Mỗi trang có **"Xem trước"** (mở trang khách ở tab mới với nội dung chưa lưu), **Lưu**, **Lịch sử thay đổi + "Quay lại bản này"**.
+
+- **Khung trang nội dung dùng chung** (`config/admin_content.php`, `ContentController`): mỗi trang là danh sách ô (chữ, đoạn văn, chữ có định dạng, ảnh, màu, font, địa chỉ web, danh sách link, tên miền). Thêm ô mới = thêm một dòng config.
+  - **Trang giới thiệu – tab Banner:** dòng chữ nhỏ, tiêu đề, đoạn giới thiệu, 3 lợi ích, chữ nút, **ảnh banner máy tính + điện thoại**.
+  - **Trang kết quả:** lời chào, mở đầu, tiêu đề các phần, câu nhắc hồ sơ phẳng / bằng điểm, khối liên hệ (chữ có định dạng), lưu ý. "Xem trước" dùng kết quả học sinh mẫu HS01 (không lưu).
+  - **Email gửi khách:** tiêu đề, lời chào, mở đầu, lời kết (có định dạng), chữ ký. "Xem trước" hiện email mẫu.
+  - **Giao diện & chân trang:** tên đơn vị, tên bài test, logo, favicon, màu chủ đạo, màu chữ, 2 font, **menu đầu trang** (thêm/bỏ link, mở tab mới), link về web chính, thông tin chân trang, **danh sách mạng xã hội / link** (thay 3 ô Facebook / YouTube / TikTok cố định).
+  - **Nhúng vào web chính:** tiêu đề, mô tả, ảnh, chữ nút, **tên miền được phép nhúng**; trang hiện sẵn 3 đoạn mã kèm nút "Chép" để gửi Tuấn.
+- **Trang giới thiệu – tab "Các khối nội dung":** thêm / sửa / bật-tắt / **kéo thả** / xóa (lấy lại bằng lịch sử). 5 loại khối: Cách làm bài, 6 nhóm Holland, Chữ và ảnh, **Câu hỏi thường gặp** (có sẵn 4 câu mẫu), **Cảm nhận phụ huynh / học sinh** (chỉ đăng lời thật; khối trống tự ẩn). Khối "Cách làm bài" đặt cạnh banner khi banner không có ảnh (giữ giao diện cũ).
+- **Thư viện ảnh:** tải nhiều ảnh, **tự thu nhỏ còn rộng 1920px và nén** (GD có sẵn, xoay đúng chiều ảnh chụp điện thoại), thùng rác. Ô ảnh ở mọi trang có nút "Chọn ảnh" mở thư viện, tải ảnh mới ngay trong hộp chọn.
+- **Trình soạn thảo:** CKEditor 5 bản 41.4.2 qua CDN (giống web chính), chỉ bật cho ô "chữ có định dạng". HTML được **lọc an toàn** (`HtmlSanitizer`: chỉ giữ đoạn, đậm, nghiêng, link http/https/mailto/tel, danh sách; bỏ script, sự kiện, iframe…) khi lưu và khi hiển thị.
+- **Khối nhúng cho web chính:** `GET /api/v1/public/intro` (JSON theo hợp đồng, cache 5 phút, chỉ tên miền cho phép gọi từ trình duyệt, 60 lần/phút), `GET /embed` (khung rút gọn, header `frame-ancestors` theo danh sách tên miền), `GET /embed.js` (tự chèn iframe, tự co chiều cao). Bấm nút trong khung mở trang Holland ở **tab mới** (làm bài trên trang Holland, không làm bài trong iframe – đỡ lỗi đăng nhập / cookie giữa 2 tên miền).
+- **Vai trò marketing (`EDITOR`):** chỉ thấy Bảng điều khiển, Mô tả 6 nhóm, Trang giới thiệu, Trang kết quả, Email, Nhúng vào web chính, Thư viện ảnh, Lượt làm bài. Vào mục khác → báo không có quyền; không quay lại được thay đổi câu hỏi / chấm điểm. Tài khoản mẫu tạo từ `.env` (trang quản lý tài khoản: giai đoạn 6).
+- Migration chỉ thêm: bảng `media`. **146 test đều đạt** (18 test mới). Đã chụp ảnh kiểm tra trang giới thiệu ở 1366px và 496px, khối nhúng.
+
+**Chưa làm / để sau:** SEO + ô "Mã nhúng chatbot" thuộc trang Cài đặt (giai đoạn 7); câu báo lỗi cho khách ("Vui lòng điền…") vẫn trong code – đưa vào admin ở giai đoạn 7 cùng Cài đặt.
+
+### Bảng nghiệm thu – việc đã làm được đến giai đoạn 3c
+| Vai trò | # | Việc | Trạng thái |
+|---|---|---|---|
+| Sếp | 1 | Đổi số hotline, địa chỉ, logo | ✅ Trang "Giao diện & chân trang" (phía web Holland) |
+| Sếp | 4 | Sửa câu hỏi Holland, thêm câu "Trường chuyên?" | ✅ |
+| Sếp | 5 | Đổi chữ trên trang kết quả Holland | ✅ Có xem trước |
+| Sếp | 7 | Tài khoản marketing chỉ thấy phần của mình | Một phần: vai trò đã chặn đúng; tạo tài khoản trên web ở giai đoạn 6 |
+| Marketing | 2 | Thay banner | ✅ Phía web Holland (ảnh banner máy tính + điện thoại); hẹn giờ banner là việc của web chính |
+
+## Tiếp theo: Giai đoạn 4 – Kết nối CRM
+
+Danh mục ngành từ CRM (dự phòng file `majors.json`), gửi khách sang CRM thật qua hàng đợi + thử lại + lịch chạy, trang "Hàng đợi gửi CRM" (gửi lại), trang "Kết nối CRM & chatbot" (bật/tắt, địa chỉ, mã kết nối, nút "Kiểm tra kết nối", ô mã nhúng chatbot). Test bằng `Http::fake()`.

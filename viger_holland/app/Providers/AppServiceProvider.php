@@ -42,6 +42,9 @@ class AppServiceProvider extends ServiceProvider
         // An toàn dữ liệu: chặn migrate:fresh / migrate:reset / db:wipe khi chạy thật.
         DB::prohibitDestructiveCommands($this->app->isProduction());
 
+        // API: tối đa 60 lần / phút / địa chỉ IP.
+        RateLimiter::for('api', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
+
         // Form công khai: tối đa 5 lần nộp bài / phút / địa chỉ IP, báo lỗi tiếng Việt.
         RateLimiter::for('submit-test', fn (Request $request) => Limit::perMinute(5)
             ->by($request->ip())

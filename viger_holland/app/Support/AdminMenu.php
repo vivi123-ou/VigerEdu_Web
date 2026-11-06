@@ -45,6 +45,6 @@ class AdminMenu
 
     public static function url(array $item): string
     {
-        return isset($item['route']) ? route($item['route']) : route('admin.section', $item['key']);
+        return isset($item['route']) ? route($item['route'], $item['params'] ?? []) : route('admin.section', $item['key']);
     }
 }

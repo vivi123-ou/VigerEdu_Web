@@ -1,9 +1,5 @@
 @php
-    $socials = array_filter([
-        'Facebook' => setting('facebook_url'),
-        'YouTube' => setting('youtube_url'),
-        'TikTok' => setting('tiktok_url'),
-    ]);
+    $socials = \App\Support\ContentPages::links(setting('footer_links'));
     $hotline = setting('hotline');
     $zalo = setting('zalo');
 @endphp
@@ -30,7 +26,7 @@
                         <li><a href="mailto:{{ setting('email') }}">{{ setting('email') }}</a></li>
                     @endif
                     @if (filled(setting('address')))
-                        <li>{{ setting('address') }}</li>
+                        <li class="site-footer__address">{{ setting('address') }}</li>
                     @endif
                     @if (filled(setting('working_hours')))
                         <li>{{ setting('working_hours') }}</li>
@@ -42,8 +38,8 @@
                 <div>
                     <p class="site-footer__heading">{{ setting('footer_social_heading', 'Theo dõi') }}</p>
                     <ul>
-                        @foreach ($socials as $name => $url)
-                            <li><a href="{{ $url }}" rel="noopener" target="_blank">{{ $name }}</a></li>
+                        @foreach ($socials as $link)
+                            <li><a href="{{ $link['url'] }}" @if ($link['new_tab']) target="_blank" rel="noopener" @endif>{{ $link['label'] }}</a></li>
                         @endforeach
                     </ul>
                 </div>

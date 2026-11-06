@@ -7,6 +7,7 @@ use App\Models\AdminActivity;
 use App\Models\Question;
 use App\Models\QuestionSet;
 use App\Models\Setting;
+use App\Support\IntroBlocks;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -87,6 +88,18 @@ class QuestionController extends Controller
     public function revert(AdminActivity $activity): RedirectResponse
     {
         abort_unless($activity->canRevert(), 404);
+
+        // Marketing chỉ quay lại được nội dung trang (trang giới thiệu, kết quả, email, khối nhúng, mô tả nhóm).
+        $user = auth()->user();
+        if (! $user->isAdmin()) {
+            $menuKey = match (true) {
+                $activity->subject_type === AdminActivity::SUBJECT_GROUPS => 'groups',
+                $activity->subject_type === IntroBlocks::SUBJECT => 'intro',
+                str_starts_with((string) $activity->subject_type, AdminActivity::SUBJECT_SETTINGS.'.') => substr((string) $activity->subject_type, strlen(AdminActivity::SUBJECT_SETTINGS) + 1),
+                default => 'question-sets',
+            };
+            abort_unless($user->canAccessMenu($menuKey), 403, 'Tài khoản của bạn không có quyền quay lại nội dung này.');
+        }
 
         $label = 'Quay lại bản trước lần sửa lúc '.$activity->created_at->format('H:i d/m/Y');
 

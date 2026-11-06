@@ -111,7 +111,7 @@
             <div class="container">
                 <div class="contact-box">
                     <h2 class="contact-box__title">{{ setting('result_contact_title') }}</h2>
-                    <p class="contact-box__text">{{ setting('result_contact_text') }}</p>
+                    <div class="contact-box__text rich">{!! rich_text(setting('result_contact_text')) !!}</div>
                     <div class="contact-box__actions">
                         @if (filled($hotline))
                             <a class="btn btn--primary" href="tel:{{ preg_replace('/[^0-9+]/', '', $hotline) }}">{{ setting('result_call_text', 'Gọi tư vấn') }} · {{ $hotline }}</a>

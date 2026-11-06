@@ -64,9 +64,17 @@ return [
         'email' => env('HOLLAND_ADMIN_EMAIL'),
     ],
 
-    // Vai trò tài khoản admin. EDITOR (marketing) sẽ thêm ở giai đoạn 3.
+    // Tài khoản marketing mẫu (không bắt buộc), do AdminSeeder tạo để thử nghiệm thu
+    'editor' => [
+        'username' => env('HOLLAND_EDITOR_USERNAME'),
+        'password' => env('HOLLAND_EDITOR_PASSWORD'),
+        'name' => env('HOLLAND_EDITOR_NAME', 'Marketing'),
+    ],
+
+    // Vai trò tài khoản admin. EDITOR (marketing) chỉ thấy các mục có 'editor' => true trong config/admin_menu.php.
     'roles' => [
         'ADMIN' => 'Quản trị viên',
+        'EDITOR' => 'Marketing (nội dung trang)',
     ],
 
     // Danh sách font admin được chọn (Google Fonts, đều hỗ trợ tiếng Việt).

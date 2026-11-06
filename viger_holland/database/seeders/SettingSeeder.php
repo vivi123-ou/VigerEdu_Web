@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Setting;
+use App\Support\IntroBlocks;
 use Illuminate\Database\Seeder;
 
 /**
@@ -40,9 +41,12 @@ class SettingSeeder extends Seeder
                 'email' => 'info@spn.com.vn',
                 'address' => '',
                 'working_hours' => '',
-                'facebook_url' => 'https://www.facebook.com/duhocVIGER',
-                'youtube_url' => 'https://www.youtube.com/@SPN.Invest',
-                'tiktok_url' => 'https://www.tiktok.com/@spn.invest',
+                'footer_links' => json_encode([
+                    ['label' => 'Facebook', 'url' => 'https://www.facebook.com/duhocVIGER', 'new_tab' => true],
+                    ['label' => 'YouTube', 'url' => 'https://www.youtube.com/@SPN.Invest', 'new_tab' => true],
+                    ['label' => 'TikTok', 'url' => 'https://www.tiktok.com/@spn.invest', 'new_tab' => true],
+                ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                'header_menu' => '[]',
                 'copyright' => 'Viger-Edu. Bảo lưu mọi quyền.',
                 'footer_contact_heading' => 'Liên hệ',
                 'footer_social_heading' => 'Theo dõi',
@@ -56,10 +60,13 @@ class SettingSeeder extends Seeder
                 'intro_benefit_3' => 'Gợi ý lĩnh vực và ngành học phù hợp',
                 'intro_button_text' => 'Bắt đầu làm bài',
                 'intro_button_note' => 'Không cần tạo tài khoản.',
+                'banner_image' => '',
+                'banner_image_mobile' => '',
 
-                // Khối "Phương pháp Holland" + 6 nhóm sở thích
-                'groups_title' => 'Phương pháp Holland là gì?',
-                'groups_intro' => 'Phương pháp do nhà tâm lý học John Holland (Mỹ) xây dựng, được dùng phổ biến trong hướng nghiệp. Sở thích nghề nghiệp được chia thành 6 nhóm. Mỗi người thường có điểm ở nhiều nhóm; ba nhóm cao nhất tạo thành mã Holland, ví dụ AIS. Người làm công việc phù hợp với mã Holland của mình thường hứng thú và gắn bó với nghề lâu hơn.',
+                // Các khối nội dung (Cách làm bài, 6 nhóm Holland, Câu hỏi thường gặp…), sửa ở tab "Các khối nội dung"
+                'intro_blocks' => json_encode(IntroBlocks::defaults(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+
+                // Tên + mô tả 6 nhóm (dùng ở trang giới thiệu, trang kết quả, email)
                 'group_name_R' => 'Kỹ thuật',
                 'group_desc_R' => 'Thích làm việc thực hành với máy móc, dụng cụ, công trình.',
                 'group_name_I' => 'Nghiên cứu',
@@ -72,16 +79,14 @@ class SettingSeeder extends Seeder
                 'group_desc_E' => 'Thích dẫn dắt, thuyết phục người khác và kinh doanh.',
                 'group_name_C' => 'Nghiệp vụ',
                 'group_desc_C' => 'Thích công việc có quy trình rõ ràng, cẩn thận với số liệu.',
-
-                // Khối "Cách làm bài"
-                'steps_title' => 'Cách làm bài',
-                'step_1_title' => 'Trả lời các câu hỏi',
-                'step_1_text' => 'Chọn mức đúng nhất với bạn. Không có câu trả lời đúng hay sai và không giới hạn thời gian.',
-                'step_2_title' => 'Điền thông tin nhận kết quả',
-                'step_2_text' => 'Một số thông tin cơ bản để gửi kết quả cho bạn và để chuyên viên tư vấn liên hệ khi cần.',
-                'step_3_title' => 'Xem kết quả và nhận tư vấn',
-                'step_3_text' => 'Xem ngay mã Holland và các ngành gợi ý. Chuyên viên tư vấn sẽ liên hệ để trao đổi thêm về ngành, trường và lộ trình du học.',
-                'intro_parent_note' => 'Phụ huynh có thể làm cùng con hoặc tự làm để hiểu thêm về con.',
+            ],
+            'embed' => [
+                // Khối "Trắc nghiệm Holland" trên web chính (/embed, /api/v1/public/intro)
+                'embed_title' => 'Trắc nghiệm hướng nghiệp Holland',
+                'embed_subtitle' => 'Biết mình hứng thú với kiểu công việc nào và nhận gợi ý ngành học phù hợp trước khi chọn trường du học Đức. Miễn phí.',
+                'embed_image' => '',
+                'embed_button_text' => 'Làm bài trắc nghiệm',
+                'embed_allowed_domains' => 'https://viger.edu.vn',
             ],
             'test' => [
                 // Trang làm bài
