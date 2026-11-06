@@ -29,7 +29,6 @@ class ScoringController extends Controller
         return view('admin.scoring.edit', [
             'config' => ScoringConfig::current(),
             'defaults' => ScoringConfig::defaults(),
-            'samples' => $this->samples(),
             'trialPercent' => $this->trialPercent($request),
             'activities' => AdminActivity::forSubject(AdminActivity::SUBJECT_SCORING, null),
         ]);
@@ -93,15 +92,18 @@ class ScoringController extends Controller
         return app()->make($class, ['config' => $config]);
     }
 
+    /** Hồ sơ gợi ý sẵn cho ô "Chạy thử" (admin sửa tự do). */
+    private const TRIAL_DEFAULT = ['R' => 30, 'I' => 70, 'A' => 85, 'S' => 55, 'E' => 15, 'C' => 20];
+
     /**
-     * Hồ sơ dùng để chạy thử: % 6 nhóm (0–100), mặc định học sinh mẫu HS01.
+     * Hồ sơ dùng để chạy thử: % 6 nhóm (0–100).
      *
      * @return array<string, int>
      */
     private function trialPercent(Request $request): array
     {
         $input = (array) ($request->input('p') ?? $request->query('p') ?? []);
-        $default = $this->samples()[0]['percent'] ?? array_fill_keys(self::RIASEC, 50);
+        $default = self::TRIAL_DEFAULT;
 
         return collect(self::RIASEC)->mapWithKeys(fn (string $group) => [
             $group => max(0, min(100, (int) ($input[$group] ?? $default[$group]))),
@@ -115,25 +117,6 @@ class ScoringController extends Controller
     private function ratio(array $percent): array
     {
         return array_map(fn (int $value) => $value / 100, $percent);
-    }
-
-    /**
-     * Học sinh mẫu trong test_cases.json.
-     *
-     * @return list<array{name: string, percent: array<string, int>}>
-     */
-    private function samples(): array
-    {
-        $path = config('holland.seed_path').'/test_cases.json';
-        $data = is_file($path) ? json_decode((string) file_get_contents($path), true) : [];
-
-        return collect($data['holland'] ?? [])
-            ->map(fn (array $case) => [
-                'name' => (string) $case['name'],
-                'percent' => collect($case['expected']['percent'] ?? [])->map(fn ($value) => (int) round($value * 100))->all(),
-            ])
-            ->values()
-            ->all();
     }
 
     /**

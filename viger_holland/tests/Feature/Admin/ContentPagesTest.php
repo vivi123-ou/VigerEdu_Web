@@ -77,7 +77,7 @@ class ContentPagesTest extends TestCase
         $this->assertSame('Bạn phù hợp với ngành học nào?', setting('intro_title'));
 
         $this->post(route('admin.content.preview', 'result-page'), $this->form('result-page', ['result_greeting' => 'Xin chào']))
-            ->assertOk()->assertSee('Xin chào An')->assertSee('AIS');
+            ->assertOk()->assertSee('Xin chào [Tên khách]')->assertSee('AIS');
 
         $this->post(route('admin.content.preview', 'email'), $this->form('email', ['email_closing' => '<p>Hẹn gặp bạn</p>']))
             ->assertOk()->assertSee('Hẹn gặp bạn');

@@ -6,16 +6,15 @@ use App\Contracts\MajorCatalog;
 use App\Contracts\ScoringEngine;
 use App\Mail\TestResultMail;
 use App\Models\Attempt;
-use App\Models\Question;
 use App\Models\Setting;
 use Illuminate\Support\Str;
 
 /**
- * Nút "Xem trước": dựng trang khách với giá trị đang gõ (chưa lưu) và kết quả mẫu (học sinh mẫu, không lưu database).
+ * Nút "Xem trước": dựng trang khách với giá trị đang gõ (chưa lưu) và một kết quả minh họa (không lưu database).
  */
 final class PagePreview
 {
-    /** % 6 nhóm của học sinh mẫu HS01 (test_cases.json). */
+    /** % 6 nhóm của hồ sơ minh họa (chỉ để hiện trang kết quả khi xem trước). */
     private const SAMPLE_PERCENT = ['R' => 0.3333, 'I' => 0.6667, 'A' => 0.8889, 'S' => 0.5556, 'E' => 0.1111, 'C' => 0.2222];
 
     public function __construct(
@@ -45,22 +44,23 @@ final class PagePreview
     }
 
     /**
-     * Lượt làm bài mẫu (không lưu): kết quả học sinh mẫu, tên "An".
+     * Lượt làm bài minh họa (không lưu) cho "Xem trước" / "Sửa trên trang". Tên khách hiện là "[Tên khách]".
      */
     public function sampleAttempt(): Attempt
     {
         $result = $this->engine->scorePercent(self::SAMPLE_PERCENT, $this->catalog->all());
 
-        $nameCode = Question::query()->where('lead_field', 'student_name')->value('code');
-
-        return new Attempt([
+        $attempt = new Attempt([
             'uuid' => (string) Str::uuid(),
             'result_token' => (string) Str::uuid(),
             'holland_code' => $result->code,
-            'contact' => $nameCode ? [$nameCode => 'Nguyễn Văn An'] : [],
+            'contact' => [],
             'answers' => [],
             'result' => $result->toArray(withRanking: true),
             'completed_at' => now(),
         ]);
+        $attempt->setAttribute('preview_name', '[Tên khách]');
+
+        return $attempt;
     }
 }

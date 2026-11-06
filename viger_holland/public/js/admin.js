@@ -275,18 +275,6 @@
         });
     }
 
-    // Chạy thử chấm điểm: chọn học sinh mẫu thì điền sẵn % 6 nhóm.
-    var sample = document.querySelector('[data-trial-sample]');
-    if (sample) {
-        sample.addEventListener('change', function () {
-            if (!sample.value) return;
-            var percent = JSON.parse(sample.value);
-            Object.keys(percent).forEach(function (group) {
-                var input = document.querySelector('[data-trial-group="' + group + '"]');
-                if (input) input.value = percent[group];
-            });
-        });
-    }
 })();
 
 // ---------- Thẻ câu hỏi (kiểu Google Form): bấm để sửa tại chỗ, tự lưu, nhân đôi, xóa, thêm nhanh ----------

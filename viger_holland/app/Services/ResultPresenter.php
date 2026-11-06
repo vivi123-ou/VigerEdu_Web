@@ -55,7 +55,8 @@ final class ResultPresenter
             'vocational' => array_map($presentMajor, $result['top_vocational'] ?? []),
             'isFlat' => ($result['di3'] ?? 1) < $di3Threshold,
             'hasTie' => (bool) ($result['has_tie'] ?? false),
-            'name' => $this->firstName($attempt),
+            // Xem trước / sửa trên trang: hiện chỗ đặt tên khách thay cho tên thật.
+            'name' => $attempt->getAttribute('preview_name') ?? $this->firstName($attempt),
         ];
     }
 

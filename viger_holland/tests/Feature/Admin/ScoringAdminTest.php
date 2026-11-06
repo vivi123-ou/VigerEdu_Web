@@ -39,7 +39,7 @@ class ScoringAdminTest extends TestCase
 
     public function test_defaults_shown_and_engine_uses_config_defaults(): void
     {
-        $this->get(route('admin.scoring.edit'))->assertOk()->assertSee('Rất phù hợp')->assertSee('Chạy thử')->assertSee('HS01 Lan');
+        $this->get(route('admin.scoring.edit'))->assertOk()->assertSee('Rất phù hợp')->assertSee('Chạy thử')->assertDontSee('HS01')->assertDontSee('Học sinh mẫu');
 
         $this->assertSame(ScoringConfig::defaults()->toArray(), app(ScoringConfig::class)->toArray());
     }

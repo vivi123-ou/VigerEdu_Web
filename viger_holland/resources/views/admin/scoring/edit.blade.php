@@ -87,16 +87,7 @@
 
         <section class="card">
             <h2 class="card__title">Chạy thử (không lưu)</h2>
-            <p class="muted">Nhập % 6 nhóm của một học sinh (hoặc chọn học sinh mẫu), bấm "Chạy thử" để so sánh gợi ý theo cấu hình hiện tại và theo các con số bạn vừa gõ.</p>
-            <div class="field">
-                <label for="sample">Học sinh mẫu</label>
-                <select id="sample" data-trial-sample>
-                    <option value="">— Tự nhập —</option>
-                    @foreach ($samples as $sample)
-                        <option value='@json($sample['percent'])'>{{ $sample['name'] }} ({{ collect($sample['percent'])->map(fn ($v, $k) => $k.' '.$v)->implode(', ') }})</option>
-                    @endforeach
-                </select>
-            </div>
+            <p class="muted">Nhập mức hứng thú (%) ở 6 nhóm của một học sinh bất kỳ, bấm "Chạy thử" để so sánh ngành được gợi ý theo cấu hình hiện tại và theo các con số bạn vừa gõ. Không lưu gì.</p>
             <div class="trial-inputs">
                 @foreach ($trialPercent as $group => $value)
                     <label class="field">
