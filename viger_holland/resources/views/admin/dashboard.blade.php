@@ -3,27 +3,31 @@
 @section('title', 'Bảng điều khiển')
 
 @section('content')
-    <p class="lead">Xin chào {{ auth()->user()->name }}! Đây là tình hình bài test hiện tại. Chọn một mục ở menu bên trái để bắt đầu; mỗi trang đều có nút <strong>?</strong> cạnh tiêu đề để xem hướng dẫn.</p>
+    <p class="lead">Xin chào {{ auth()->user()->name }}. Bạn muốn làm gì hôm nay? Bấm vào một ô bên dưới. Trang nào cũng có nút <strong>?</strong> màu vàng cạnh tiêu đề để xem hướng dẫn.</p>
 
     @php
         // Việc hay làm (≤ 3 lần bấm), chỉ hiện việc thuộc vai trò của người đăng nhập.
         $shortcuts = collect([
-            ['question-sets', 'Sửa câu hỏi bài test', 'Thêm, sửa, bật/tắt câu hỏi Holland.'],
-            ['intro', 'Đổi chữ, ảnh trang giới thiệu', 'Tiêu đề, mô tả, banner, các khối nội dung.'],
-            ['result-page', 'Đổi chữ trang kết quả', 'Lời chào, khối liên hệ tư vấn.'],
-        ])->filter(fn ($item) => auth()->user()->canAccessMenu($item[0]))->take(2);
+            ['intro', 'image', 'Sửa trang giới thiệu', 'Bấm vào chữ, ảnh trên trang để sửa ngay.'],
+            ['result-page', 'chart', 'Sửa trang kết quả', 'Lời chào, khối liên hệ tư vấn.'],
+            ['question-sets', 'list', 'Sửa câu hỏi bài test', 'Thêm, sửa, ẩn câu hỏi Holland.'],
+            ['info-form', 'form', 'Sửa form thông tin khách', 'Các câu khách điền để nhận kết quả.'],
+            ['media', 'image', 'Thư viện ảnh', 'Tải ảnh banner, ảnh khối nội dung.'],
+            ['email', 'mail', 'Sửa email gửi khách', 'Lời chào, lời kết, chữ ký.'],
+            ['attempts', 'users', 'Xem lượt làm bài', 'Mã Holland và ngành gợi ý của từng lượt.'],
+            ['appearance', 'palette', 'Hotline, logo, chân trang', 'Thông tin liên hệ, màu, menu đầu trang.'],
+        ])->filter(fn ($item) => auth()->user()->canAccessMenu($item[0]))->take(6);
     @endphp
     <div class="guide">
-        @foreach ($shortcuts as [$key, $title, $text])
+        @foreach ($shortcuts as [$key, $icon, $title, $text])
             <a class="guide__item" href="{{ \App\Support\AdminMenu::url(\App\Support\AdminMenu::find($key)) }}">
-                <p class="guide__title">{{ $title }}</p>
-                <p class="guide__text">{{ $text }}</p>
+                <span class="guide__icon">@include('partials.icon', ['name' => $icon, 'size' => 22])</span>
+                <span>
+                    <p class="guide__title">{{ $title }}</p>
+                    <p class="guide__text">{{ $text }}</p>
+                </span>
             </a>
         @endforeach
-        <a class="guide__item" href="{{ route('home') }}" target="_blank" rel="noopener">
-            <p class="guide__title">Xem trang như khách</p>
-            <p class="guide__text">Mở trang bài test ở tab mới để kiểm tra.</p>
-        </a>
     </div>
 
     @php $canEditQuestions = auth()->user()->canAccessMenu('question-sets'); @endphp

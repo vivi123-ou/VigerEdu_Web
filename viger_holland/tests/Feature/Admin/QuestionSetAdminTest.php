@@ -36,7 +36,7 @@ class QuestionSetAdminTest extends TestCase
 
     public function test_index_and_show_list_sets_and_questions(): void
     {
-        $this->get(route('admin.question-sets.index'))->assertOk()->assertSee('THPT – 54 câu')->assertSee('Mặc định')->assertSee('54 / 54');
+        $this->get(route('admin.question-sets.index'))->assertOk()->assertSee('THPT – 54 câu')->assertSee('Mặc định')->assertSee('<td class="center">54</td>', false);
 
         $this->get(route('admin.question-sets.show', $this->set))->assertOk()
             ->assertSee('Người thích làm việc bằng tay')

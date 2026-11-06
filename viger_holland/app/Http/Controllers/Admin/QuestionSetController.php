@@ -141,6 +141,21 @@ class QuestionSetController extends Controller
             ->with('status', 'Đã nhân bản. Bộ mới đang TẮT – sửa xong thì bấm "Sửa thông tin bộ" để bật.');
     }
 
+    /**
+     * Cột "Hiển thị" trên danh sách: bật / tắt bộ câu (khách mở được link hay không).
+     */
+    public function toggle(QuestionSet $questionSet): RedirectResponse
+    {
+        if ($questionSet->is_default && $questionSet->is_active) {
+            return back()->withErrors(['set' => 'Không tắt được bộ mặc định. Hãy chọn bộ khác làm mặc định trước.']);
+        }
+
+        $questionSet->update(['is_active' => ! $questionSet->is_active]);
+        AdminActivity::recordModelChange($questionSet, AdminActivity::SUBJECT_SET, ($questionSet->is_active ? 'Bật' : 'Tắt').' bộ câu "'.$questionSet->name.'"');
+
+        return back()->with('status', ($questionSet->is_active ? 'Đã bật' : 'Đã tắt').' bộ "'.$questionSet->name.'".');
+    }
+
     public function destroy(QuestionSet $questionSet): RedirectResponse
     {
         if ($questionSet->is_default) {

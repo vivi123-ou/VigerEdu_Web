@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Attempt;
 use App\Models\Question;
+use App\Models\QuestionSet;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -15,14 +16,22 @@ class AttemptController extends Controller
 {
     public function index(Request $request): View
     {
+        $days = ['hom-nay' => 0, '7-ngay' => 7, '30-ngay' => 30][(string) $request->query('thoi_gian')] ?? null;
+
         $attempts = Attempt::query()
             ->with('questionSet')
-            ->when($request->filled('ma'), fn ($query) => $query->where('holland_code', strtoupper((string) $request->query('ma'))))
+            ->when($request->filled('ma'), fn ($query) => $query->where('holland_code', strtoupper(trim((string) $request->query('ma')))))
+            ->when($request->filled('bo'), fn ($query) => $query->where('question_set_id', (int) $request->query('bo')))
+            ->when($days !== null, fn ($query) => $query->where('completed_at', '>=', now()->subDays($days)->startOfDay()))
             ->latest('completed_at')
             ->paginate(25)
             ->withQueryString();
 
-        return view('admin.attempts.index', ['attempts' => $attempts]);
+        return view('admin.attempts.index', [
+            'attempts' => $attempts,
+            'sets' => QuestionSet::query()->orderBy('name')->pluck('name', 'id'),
+            'isFiltered' => $request->hasAny(['ma', 'bo', 'thoi_gian']) && collect($request->only(['ma', 'bo', 'thoi_gian']))->filter()->isNotEmpty(),
+        ]);
     }
 
     public function show(Request $request, Attempt $attempt): View

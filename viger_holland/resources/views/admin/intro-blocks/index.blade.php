@@ -13,24 +13,24 @@
         @else
             <div class="table-wrap">
                 <table class="table table--wrap">
-                    <thead><tr><th></th><th>Khối</th><th>Loại</th><th>Trạng thái</th><th></th></tr></thead>
+                    <thead><tr><th class="center">Thứ tự</th><th>Tên khối</th><th>Loại khối</th><th class="center">Hiển thị</th><th class="center">Tác vụ</th></tr></thead>
                     <tbody data-sortable>
                         @foreach ($blocks as $block)
                             <tr data-id="{{ $block['id'] }}" @class(['is-off' => ! $block['enabled']])>
-                                <td class="drag" draggable="true" title="Kéo để đổi thứ tự" aria-label="Kéo để đổi thứ tự">⋮⋮</td>
-                                <td><strong>{{ $block['data']['title'] ?: '(chưa có tiêu đề)' }}</strong></td>
+                                <td class="center drag" draggable="true" title="Kéo để đổi thứ tự" aria-label="Kéo để đổi thứ tự">⋮⋮ {{ $loop->iteration }}</td>
+                                <td><a href="{{ route('admin.intro-blocks.edit', $block['id']) }}">{{ $block['data']['title'] ?: '(chưa có tiêu đề)' }}</a></td>
                                 <td>{{ \App\Support\IntroBlocks::typeLabel($block['type']) }}</td>
-                                <td>
+                                <td class="center">
                                     <form method="post" action="{{ route('admin.intro-blocks.toggle', $block['id']) }}">
                                         @csrf @method('PATCH')
-                                        <button type="submit" @class(['switch', 'is-on' => $block['enabled']]) title="Bấm để {{ $block['enabled'] ? 'tắt' : 'bật' }}">{{ $block['enabled'] ? 'Đang hiện' : 'Đang tắt' }}</button>
+                                        <button type="submit" @class(['toggle', 'is-on' => $block['enabled']]) title="{{ $block['enabled'] ? 'Đang hiện – bấm để ẩn' : 'Đang ẩn – bấm để hiện' }}" aria-label="{{ $block['enabled'] ? 'Đang hiện' : 'Đang ẩn' }}"></button>
                                     </form>
                                 </td>
-                                <td class="actions">
-                                    <a href="{{ route('admin.intro-blocks.edit', $block['id']) }}">Sửa</a>
-                                    <form method="post" action="{{ route('admin.intro-blocks.destroy', $block['id']) }}" data-confirm="Xóa khối này? Có thể lấy lại bằng Lịch sử thay đổi.">
+                                <td class="center actions">
+                                    <a class="icon-btn icon-btn--edit" href="{{ route('admin.intro-blocks.edit', $block['id']) }}" title="Sửa" aria-label="Sửa">@include('partials.icon', ['name' => 'edit', 'size' => 16])</a>
+                                    <form method="post" action="{{ route('admin.intro-blocks.destroy', $block['id']) }}" style="display:inline" data-confirm="Xóa khối này? Có thể lấy lại bằng Lịch sử thay đổi.">
                                         @csrf @method('DELETE')
-                                        <button class="link-danger" type="submit">Xóa</button>
+                                        <button class="icon-btn icon-btn--delete" type="submit" title="Xóa" aria-label="Xóa">@include('partials.icon', ['name' => 'trash', 'size' => 16])</button>
                                     </form>
                                 </td>
                             </tr>

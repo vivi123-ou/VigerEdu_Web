@@ -96,6 +96,7 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
             Route::get('question-sets/{questionSet}/edit', [QuestionSetController::class, 'edit'])->name('question-sets.edit');
             Route::put('question-sets/{questionSet}', [QuestionSetController::class, 'update'])->name('question-sets.update');
             Route::post('question-sets/{questionSet}/duplicate', [QuestionSetController::class, 'duplicate'])->name('question-sets.duplicate');
+            Route::patch('question-sets/{questionSet}/toggle', [QuestionSetController::class, 'toggle'])->name('question-sets.toggle');
             Route::delete('question-sets/{questionSet}', [QuestionSetController::class, 'destroy'])->name('question-sets.destroy');
             Route::post('question-sets/{id}/restore', [QuestionSetController::class, 'restore'])->whereNumber('id')->name('question-sets.restore');
 
