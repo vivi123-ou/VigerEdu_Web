@@ -111,7 +111,7 @@ class SettingSeeder extends Seeder
                 'result_code_label' => 'Mã Holland của bạn',
                 'result_chart_title' => 'Mức độ hứng thú theo 6 nhóm',
                 'result_flat_note' => 'Điểm các nhóm của bạn khá đều nhau, chưa có nhóm nào nổi bật rõ. Trường hợp này khá phổ biến. Chuyên viên tư vấn có thể cùng bạn trao đổi thêm để tìm hướng phù hợp.',
-                'result_tie_note' => 'Một số nhóm của bạn có điểm bằng nhau, vì vậy thứ tự các chữ trong mã Holland có thể thay đổi.',
+                'result_tie_note' => 'Nhóm thứ ba và thứ tư của bạn bằng điểm nhau, nên chữ cuối của mã Holland có thể là một trong hai nhóm này. Chuyên viên tư vấn sẽ cùng bạn xem kỹ hơn.',
                 'result_fields_title' => 'Lĩnh vực phù hợp',
                 'result_university_title' => 'Ngành đại học gợi ý',
                 'result_vocational_title' => 'Ngành học nghề gợi ý (Ausbildung)',

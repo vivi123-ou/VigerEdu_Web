@@ -54,10 +54,25 @@ final class ResultPresenter
             'university' => array_map($presentMajor, $result['top_university'] ?? []),
             'vocational' => array_map($presentMajor, $result['top_vocational'] ?? []),
             'isFlat' => ($result['di3'] ?? 1) < $di3Threshold,
-            'hasTie' => (bool) ($result['has_tie'] ?? false),
+            // Chỉ nhắc khi nhóm thứ 3 và thứ 4 bằng điểm (chữ cuối của mã chưa chắc). Bài 54 câu rất hay bằng điểm ở
+            // các vị trí khác (70/100 hồ sơ thử), nhắc quá thường xuyên thì mất tác dụng. Cờ has_tie gửi CRM giữ nguyên.
+            'hasTie' => self::thirdAndFourthTied($percent),
             // Xem trước / sửa trên trang: hiện chỗ đặt tên khách thay cho tên thật.
             'name' => $attempt->getAttribute('preview_name') ?? $this->firstName($attempt),
         ];
+    }
+
+    /**
+     * Nhóm đứng thứ 3 và thứ 4 có bằng điểm không (chữ thứ ba của mã Holland chưa chắc chắn).
+     *
+     * @param  array<string, float|int>  $percent
+     */
+    public static function thirdAndFourthTied(array $percent): bool
+    {
+        $values = array_values(array_map('floatval', $percent));
+        rsort($values);
+
+        return count($values) >= 4 && abs($values[2] - $values[3]) < 1e-9;
     }
 
     /**
