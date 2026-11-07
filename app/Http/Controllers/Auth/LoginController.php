@@ -17,7 +17,7 @@ class LoginController extends Controller
         $user = Auth::user();
 
         if ($user && $user->isAdmin()) {
-            return redirect('/admin/posts');
+            return redirect('/admin');
         }
 
         return view('auth.login');
@@ -44,7 +44,7 @@ class LoginController extends Controller
             RateLimiter::clear($key);
             $request->session()->regenerate();
 
-            return redirect('/admin/posts');
+            return redirect('/admin');
         }
 
         RateLimiter::hit($key, 60);

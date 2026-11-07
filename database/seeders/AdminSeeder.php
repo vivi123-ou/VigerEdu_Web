@@ -23,6 +23,7 @@ class AdminSeeder extends Seeder
             ['username' => env('ADMIN_USERNAME', 'SPN')],
             [
                 'full_name' => 'Quản trị SPN',
+                'email' => 'info@spn.com.vn',
                 'password' => $password,
                 'role' => 'ADMIN',
                 'active' => true,

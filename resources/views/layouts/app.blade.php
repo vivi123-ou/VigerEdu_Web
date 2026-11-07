@@ -17,6 +17,7 @@
 
     <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
     <link href="{{ asset('styles.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/chatbot.css') }}" rel="stylesheet" />
 
     {{-- CSS riêng của từng trang --}}
     @stack('styles')
@@ -32,8 +33,12 @@
     {{-- Footer --}}
     @include('partials.footer')
 
+    {{-- Chatbot AI (nút nổi góc phải dưới) --}}
+    @include('partials.chatbot')
+
     {{-- JS chung --}}
     <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/chatbot.js') }}"></script>
 
     {{-- JS riêng của từng trang (layout:fragment="scripts") --}}
     @stack('scripts')
