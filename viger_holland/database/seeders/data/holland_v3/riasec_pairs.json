@@ -1,0 +1,227 @@
+[
+ {
+  "pair": "RI",
+  "name": "Thực hành + Nghiên cứu",
+  "hex_distance": 1,
+  "relation": "Liền kề",
+  "majors": [
+   "MAJ002",
+   "MAJ001"
+  ],
+  "occupations": [
+   "Robotics Engineer / Robotikingenieur",
+   "Mechanical Engineer / Maschinenbauingenieur"
+  ],
+  "foundation": "Toán, Vật lý, lập trình và thực hành kỹ thuật; Toán, Vật lý, cơ học và thiết kế kỹ thuật"
+ },
+ {
+  "pair": "RA",
+  "name": "Thực hành + Sáng tạo",
+  "hex_distance": 2,
+  "relation": "Cách một",
+  "majors": [
+   "MAJ025",
+   "MAJ026"
+  ],
+  "occupations": [
+   "Product Designer / Produktdesigner",
+   "Industrial Designer / Industriedesigner"
+  ],
+  "foundation": "Phác thảo, thiết kế, vật liệu và hồ sơ sản phẩm; Tư duy tạo hình, CAD, nguyên mẫu và portfolio"
+ },
+ {
+  "pair": "RS",
+  "name": "Thực hành + Xã hội",
+  "hex_distance": 3,
+  "relation": "Đối kháng",
+  "majors": [
+   "MAJ027",
+   "MAJ028"
+  ],
+  "occupations": [
+   "Occupational Therapist / Ergotherapeut",
+   "Physiotherapist / Physiotherapeut"
+  ],
+  "foundation": "Sinh học, giao tiếp, thực hành; kiểm tra điều kiện hành nghề; Sinh học, vận động, tiếng Đức và quy định nghề"
+ },
+ {
+  "pair": "RE",
+  "name": "Thực hành + Kinh doanh",
+  "hex_distance": 2,
+  "relation": "Cách một",
+  "majors": [
+   "MAJ016",
+   "MAJ029"
+  ],
+  "occupations": [
+   "Technical Project Manager / Technischer Projektmanager",
+   "Construction Manager / Bauprojektmanager"
+  ],
+  "foundation": "Toán, kỹ thuật, quản lý dự án; Kỹ thuật xây dựng, quản trị và thực hành dự án"
+ },
+ {
+  "pair": "RC",
+  "name": "Thực hành + Tổ chức",
+  "hex_distance": 1,
+  "relation": "Liền kề",
+  "majors": [
+   "MAJ030",
+   "MAJ031"
+  ],
+  "occupations": [
+   "Production Engineer / Produktionsingenieur",
+   "Logistics Planner / Logistikplaner"
+  ],
+  "foundation": "Toán, kỹ thuật sản xuất, quy trình và an toàn; Toán ứng dụng, vận hành và phân tích quy trình"
+ },
+ {
+  "pair": "IA",
+  "name": "Nghiên cứu + Sáng tạo",
+  "hex_distance": 1,
+  "relation": "Liền kề",
+  "majors": [
+   "MAJ008",
+   "MAJ032"
+  ],
+  "occupations": [
+   "Interaction Developer / Interaktionsentwickler",
+   "Cognitive Science Researcher / Kognitionswissenschaftler"
+  ],
+  "foundation": "Toán, lập trình, thiết kế tương tác; Toán, phương pháp nghiên cứu, thống kê"
+ },
+ {
+  "pair": "IS",
+  "name": "Nghiên cứu + Xã hội",
+  "hex_distance": 2,
+  "relation": "Cách một",
+  "majors": [
+   "MAJ021",
+   "MAJ033"
+  ],
+  "occupations": [
+   "Psychology Researcher / Psychologieforscher",
+   "Health Researcher / Gesundheitsforscher"
+  ],
+  "foundation": "Thống kê, phương pháp nghiên cứu, ngôn ngữ; kiểm tra nghề được quản lý; Sinh học, thống kê và nghiên cứu sức khỏe"
+ },
+ {
+  "pair": "IE",
+  "name": "Nghiên cứu + Kinh doanh",
+  "hex_distance": 3,
+  "relation": "Đối kháng",
+  "majors": [
+   "MAJ007",
+   "MAJ034"
+  ],
+  "occupations": [
+   "Business Analyst / Business-Analyst",
+   "Business Analytics Specialist / Business-Analytics-Spezialist"
+  ],
+  "foundation": "Toán, CNTT, phân tích kinh doanh; Thống kê, dữ liệu, kinh tế và lập trình"
+ },
+ {
+  "pair": "IC",
+  "name": "Nghiên cứu + Tổ chức",
+  "hex_distance": 2,
+  "relation": "Cách một",
+  "majors": [
+   "MAJ006",
+   "MAJ035"
+  ],
+  "occupations": [
+   "Data Analyst / Datenanalyst",
+   "Quantitative Analyst / Quantitativer Analyst"
+  ],
+  "foundation": "Toán, thống kê, Python và dữ liệu; Giải tích, xác suất, mô hình định lượng"
+ },
+ {
+  "pair": "AS",
+  "name": "Sáng tạo + Xã hội",
+  "hex_distance": 1,
+  "relation": "Liền kề",
+  "majors": [
+   "MAJ036",
+   "MAJ037"
+  ],
+  "occupations": [
+   "Media Educator / Medienpädagoge",
+   "Art Educator / Kunstpädagoge"
+  ],
+  "foundation": "Truyền thông, giáo dục và dự án sáng tạo; Nghệ thuật, sư phạm, portfolio; kiểm tra yêu cầu nghề"
+ },
+ {
+  "pair": "AE",
+  "name": "Sáng tạo + Kinh doanh",
+  "hex_distance": 2,
+  "relation": "Cách một",
+  "majors": [
+   "MAJ038",
+   "MAJ039"
+  ],
+  "occupations": [
+   "Media Manager / Medienmanager",
+   "Communication Manager / Kommunikationsmanager"
+  ],
+  "foundation": "Sáng tạo nội dung, marketing và quản trị; Truyền thông, nghiên cứu công chúng và lập kế hoạch"
+ },
+ {
+  "pair": "AC",
+  "name": "Sáng tạo + Tổ chức",
+  "hex_distance": 3,
+  "relation": "Đối kháng",
+  "majors": [
+   "MAJ040",
+   "MAJ041"
+  ],
+  "occupations": [
+   "Technical Writer / Technischer Redakteur",
+   "Information Designer / Informationsdesigner"
+  ],
+  "foundation": "Viết, cấu trúc thông tin và hiểu biết công nghệ; Thiết kế thông tin, trực quan hóa, công cụ số"
+ },
+ {
+  "pair": "SE",
+  "name": "Xã hội + Kinh doanh",
+  "hex_distance": 1,
+  "relation": "Liền kề",
+  "majors": [
+   "MAJ042",
+   "MAJ043"
+  ],
+  "occupations": [
+   "HR Specialist / Personalreferent",
+   "Social Services Manager / Sozialmanager"
+  ],
+  "foundation": "Giao tiếp, tổ chức, luật lao động cơ bản; Khoa học xã hội, quản trị và dự án cộng đồng"
+ },
+ {
+  "pair": "SC",
+  "name": "Xã hội + Tổ chức",
+  "hex_distance": 2,
+  "relation": "Cách một",
+  "majors": [
+   "MAJ044",
+   "MAJ045"
+  ],
+  "occupations": [
+   "Healthcare Administrator / Gesundheitsmanager",
+   "Education Coordinator / Bildungskoordinator"
+  ],
+  "foundation": "Tổ chức dịch vụ, dữ liệu, hiểu biết y tế; Giáo dục, quy trình, quản trị dự án"
+ },
+ {
+  "pair": "EC",
+  "name": "Kinh doanh + Tổ chức",
+  "hex_distance": 1,
+  "relation": "Liền kề",
+  "majors": [
+   "MAJ009",
+   "MAJ046"
+  ],
+  "occupations": [
+   "Operations Manager / Betriebsmanager",
+   "Financial Controller / Controller"
+  ],
+  "foundation": "Toán kinh tế, kế toán, quản trị; Kế toán, tài chính, Excel và dữ liệu"
+ }
+]

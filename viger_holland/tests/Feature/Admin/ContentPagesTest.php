@@ -76,20 +76,13 @@ class ContentPagesTest extends TestCase
             ->assertOk()->assertSee('Tiêu đề thử');
         $this->assertSame('Bạn phù hợp với ngành học nào?', setting('intro_title'));
 
-        $this->post(route('admin.content.preview', 'result-page'), $this->form('result-page', ['result_greeting' => 'Xin chào']))
-            ->assertOk()->assertSee('Xin chào [Tên khách]')->assertSee('AIS');
-
-        $this->post(route('admin.content.preview', 'email'), $this->form('email', ['email_closing' => '<p>Hẹn gặp bạn</p>']))
-            ->assertOk()->assertSee('Hẹn gặp bạn');
+        $this->post(route('admin.content.preview', 'embed'), $this->form('embed', ['embed_title' => 'Khối nhúng thử']))
+            ->assertOk()->assertSee('Khối nhúng thử');
+        $this->assertNotSame('Khối nhúng thử', setting('embed_title'));
     }
 
-    public function test_rich_text_is_sanitized_and_links_saved_as_list(): void
+    public function test_links_are_saved_as_list(): void
     {
-        $this->put(route('admin.content.update', 'result-page'), $this->form('result-page', [
-            'result_contact_text' => '<p>Gọi <strong>ngay</strong><script>alert(1)</script></p>',
-        ]))->assertSessionHasNoErrors();
-        $this->assertSame('<p>Gọi <strong>ngay</strong></p>', setting('result_contact_text'));
-
         $this->put(route('admin.content.update', 'appearance'), $this->form('appearance', [
             'header_menu' => [['label' => 'Du học Đức', 'url' => 'viger.edu.vn/du-hoc-duc', 'new_tab' => '1'], ['label' => '', 'url' => '']],
             'hotline' => '0909 123 456',

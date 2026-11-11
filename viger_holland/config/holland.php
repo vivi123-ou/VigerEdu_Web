@@ -1,7 +1,5 @@
 <?php
 
-use App\Engines\RiasecFitEngineV2;
-
 /*
 |--------------------------------------------------------------------------
 | Cấu hình web Holland
@@ -14,35 +12,6 @@ use App\Engines\RiasecFitEngineV2;
 */
 
 return [
-
-    // Thuật toán chấm điểm đang dùng (mã trong danh sách 'engines' bên dưới)
-    'engine' => env('HOLLAND_ENGINE', 'riasec_fit_v2'),
-
-    // Danh sách engine cài sẵn: mã => class (cách thêm engine mới: docs/THAY_THUAT_TOAN.md)
-    'engines' => [
-        'riasec_fit_v2' => RiasecFitEngineV2::class,
-    ],
-
-    // Tham số chấm điểm mặc định = bản chốt (khớp holland_config.json).
-    // Giai đoạn 3: admin sửa trên trang "Cấu hình chấm điểm" (lưu trong settings, ưu tiên hơn ở đây).
-    'scoring' => [
-        'weight_code_match' => 0.6,
-        'weight_score_match' => 0.4,
-        'labels' => [
-            ['min' => 0.80, 'label' => 'Rất phù hợp'],
-            ['min' => 0.65, 'label' => 'Phù hợp'],
-            ['min' => 0.50, 'label' => 'Có thể cân nhắc'],
-            ['min' => 0.0, 'label' => 'Ít phù hợp'],
-        ],
-        'top_university' => 5,
-        'top_vocational' => 3,
-        'di3_threshold' => 0.15,
-        // Chữ trong câu lý do: "AIS ↔ IAS · bạn đạt I 67%…"
-        'reason_subject' => 'bạn',
-    ],
-
-    // Danh mục ngành dự phòng khi chưa có / không gọi được CRM
-    'majors_json' => database_path('seeders/data/holland/majors.json'),
 
     'crm' => [
         'enabled' => (bool) env('HOLLAND_CRM_ENABLED', false),
@@ -89,6 +58,9 @@ return [
     ],
 
     // Thư mục dữ liệu mẫu dùng cho seeder
-    'seed_path' => database_path('seeders/data/holland'),
+    'seed_path' => database_path('seeders/data/holland_v3'),
+
+    // Dữ liệu dùng chung với các hệ thống khác (regions.json: khu vực ở Đức, Ý thu thập, chốt 05/11/2026)
+    'shared_seed_path' => database_path('seeders/data/shared'),
 
 ];

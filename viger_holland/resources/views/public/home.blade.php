@@ -38,7 +38,7 @@
                     </ul>
                 @endif
 
-                <a class="btn btn--primary btn--lg" href="{{ route('test.show', array_filter(request()->only(['bo', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']))) }}">
+                <a class="btn btn--primary btn--lg" href="{{ route('test.show', array_filter(request()->only(['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']))) }}">
                     {{ ed('intro_button_text', 'Bắt đầu', 'Chữ trên nút') }} <span class="btn__arrow" aria-hidden="true">→</span>
                 </a>
                 @if ($editing || filled(setting('intro_button_note')))

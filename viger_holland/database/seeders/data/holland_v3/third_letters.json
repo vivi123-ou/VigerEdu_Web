@@ -1,0 +1,38 @@
+[
+ {
+  "code": "R",
+  "specialty_de": "Anwendungsorientierte Technik",
+  "specialty_en": "Applied Engineering",
+  "skills": "thiết kế nguyên mẫu, công cụ và thử nghiệm"
+ },
+ {
+  "code": "I",
+  "specialty_de": "Datenanalyse und Forschung",
+  "specialty_en": "Data Analytics and Research",
+  "skills": "phương pháp nghiên cứu, thống kê và tư duy phản biện"
+ },
+ {
+  "code": "A",
+  "specialty_de": "Design und Innovation",
+  "specialty_en": "Design and Innovation",
+  "skills": "tư duy thiết kế, portfolio và thử nghiệm ý tưởng"
+ },
+ {
+  "code": "S",
+  "specialty_de": "Menschzentrierte Gestaltung",
+  "specialty_en": "Human-Centred Design",
+  "skills": "phỏng vấn người dùng, giao tiếp và đạo đức"
+ },
+ {
+  "code": "E",
+  "specialty_de": "Innovationsmanagement",
+  "specialty_en": "Innovation Management",
+  "skills": "thuyết trình, quản lý dự án và ra quyết định"
+ },
+ {
+  "code": "C",
+  "specialty_de": "Qualitätsmanagement",
+  "specialty_en": "Quality Management",
+  "skills": "kiểm soát chất lượng, tài liệu và quy trình"
+ }
+]

@@ -1,106 +1,91 @@
 # CLAUDE.md – VigerEdu_Holland (web Test Holland, `holland.viger.edu.vn`)
 
-> File này Claude Code tự đọc mỗi phiên. **Đặc tả đầy đủ:** `docs/PROMPT_2_HOLLAND.md`, đọc khi bắt đầu một giai đoạn mới hoặc khi chưa rõ yêu cầu.
+> File này Claude Code tự đọc mỗi phiên. **Đặc tả hiện hành:** `docs/PROMPT_3_CAP_NHAT_HOLLAND.md` + các quyết định ở mục 4 dưới đây (ưu tiên hơn PROMPT 3 khi khác nhau). `docs/PROMPT_2_HOLLAND.md` là bản cũ, chỉ tham khảo phần hạ tầng.
 > **Tiến độ:** `docs/TIEN_DO.md`. Đọc đầu mỗi phiên và cập nhật cuối mỗi phiên.
 
 ## 1. Tôi là ai, dự án là gì
 
 - Tôi là **Vân (Vivi)**, Team Công nghệ, thực tập tại **Viger-Edu** (tư vấn du học Đức). Giao tiếp bằng **tiếng Việt**.
 - Hệ thống gồm **3 platform độc lập + 1 chatbot**, nối với nhau **chỉ qua API** (`docs/HOP_DONG_KET_NOI.md`):
-  1. `viger.edu.vn`: web chính, Tuấn làm (Laravel, có admin quản lý thư mục, bài viết).
-  2. **`holland.viger.edu.vn`: repo này.** Tôi làm. Khách (học sinh / phụ huynh) làm bài test Holland, xem kết quả; thông tin và bài làm được gửi sang CRM.
-  3. `crm.viger.edu.vn`: CRM, tôi làm sau, ở repo riêng `VigerEdu_CRM`. Hiện **chưa có**, nên mọi kết nối CRM phải chạy được ở **chế độ dự phòng** và test bằng `Http::fake()`.
-  4. AI chatbot: **Python**, bạn Ý làm, độc lập. Gắn vào trang bằng ô "Mã nhúng chatbot" trong admin; gọi API của repo này để lấy câu hỏi và chấm điểm.
-- Yêu cầu của Thầy (người quản lý, **không làm IT**):
-  - mỗi platform **gỡ ra / thay thế được, không sửa code**;
-  - **mọi thứ khách thấy và mọi danh mục đều sửa / thêm được trên admin**;
-  - dữ liệu khách tập trung ở CRM, được bảo mật.
+  1. `viger.edu.vn`: web chính, Tuấn làm.
+  2. **`holland.viger.edu.vn`: repo này.** Tôi làm. Khách điền thông tin, làm bài Holland, xem báo cáo; dữ liệu gửi sang CRM.
+  3. `crm.viger.edu.vn`: CRM, repo riêng, **chưa có** → mọi kết nối CRM chạy được ở **chế độ dự phòng**, test bằng `Http::fake()`.
+  4. AI chatbot (Python, bạn Ý): gọi API repo này; nhận báo cáo dạng JSON.
+- Yêu cầu của Thầy (không làm IT): mỗi platform gỡ / thay được; **mọi thứ khách thấy và mọi danh mục sửa được trên admin** (phần mềm "mở"); dữ liệu khách tập trung ở CRM, bảo mật; **mỗi trang admin có chú thích** ("Trang này làm gì?", nút "?").
 
-## 2. Repo này làm gì
+## 2. Sản phẩm: VIGER EDU Career Map (bản làm lại từ 11/11/2026)
 
-- **Trang khách** (thiết kế cho điện thoại trước):
-  - giới thiệu → **Phần B** (bộ câu Holland, không giới hạn thời gian, không hiện số câu) → **Phần A** (form "Nhận kết quả", động, admin tự thêm câu; điền xong mới xem kết quả) — *đổi thứ tự theo quyết định của Vân 05/11/2026*;
-  - **trang kết quả**: biểu đồ 6 nhóm, mã 3 chữ, lĩnh vực và ngành gợi ý; **không hiện điểm FIT dạng số, không hiện GREEN/YELLOW/RED, không hứa đậu**; **không có nút đặt lịch** (tư vấn viên đặt lịch trong CRM rồi email cho khách), khối "chuyên viên sẽ liên hệ" + Gọi / Zalo;
-  - trang kết quả `noindex`.
-- **Admin** (`/admin`), theo bố cục `docs/anh_mau_quan_tri/H19_admin_holland.png`:
-  - bộ câu hỏi (sửa trên web hoặc qua Excel), form Phần A, cấu hình chấm điểm (có nút "Chạy thử");
-  - nội dung trang (banner, chữ, hình, email, khối cho web chính), lượt làm bài, hàng đợi gửi CRM;
-  - kết nối, cài đặt, SEO, tài khoản, sao lưu.
-- **API** `/api/v1`: `GET questions`, `POST score`, `GET public/intro`, `GET embed`, `embed.js` (theo hợp đồng).
-- **Gửi sang CRM**: `POST {CRM}/api/v1/leads` với gói `lead/1` + `holland_result` + `quiz` (bài làm từng câu) + `extra_fields`, qua **bảng outbox + job thử lại**.
+- **Luồng khách** (điện thoại trước): giới thiệu → **điền thông tin** → **làm bài 36 câu** (1 câu / màn hình, thang Likert 1–5, **không có nút "Chưa biết"**, câu nào cũng bắt buộc) → **báo cáo cho khách** → email kết quả. **Không có nút đặt lịch** (tư vấn viên liên hệ qua CRM).
+- **Hai phiên bản báo cáo** từ cùng một kết quả:
+  - *External (khách)*: biểu đồ 6 nhóm, **mã 2 chữ**; chữ thứ 3 chỉ đọc chi tiết khi đủ điều kiện; 3–5 ngành gợi ý với nhãn chữ (không %), nghề tham khảo, bước tiếp theo. Không hứa đậu. `noindex`.
+  - *Internal (tư vấn viên / quản trị, phải đăng nhập)*: đủ 6 điểm, mã 3 chữ, mã thay thế, quan hệ lục giác, độ tin cậy, 36 câu đã làm, thông tin khách, JSON cho AI.
+- **Admin**: thư viện câu hỏi, cài đặt bài test, danh mục (6 nhóm, 15 cặp, 120 mã, ngành, nghề, môi trường), trường thông tin khách, lượt làm bài, nội dung trang, kết nối, tài khoản. Vai trò: quản trị viên, tư vấn viên, marketing.
 
 ## 3. Công nghệ và quy tắc
 
-- **Laravel 13, PHP ≥ 8.3**, MySQL (production) / SQLite (dev, test), Blade + CSS/JS thuần (không Tailwind, không SPA).
-- Package ngoài Laravel: **chỉ `openspout/openspout`** đã được duyệt. Muốn thêm package khác thì **hỏi tôi trước**.
-- Git: làm trên nhánh `dev`, commit theo giai đoạn, message tiếng Việt. **Không push, không merge.**
+- **Laravel 13, PHP ≥ 8.3**, MySQL (production) / SQLite (test), Blade + CSS/JS thuần (không Tailwind, không SPA).
+- Package ngoài Laravel: **chỉ `openspout/openspout`**. Muốn thêm package khác thì **hỏi tôi trước**.
+- Git: nhánh `feature/holland-v3` (tách từ `dev`), commit theo giai đoạn, message tiếng Việt. **Không push, không merge.** Không commit `.env`.
 - Giao diện và thông báo **tiếng Việt**. Class, bảng, cột **tiếng Anh**.
-- **Tên trường, khóa API, mã, giá trị lựa chọn: đúng `docs/TU_DIEN_DU_LIEU_CHUNG.xlsx` và `docs/lua_chon_chuan.json`.** Không tự đặt tên khác.
-- **Nguyên tắc "mở"**: không ghi cứng chữ, hình, lựa chọn, tên miền, chữ "Viger" trong code/view; lấy từ bảng `settings` / nội dung admin.
-- **Dễ dùng cho người không làm IT**: làm theo `docs/TIEU_CHI_DE_DUNG_VA_NGHIEM_THU.md` (10 quy tắc: nút "?", xem trước, lịch sử, thùng rác, ≤ 3 lần bấm…).
+- Tên trường thông tin khách / khóa gửi CRM: đúng `docs/TU_DIEN_DU_LIEU_CHUNG.xlsx` và `docs/lua_chon_chuan.json`.
+- **Nguyên tắc "mở"**: không ghi cứng chữ, hình, lựa chọn, ngưỡng, tên miền trong code/view; lấy từ bảng cài đặt / danh mục admin.
+- **Dễ dùng cho người không làm IT**: `docs/TIEU_CHI_DE_DUNG_VA_NGHIEM_THU.md` (nút "?", xem trước, lịch sử, thùng rác, ≤ 3 lần bấm…).
 - Bảo mật:
   - FormRequest cho mọi input, `{{ }}` trong Blade, CSRF, throttle form công khai (5/phút) và API (60/phút);
   - `result_token` là UUID; token API lưu dạng hash, so sánh `hash_equals`;
-  - **không ghi SĐT/email vào log**;
-  - migration **chỉ thêm**; chặn `migrate:fresh` / `reset` / `db:wipe` khi production.
+  - **không ghi SĐT, email, họ tên vào log** (cần thì che: `09xx xxx 678`);
+  - `/admin` và mọi trang có dữ liệu khách: bắt buộc đăng nhập + `noindex, nofollow`; `robots.txt` chặn `/admin`;
+  - **migration**: bản v3 được làm sạch một lần khi chưa có dữ liệu thật (Vân duyệt 11/11/2026). **Từ khi lên máy chủ thật: chỉ thêm bảng / cột cho phép rỗng**, không xóa, không đổi tên. Chặn `migrate:fresh` / `reset` / `db:wipe` khi production.
 - Tài liệu chỉ viết: `README.md`, `docs/API_HOLLAND.md`, `docs/THAY_THUAT_TOAN.md`, `docs/SO_TAY_SU_DUNG.md`, `docs/TIEN_DO.md`, `docs/NGHIEM_THU.md`.
 - Chưa rõ hoặc thấy mâu thuẫn: **hỏi tôi**, đừng đoán.
 
-## 4. Thuật toán (KHÔNG đổi công thức – port từ `database/seeders/data/holland/holland_engine_reference.php`)
+## 4. Thuật toán và đề thi (theo tài liệu của Thầy, chốt 11/11/2026)
 
-Đặt sau interface `App\Contracts\ScoringEngine`, bản mặc định là `RiasecFitEngineV2`, chọn engine bằng cấu hình.
-1. `p[g]` = tổng điểm câu nhóm g / tổng điểm tối đa nhóm g. Chạy được với mọi số câu và mọi thang trả lời.
-2. Mã = 3 nhóm có p cao nhất; **bằng nhau thì xếp theo R, I, A, S, E, C**.
-3. Cảnh báo (không đổi xếp hạng):
-   - `di3 = p1 − (p2 + p4)/2`, dưới 0,15 là "hồ sơ phẳng";
-   - `consistency = s(X1, X2)`;
-   - `has_tie` khi p1 = p2, hoặc p2 = p3, hoặc p3 = p4.
-4. `s(x, y) = 3 − min(|i − j|, 6 − |i − j|)` theo thứ tự "RIASEC" (trùng 3, kề 2, cách một 1, đối diện 0).
-5. Khớp mã: `C = 3·s(X1,Y1) + 2·s(X2,Y2) + s(X3,Y3)`, `code_match = C/18` (X = mã học sinh, Y = mã ngành).
-6. Khớp điểm: `r = (3·p[Y1] + 2·p[Y2] + p[Y3] − Σp) / (√8 · √Σ(p − p̄)²)` (mẫu số = 0 thì r = 0), `score_match = (r + 1)/2`.
-7. `FIT = 0,6·code_match + 0,4·score_match` (trọng số sửa được trên admin). Ngành có 1–3 mã thì lấy mã cho FIT cao nhất.
-8. Nhãn: ≥ 0,80 Rất phù hợp · ≥ 0,65 Phù hợp · ≥ 0,50 Có thể cân nhắc · còn lại Ít phù hợp.
-9. Xếp hạng ngành đang bật, tách đại học / học nghề, sắp theo FIT → code_match → mã; lấy top 5 + top 3.
-10. Điểm lĩnh vực / nhóm TestAS = FIT cao nhất trong nhóm. `reason` có dạng `"AIS ↔ IAS · bạn đạt I 67%, A 89%, S 56%"`.
-11. Kết quả trả về theo cấu trúc **`holland-result/1`** (`docs/HOP_DONG_KET_NOI.md` mục 4).
+**Rút đề – thư viện 300 câu, ngẫu nhiên có trọng số và ràng buộc** (`docs/CẤU TRÚC THƯ VIỆN CÂU HỎI TRẮC NGHIỆM HOLLAND.docx`, `docs/VIGER_Holland_QuestionBank_Programming_Guide_V1.docx`):
+1. Thư viện 6 nhóm × 50 câu, mỗi nhóm 10 chủ đề (facet). Loại A/B/C, trọng số chọn mặc định 5/3/1. **Thầy đã chọn bộ 300 câu → nạp ở trạng thái đã duyệt**; admin tạm ngưng / duyệt từng câu.
+2. Mỗi lượt: mỗi nhóm lấy câu neo (nếu bật) rồi rút thêm cho đủ `items_per_group` (6) câu theo trọng số, không hoàn lại (Efraimidis–Spirakis: key = −ln(u)/w, lấy k nhỏ nhất). Chỉ rút câu đã duyệt.
+3. Ràng buộc: ≥ `min_distinct_facets` (4) chủ đề khác nhau / nhóm; hạn chế lặp câu của lượt trước trên cùng máy (cookie, không dùng SĐT); tối đa 100 lần thử, không đạt thì nới ràng buộc và ghi cảnh báo.
+4. Trộn 36 câu; lưu mã câu, phiên bản câu, thứ tự hiện, phiên bản cài đặt. **Trọng số chỉ để chọn câu, không dùng tính điểm.**
 
-**Kiểm tra:** unit test theo `database/seeders/data/holland/test_cases.json`, sai số 0,001. Ví dụ HS01: mã AIS, ngành đầu tiên N043 (Ngôn ngữ và Văn học Đức) FIT ≈ 0,8011.
+**Chấm và phân tích** (`docs/holland_v3/HollandEngine.php` là bản tham chiếu; 8 ca trong `docs/holland_v3/cases.json`):
+1. Điểm nhóm = **trung bình cộng** các câu của nhóm (1–5). Không có "Chưa biết".
+2. Xếp hạng: điểm giảm dần; bằng nhau theo thứ tự R, I, A, S, E, C.
+3. Mã 2 chữ luôn có. Chữ thứ 3 chỉ đọc chi tiết cho khách khi điểm nhóm 3 **> 4,2** và đủ số câu (tương đương ≥ 26/30). Nội bộ luôn thấy đủ.
+4. Mã thay thế khi các vị trí 1–2, 2–3, 3–4 cách nhau ≤ 0,25, hoặc nhóm 3 gần ngưỡng.
+5. Quan hệ lục giác: liền kề / cách một / đối kháng; độ nhất quán Cao / Trung bình / Thấp.
+6. Gợi ý ngành: chỉ số C (Brown & Gore, 0–18) theo mã có thứ tự (ISA ≠ SIA); nhãn ≥ 15 "Liên quan nhiều", ≥ 11 "Liên quan", ≥ 7 "Có thể khám phá"; **không hiện %**.
+7. Mọi con số (6 câu, 4,2, 0,25, trọng số, nhãn, số ngành…) đọc từ cài đặt admin, không viết cứng.
 
 ## 5. Dữ liệu có sẵn
 
-- `database/seeders/data/holland/`:
-  - `questions.json`: 69 câu, gồm A01–A15 và B01–B54 (**câu B là câu mẫu**, Thầy sẽ thay);
-  - `holland_config.json`, `majors.json` (75 ngành / nghề, bản dự phòng khi chưa có CRM), `test_cases.json`, `holland_engine_reference.php`;
-  - regions.json là dữ liệu thật (Ý thu thập, đã chốt 05/11).
-- `docs/`:
-  - `HOP_DONG_KET_NOI.md`, `TU_DIEN_DU_LIEU_CHUNG.xlsx`, `lua_chon_chuan.json`, `TIEU_CHI_DE_DUNG_VA_NGHIEM_THU.md`;
-  - `3_Mau_GoogleSheet_Viger_Holland_v2.xlsx` (tab CAU_HOI = cột của file Excel câu hỏi);
-  - `Holland_de_xuat_nganh_v2.1.docx` (giải thích thuật toán từng công thức) + `Holland_de_xuat_nganh_v2.xlsx`, `DEMO_Holland_de_xuat_nganh.xlsx` (5 học sinh mẫu);
-  - `Phan_tich_thiet_ke_he_thong_Holland.docx`, `De_xuat_cau_truc_quan_tri_web_Viger.docx`, `anh_mau_quan_tri/`.
+- `docs/VIGER_Holland_QuestionBank_300_V1.xlsx` / `.csv`: 300 câu, 60 chủ đề, cấu hình rút đề.
+- `docs/VIGER_RIASEC_120_codes.xlsx`, `docs/VIGER_CareerMap_Layer4_Germany_V1.xlsx`, `docs/Sơ đồ kiến trúc ứng dụng VIGER EDU Career Map-chitiet.docx`: 120 mã, 15 cặp, nghề, môi trường, quy tắc.
+- `database/seeders/data/holland_v3/`: dữ liệu chuẩn hóa (6 nhóm, 15 cặp, 6 chữ thứ ba, 46 ngành, nghề, liên kết, môi trường, trường thông tin, cài đặt). File `questions.json` trong đó là 54 câu giả cũ → **không dùng**, thay bằng thư viện 300 câu.
+- `database/seeders/data/shared/regions.json`: khu vực ở Đức (dữ liệu thật, Ý thu thập).
+- **Không dùng** các file bản cũ đã xóa (`Holland_de_xuat_nganh_v2*`, `DEMO_Holland_de_xuat_nganh.xlsx`, dữ liệu `database/seeders/data/holland/`).
 
 ## 6. Cách làm việc mỗi phiên
 
 1. Đọc `docs/TIEN_DO.md` và `git log --oneline -15`.
-2. Nói ngắn gọn sẽ làm gì trong phiên này (giai đoạn nào, những file nào). Việc lớn thì **chờ tôi đồng ý**.
-3. Làm, rồi chạy `php artisan test` và `vendor/bin/pint --dirty`.
-4. Commit, cập nhật `docs/TIEN_DO.md` (đã xong gì, còn gì, câu hỏi cho tôi), báo cáo ngắn.
-5. Hết giai đoạn thì liệt kê các việc trong **bảng nghiệm thu** đã làm được, để tôi đưa Thầy và marketing thử.
+2. Mỗi giai đoạn: **báo kế hoạch → chờ tôi duyệt → làm → `php artisan test` + `vendor/bin/pint --dirty` → commit → cập nhật `docs/TIEN_DO.md` → báo kết quả rồi dừng.**
+3. Hết giai đoạn thì liệt kê việc trong bảng nghiệm thu đã làm được để tôi đưa Thầy thử.
 
-## 7. Giai đoạn (chi tiết ở `docs/PROMPT_2_HOLLAND.md` mục 8)
+## 7. Giai đoạn (bản làm lại)
 
-- [x] 1. Khởi tạo Laravel 13, Laravel Boost, layout mobile-first, đăng nhập admin, seeder 69 câu
-- [x] 2. Contracts + `RiasecFitEngineV2` + `JsonMajorCatalog` + unit test theo `test_cases.json` + test engine giả
-- [x] 3. Form Phần A động, nhiều bộ câu, cấu hình chấm điểm trên admin, trang làm bài, kết quả, email, quản trị nội dung trang, khối nhúng
-- [ ] 4. Kết nối CRM: catalog, lead sink, outbox + retry + scheduler (test bằng `Http::fake()`)
-- [ ] 5. API v1 + `docs/API_HOLLAND.md` (curl + Python `requests` cho bạn Ý)
-- [ ] 6. An toàn dữ liệu: backup / restore, chặn lệnh xóa database, gỡ / cài lại
-- [ ] 7. Admin câu hỏi / thống kê / outbox, xuất nhập Excel, trang Cài đặt và kết nối, SEO, `/install`, README deploy VPS Linux, sổ tay sử dụng
+- [x] 0. Nhánh `feature/holland-v3`, gỡ phần nghiệp vụ cũ (FIT, bộ câu Google Form, Phần A, 75 ngành), giữ hạ tầng
+- [ ] 1. Bảng dữ liệu + nạp 300 câu, 60 chủ đề, danh mục, cài đặt, trường thông tin; trang Cài đặt bài test
+- [ ] 2. Bộ máy: rút đề, chấm, phân tích, gợi ý ngành + test (8 ca của Thầy, ràng buộc rút đề)
+- [ ] 3. Luồng khách: thông tin → làm bài → báo cáo khách → email
+- [ ] 4. Admin thư viện câu hỏi + thống kê từng câu + nhập/xuất Excel
+- [ ] 5. Admin danh mục (nhóm, cặp, 120 mã, ngành, nghề), trường thông tin khách, chú thích
+- [ ] 6. Báo cáo nội bộ, vai trò tư vấn viên, lượt làm bài
+- [ ] 7. API, CRM (outbox + thử lại), tài khoản, sao lưu, tài liệu, nghiệm thu
 
 ## 8. Lệnh hay dùng
 
 ```bash
 composer install && cp .env.example .env && php artisan key:generate
-php artisan migrate --seed          # dev (SQLite)
+php artisan migrate --seed          # máy dev
 php artisan serve                   # http://127.0.0.1:8000
 php artisan test                    # chạy test
 vendor/bin/pint --dirty             # định dạng code

@@ -37,7 +37,7 @@
             <div class="field">
                 <label for="intro">Đoạn giới thiệu</label>
                 <textarea id="intro" name="intro" rows="4" maxlength="1500">{{ $value('intro') }}</textarea>
-                <p class="field__hint">Tên và mô tả từng nhóm sửa ở mục <a href="{{ route('admin.groups.edit') }}">Mô tả 6 nhóm Holland</a>.</p>
+                <p class="field__hint">Tên và mô tả từng nhóm: bấm sửa trực tiếp trên <a href="{{ route('admin.page-editor.show', 'trang-gioi-thieu') }}">trang giới thiệu</a>.</p>
             </div>
         @endif
 

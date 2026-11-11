@@ -20,22 +20,19 @@ class AdminLayoutTest extends TestCase
         $this->actingAs(User::factory()->create(['name' => 'Thầy Phương']));
     }
 
-    public function test_dashboard_shows_menu_groups_and_question_counts(): void
+    public function test_dashboard_shows_menu_groups_and_shortcuts(): void
     {
         $response = $this->get(route('admin.dashboard'))
             ->assertOk()
             ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
             ->assertSee('Xin chào Thầy Phương')
-            ->assertSee('Xem trang test như khách')
-            ->assertSeeInOrder(['Bảng điều khiển', 'Bài test', 'Nội dung trang', 'Dữ liệu', 'Cấu hình'])
-            ->assertSee('THPT – 54 câu');
+            ->assertSeeInOrder(['Bảng điều khiển', 'Bài trắc nghiệm', 'Danh mục Holland', 'Khách hàng', 'Nội dung trang', 'Cấu hình'])
+            ->assertSee('Thư viện câu hỏi');
 
         foreach (AdminMenu::items() as $item) {
             $response->assertSee($item['label']);
         }
 
-        $this->assertSame(54, $response->viewData('partBCount'));
-        $this->assertSame(12, $response->viewData('partACount'));
     }
 
     public function test_every_pending_menu_item_opens_a_coming_soon_page_with_help(): void

@@ -2,6 +2,36 @@
 
 (Claude Code cập nhật sau mỗi phiên: đã xong · đang làm · câu hỏi cho Vân)
 
+## Làm lại theo VIGER EDU Career Map (từ 11/11/2026, nhánh `feature/holland-v3`)
+
+Sau buổi họp 11/11, Thầy chốt hướng mới: thư viện 300 câu, rút ngẫu nhiên có trọng số, điểm trung bình cộng, mã 2/3 chữ, 120 mã có thứ tự, ngành – nghề Đức, báo cáo khách / nội bộ. Bản cũ (FIT, bộ câu kiểu Google Form, 75 ngành) **đã gỡ**; xem `CLAUDE.md` mục 2, 4, 7.
+
+**Quyết định của Vân (11/11/2026):**
+- Rút đề **ngẫu nhiên có trọng số từ 300 câu** cho mọi lượt (không dùng đề cố định); 300 câu nạp ở trạng thái **đã duyệt** (Thầy đã chọn).
+- **Không có nút "Chưa biết"**: Likert 1–5, câu nào cũng bắt buộc.
+- **Không có nút đặt lịch**: gửi kết quả qua email, sau nối CRM. Hai phiên bản báo cáo: khách (external) và nội bộ (internal).
+- Thứ tự: **điền thông tin trước → làm bài → báo cáo** (theo bản mẫu của Thầy).
+- Chưa có dữ liệu khách thật → **làm sạch** migration cũ một lần; từ khi lên máy chủ thật mới áp dụng "chỉ thêm".
+- Bảng trường / chương trình đại học: để phiên bản sau.
+
+| Giai đoạn | Trạng thái |
+|---|---|
+| 0. Nhánh mới, gỡ phần nghiệp vụ cũ, giữ hạ tầng, sửa CLAUDE.md | ✅ Xong |
+| 1. Bảng dữ liệu + nạp 300 câu, danh mục, cài đặt, trường thông tin; trang Cài đặt bài test | Chờ duyệt kế hoạch |
+| 2. Bộ máy rút đề, chấm, phân tích, gợi ý ngành | Chưa làm |
+| 3. Luồng khách: thông tin → làm bài → báo cáo → email | Chưa làm |
+| 4. Admin thư viện câu hỏi, thống kê, Excel | Chưa làm |
+| 5. Admin danh mục, trường thông tin, chú thích | Chưa làm |
+| 6. Báo cáo nội bộ, vai trò tư vấn viên, lượt làm bài | Chưa làm |
+| 7. API, CRM, tài khoản, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+**GĐ0 đã làm:** gỡ thuật toán FIT, bộ câu, form Phần A, trang làm bài / kết quả / email cũ, 75 ngành, dữ liệu `database/seeders/data/holland/` (giữ `regions.json` → `database/seeders/data/shared/`); giữ đăng nhập, khung admin, nội dung trang giới thiệu, khối nhúng, thư viện ảnh, lịch sử + quay lại bản cũ (`HistoryController`), chặn lệnh xóa database. Menu admin theo cấu trúc mới (mục chưa làm hiện "Đang xây dựng – giai đoạn X"). Nút "Bắt đầu" tạm mở trang "đang cập nhật". `robots.txt` chặn `/admin`. 41 test đạt.
+
+**Việc Vân cần làm sau GĐ0:** trên máy Vân, bật Laragon (Start All) rồi chạy `php artisan migrate:fresh --seed` **một lần** (database máy Vân còn bảng cũ). Lệnh này bị chặn trên máy chủ thật.
+
+---
+
+# Lịch sử bản cũ (trước 11/11/2026, đã thay)
 ## Tình trạng hiện tại (cập nhật 05/11/2026)
 
 | Giai đoạn | Trạng thái |

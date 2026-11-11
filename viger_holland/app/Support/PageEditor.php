@@ -162,7 +162,7 @@ final class PageEditor
     private static function field(string $key): ?array
     {
         if (preg_match('/^group_(name|desc)_[RIASEC]$/', $key)) {
-            return ['type' => str_contains($key, 'desc') ? 'textarea' : 'text', 'menu' => 'groups', 'group' => 'intro',
+            return ['type' => str_contains($key, 'desc') ? 'textarea' : 'text', 'menu' => 'intro', 'group' => 'intro',
                 'subject' => AdminActivity::SUBJECT_GROUPS, 'title' => 'Mô tả 6 nhóm Holland'];
         }
 

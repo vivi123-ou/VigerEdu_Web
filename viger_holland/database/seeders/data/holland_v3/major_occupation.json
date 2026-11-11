@@ -1,0 +1,479 @@
+[
+ {
+  "id": "LNK001",
+  "major_id": "MAJ001",
+  "occupation_id": "OCC001",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK002",
+  "major_id": "MAJ002",
+  "occupation_id": "OCC002",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK003",
+  "major_id": "MAJ003",
+  "occupation_id": "OCC003",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK004",
+  "major_id": "MAJ004",
+  "occupation_id": "OCC004",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK005",
+  "major_id": "MAJ005",
+  "occupation_id": "OCC005",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK006",
+  "major_id": "MAJ006",
+  "occupation_id": "OCC006",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK007",
+  "major_id": "MAJ007",
+  "occupation_id": "OCC007",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK008",
+  "major_id": "MAJ008",
+  "occupation_id": "OCC008",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK009",
+  "major_id": "MAJ009",
+  "occupation_id": "OCC009",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK010",
+  "major_id": "MAJ010",
+  "occupation_id": "OCC010",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK011",
+  "major_id": "MAJ011",
+  "occupation_id": "OCC011",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK012",
+  "major_id": "MAJ012",
+  "occupation_id": "OCC012",
+  "type": "Potential pathway",
+  "routes": "Uni",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK013",
+  "major_id": "MAJ013",
+  "occupation_id": "OCC013",
+  "type": "Potential pathway",
+  "routes": "HAW, Uni, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK014",
+  "major_id": "MAJ014",
+  "occupation_id": "OCC014",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK015",
+  "major_id": "MAJ015",
+  "occupation_id": "OCC015",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK016",
+  "major_id": "MAJ016",
+  "occupation_id": "OCC016",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK017",
+  "major_id": "MAJ017",
+  "occupation_id": "OCC017",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK018",
+  "major_id": "MAJ018",
+  "occupation_id": "OCC018",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK019",
+  "major_id": "MAJ019",
+  "occupation_id": "OCC019",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK020",
+  "major_id": "MAJ020",
+  "occupation_id": "OCC020",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK021",
+  "major_id": "MAJ021",
+  "occupation_id": "OCC021",
+  "type": "Potential pathway",
+  "routes": "Uni",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK022",
+  "major_id": "MAJ022",
+  "occupation_id": "OCC022",
+  "type": "Potential pathway",
+  "routes": "Uni, HAW",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK023",
+  "major_id": "MAJ023",
+  "occupation_id": "OCC023",
+  "type": "Potential pathway",
+  "routes": "HAW, ART",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK024",
+  "major_id": "MAJ024",
+  "occupation_id": "OCC024",
+  "type": "Potential pathway",
+  "routes": "HAW, DUAL",
+  "source": "Layer 4",
+  "status": "Illustrative - not institution verified"
+ },
+ {
+  "id": "LNK025",
+  "major_id": "MAJ002",
+  "occupation_id": "OCC025",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK026",
+  "major_id": "MAJ001",
+  "occupation_id": "OCC026",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK027",
+  "major_id": "MAJ025",
+  "occupation_id": "OCC027",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK028",
+  "major_id": "MAJ026",
+  "occupation_id": "OCC028",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK029",
+  "major_id": "MAJ027",
+  "occupation_id": "OCC029",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK030",
+  "major_id": "MAJ028",
+  "occupation_id": "OCC030",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK031",
+  "major_id": "MAJ016",
+  "occupation_id": "OCC031",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK032",
+  "major_id": "MAJ029",
+  "occupation_id": "OCC032",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK033",
+  "major_id": "MAJ030",
+  "occupation_id": "OCC033",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK034",
+  "major_id": "MAJ031",
+  "occupation_id": "OCC013",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK035",
+  "major_id": "MAJ008",
+  "occupation_id": "OCC034",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK036",
+  "major_id": "MAJ032",
+  "occupation_id": "OCC035",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK037",
+  "major_id": "MAJ021",
+  "occupation_id": "OCC036",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK038",
+  "major_id": "MAJ033",
+  "occupation_id": "OCC037",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK039",
+  "major_id": "MAJ007",
+  "occupation_id": "OCC038",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK040",
+  "major_id": "MAJ034",
+  "occupation_id": "OCC039",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK041",
+  "major_id": "MAJ035",
+  "occupation_id": "OCC040",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK042",
+  "major_id": "MAJ036",
+  "occupation_id": "OCC041",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK043",
+  "major_id": "MAJ037",
+  "occupation_id": "OCC042",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK044",
+  "major_id": "MAJ038",
+  "occupation_id": "OCC043",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK045",
+  "major_id": "MAJ039",
+  "occupation_id": "OCC044",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK046",
+  "major_id": "MAJ040",
+  "occupation_id": "OCC045",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK047",
+  "major_id": "MAJ041",
+  "occupation_id": "OCC046",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK048",
+  "major_id": "MAJ042",
+  "occupation_id": "OCC047",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK049",
+  "major_id": "MAJ043",
+  "occupation_id": "OCC048",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK050",
+  "major_id": "MAJ044",
+  "occupation_id": "OCC049",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK051",
+  "major_id": "MAJ045",
+  "occupation_id": "OCC050",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK052",
+  "major_id": "MAJ009",
+  "occupation_id": "OCC051",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ },
+ {
+  "id": "LNK053",
+  "major_id": "MAJ046",
+  "occupation_id": "OCC009",
+  "type": "Potential pathway",
+  "routes": null,
+  "source": "15_CAP_NEN",
+  "status": "Đề xuất – chưa kiểm định"
+ }
+]

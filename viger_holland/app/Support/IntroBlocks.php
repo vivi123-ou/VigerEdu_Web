@@ -23,7 +23,7 @@ final class IntroBlocks
      */
     public const TYPES = [
         'steps' => ['Cách làm bài', 'Các bước làm bài, đánh số 1, 2, 3…'],
-        'groups' => ['6 nhóm Holland', 'Giải thích phương pháp và 6 nhóm R, I, A, S, E, C (tên, mô tả sửa ở mục "Mô tả 6 nhóm Holland").'],
+        'groups' => ['6 nhóm Holland', 'Giải thích phương pháp và 6 nhóm R, I, A, S, E, C (tên, mô tả bấm sửa trực tiếp trên trang).'],
         'text_image' => ['Chữ và ảnh', 'Một đoạn nội dung có định dạng, kèm ảnh bên trái hoặc phải và nút bấm (không bắt buộc).'],
         'faq' => ['Câu hỏi thường gặp', 'Danh sách câu hỏi, bấm vào để xem câu trả lời.'],
         'testimonials' => ['Cảm nhận phụ huynh / học sinh', 'Lời nhận xét thật kèm tên và vai trò người nói.'],

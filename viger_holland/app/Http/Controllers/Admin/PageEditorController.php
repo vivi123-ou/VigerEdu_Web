@@ -3,28 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\TestResultMail;
-use App\Services\PagePreview;
-use App\Services\ResultPresenter;
 use App\Support\PageEditor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
- * "Sửa trực tiếp trên trang": mở trang khách thấy (trang giới thiệu, trang kết quả mẫu, email) ở chế độ sửa –
- * bấm vào chữ để gõ, bấm vào ảnh để đổi, bấm "Lưu". Mọi thay đổi ghi lịch sử như các trang nội dung khác.
+ * "Sửa trực tiếp trên trang": mở trang khách thấy ở chế độ sửa – bấm vào chữ để gõ, bấm vào ảnh để đổi,
+ * bấm "Lưu". Mọi thay đổi ghi lịch sử như các trang nội dung khác.
+ * Hiện có trang giới thiệu; trang kết quả và email thêm lại ở giai đoạn làm báo cáo.
  */
 class PageEditorController extends Controller
 {
     /** Trang sửa được => [tên, mục menu (quyền), trang biểu mẫu tương ứng]. */
     public const PAGES = [
         'trang-gioi-thieu' => ['Trang giới thiệu', 'intro', 'admin.content.edit:intro'],
-        'trang-ket-qua' => ['Trang kết quả', 'result-page', 'admin.content.edit:result-page'],
-        'email' => ['Email gửi khách', 'email', 'admin.content.edit:email'],
     ];
 
-    public function show(Request $request, string $page, PagePreview $preview, ResultPresenter $presenter): Response
+    public function show(Request $request, string $page): Response
     {
         [$title, $menuKey, $formRoute] = self::PAGES[$page] ?? abort(404);
         abort_unless($request->user()->canAccessMenu($menuKey), 403, 'Tài khoản của bạn không có quyền vào mục này.');
@@ -33,20 +29,14 @@ class PageEditorController extends Controller
         PageEditor::start();
 
         try {
-            $html = match ($page) {
-                'trang-ket-qua' => view('public.result', ['attempt' => $attempt = $preview->sampleAttempt(), 'result' => $presenter->present($attempt)])->render(),
-                'email' => (new TestResultMail($preview->sampleAttempt()))->render(),
-                default => view('public.home')->render(),
-            };
+            $html = view('public.home')->render();
 
             $toolbar = view('admin.page-editor.toolbar', [
                 'pageKey' => $page,
                 'title' => $title,
                 'formUrl' => route($formName, $formPage),
-                'viewUrl' => match ($page) {
-                    'trang-gioi-thieu' => route('home'), default => null
-                },
-                'isEmail' => $page === 'email',
+                'viewUrl' => route('home'),
+                'isEmail' => false,
             ])->render();
         } finally {
             // Chế độ sửa chỉ dùng cho lần dựng trang này.

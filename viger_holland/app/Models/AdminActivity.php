@@ -27,17 +27,18 @@ class AdminActivity extends Model
 
     public const ACTION_REVERT = 'revert';
 
-    public const SUBJECT_QUESTION = 'question';
-
-    public const SUBJECT_SET = 'question_set';
-
     public const SUBJECT_SETTINGS = 'settings';
-
-    /** Nhật ký cài đặt của trang "Cấu hình chấm điểm". */
-    public const SUBJECT_SCORING = 'settings.scoring';
 
     /** Nhật ký cài đặt của trang "Mô tả 6 nhóm". */
     public const SUBJECT_GROUPS = 'settings.groups';
+
+    /**
+     * Loại nội dung (subject_type) => model, để nút "Quay lại bản này" biết khôi phục vào đâu.
+     * Mỗi giai đoạn thêm model của mình vào đây.
+     *
+     * @var array<string, class-string<Model>>
+     */
+    public const MODELS = [];
 
     /**
      * @return array<string, string>

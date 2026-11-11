@@ -1,0 +1,182 @@
+[
+ {
+  "key": "ho_ten",
+  "label": "Họ và tên",
+  "type": "Chữ",
+  "required": true,
+  "to_crm": true,
+  "on_report": true,
+  "group": "Liên hệ",
+  "note": null
+ },
+ {
+  "key": "so_dien_thoai",
+  "label": "Số điện thoại / Zalo",
+  "type": "Số điện thoại",
+  "required": true,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Liên hệ",
+  "note": "Dùng để tìm và gộp khách trùng"
+ },
+ {
+  "key": "nam_sinh",
+  "label": "Năm sinh",
+  "type": "Năm (chọn)",
+  "required": true,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Cá nhân",
+  "note": "Suy ra lớp, kiểm tra cần đồng ý của phụ huynh"
+ },
+ {
+  "key": "email",
+  "label": "Email nhận báo cáo",
+  "type": "Email",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Liên hệ",
+  "note": null
+ },
+ {
+  "key": "dong_y",
+  "label": "Đồng ý xử lý dữ liệu",
+  "type": "Ô đánh dấu",
+  "required": true,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Pháp lý",
+  "note": "Không được đánh dấu sẵn; lưu thời điểm đồng ý"
+ },
+ {
+  "key": "sdt_phu_huynh",
+  "label": "Số điện thoại phụ huynh",
+  "type": "Số điện thoại",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Liên hệ",
+  "note": null
+ },
+ {
+  "key": "tinh",
+  "label": "Tỉnh / thành phố",
+  "type": "Danh sách",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Cá nhân",
+  "note": null
+ },
+ {
+  "key": "truong_dang_hoc",
+  "label": "Trường đang học",
+  "type": "Chữ, gợi ý tự động",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Học tập",
+  "note": null
+ },
+ {
+  "key": "lop",
+  "label": "Lớp / năm học",
+  "type": "Danh sách",
+  "required": false,
+  "to_crm": true,
+  "on_report": true,
+  "group": "Học tập",
+  "note": null
+ },
+ {
+  "key": "ban_hoc",
+  "label": "Ban / khối (Tự nhiên, Xã hội…)",
+  "type": "Danh sách",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Học tập",
+  "note": null
+ },
+ {
+  "key": "dtb_hoc_ba",
+  "label": "Điểm trung bình học bạ (thang 10)",
+  "type": "Số 0–10",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Học tập",
+  "note": "Theo năm gần nhất"
+ },
+ {
+  "key": "diem_mon",
+  "label": "Điểm các môn chính",
+  "type": "Bảng môn – điểm",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Học tập",
+  "note": "Danh sách môn do quản trị viên chọn: Toán, Văn, Anh, Lý, Hóa, Sinh, Tin…"
+ },
+ {
+  "key": "ngoai_ngu",
+  "label": "Ngoại ngữ và chứng chỉ",
+  "type": "Danh sách + điểm",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Học tập",
+  "note": "IELTS, Goethe, TestDaF…"
+ },
+ {
+  "key": "bac_quan_tam",
+  "label": "Hướng học quan tâm",
+  "type": "Danh sách",
+  "required": false,
+  "to_crm": true,
+  "on_report": true,
+  "group": "Mục tiêu",
+  "note": "Đại học nghiên cứu (Uni) / Đại học ứng dụng (HAW) / Chưa biết"
+ },
+ {
+  "key": "ngon_ngu_hoc",
+  "label": "Ngôn ngữ học dự kiến",
+  "type": "Danh sách",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Mục tiêu",
+  "note": "Tiếng Đức / Tiếng Anh / Chưa biết"
+ },
+ {
+  "key": "thoi_diem_du_kien",
+  "label": "Thời điểm dự kiến đi",
+  "type": "Năm",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Mục tiêu",
+  "note": null
+ },
+ {
+  "key": "muc_tai_chinh",
+  "label": "Khả năng tài chính (khoảng)",
+  "type": "Danh sách khoảng",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Mục tiêu",
+  "note": "Chỉ khoảng, không hỏi số cụ thể"
+ },
+ {
+  "key": "nguon",
+  "label": "Biết đến qua",
+  "type": "Danh sách",
+  "required": false,
+  "to_crm": true,
+  "on_report": false,
+  "group": "Marketing",
+  "note": "Ghi tự động nếu đi từ quảng cáo"
+ }
+]

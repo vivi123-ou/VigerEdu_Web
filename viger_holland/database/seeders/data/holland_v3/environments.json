@@ -1,0 +1,86 @@
+[
+ {
+  "code": "DESIGN_OFFICE",
+  "name": "Văn phòng thiết kế",
+  "activities": "CAD, phối hợp kỹ thuật",
+  "hint": "R;I;C"
+ },
+ {
+  "code": "LAB",
+  "name": "Phòng thí nghiệm",
+  "activities": "Thí nghiệm, đo lường",
+  "hint": "I;R;C"
+ },
+ {
+  "code": "RESEARCH_LAB",
+  "name": "Trung tâm nghiên cứu",
+  "activities": "Phân tích, nghiên cứu",
+  "hint": "I;A"
+ },
+ {
+  "code": "FACTORY",
+  "name": "Nhà máy",
+  "activities": "Sản xuất, kiểm tra hệ thống",
+  "hint": "R;C;I"
+ },
+ {
+  "code": "FIELD",
+  "name": "Thực địa",
+  "activities": "Khảo sát, thu thập mẫu",
+  "hint": "R;I"
+ },
+ {
+  "code": "CONSTRUCTION_SITE",
+  "name": "Công trường",
+  "activities": "Giám sát thi công",
+  "hint": "R;E;C"
+ },
+ {
+  "code": "OFFICE",
+  "name": "Văn phòng",
+  "activities": "Họp, phân tích, báo cáo",
+  "hint": "C;E;I"
+ },
+ {
+  "code": "REMOTE",
+  "name": "Làm việc từ xa",
+  "activities": "Phần mềm, phối hợp trực tuyến",
+  "hint": "Không suy ra RIASEC"
+ },
+ {
+  "code": "CLIENT_SITE",
+  "name": "Tại khách hàng",
+  "activities": "Tư vấn, triển khai",
+  "hint": "E;S;I"
+ },
+ {
+  "code": "STUDIO",
+  "name": "Studio sáng tạo",
+  "activities": "Thiết kế, sản xuất nội dung",
+  "hint": "A;E"
+ },
+ {
+  "code": "WAREHOUSE",
+  "name": "Kho và logistics",
+  "activities": "Vận hành, điều phối",
+  "hint": "R;C"
+ },
+ {
+  "code": "SCHOOL",
+  "name": "Trường học",
+  "activities": "Giáo dục, hỗ trợ",
+  "hint": "S;A"
+ },
+ {
+  "code": "TRAINING_ROOM",
+  "name": "Phòng đào tạo",
+  "activities": "Hướng dẫn, phát triển",
+  "hint": "S;E"
+ },
+ {
+  "code": "COMMUNITY",
+  "name": "Cộng đồng",
+  "activities": "Hỗ trợ dịch vụ xã hội",
+  "hint": "S;E"
+ }
+]

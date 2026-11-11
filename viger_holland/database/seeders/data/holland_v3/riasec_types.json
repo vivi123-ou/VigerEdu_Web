@@ -1,0 +1,38 @@
+[
+ {
+  "code": "R",
+  "name": "Thực hành",
+  "label": "Thực hành, kỹ thuật",
+  "hex_index": 0
+ },
+ {
+  "code": "I",
+  "name": "Nghiên cứu",
+  "label": "Nghiên cứu, phân tích",
+  "hex_index": 1
+ },
+ {
+  "code": "A",
+  "name": "Sáng tạo",
+  "label": "Sáng tạo, nghệ thuật",
+  "hex_index": 2
+ },
+ {
+  "code": "S",
+  "name": "Xã hội",
+  "label": "Hỗ trợ, phát triển con người",
+  "hex_index": 3
+ },
+ {
+  "code": "E",
+  "name": "Kinh doanh",
+  "label": "Kinh doanh, tạo ảnh hưởng",
+  "hex_index": 4
+ },
+ {
+  "code": "C",
+  "name": "Tổ chức",
+  "label": "Tổ chức, quy trình",
+  "hex_index": 5
+ }
+]

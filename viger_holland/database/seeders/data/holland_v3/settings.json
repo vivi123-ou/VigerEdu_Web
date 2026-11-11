@@ -1,0 +1,93 @@
+{
+ "items_per_group": 6,
+ "draw_mode": "fixed",
+ "scale_min": 1,
+ "scale_max": 5,
+ "allow_dont_know": true,
+ "min_valid_per_group": 4,
+ "third_letter_threshold": 4.2,
+ "third_letter_requires_full": true,
+ "near_tie_gap": 0.25,
+ "interest_mark": 3.4,
+ "bands": [
+  [
+   1.8,
+   "Rất ít quan tâm"
+  ],
+  [
+   2.6,
+   "Ít quan tâm"
+  ],
+  [
+   3.4,
+   "Quan tâm trung bình"
+  ],
+  [
+   4.2,
+   "Quan tâm"
+  ],
+  [
+   5.0,
+   "Rất quan tâm"
+  ]
+ ],
+ "c_labels": [
+  [
+   15,
+   "Liên quan nhiều"
+  ],
+  [
+   11,
+   "Liên quan"
+  ],
+  [
+   7,
+   "Có thể khám phá"
+  ]
+ ],
+ "max_majors_public": 5,
+ "dont_know_flag_total": 6,
+ "one_option_share": 0.9,
+ "longstring": 10,
+ "fast_avg_seconds": 2.0,
+ "rushed_run": 5,
+ "rushed_seconds": 1.0,
+ "fixed_set": [
+  "R01",
+  "R02",
+  "R03",
+  "R04",
+  "R05",
+  "R06",
+  "I01",
+  "I02",
+  "I03",
+  "I04",
+  "I05",
+  "I06",
+  "A01",
+  "A02",
+  "A03",
+  "A04",
+  "A05",
+  "A06",
+  "S01",
+  "S02",
+  "S03",
+  "S04",
+  "S05",
+  "S06",
+  "E01",
+  "E02",
+  "E03",
+  "E04",
+  "E05",
+  "E06",
+  "C01",
+  "C02",
+  "C03",
+  "C04",
+  "C05",
+  "C06"
+ ]
+}

@@ -37,10 +37,8 @@ class PageEditorTest extends TestCase
             ->assertSee('data-ed-image="banner_image"', false)
             ->assertSee('js/page-editor.js', false);
 
-        $this->get(route('admin.page-editor.show', 'trang-ket-qua'))->assertOk()
-            ->assertSee('data-ed="result_greeting"', false)->assertSee('data-ed="result_flat_note"', false)->assertSee('Chào', false);
-        $this->get(route('admin.page-editor.show', 'email'))->assertOk()
-            ->assertSee('data-ed="email_subject"', false)->assertSee('data-ed="email_closing"', false);
+        // Trang báo cáo và email: làm lại ở GĐ3.
+        $this->get('/admin/sua-trang/trang-ket-qua')->assertNotFound();
 
         $this->get(route('home'))->assertOk()->assertDontSee('data-ed=', false)->assertDontSee('page-editor.js', false);
     }
@@ -52,16 +50,14 @@ class PageEditorTest extends TestCase
         $this->postJson(route('admin.page-editor.save'), ['changes' => [
             'intro_title' => "  Chọn ngành\n đúng  ",
             'group_name_R' => 'Kỹ thuật – Thực hành',
-            'result_contact_text' => '<p>Gọi <b>ngay</b></p><script>x</script>',
             'block:faq01:items.0.question' => 'Có mất phí không?',
             'block:faq01:items.0.answer' => '<p>Không <img src=x onerror=alert(1)></p>',
             'banner_image' => 'storage/media/2026/11/abc.jpg',
             'hotline' => '0909 123 456',
-        ]])->assertOk()->assertJsonPath('saved', 7);
+        ]])->assertOk()->assertJsonPath('saved', 6);
 
         $this->assertSame('Chọn ngành đúng', setting('intro_title'));
         $this->assertSame('Kỹ thuật – Thực hành', setting('group_name_R'));
-        $this->assertSame('<p>Gọi <b>ngay</b></p>', setting('result_contact_text'));
         $this->assertSame('storage/media/2026/11/abc.jpg', setting('banner_image'));
         $faq = IntroBlocks::find('faq01');
         $this->assertSame('Có mất phí không?', $faq['data']['items'][0]['question']);

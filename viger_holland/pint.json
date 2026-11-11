@@ -1,6 +1,7 @@
 {
     "preset": "laravel",
     "exclude": [
-        "database/seeders/data"
+        "database/seeders/data",
+        "docs"
     ]
 }

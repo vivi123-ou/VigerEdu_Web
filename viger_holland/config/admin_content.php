@@ -10,7 +10,7 @@
 |
 | type: text | textarea | rich (trình soạn thảo, lọc HTML khi lưu) | image (thư viện ảnh) | color | font
 |       | url | email | links (danh sách link: chữ + địa chỉ) | domains (mỗi dòng một tên miền)
-| preview: trang khách dùng cho nút "Xem trước" (home, result, email, embed).
+| preview: trang khách dùng cho nút "Xem trước" (home, embed). Trang kết quả, email: làm lại ở GĐ3.
 |
 */
 
@@ -32,54 +32,6 @@ return [
                 ['key' => 'intro_button_note', 'label' => 'Dòng chữ nhỏ dưới nút', 'type' => 'text'],
                 ['key' => 'banner_image', 'label' => 'Ảnh banner (máy tính)', 'type' => 'image', 'hint' => 'Hiện bên phải tiêu đề trên máy tính. Nên rộng khoảng 1200px, tỉ lệ 4:3 hoặc 1:1. Để trống thì không có ảnh.'],
                 ['key' => 'banner_image_mobile', 'label' => 'Ảnh banner (điện thoại)', 'type' => 'image', 'hint' => 'Hiện trên tiêu đề khi xem bằng điện thoại. Để trống = dùng ảnh máy tính.'],
-            ],
-        ],
-    ],
-
-    'result-page' => [
-        'title' => 'Trang kết quả',
-        'menu' => 'result-page',
-        'group' => 'result',
-        'preview' => 'result',
-        'sections' => [
-            'Phần đầu' => [
-                ['key' => 'result_title', 'label' => 'Dòng chữ nhỏ trên lời chào', 'type' => 'text'],
-                ['key' => 'result_greeting', 'label' => 'Lời chào', 'type' => 'text', 'hint' => 'Tên khách tự thêm phía sau, ví dụ "Chào An,".'],
-                ['key' => 'result_intro', 'label' => 'Đoạn mở đầu', 'type' => 'textarea'],
-                ['key' => 'result_code_label', 'label' => 'Chữ trên mã Holland', 'type' => 'text'],
-            ],
-            'Biểu đồ và gợi ý' => [
-                ['key' => 'result_chart_title', 'label' => 'Tiêu đề biểu đồ 6 nhóm', 'type' => 'text'],
-                ['key' => 'result_flat_note', 'label' => 'Câu nhắc khi điểm các nhóm khá đều', 'type' => 'textarea'],
-                ['key' => 'result_tie_note', 'label' => 'Câu nhắc khi có nhóm bằng điểm', 'type' => 'textarea'],
-                ['key' => 'result_fields_title', 'label' => 'Tiêu đề phần lĩnh vực', 'type' => 'text'],
-                ['key' => 'result_university_title', 'label' => 'Tiêu đề phần ngành đại học', 'type' => 'text'],
-                ['key' => 'result_vocational_title', 'label' => 'Tiêu đề phần học nghề', 'type' => 'text'],
-            ],
-            'Liên hệ tư vấn' => [
-                ['key' => 'result_contact_title', 'label' => 'Tiêu đề khối liên hệ', 'type' => 'text'],
-                ['key' => 'result_contact_text', 'label' => 'Nội dung khối liên hệ', 'type' => 'rich'],
-                ['key' => 'result_call_text', 'label' => 'Chữ nút gọi điện', 'type' => 'text', 'hint' => 'Số hotline lấy ở trang "Giao diện & chân trang".'],
-                ['key' => 'result_zalo_text', 'label' => 'Chữ nút Zalo', 'type' => 'text'],
-                ['key' => 'result_disclaimer', 'label' => 'Lưu ý cuối trang', 'type' => 'textarea'],
-                ['key' => 'result_retake', 'label' => 'Chữ link làm lại bài', 'type' => 'text'],
-            ],
-        ],
-    ],
-
-    'email' => [
-        'title' => 'Email gửi khách',
-        'menu' => 'email',
-        'group' => 'email',
-        'preview' => 'email',
-        'sections' => [
-            'Email kết quả' => [
-                ['key' => 'email_subject', 'label' => 'Tiêu đề email', 'type' => 'text', 'required' => true],
-                ['key' => 'email_greeting', 'label' => 'Lời chào', 'type' => 'text', 'hint' => 'Tên khách tự thêm phía sau.'],
-                ['key' => 'email_intro', 'label' => 'Lời mở đầu (trước mã Holland)', 'type' => 'rich'],
-                ['key' => 'email_button_text', 'label' => 'Chữ nút xem kết quả', 'type' => 'text'],
-                ['key' => 'email_closing', 'label' => 'Lời kết', 'type' => 'rich'],
-                ['key' => 'email_signature', 'label' => 'Chữ ký', 'type' => 'textarea', 'hint' => 'Mỗi dòng một dòng chữ ký.'],
             ],
         ],
     ],

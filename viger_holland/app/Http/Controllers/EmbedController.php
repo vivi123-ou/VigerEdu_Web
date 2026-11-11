@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attempt;
 use App\Support\ContentPages;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,7 +26,8 @@ class EmbedController extends Controller
             'image_url' => media_url(setting('embed_image', setting('banner_image'))),
             'button_text' => (string) setting('embed_button_text', setting('intro_button_text')),
             'start_url' => route('home', ['utm_source' => 'web-chinh']),
-            'stats' => ['total_attempts' => Attempt::count()],
+            // Hợp đồng kết nối mục 6c. GĐ3 đếm từ bảng lượt làm bài mới; hiện chưa có lượt nào.
+            'stats' => ['total_attempts' => 0],
         ]);
 
         $response = response()->json($data)->header('Cache-Control', 'public, max-age=300');

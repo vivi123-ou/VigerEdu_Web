@@ -57,27 +57,25 @@ class EmbedAndRolesTest extends TestCase
         $this->actingAs($editor);
 
         $this->get(route('admin.dashboard'))->assertOk()
-            ->assertSee('Trang giới thiệu')->assertSee('Thư viện ảnh')->assertSee('Lượt làm bài')
-            ->assertDontSee('Cấu hình chấm điểm')->assertDontSee('Bộ câu hỏi');
+            ->assertSee('Trang giới thiệu')->assertSee('Thư viện ảnh')->assertSee('Trang báo cáo &amp; email', false)
+            ->assertDontSee('Thư viện câu hỏi')->assertDontSee('Lượt làm bài')->assertDontSee('Trường thông tin khách');
 
         $this->get(route('admin.content.edit', 'intro'))->assertOk();
-        $this->get(route('admin.content.edit', 'result-page'))->assertOk();
+        $this->get(route('admin.content.edit', 'embed'))->assertOk();
         $this->get(route('admin.intro-blocks.index'))->assertOk();
         $this->get(route('admin.media.index'))->assertOk();
-        $this->get(route('admin.groups.edit'))->assertOk();
-        $this->get(route('admin.attempts.index'))->assertOk();
 
-        $this->get(route('admin.question-sets.index'))->assertForbidden();
-        $this->get(route('admin.info-questions.index'))->assertForbidden();
-        $this->get(route('admin.scoring.edit'))->assertForbidden();
-        $this->get(route('admin.excel.index'))->assertForbidden();
+        // Dữ liệu khách và cấu hình bài test: chỉ quản trị viên.
+        foreach (['question-bank', 'test-settings', 'codes', 'majors', 'form-fields', 'attempts'] as $section) {
+            $this->get(route('admin.section', $section))->assertForbidden();
+        }
         $this->get(route('admin.content.edit', 'appearance'))->assertForbidden();
         $this->get(route('admin.section', 'settings'))->assertForbidden();
     }
 
-    public function test_editor_cannot_revert_question_or_scoring_changes(): void
+    public function test_editor_cannot_revert_admin_only_changes(): void
     {
-        $scoring = AdminActivity::record(AdminActivity::ACTION_UPDATE, AdminActivity::SUBJECT_SCORING, null, 'x', ['scoring_config' => null], ['scoring_config' => '{}']);
+        $scoring = AdminActivity::record(AdminActivity::ACTION_UPDATE, 'settings.appearance', null, 'x', ['hotline' => null], ['hotline' => '0909']);
         $intro = AdminActivity::record(AdminActivity::ACTION_UPDATE, 'settings.intro', null, 'y', ['intro_title' => 'Cũ'], ['intro_title' => 'Mới']);
 
         $this->actingAs(User::factory()->create(['role' => User::ROLE_EDITOR]));
