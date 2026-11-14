@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mẫu 2 – Kết quả sơ lược và nhận báo cáo</title>
+<link rel="stylesheet" href="mau.css">
+<style>
+  .hero { background: radial-gradient(120% 120% at 0% 0%, #fff4d6 0%, var(--bg) 55%); padding: 3rem 0 2rem; text-align: center; }
+  .code { display: inline-flex; gap: .6rem; margin: 1rem 0; }
+  .code span { width: 4.5rem; height: 4.5rem; border-radius: 1.2rem; display: grid; place-items: center; color: #fff; font: 700 2.2rem "Playfair Display", serif; box-shadow: var(--shadow-xl); }
+  .teaser { display: grid; gap: 1.5rem; margin-top: 1rem; } @media (min-width: 56rem) { .teaser { grid-template-columns: 1fr 1.1fr; align-items: start; } }
+  .locked { position: relative; overflow: hidden; }
+  .locked__list { display: grid; gap: .75rem; filter: blur(5px); user-select: none; }
+  .locked__item { padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; }
+  .locked__veil { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; background: linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.9) 55%); padding: 1.5rem; }
+  .lock { width: 3rem; height: 3rem; border-radius: 50%; background: var(--ink); color: var(--gold); display: grid; place-items: center; font-size: 1.3rem; margin: 0 auto .5rem; }
+  .form { display: grid; gap: 1rem; }
+  .row2 { display: grid; gap: 1rem; } @media (min-width: 36rem) { .row2 { grid-template-columns: 1fr 1fr; } }
+  label { display: grid; gap: .35rem; font-weight: 600; font-size: .9rem; }
+  input, select { font: 400 1rem "Inter"; padding: .75rem .9rem; border: 1.5px solid var(--line); border-radius: .8rem; background: #fff; color: var(--ink); }
+  input:focus, select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px #fff4d6; }
+  .req { color: var(--red); }
+  .hint { font-weight: 400; font-size: .8rem; color: var(--muted); }
+  details.more { border: 1px dashed var(--line); border-radius: 1rem; padding: .8rem 1rem; }
+  details.more summary { cursor: pointer; font-weight: 600; color: var(--ink-2); }
+  .consent { display: flex; gap: .6rem; align-items: flex-start; font-weight: 400; font-size: .85rem; }
+  .consent input { width: 1.1rem; height: 1.1rem; margin-top: .2rem; accent-color: var(--red); }
+  .captcha { display: flex; align-items: center; gap: .75rem; padding: .7rem 1rem; border: 1px solid var(--line); border-radius: .8rem; font-size: .85rem; color: var(--ink-2); background: #fafafa; }
+  .captcha b { width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--ok); color: #fff; display: grid; place-items: center; font-size: .8rem; }
+  .confirm { background: #e6f0fa; color: var(--info); border-radius: .8rem; padding: .7rem 1rem; font-size: .9rem; }
+  .otp { display: flex; gap: .5rem; justify-content: center; margin: 1rem 0; }
+  .otp input { width: 3rem; height: 3.4rem; text-align: center; font: 700 1.4rem "Inter"; padding: 0; }
+  .steps { display: flex; justify-content: center; gap: .5rem; font-size: .8rem; color: var(--muted); margin-bottom: 1rem; flex-wrap: wrap; }
+  .steps b { color: var(--red); }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7"/><path d="M6 10v10h4v-6h4v6h4V10"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.6-5 6.5-5s5.5 1.5 6.5 5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 15c2 .6 3.2 2.2 3.5 5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></symbol>
+    <symbol id="i-hexagon" viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/></symbol>
+    <symbol id="i-form" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><circle cx="9" cy="10" r="1.75"/><path d="m21 16-5-5-9 9"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.5"/><path d="M4.5 5.5v13c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5v-13M4.5 12c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5"/></symbol>
+    <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M7 14h10v7H7z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="m8.2 10.8 7.6-4.1M8.2 13.2l7.6 4.1"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9.5 9.5h5v5h-5zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="1.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
+  </defs>
+</svg>
+
+<header class="bar"><div class="wrap bar__in">
+  <a class="brand" href="index.html"><img src="../../public/img/logo.png" alt=""><span><b>VIGER.EDU.VN</b><small>Trắc nghiệm sở thích nghề nghiệp</small></span></a>
+  <a class="btn btn--sm btn--red" href="tel:0819949968"><svg class="ic"><use href="#i-phone"/></svg> 0819 949 968</a>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <span class="chip chip--gold">Bạn đã hoàn thành 36/36 câu</span>
+  <h1 style="font-size:clamp(1.8rem,5vw,2.6rem);margin-top:1rem">Nhóm sở thích nổi bật của bạn là</h1>
+  <div class="code" aria-label="Mã Holland IS"><span style="background:var(--I)">I</span><span style="background:var(--S)">S</span></div>
+  <p style="font-size:1.15rem;max-width:38rem;margin:0 auto"><strong>Nghiên cứu + Xã hội</strong>: bạn thích tìm hiểu, phân tích để hiểu sâu một vấn đề, và muốn dùng hiểu biết đó để giúp đỡ, hỗ trợ con người.</p>
+</div></section>
+
+<main class="wrap">
+  <div class="teaser">
+    <section class="card locked">
+      <h2 style="font-size:1.3rem">5 hướng ngành tại Đức phù hợp với bạn</h2>
+      <div class="locked__list" aria-hidden="true">
+        <div class="locked__item"><b>Tâm lý học</b> · Psychologie<br><span class="muted small">Gợi ý chính · Nhà nghiên cứu tâm lý…</span></div>
+        <div class="locked__item"><b>Khoa học sức khỏe</b> · Gesundheitswissenschaften<br><span class="muted small">Gợi ý chính · Nghiên cứu sức khỏe cộng đồng…</span></div>
+        <div class="locked__item"><b>Khoa học môi trường</b> · Umweltwissenschaften<br><span class="muted small">Liên quan nhiều · Tư vấn bền vững…</span></div>
+        <div class="locked__item"><b>Giáo dục nghệ thuật</b><br><span class="muted small">Liên quan</span></div>
+      </div>
+      <div class="locked__veil"><div>
+        <div class="lock"><svg class="ic ic--lg"><use href="#i-lock"/></svg></div>
+        <p style="margin:0 0 .25rem"><strong>Báo cáo chi tiết đang chờ bạn</strong></p>
+        <p class="muted small" style="margin:0">Biểu đồ 6 nhóm, ngành học và nghề nghiệp phù hợp.<br>Điền thông tin bên cạnh để xem ngay.</p>
+      </div></div>
+    </section>
+
+    <section class="card">
+      <div class="steps"><b>① Thông tin</b> → ② Mã xác nhận qua email → ③ Xem báo cáo</div>
+      <h2 style="font-size:1.3rem">Nhận báo cáo chi tiết</h2>
+      <p class="muted small" style="margin-top:0">Thông tin chỉ dùng để gửi kết quả và liên hệ tư vấn, được bảo mật, không chia sẻ cho bên thứ ba.</p>
+      <form class="form" onsubmit="return false">
+        <label>Họ và tên <span class="req">*</span><input value="Nguyễn Minh Anh"></label>
+        <div class="row2">
+          <label>Số điện thoại / Zalo <span class="req">*</span><input value="0819 123 456" inputmode="tel"><span class="hint">Chuyên viên sẽ gọi số này để hẹn buổi tư vấn miễn phí.</span></label>
+          <label>Năm sinh <span class="req">*</span><select><option>2009</option></select></label>
+        </div>
+        <label>Email nhận mã xác nhận <span class="req">*</span><input value="minhanh@gmail.com" inputmode="email"></label>
+        <p class="confirm">Kiểm tra lại: số của bạn là <strong>0819 123 456</strong>, email <strong>minhanh@gmail.com</strong>. Đúng chưa?</p>
+        <details class="more"><summary>Thêm thông tin học tập (không bắt buộc, giúp tư vấn sát hơn)</summary>
+          <div class="form" style="margin-top:1rem">
+            <div class="row2"><label>Trường đang học<input placeholder="Ví dụ: THPT Lê Hồng Phong"></label><label>Lớp<select><option>Lớp 11</option></select></label></div>
+            <div class="row2"><label>Điểm trung bình học bạ<input placeholder="Ví dụ: 8,2"></label><label>Tiếng Anh<select><option>IELTS 5.0–5.5</option></select></label></div>
+            <label>Điểm các môn chính<span class="hint">Toán · Văn · Anh · Lý · Hóa · Sinh · Tin (điền môn nào cũng được)</span></label>
+          </div>
+        </details>
+        <label class="consent"><input type="checkbox" checked> <span>Tôi đồng ý cho đơn vị tư vấn lưu và dùng thông tin trên để gửi kết quả và liên hệ tư vấn. <a href="#">Chính sách bảo mật</a></span></label>
+        <div class="captcha"><b>✓</b> Đã xác minh không phải robot (Cloudflare Turnstile)</div>
+        <button class="btn btn--red" style="width:100%">Gửi mã xác nhận qua email →</button>
+      </form>
+    </section>
+  </div>
+
+  <section class="card" style="max-width:30rem;margin:2rem auto 0;text-align:center">
+    <div class="steps">① Thông tin → <b>② Mã xác nhận qua email</b> → ③ Xem báo cáo</div>
+    <h2 style="font-size:1.3rem">Nhập mã 6 số</h2>
+    <p class="muted small">Mã đã gửi tới <strong>m•••••h@gmail.com</strong>, có hiệu lực 10 phút. Không thấy thì xem mục Spam.</p>
+    <div class="otp"><input value="4"><input value="8"><input value="2"><input value="9"><input value="1"><input></div>
+    <button class="btn btn--red" style="width:100%">Xem báo cáo của bạn</button>
+    <p class="small" style="margin-top:1rem"><a href="#">Gửi lại mã (sau 45 giây)</a> · <a href="#">Sửa email</a></p>
+  </section>
+</main>
+
+<footer class="foot"><div class="wrap">
+  <p class="foot__copy" style="border:0;margin:0;padding:0">© VIGER.EDU.VN · <a href="#">Về trang chủ viger.edu.vn</a></p>
+</div></footer>
+<p class="note-demo">Mẫu giao diện · <a href="index.html">Xem các mẫu khác</a></p>
+</body>
+</html>
