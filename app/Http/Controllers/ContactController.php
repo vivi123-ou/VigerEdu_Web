@@ -21,11 +21,11 @@ class ContactController extends Controller
             'phone' => ['required', 'string', 'max:30'],
             'message' => ['nullable', 'string', 'max:2000'],
         ], [
-            'name.required' => 'Vui lòng nhập tên của bạn.',
-            'email.required' => 'Vui lòng nhập email.',
-            'email.email' => 'Email không hợp lệ.',
-            'phone.required' => 'Vui lòng nhập số điện thoại.',
-            'message.max' => 'Lời nhắn tối đa 2000 ký tự.',
+            'name.required' => __('contact.validation.name_required'),
+            'email.required' => __('contact.validation.email_required'),
+            'email.email' => __('contact.validation.email_invalid'),
+            'phone.required' => __('contact.validation.phone_required'),
+            'message.max' => __('contact.validation.message_max'),
         ]);
 
         ContactMessage::create($data);

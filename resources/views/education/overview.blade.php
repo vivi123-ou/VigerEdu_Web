@@ -1,8 +1,11 @@
 @extends('layouts.category')
 
-@section('title', 'Tổng quan Giáo dục Đức')
-@section('banner_image', 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80')
+{{-- Nội dung banner quản trị ở Admin > Giáo dục tại Đức (App\Support\EducationPages) --}}
+@php($hero = \App\Support\EducationPages::hero('overview'))
+
+@section('title', $hero['page_title'])
+@section('banner_image', $hero['image'])
 @section('banner_color', 'rgba(193, 18, 31, 0.8)')
-@section('banner_pretitle', 'Bài Viết Chuyên Đề')
-@section('banner_heading', 'TỔNG QUAN GIÁO DỤC ĐỨC')
-@section('banner_desc', 'Tập hợp các bài phân tích, chia sẻ kinh nghiệm và kiến thức chuyên sâu về hệ thống giáo dục, văn hóa, và cuộc sống du học sinh tại Đức.')
+@section('banner_pretitle', $hero['pretitle'])
+@section('banner_heading', $hero['heading'])
+@section('banner_desc', $hero['description'])

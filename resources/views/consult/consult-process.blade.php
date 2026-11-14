@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Quy trình Tư vấn')
+@section('title', __('consult.process_page_title'))
 
 @use('App\Support\ConsultProcessPage')
 

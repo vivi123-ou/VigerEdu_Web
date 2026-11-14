@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <head>
     <meta charset="utf-8" />
     <meta
@@ -18,6 +18,7 @@
     <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
     <link href="{{ asset('styles.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/chatbot.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/back-to-top.css') }}" rel="stylesheet" />
 
     {{-- CSS riêng của từng trang --}}
     @stack('styles')
@@ -35,10 +36,12 @@
 
     {{-- Chatbot AI (nút nổi góc phải dưới) --}}
     @include('partials.chatbot')
+    @include('partials.back-to-top')
 
     {{-- JS chung --}}
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/chatbot.js') }}"></script>
+    <script src="{{ asset('js/back-to-top.js') }}"></script>
 
     {{-- JS riêng của từng trang (layout:fragment="scripts") --}}
     @stack('scripts')

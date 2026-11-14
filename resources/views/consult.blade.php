@@ -1,47 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Tư vấn Du học')
+@section('title', __('consult.page_title'))
 
 @php
-  // 4 bước quy trình. 'icon' là phần path bên trong thẻ <svg>.
-  $steps = [
-    [
-      'title' => 'Định hướng & Đánh giá',
-      'body' => 'Đánh giá năng lực học tập, tiếng Đức và tài chính. Tư vấn chọn ngành, chọn trường (Uni/FH/Studienkolleg) phù hợp nhất với nguyện vọng.',
-      'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
-    ],
-    [
-      'title' => 'Hoàn thiện Hồ sơ',
-      'body' => 'Hỗ trợ dịch thuật, công chứng, thẩm tra APS, thi TestAS. Chuẩn bị Motivation Letter (Thư động lực) và CV chuẩn form Đức.',
-      'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-    ],
-    [
-      'title' => 'Xin Zu & Tài chính',
-      'body' => 'Gửi hồ sơ xin giấy gọi nhập học (Zulassung) tới các trường qua Uni-Assist. Hỗ trợ mở tài khoản phong tỏa (Sperrkonto) nhanh chóng.',
-      'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
-    ],
-    [
-      'title' => 'Visa & Xuất cảnh',
-      'body' => 'Luyện phỏng vấn Visa trực tiếp với chuyên gia. Hỗ trợ đặt vé máy bay, tìm nhà ở và đưa đón tại sân bay Đức.',
-      'icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-    ],
+  // Icon của 4 bước (thuộc tính d của <path>), chữ lấy từ lang/{locale}/consult.php theo cùng vị trí.
+  $stepIcons = [
+    'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
+    'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+    'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
   ];
+  $steps = collect(__('consult.steps'))
+    ->map(fn (array $step, int $index) => $step + ['icon' => $stepIcons[$index] ?? ''])
+    ->all();
 
   // Điều kiện du học hệ Đại học
-  $requirements = [
-    [
-      'title' => 'Học vấn & Kỳ thi Tốt nghiệp THPT',
-      'body' => 'Thi đỗ kỳ thi Tốt nghiệp THPT Quốc gia với tổng điểm 6 môn (Toán, Văn, Ngoại ngữ và 3 môn tổ hợp) đạt từ 36 điểm trở lên. Không môn nào dưới 4, và có ít nhất 4 môn đạt từ 6 trở lên.',
-    ],
-    [
-      'title' => 'Trúng tuyển Đại học tại Việt Nam',
-      'body' => 'Đã trúng tuyển vào hệ Đào tạo Đại học Chính quy tại một Trường Đại học Việt Nam được công nhận (theo xếp hạng H+ trên Anabin).',
-    ],
-    [
-      'title' => 'Ngoại ngữ (Tiếng Đức / Tiếng Anh)',
-      'body' => 'Chứng chỉ tiếng Đức B1/B2 (Goethe, ÖSD, Telc) hoặc IELTS 6.0+ (nếu học chương trình tiếng Anh). Chứng chỉ TestAS và chứng nhận thẩm tra APS.',
-    ],
-  ];
+  $requirements = __('consult.requirements');
 @endphp
 
 {{-- CSS riêng của trang (cần @stack('styles') trong layout) --}}
@@ -306,16 +280,14 @@
         <div class="text-center animate-hidden">
           <div class="section-pretitle" style="justify-content: center; margin-bottom: 1rem">
             <span style="color: var(--accent-alt); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;"
-              >Chương trình Đại học &amp; Cao học</span
+              >{{ __('consult.hero_pretitle') }}</span
             >
           </div>
           <h1 class="hero-heading" style="color: white; margin-bottom: 1rem">
-            TƯ VẤN DU HỌC
+            {{ __('consult.hero_title') }}
           </h1>
           <p class="cta-desc" style="max-width: 750px; margin: 1.5rem auto 2.5rem; font-weight: 300;">
-            Khởi đầu hành trình học thuật tại Đức với sự đồng hành sát sao từ
-            chuyên gia. Chúng tôi giúp bạn định hướng ngành nghề, chuẩn bị hồ sơ
-            và xin Visa với tỷ lệ đỗ cao nhất.
+            {{ __('consult.hero_description') }}
           </p>
         </div>
       </div>
@@ -325,10 +297,9 @@
     <section class="consult-section">
       <div class="consult-container">
         <div class="section-heading-center animate-hidden">
-          <h2>Lộ trình đồng hành cùng VIGER EDU</h2>
+          <h2>{{ __('consult.steps_heading') }}</h2>
           <p>
-            Quy trình làm việc chuyên nghiệp, minh bạch giúp bạn hoàn thành giấc
-            mơ du học Đức một cách dễ dàng và nhanh chóng nhất.
+            {{ __('consult.steps_description') }}
           </p>
         </div>
 
@@ -365,12 +336,12 @@
         <div class="req-img animate-hidden delay-100">
           <img
             src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=80"
-            alt="Sinh viên"
+            alt="{{ __('consult.requirements_image_alt') }}"
           />
         </div>
         <div class="req-content animate-hidden delay-300">
           <h2 style="font-size: 2rem; color: var(--text-primary); font-weight: 800; margin-bottom: 2rem;">
-            Điều kiện du học hệ Đại học
+            {{ __('consult.requirements_heading') }}
           </h2>
           <ul class="req-list">
             @foreach ($requirements as $req)

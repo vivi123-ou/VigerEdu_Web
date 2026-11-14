@@ -1,24 +1,27 @@
 @extends('layouts.category')
 
-@section('title', 'Chương trình Đào tạo')
-@section('banner_image', 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80')
+{{-- Nội dung quản trị ở Admin > Chương trình học (App\Support\ProgramsPage) --}}
+@php
+  $hero = \App\Support\ProgramsPage::hero('main');
+  $cta = \App\Support\ProgramsPage::all();
+@endphp
+
+@section('title', $hero['page_title'])
+@section('banner_image', $hero['image'])
 @section('banner_color', 'rgba(18, 38, 63, 0.8)')
-@section('banner_pretitle', 'Đa Dạng Lựa Chọn')
-@section('banner_heading', 'CHƯƠNG TRÌNH ĐÀO TẠO')
-@section('banner_desc', 'Dù bạn vừa tốt nghiệp THPT, muốn nâng cao bằng cấp hay học nghề có lương, hệ thống giáo dục Đức luôn có một lộ trình hoàn hảo dành riêng cho bạn.')
+@section('banner_pretitle', $hero['pretitle'])
+@section('banner_heading', $hero['heading'])
+@section('banner_desc', $hero['description'])
 
 @section('after_content')
   <section class="cta-section animate-hidden">
     <div class="page-container">
       <div class="section-pretitle" style="justify-content: center">
-        <span>✨ Bắt đầu hành trình của riêng bạn</span>
+        <span>{{ $cta['programs_cta_pretitle'] }}</span>
       </div>
-      <h2 class="cta-title">Chưa biết chọn chương trình nào?</h2>
-      <p class="cta-desc">
-        Để lại thông tin, chuyên gia của VIGER EDU sẽ tư vấn lộ trình học tập
-        miễn phí và phù hợp nhất với năng lực của bạn.
-      </p>
-      <a class="cta-pill" href="/lien-he">Nhận tư vấn ngay</a>
+      <h2 class="cta-title">{{ $cta['programs_cta_title'] }}</h2>
+      <p class="cta-desc">{{ $cta['programs_cta_description'] }}</p>
+      <a class="cta-pill" href="{{ $cta['programs_cta_button_url'] }}">{{ $cta['programs_cta_button_text'] }}</a>
     </div>
   </section>
 @endsection

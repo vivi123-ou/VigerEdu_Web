@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Liên Hệ')
+@section('title', __('contact.page_title'))
 
 @use('App\Support\ContactPage')
 
@@ -12,21 +12,21 @@
   // 3 thẻ thông tin đầu tiên. 'icon' là phần bên trong thẻ <svg>.
   $contactCards = [
     [
-      'label' => 'Điện thoại',
+      'label' => __('contact.phone'),
       'value' => $c['contact_phone'],
       'href'  => $phoneHref,
       'size'  => '1.2rem',
       'icon'  => '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>',
     ],
     [
-      'label' => 'Email',
+      'label' => __('contact.email'),
       'value' => $c['contact_email'],
       'href'  => 'mailto:'.$c['contact_email'],
       'size'  => '1.1rem',
       'icon'  => '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>',
     ],
     [
-      'label' => 'Địa chỉ',
+      'label' => __('contact.address'),
       'value' => nl2br(e($c['contact_address']), false), // đã escape, giữ xuống dòng
       'raw'   => true,
       'size'  => '1rem',
@@ -138,7 +138,7 @@
             >
               <div>
                 <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-bottom: 1.25rem; text-transform: uppercase;">
-                  Mạng xã hội
+                  {{ __('contact.social') }}
                 </p>
                 <div style="display: flex; gap: 1rem">
                   @foreach ($socials as [$url, $path])
@@ -164,8 +164,8 @@
         <div class="hero-image animate-hidden delay-100" style="text-align: center">
           <img
             src="{{ ContactPage::imageUrl($c['contact_side_image'], ContactPage::DEFAULT_SIDE_IMAGE) }}"
-            alt="contact man"
-            style="border: none; box-shadow: none; border-radius: 0"
+            alt="{{ __('contact.side_image_alt') }}"
+            style="border: 4px solid var(--accent-main); border-radius: var(--radius-2xl); padding: 0; display: block; margin: 0 auto; box-shadow: 0 20px 40px -12px rgba(193, 18, 31, 0.35)"
           />
         </div>
       </div>
@@ -200,22 +200,22 @@
           @csrf
 
           <div style="margin-bottom: 1.5rem">
-            <input type="text" name="name" value="{{ old('name') }}" placeholder="Tên của bạn" required style="{{ $inputStyle }}" />
+            <input type="text" name="name" value="{{ old('name') }}" placeholder="{{ __('contact.name_placeholder') }}" required style="{{ $inputStyle }}" />
             @error('name')<small style="color: #ffb4b4">{{ $message }}</small>@enderror
           </div>
 
           <div style="margin-bottom: 1.5rem">
-            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email" required style="{{ $inputStyle }}" />
+            <input type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('contact.email_placeholder') }}" required style="{{ $inputStyle }}" />
             @error('email')<small style="color: #ffb4b4">{{ $message }}</small>@enderror
           </div>
 
           <div style="margin-bottom: 1.5rem">
-            <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="Số điện thoại" required style="{{ $inputStyle }}" />
+            <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="{{ __('contact.phone_placeholder') }}" required style="{{ $inputStyle }}" />
             @error('phone')<small style="color: #ffb4b4">{{ $message }}</small>@enderror
           </div>
 
           <div style="margin-bottom: 1.5rem">
-            <textarea name="message" rows="4" placeholder="Nhu cầu hoặc lời nhắn" style="{{ $inputStyle }}">{{ old('message') }}</textarea>
+            <textarea name="message" rows="4" placeholder="{{ __('contact.message_placeholder') }}" style="{{ $inputStyle }}">{{ old('message') }}</textarea>
             @error('message')<small style="color: #ffb4b4">{{ $message }}</small>@enderror
           </div>
 

@@ -2,16 +2,19 @@
   $siteName = \App\Models\Setting::get('site_name', 'VIGER.EDU.VN');
   $siteSlogan = \App\Models\Setting::get('site_slogan', 'From Vietnam to Europe');
   $siteLogo = \App\Models\Setting::get('site_logo', 'img/logo.png');
-  $headerCtaText = \App\Models\Setting::get('header_cta_text', 'Bắt đầu ngay');
+  // Ngôn ngữ chính (vi) lấy chữ từ Cài đặt trong admin; ngôn ngữ khác lấy từ resources/lang
+  $headerCtaText = app()->isLocale(config('app.supported_locales')[0])
+    ? \App\Models\Setting::get('header_cta_text', __('messages.start_now'))
+    : __('messages.start_now');
   $headerCtaUrl = \App\Models\Setting::get('header_cta_url', '/lien-he');
 
   try {
     $hasCatTable = \Illuminate\Support\Facades\Schema::hasTable('categories');
-    $eduCategories = $hasCatTable ? \App\Models\Category::inMenu('giao-duc-tai-duc')->get() : collect();
-    $consultCategories = $hasCatTable ? \App\Models\Category::inMenu('tu-van')->get() : collect();
-    $blogCategories = $hasCatTable ? \App\Models\Category::inMenu('blog')->get() : collect();
+    $eduCategories = $hasCatTable ? \App\Models\Category::inMenu('giao-duc-tai-duc')->with('englishVersion')->get() : collect();
+    $consultCategories = $hasCatTable ? \App\Models\Category::inMenu('tu-van')->with('englishVersion')->get() : collect();
+    $blogCategories = $hasCatTable ? \App\Models\Category::inMenu('blog')->with('englishVersion')->get() : collect();
     $mainMenuItems = $hasCatTable
-      ? \App\Models\Category::inMenu('main')->whereNull('parent_id')->with('children')->get()
+      ? \App\Models\Category::inMenu('main')->whereNull('parent_id')->with(['englishVersion', 'children.englishVersion'])->get()
       : collect();
   } catch (\Throwable) {
     $eduCategories = collect();
@@ -37,7 +40,7 @@
 
   <input class="navtoggle" type="checkbox" id="nav-open" />
   <label class="scrim" for="nav-open" aria-hidden="true"></label>
-  <label class="burger" for="nav-open" aria-label="Menu">
+  <label class="burger" for="nav-open" aria-label="{{ __('messages.menu') }}">
     <svg viewBox="0 0 22 14">
       <path class="b1" d="M1 1 H21" />
       <path class="b2" d="M1 7 H21" />
@@ -46,11 +49,11 @@
   </label>
 
   <nav class="navpanel menu">
-    <a href="/ve-chung-toi"><span id="nav-home">Về chúng tôi</span></a>
+    <a href="/ve-chung-toi"><span id="nav-home">{{ __('messages.about_us') }}</span></a>
 
     <div class="menu-dropdown">
       <a href="/giao-duc-tai-duc"
-        ><span id="nav-about">Giáo dục tại Đức</span>
+        ><span id="nav-about">{{ __('messages.education') }}</span>
         <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
           <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
         </svg>
@@ -58,21 +61,21 @@
       <div class="dropdown-content">
         @if ($eduCategories->isNotEmpty())
           @foreach ($eduCategories as $c)
-            <a href="{{ $c->menuUrl() }}">{{ $c->name }}</a>
+            <a href="{{ $c->menuUrl() }}">{{ $c->displayName() }}</a>
           @endforeach
         @else
-          <a href="/giao-duc-tai-duc/tong-quan">Tổng quan</a>
-          <a href="/giao-duc-tai-duc/he-thong-giao-duc">Hệ thống giáo dục</a>
-          <a href="/giao-duc-tai-duc/nghien-cuu-va-ung-dung">Nghiên cứu và Ứng dụng</a>
-          <a href="/giao-duc-tai-duc/chi-phi-va-co-hoi">Chi phí và Cơ hội</a>
-          <a href="/giao-duc-tai-duc/co-hoi-nghe-nghiep">Cơ hội nghề nghiệp</a>
+          <a href="/giao-duc-tai-duc/tong-quan">{{ __('messages.overview') }}</a>
+          <a href="/giao-duc-tai-duc/he-thong-giao-duc">{{ __('messages.education_system') }}</a>
+          <a href="/giao-duc-tai-duc/nghien-cuu-va-ung-dung">{{ __('messages.research_applied') }}</a>
+          <a href="/giao-duc-tai-duc/chi-phi-va-co-hoi">{{ __('messages.costs_opportunities') }}</a>
+          <a href="/giao-duc-tai-duc/co-hoi-nghe-nghiep">{{ __('messages.career_opportunities') }}</a>
         @endif
       </div>
     </div>
 
     <div class="menu-dropdown">
       <a href="/tu-van"
-        ><span id="nav-consult">Tư vấn</span>
+        ><span id="nav-consult">{{ __('messages.consulting') }}</span>
         <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
           <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
         </svg>
@@ -80,24 +83,24 @@
       <div class="dropdown-content">
         @if ($consultCategories->isNotEmpty())
           @foreach ($consultCategories as $c)
-            <a href="{{ $c->menuUrl() }}">{{ $c->name }}</a>
+            <a href="{{ $c->menuUrl() }}">{{ $c->displayName() }}</a>
           @endforeach
-          <a href="/tu-van/quy-trinh-tu-van">Quy trình Tư vấn</a>
+          <a href="/tu-van/quy-trinh-tu-van">{{ __('messages.consult_process') }}</a>
         @else
-          <a href="/tu-van/du-hoc-dai-hoc">Du học Đại học</a>
-          <a href="/tu-van/du-hoc-cao-hoc">Du học Cao học</a>
-          <a href="/tu-van/quy-trinh-tu-van">Quy trình Tư vấn</a>
+          <a href="/tu-van/du-hoc-dai-hoc">{{ __('messages.consult_bachelor') }}</a>
+          <a href="/tu-van/du-hoc-cao-hoc">{{ __('messages.consult_master') }}</a>
+          <a href="/tu-van/quy-trinh-tu-van">{{ __('messages.consult_process') }}</a>
         @endif
       </div>
     </div>
 
     <a href="/chuong-trinh-hoc"
-      ><span id="nav-programs">Chương trình học</span></a
+      ><span id="nav-programs">{{ __('messages.programs') }}</span></a
     >
 
     <div class="menu-dropdown">
       <a href="/blog"
-        ><span id="nav-blog">Blog</span>
+        ><span id="nav-blog">{{ __('messages.blog') }}</span>
         <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
           <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
         </svg>
@@ -105,11 +108,11 @@
       <div class="dropdown-content">
         @if ($blogCategories->isNotEmpty())
           @foreach ($blogCategories as $c)
-            <a href="{{ $c->menuUrl() }}">{{ $c->name }}</a>
+            <a href="{{ $c->menuUrl() }}">{{ $c->displayName() }}</a>
           @endforeach
         @else
-          <a href="/blog/hieu-ve-duc">Hiểu về Đức</a>
-          <a href="/blog/cuoc-song-o-duc">Cuộc sống ở Đức</a>
+          <a href="/blog/hieu-ve-duc">{{ __('messages.understand_germany') }}</a>
+          <a href="/blog/cuoc-song-o-duc">{{ __('messages.life_in_germany') }}</a>
         @endif
       </div>
     </div>
@@ -119,19 +122,19 @@
       @if ($item->children->isNotEmpty())
         <div class="menu-dropdown">
           <a href="{{ $item->menuUrl() }}"
-            ><span>{{ $item->name }}</span>
+            ><span>{{ $item->displayName() }}</span>
             <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
               <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
             </svg>
           </a>
           <div class="dropdown-content">
             @foreach ($item->children as $child)
-              <a href="{{ $child->menuUrl() }}">{{ $child->name }}</a>
+              <a href="{{ $child->menuUrl() }}">{{ $child->displayName() }}</a>
             @endforeach
           </div>
         </div>
       @else
-        <a href="{{ $item->menuUrl() }}"><span>{{ $item->name }}</span></a>
+        <a href="{{ $item->menuUrl() }}"><span>{{ $item->displayName() }}</span></a>
       @endif
     @endforeach
 
@@ -140,7 +143,7 @@
       @if (auth()->user()->role === 'ADMIN')
         <div class="menu-dropdown">
           <a href="/admin"
-            ><span id="nav-admin">Phần quản trị</span>
+            ><span id="nav-admin">{{ __('messages.admin') }}</span>
             <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
               <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
             </svg>
@@ -155,15 +158,36 @@
               @csrf
             </form>
             <button type="submit" form="logoutForm" class="logout-link">
-              Đăng xuất
+              {{ __('messages.logout') }}
             </button>
           </div>
         </div>
       @endif
     @endauth
+
   </nav>
 
-  <a class="cta-pill" href="{{ $headerCtaUrl }}"
-    ><span id="nav-cta">{{ $headerCtaText }}</span></a
-  >
+  <div class="header-actions">
+    {{-- Nút chuyển ngôn ngữ (đặt ngoài <nav> để vẫn hiện trên mobile) --}}
+    @php
+      $currentLocale = app()->getLocale();
+      $nextLocale = collect(config('app.supported_locales'))->first(fn ($locale) => $locale !== $currentLocale);
+    @endphp
+    <a
+      class="lang-toggle"
+      href="{{ route('switch.language', $nextLocale) }}"
+      hreflang="{{ $nextLocale }}"
+      title="{{ __('messages.switch_lang') }}"
+      aria-label="{{ __('messages.switch_lang') }}"
+    >
+      @foreach (config('app.supported_locales') as $locale)
+        @if (! $loop->first)<span class="lang-sep">|</span>@endif
+        <span @class(['lang-active' => $locale === $currentLocale])>{{ strtoupper($locale) }}</span>
+      @endforeach
+    </a>
+
+    <a class="cta-pill" href="{{ $headerCtaUrl }}"
+      ><span id="nav-cta">{{ $headerCtaText }}</span></a
+    >
+  </div>
 </header>

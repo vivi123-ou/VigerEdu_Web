@@ -6,11 +6,22 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Spatie\Translatable\HasTranslations;
 
 class Category extends Model
 {
+    use HasTranslations;
+
+    /**
+     * Các cột đa ngôn ngữ, lưu dạng JSON {"vi": "...", "en": "..."}.
+     *
+     * @var list<string>
+     */
+    public array $translatable = ['name', 'description'];
+
     // Bảng categories không có created_at / updated_at
     public $timestamps = false;
 
@@ -19,6 +30,7 @@ class Category extends Model
         'slug',
         'menu_group',
         'parent_id',
+        'translation_of_id',
         'url',
         'is_in_menu',
         'sort_order',
@@ -50,6 +62,53 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id')
             ->where('is_in_menu', true)
             ->orderBy('sort_order');
+    }
+
+    /** Chuyên mục tiếng Việt gốc (khi đây là chuyên mục tiếng Anh, vd. "German education overview" => "Tổng quan"). */
+    public function translationOf(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'translation_of_id');
+    }
+
+    /** Chuyên mục tiếng Anh riêng của chuyên mục này (nếu đã tạo). */
+    public function englishVersion(): HasOne
+    {
+        return $this->hasOne(Category::class, 'translation_of_id');
+    }
+
+    /** Chuyên mục dùng cho ngôn ngữ đang chọn: tiếng Anh => bản tiếng Anh (nếu có), còn lại => chính nó. */
+    public function localized(?string $locale = null): Category
+    {
+        $locale ??= app()->getLocale();
+
+        if ($locale === 'en' && $this->translation_of_id === null && $this->englishVersion !== null) {
+            return $this->englishVersion;
+        }
+
+        return $this;
+    }
+
+    /** Tên hiển thị trên menu / tiêu đề trang theo ngôn ngữ đang chọn. */
+    public function displayName(): string
+    {
+        return (string) $this->localized()->name;
+    }
+
+    /**
+     * Id của chuyên mục và các bản ngôn ngữ của nó (gốc + bản tiếng Anh).
+     * Bài viết được lọc theo ngôn ngữ ở Post::writtenIn() nên mỗi chế độ chỉ hiện đúng bài của nó.
+     *
+     * @return list<int>
+     */
+    public function languageFamilyIds(): array
+    {
+        $original = $this->translation_of_id !== null ? $this->translationOf : $this;
+
+        return array_values(array_unique(array_filter([
+            $this->id,
+            $original?->id,
+            $original?->englishVersion?->id,
+        ])));
     }
 
     public const GROUP_LABELS = [
@@ -102,6 +161,11 @@ class Category extends Model
     /** Trang danh sách bài viết của chuyên mục (bỏ qua URL tùy chỉnh). */
     public function pageUrl(): string
     {
+        // Chuyên mục tiếng Anh dùng chung URL với chuyên mục gốc (trang tự đổi nội dung theo ngôn ngữ)
+        if ($this->translation_of_id !== null && $this->translationOf !== null) {
+            return $this->translationOf->pageUrl();
+        }
+
         if (Route::has('category.'.$this->slug)) {
             return route('category.'.$this->slug);
         }

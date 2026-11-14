@@ -417,7 +417,32 @@ img {
 
 .hero-buttons {
   display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
   gap: 1rem;
+}
+
+/* Hai nút hero: cùng khung, cùng chiều cao, chữ căn giữa */
+.hero-buttons .btn-red,
+.hero-buttons .btn-outline-custom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  font-family: inherit;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.hero-buttons .btn-red {
+  border-color: var(--accent-main);
+}
+.hero-buttons .btn-red:hover {
+  border-color: var(--accent-hover);
+}
+.hero-buttons .btn-outline-custom {
+  border-color: var(--border-color);
 }
 
 .btn-red {

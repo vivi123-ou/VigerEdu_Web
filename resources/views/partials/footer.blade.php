@@ -2,7 +2,9 @@
   $siteName = \App\Models\Setting::get('site_name', 'VIGER.EDU.VN');
   $siteSlogan = \App\Models\Setting::get('site_slogan', 'From Vietnam to Europe');
   $siteLogo = \App\Models\Setting::get('site_logo', 'img/logo.png');
-  $footerDesc = \App\Models\Setting::get('footer_description', 'Đồng hành cùng người trẻ Việt Nam trên hành trình chinh phục giáo dục Đức - miễn học phí, chất lượng quốc tế.');
+  $footerDesc = app()->isLocale(config('app.supported_locales')[0])
+    ? \App\Models\Setting::get('footer_description', __('messages.footer_description'))
+    : __('messages.footer_description');
   $facebookUrl = \App\Models\Setting::get('social_facebook', 'https://www.facebook.com/duhocVIGER');
   $youtubeUrl = \App\Models\Setting::get('social_youtube', 'https://www.youtube.com/@SPN.Invest');
   $tiktokUrl = \App\Models\Setting::get('social_tiktok', 'https://www.tiktok.com/@spn.invest');
@@ -73,11 +75,11 @@
     <!-- Cột phải: Links -->
     <div class="foot-right animate-hidden delay-100">
       <nav class="foot-nav">
-        <a href="/ve-chung-toi">Về chúng tôi</a>
-        <a href="/giao-duc-tai-duc">Giáo dục tại Đức</a>
-        <a href="/tu-van">Tư vấn</a>
-        <a href="/chuong-trinh-hoc">Chương trình học</a>
-        <a href="/blog">Blog</a>
+        <a href="/ve-chung-toi">{{ __('messages.about_us') }}</a>
+        <a href="/giao-duc-tai-duc">{{ __('messages.education') }}</a>
+        <a href="/tu-van">{{ __('messages.consulting') }}</a>
+        <a href="/chuong-trinh-hoc">{{ __('messages.programs') }}</a>
+        <a href="/blog">{{ __('messages.blog') }}</a>
       </nav>
     </div>
 

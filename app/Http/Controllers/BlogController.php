@@ -4,14 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Support\PostDetailPage;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
+    /** Bài đã xuất bản, viết bằng ngôn ngữ đang chọn trên website. */
+    private function visiblePosts(): Builder
+    {
+        return Post::published()->writtenIn(app()->getLocale());
+    }
+
     /** 5 bài mới nhất cho sidebar. */
     private function latestPosts()
     {
-        return Post::published()->latest()->take(5)->get();
+        return $this->visiblePosts()->latest()->take(5)->get();
     }
 
     /**
@@ -20,8 +28,11 @@ class BlogController extends Controller
      */
     public function category(string $slug, string $view)
     {
-        $posts = Post::published()
-            ->whereHas('category', fn ($q) => $q->where('slug', $slug))
+        $category = Category::with('translationOf.englishVersion', 'englishVersion')->where('slug', $slug)->first();
+
+        // Chế độ tiếng Anh: lấy cả bài của chuyên mục tiếng Anh riêng (vd. Tổng quan => German education overview)
+        $posts = $this->visiblePosts()
+            ->whereIn('category_id', $category?->languageFamilyIds() ?? [])
             ->latest()
             ->paginate(6);
 
@@ -37,15 +48,15 @@ class BlogController extends Controller
      */
     public function groupCategory(string $slug, string $group)
     {
-        $category = Category::where('menu_group', $group)->where('slug', $slug)->firstOrFail();
+        $category = Category::with('englishVersion')->where('menu_group', $group)->where('slug', $slug)->firstOrFail();
 
-        $posts = Post::published()
-            ->where('category_id', $category->id)
+        $posts = $this->visiblePosts()
+            ->whereIn('category_id', $category->languageFamilyIds())
             ->latest()
             ->paginate(6);
 
         return view('category', [
-            'category' => $category,
+            'category' => $category->localized(),
             'posts' => $posts,
             'latestPosts' => $this->latestPosts(),
         ]);
@@ -54,24 +65,25 @@ class BlogController extends Controller
     /** Chi tiết bài viết: /bai-viet/{slug} */
     public function show(string $slug)
     {
-        $post = Post::published()->with('category')->where('slug', $slug)->first();
+        $post = $this->visiblePosts()->with('category')->where('slug', $slug)->first();
 
         if (! $post) {
             return redirect('/blog');
         }
 
-        // Bài liên quan: cùng chuyên mục, không có thì lấy bài khác
+        // Bài liên quan: cùng chuyên mục, không có thì lấy bài khác (số lượng cấu hình trong admin)
+        $relatedCount = PostDetailPage::relatedCount();
         $relatedPosts = collect();
         if ($post->category_id) {
-            $relatedPosts = Post::published()
+            $relatedPosts = $this->visiblePosts()
                 ->where('category_id', $post->category_id)
                 ->whereKeyNot($post->id)
-                ->latest()->limit(5)->get();
+                ->latest()->limit($relatedCount)->get();
         }
         if ($relatedPosts->isEmpty()) {
-            $relatedPosts = Post::published()
+            $relatedPosts = $this->visiblePosts()
                 ->whereKeyNot($post->id)
-                ->latest()->limit(5)->get();
+                ->latest()->limit($relatedCount)->get();
         }
 
         return view('post-detail', compact('post', 'relatedPosts'));
@@ -85,15 +97,13 @@ class BlogController extends Controller
         $filtering = $categoryId !== null || $keyword !== '';
 
         // Bài nổi bật: chỉ khi không lọc/tìm kiếm
-        $featured = $filtering ? null : Post::published()->latest()->first();
+        $featured = $filtering ? null : $this->visiblePosts()->latest()->first();
 
-        $posts = Post::published()
+        $posts = $this->visiblePosts()
             ->with('category')
             ->when($categoryId, fn ($q) => $q->where('category_id', $categoryId))
-            ->when($keyword !== '', fn ($q) => $q->where(function ($q) use ($keyword) {
-                $q->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('excerpt', 'like', "%{$keyword}%");
-            }))
+            // Tìm trong tiêu đề/tóm tắt của ngôn ngữ đang chọn (cột JSON đa ngôn ngữ)
+            ->when($keyword !== '', fn ($q) => $q->whereTranslationLike(['title', 'excerpt'], $keyword, [app()->getLocale()]))
             ->when($featured, fn ($q) => $q->whereKeyNot($featured->id))
             ->latest()
             ->paginate(9)

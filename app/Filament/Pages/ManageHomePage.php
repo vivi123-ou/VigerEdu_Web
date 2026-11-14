@@ -2,10 +2,12 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Forms\Components\TranslatableTabs;
 use App\Models\Setting;
 use App\Support\HomePage;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -21,6 +23,8 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Arr;
+use Livewire\Attributes\Url;
 use UnitEnum;
 
 class ManageHomePage extends Page
@@ -60,15 +64,64 @@ class ManageHomePage extends Page
     /** @var array<string, mixed>|null */
     public ?array $data = [];
 
+    /** Ngôn ngữ đang sửa (?lang=en): ngôn ngữ phụ chỉ sửa phần chữ, ảnh/liên kết/con số dùng chung. */
+    #[Url(as: 'lang')]
+    public string $editLocale = 'vi';
+
     public function mount(): void
     {
-        $data = HomePage::all();
+        if (! in_array($this->editLocale, config('app.supported_locales'), true)) {
+            $this->editLocale = HomePage::primaryLocale();
+        }
+
+        $data = HomePage::all($this->editLocale);
 
         foreach (self::IMAGE_KEYS as $key) {
             $data[$key] = Setting::get($key);
         }
 
         $this->form->fill($data);
+    }
+
+    /** Đang sửa bản dịch (ngôn ngữ phụ)? */
+    public function isTranslating(): bool
+    {
+        return $this->editLocale !== HomePage::primaryLocale();
+    }
+
+    public function getSubheading(): ?string
+    {
+        $language = TranslatableTabs::LOCALE_LABELS[$this->editLocale] ?? strtoupper($this->editLocale);
+
+        return $this->isTranslating()
+            ? "Đang sửa bản {$language}. Chỉ sửa được phần chữ; ảnh, liên kết, con số và tên dùng chung với bản Tiếng Việt. Ô để trống sẽ dùng bản dịch mặc định."
+            : "Đang sửa bản {$language}.";
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return collect(config('app.supported_locales'))
+            ->map(fn (string $locale) => Action::make("edit_{$locale}")
+                ->label('Sửa bản '.(TranslatableTabs::LOCALE_LABELS[$locale] ?? strtoupper($locale)))
+                ->icon(Heroicon::OutlinedLanguage)
+                ->color($locale === $this->editLocale ? 'primary' : 'gray')
+                ->url(static::getUrl(['lang' => $locale])))
+            ->all();
+    }
+
+    /** Trường dùng chung cho mọi ngôn ngữ (ảnh, liên kết, con số...): khóa khi sửa bản dịch. */
+    private function shared(Field $field): Field
+    {
+        return $field->disabled(fn (): bool => $this->isTranslating());
+    }
+
+    /** Repeater khi sửa bản dịch: giữ nguyên số mục và thứ tự theo bản Tiếng Việt. */
+    private function translatableRepeater(Repeater $repeater): Repeater
+    {
+        return $repeater
+            ->addable(fn (): bool => ! $this->isTranslating())
+            ->deletable(fn (): bool => ! $this->isTranslating())
+            ->reorderable(fn (): bool => ! $this->isTranslating());
     }
 
     public function form(Schema $schema): Schema
@@ -103,7 +156,7 @@ class ManageHomePage extends Page
 
     private function imageUpload(string $key, string $label): FileUpload
     {
-        return FileUpload::make($key)
+        return $this->shared(FileUpload::make($key))
             ->label($label)
             ->helperText('Bỏ trống để dùng ảnh mặc định.')
             ->image()
@@ -124,15 +177,14 @@ class ManageHomePage extends Page
             Section::make('Số liệu nổi bật')
                 ->description('Các con số chạy hiệu ứng đếm trong banner.')
                 ->schema([
-                    Repeater::make('home_hero_stats')
+                    $this->translatableRepeater(Repeater::make('home_hero_stats'))
                         ->hiddenLabel()
                         ->schema([
-                            TextInput::make('number')->label('Con số')->numeric()->required(),
-                            TextInput::make('suffix')->label('Hậu tố')->placeholder('+ hoặc %')->maxLength(5),
+                            $this->shared(TextInput::make('number'))->label('Con số')->numeric()->required(),
+                            $this->shared(TextInput::make('suffix'))->label('Hậu tố')->placeholder('+ hoặc %')->maxLength(5),
                             TextInput::make('label')->label('Mô tả')->required()->maxLength(100),
                         ])
                         ->columns(3)
-                        ->reorderable()
                         ->maxItems(4)
                         ->addActionLabel('Thêm số liệu')
                         ->itemLabel(fn (array $state): ?string => trim(($state['number'] ?? '').($state['suffix'] ?? '').' '.($state['label'] ?? '')) ?: null),
@@ -141,7 +193,7 @@ class ManageHomePage extends Page
             Section::make('Nút bấm')
                 ->schema([
                     TextInput::make('home_hero_button_text')->label('Nút chính: chữ')->maxLength(100),
-                    TextInput::make('home_hero_button_url')->label('Nút chính: liên kết')->maxLength(255),
+                    $this->shared(TextInput::make('home_hero_button_url'))->label('Nút chính: liên kết')->maxLength(255),
                     TextInput::make('home_roadmap_button_text')
                         ->label('Nút phụ: chữ')
                         ->helperText('Nút phụ mở popup hiển thị ảnh lộ trình du học.')
@@ -162,10 +214,10 @@ class ManageHomePage extends Page
         return [
             Section::make('Dải trường đối tác (chữ chạy trên nền vàng)')
                 ->schema([
-                    Repeater::make('home_partners')
+                    $this->translatableRepeater(Repeater::make('home_partners'))
                         ->hiddenLabel()
+                        ->disabled(fn (): bool => $this->isTranslating())
                         ->simple(TextInput::make('name')->label('Tên trường')->required()->maxLength(255))
-                        ->reorderable()
                         ->addActionLabel('Thêm trường'),
                 ]),
         ];
@@ -180,12 +232,12 @@ class ManageHomePage extends Page
                     TextInput::make('home_about_heading')->label('Tiêu đề')->maxLength(255),
                     Textarea::make('home_about_description')->label('Mô tả')->rows(3)->columnSpanFull(),
                     TextInput::make('home_about_link_text')->label('Liên kết: chữ')->maxLength(100),
-                    TextInput::make('home_about_link_url')->label('Liên kết: đường dẫn')->maxLength(255),
+                    $this->shared(TextInput::make('home_about_link_url'))->label('Liên kết: đường dẫn')->maxLength(255),
                 ])->columns(2),
 
             Section::make('Ô số liệu')
                 ->schema([
-                    TextInput::make('home_about_stat_number')->label('Con số')->maxLength(20),
+                    $this->shared(TextInput::make('home_about_stat_number'))->label('Con số')->maxLength(20),
                     TextInput::make('home_about_stat_label')->label('Mô tả')->maxLength(100),
                 ])->columns(2),
 
@@ -210,14 +262,13 @@ class ManageHomePage extends Page
             Section::make('Các bước')
                 ->description('Số thứ tự (01, 02, ...) được đánh tự động theo thứ tự sắp xếp.')
                 ->schema([
-                    Repeater::make('home_process_steps')
+                    $this->translatableRepeater(Repeater::make('home_process_steps'))
                         ->hiddenLabel()
                         ->schema([
                             TextInput::make('title')->label('Tên bước')->required()->maxLength(100),
                             TextInput::make('description')->label('Mô tả ngắn')->maxLength(255),
                         ])
                         ->columns(2)
-                        ->reorderable()
                         ->collapsible()
                         ->addActionLabel('Thêm bước')
                         ->itemLabel(fn (array $state): ?string => $state['title'] ?? null),
@@ -226,7 +277,7 @@ class ManageHomePage extends Page
             Section::make('Liên kết bên dưới')
                 ->schema([
                     TextInput::make('home_process_link_text')->label('Chữ')->maxLength(100),
-                    TextInput::make('home_process_link_url')->label('Đường dẫn')->maxLength(255),
+                    $this->shared(TextInput::make('home_process_link_url'))->label('Đường dẫn')->maxLength(255),
                 ])->columns(2),
         ];
     }
@@ -237,12 +288,12 @@ class ManageHomePage extends Page
             Section::make('Cảm nhận học viên')
                 ->schema([
                     TextInput::make('home_testimonial_title')->label('Tiêu đề khối')->maxLength(255),
-                    Repeater::make('home_testimonials')
+                    $this->translatableRepeater(Repeater::make('home_testimonials'))
                         ->label('Danh sách cảm nhận')
                         ->schema([
                             Textarea::make('content')->label('Nội dung')->rows(3)->required()->columnSpanFull(),
-                            TextInput::make('name')->label('Tên học viên')->required()->maxLength(100),
-                            FileUpload::make('avatar')
+                            $this->shared(TextInput::make('name'))->label('Tên học viên')->required()->maxLength(100),
+                            $this->shared(FileUpload::make('avatar'))
                                 ->label('Ảnh đại diện')
                                 ->helperText('Bỏ trống: dùng ảnh hiện tại (nếu có) hoặc chữ cái đầu của tên.')
                                 ->image()
@@ -253,7 +304,6 @@ class ManageHomePage extends Page
                             Hidden::make('default_avatar'),
                         ])
                         ->columns(2)
-                        ->reorderable()
                         ->collapsible()
                         ->addActionLabel('Thêm cảm nhận')
                         ->itemLabel(fn (array $state): ?string => $state['name'] ?? null),
@@ -270,7 +320,7 @@ class ManageHomePage extends Page
                     TextInput::make('home_cta_title')->label('Tiêu đề')->maxLength(255),
                     Textarea::make('home_cta_description')->label('Mô tả')->rows(2)->columnSpanFull(),
                     TextInput::make('home_cta_button_text')->label('Nút: chữ')->maxLength(100),
-                    TextInput::make('home_cta_button_url')->label('Nút: liên kết')->maxLength(255),
+                    $this->shared(TextInput::make('home_cta_button_url'))->label('Nút: liên kết')->maxLength(255),
                 ])->columns(2),
         ];
     }
@@ -300,6 +350,12 @@ class ManageHomePage extends Page
     {
         $data = $this->form->getState();
 
+        if ($this->isTranslating()) {
+            $this->saveTranslation($data);
+
+            return;
+        }
+
         foreach (array_keys(HomePage::DEFAULTS) as $key) {
             if (! array_key_exists($key, $data)) {
                 continue;
@@ -326,6 +382,40 @@ class ManageHomePage extends Page
         }
 
         Notification::make()->success()->title('Đã lưu nội dung Trang chủ.')->send();
+    }
+
+    /**
+     * Lưu bản dịch: setting "{key}_{locale}"; danh sách chỉ lưu các trường cần dịch của mỗi mục.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    private function saveTranslation(array $data): void
+    {
+        foreach (array_keys(HomePage::TRANSLATIONS[$this->editLocale] ?? []) as $key) {
+            if (! array_key_exists($key, $data)) {
+                continue;
+            }
+
+            $value = $data[$key];
+            $isList = in_array($key, HomePage::JSON_KEYS, true);
+
+            if ($isList) {
+                $fields = HomePage::TRANSLATABLE_ITEM_FIELDS[$key] ?? [];
+                $value = is_array($value) && count($value)
+                    ? array_map(fn ($item) => Arr::only((array) $item, $fields), array_values($value))
+                    : null;
+            }
+
+            Setting::set(
+                HomePage::translationKey($key, $this->editLocale),
+                $value,
+                'home',
+                $isList ? 'json' : 'text',
+                $this->labelFor($key).' ['.strtoupper($this->editLocale).']',
+            );
+        }
+
+        Notification::make()->success()->title('Đã lưu bản '.(TranslatableTabs::LOCALE_LABELS[$this->editLocale] ?? $this->editLocale).' của Trang chủ.')->send();
     }
 
     private function labelFor(string $key): string

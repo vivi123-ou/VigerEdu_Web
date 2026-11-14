@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Về chúng tôi')
+@section('title', __('messages.about_us'))
 
 @use('App\Support\AboutPage')
 

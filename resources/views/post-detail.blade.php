@@ -433,6 +433,13 @@
 
 @section('content')
   @php
+    $detail = \App\Support\PostDetailPage::all();
+    $showAuthorBox = \App\Support\PostDetailPage::enabled('post_detail_show_author_box');
+    $showRelated = \App\Support\PostDetailPage::enabled('post_detail_show_related');
+    $showCta = \App\Support\PostDetailPage::enabled('post_detail_show_cta');
+    $authorAvatar = \App\Support\PostDetailPage::imageUrl($detail['post_detail_author_box_avatar'], \App\Support\PostDetailPage::DEFAULT_AUTHOR_AVATAR);
+    $relatedPlaceholder = \App\Support\PostDetailPage::imageUrl($detail['post_detail_related_placeholder'], \App\Support\PostDetailPage::DEFAULT_RELATED_PLACEHOLDER);
+
     // Link breadcrumb tới trang chuyên mục, không có chuyên mục thì về /blog
     $category = $post->category;
     $categoryUrl = $category ? $category->pageUrl() : url('/blog');
@@ -481,7 +488,7 @@
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                     />
                   </svg>
-                  <span>VIGER EDU</span>
+                  <span>{{ $detail['post_detail_author_name'] }}</span>
                 </div>
                 <div class="article-meta-item">
                   <svg
@@ -507,9 +514,9 @@
             </header>
 
             <!-- Ảnh đại diện nổi bật (nếu có) -->
-            @if (!empty($post->featured_image))
+            @if ($post->featured_image_url)
               <div class="article-featured-img">
-                <img src="{{ asset($post->featured_image) }}" alt="{{ $post->title }}" />
+                <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" />
               </div>
             @endif
 
@@ -523,39 +530,35 @@
               {!! $post->content !!}
             </div>
 
-            <!-- Tác giả & Giới thiệu VIGER EDU -->
-            <footer class="article-footer">
-              <div class="author-box">
-                <div class="author-avatar">
-                  <img src="{{ asset('img/favicon.png') }}" alt="VIGER EDU" />
+            <!-- Tác giả & Giới thiệu (quản trị ở admin) -->
+            @if ($showAuthorBox)
+              <footer class="article-footer">
+                <div class="author-box">
+                  <div class="author-avatar">
+                    <img src="{{ $authorAvatar }}" alt="{{ $detail['post_detail_author_box_name'] }}" />
+                  </div>
+                  <div class="author-info">
+                    <h4>{{ $detail['post_detail_author_box_name'] }}</h4>
+                    <p>{{ $detail['post_detail_author_box_bio'] }}</p>
+                  </div>
                 </div>
-                <div class="author-info">
-                  <h4>VIGER.EDU.VN</h4>
-                  <p>
-                    Đồng hành cùng học sinh, sinh viên Việt Nam trên con đường
-                    chinh phục giáo dục Đức chất lượng cao, miễn học phí và mở
-                    rộng cơ hội phát triển sự nghiệp toàn cầu.
-                  </p>
-                </div>
-              </div>
-            </footer>
+              </footer>
+            @endif
           </article>
         </div>
 
         <!-- CỘT PHẢI: SIDEBAR -->
         <aside class="post-sidebar-col">
           <!-- Box Bài viết liên quan -->
-          @if ($relatedPosts->isNotEmpty())
+          @if ($showRelated && $relatedPosts->isNotEmpty())
             <div class="sidebar-card animate-hidden delay-100">
-              <h3 class="sidebar-title">Bài Viết Liên Quan</h3>
+              <h3 class="sidebar-title">{{ $detail['post_detail_related_title'] }}</h3>
               <div class="related-post-list">
                 @foreach ($relatedPosts as $relPost)
                   <a href="{{ url('/bai-viet/' . $relPost->slug) }}" class="related-post-item">
                     <div class="related-post-thumb">
                       <img
-                        src="{{ $relPost->featured_image
-                          ? asset($relPost->featured_image)
-                          : 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=200&q=80' }}"
+                        src="{{ $relPost->featured_image_url ?: $relatedPlaceholder }}"
                         alt="{{ $relPost->title }}"
                       />
                     </div>
@@ -572,14 +575,13 @@
           @endif
 
           <!-- Box CTA Tư vấn -->
-          <div class="sidebar-cta animate-hidden delay-200">
-            <h3>Cần Tư Vấn Du Học Đức?</h3>
-            <p>
-              Nhận lộ trình du học cá nhân hóa hoàn toàn miễn phí từ các chuyên
-              gia giáo dục Đức tại VIGER EDU.
-            </p>
-            <a href="{{ url('/lien-he') }}" class="btn-cta">Đăng ký tư vấn ngay</a>
-          </div>
+          @if ($showCta)
+            <div class="sidebar-cta animate-hidden delay-200">
+              <h3>{{ $detail['post_detail_cta_title'] }}</h3>
+              <p>{{ $detail['post_detail_cta_description'] }}</p>
+              <a href="{{ $detail['post_detail_cta_button_url'] }}" class="btn-cta">{{ $detail['post_detail_cta_button_text'] }}</a>
+            </div>
+          @endif
         </aside>
       </div>
     </div>

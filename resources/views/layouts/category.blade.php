@@ -279,7 +279,7 @@
       <div class="overview-main">
         <div class="section-pretitle animate-hidden" style="margin-bottom: 1.5rem">
           <span style="color: var(--accent-alt-hover); background-color: #fff9e6; padding: 0.35rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;"
-            >Chuyên đề &amp; Bài viết</span
+            >{{ __('category.posts_label') }}</span
           >
         </div>
 
@@ -289,9 +289,7 @@
               <a href="{{ url('/bai-viet/' . $post->slug) }}" class="card-new animate-hidden delay-100">
                 <div class="card-new-img">
                   <img
-                    src="{{ $post->featured_image
-                      ? asset($post->featured_image)
-                      : 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80' }}"
+                    src="{{ $post->featured_image_url ?: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80' }}"
                     alt="{{ $post->title }}"
                   />
                 </div>
@@ -314,7 +312,7 @@
                       </svg>
                       <span>
                         @if ($post->created_at)
-                          {{ $post->created_at->format('d') }} tháng {{ $post->created_at->format('m, Y') }}
+                          {{ __('category.post_date', ['day' => $post->created_at->format('d'), 'month' => $post->created_at->format('m'), 'month_name' => $post->created_at->format('M'), 'year' => $post->created_at->format('Y')]) }}
                         @endif
                       </span>
                     </div>
@@ -327,7 +325,7 @@
                   </div>
 
                   <div class="card-new-footer">
-                    <span class="card-new-link"> Xem chi tiết &rarr; </span>
+                    <span class="card-new-link"> {{ __('category.view_details') }} &rarr; </span>
                   </div>
                 </div>
               </a>
@@ -350,7 +348,7 @@
               />
             </svg>
             <p style="color: var(--text-muted); font-size: 1.05rem; margin: 0">
-              Chưa có bài viết nào trong chuyên mục này.
+              {{ __('category.empty') }}
             </p>
           </div>
         @endif
@@ -376,7 +374,7 @@
       <!-- CỘT PHẢI: SIDEBAR -->
       <aside class="overview-sidebar animate-hidden delay-300">
         <div>
-          <h2 class="sidebar-title">Bài Đăng Mới Nhất</h2>
+          <h2 class="sidebar-title">{{ __('category.latest_posts') }}</h2>
 
           <div class="sidebar-list">
             @forelse ($latestPosts as $p)
@@ -385,7 +383,7 @@
                 <div class="sidebar-item-text">{{ $p->title }}</div>
               </a>
             @empty
-              <span style="color: var(--text-muted); font-size: 0.9rem">Chưa có bài viết nào.</span>
+              <span style="color: var(--text-muted); font-size: 0.9rem">{{ __('category.no_posts') }}</span>
             @endforelse
           </div>
         </div>

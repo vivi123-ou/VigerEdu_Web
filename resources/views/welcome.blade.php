@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Trang chủ')
+@section('title', __('home.page_title'))
 
 @push('styles')
   <style>
@@ -251,10 +251,10 @@ html.fx-text .fx-cursor-ring {
               @endforeach
             </div>
             <div class="hero-buttons">
-              <a href="{{ $h['home_hero_button_url'] }}"
-                ><button class="btn-red">
-                  {{ $h['home_hero_button_text'] }}
-                </button></a
+              <a
+                href="{{ $h['home_hero_button_url'] }}"
+                class="btn-red"
+                >{{ $h['home_hero_button_text'] }}</a
               >
               <a
                 href="#"
@@ -306,12 +306,12 @@ html.fx-text .fx-cursor-ring {
               <img
                 src="{{ HomePage::image('home_about_image_1') }}"
                 class="grid-img"
-                alt="Trường Đức 1"
+                alt="{{ __('home.about_image_1_alt') }}"
               />
               <img
                 src="{{ HomePage::image('home_about_image_2') }}"
                 class="grid-img"
-                alt="Trường Đức 2"
+                alt="{{ __('home.about_image_2_alt') }}"
               />
               <div class="stat-box">
                 <h3>{{ $h['home_about_stat_number'] }}</h3>
@@ -320,7 +320,7 @@ html.fx-text .fx-cursor-ring {
               <img
                 src="{{ HomePage::image('home_about_image_3') }}"
                 class="grid-img"
-                alt="Khuôn viên trường"
+                alt="{{ __('home.about_image_3_alt') }}"
               />
             </div>
           </div>
@@ -484,8 +484,8 @@ html.fx-text .fx-cursor-ring {
 
   <div id="roadmap-modal">
     <div id="roadmap-modal-inner">
-      <button id="roadmap-modal-close" aria-label="Đóng">&times;</button>
-      <img src="{{ HomePage::image('home_roadmap_image') }}" alt="Lộ trình tư vấn" />
+      <button id="roadmap-modal-close" aria-label="{{ __('home.close') }}">&times;</button>
+      <img src="{{ HomePage::image('home_roadmap_image') }}" alt="{{ __('home.roadmap_image_alt') }}" />
     </div>
   </div>
 @endsection

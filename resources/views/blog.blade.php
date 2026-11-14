@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Blog - Kiến thức du học Đức')
+@section('title', __('blog.page_title'))
 
 @push('styles')
   <style>
@@ -373,13 +373,12 @@
       "
     >
       <div class="blog-hero-content">
-        <p class="blog-hero-pretitle">Blog du học Đức</p>
+        <p class="blog-hero-pretitle">{{ __('blog.hero_pretitle') }}</p>
         <h1 class="hero-heading" style="color: white; margin-bottom: 1rem">
-          KIẾN THỨC DU HỌC ĐỨC
+          {{ __('blog.hero_title') }}
         </h1>
         <p class="cta-desc" style="max-width: 750px; margin: 1.5rem auto 2.5rem; font-weight: 300;">
-          Kinh nghiệm, lộ trình, học bổng, visa và chi phí du học Đức được biên
-          soạn theo hướng dễ hiểu, thực tế và hữu ích nhất.
+          {{ __('blog.hero_description') }}
         </p>
       </div>
     </section>
@@ -410,11 +409,11 @@
             name="q"
             value="{{ $q }}"
             class="blog-search-input"
-            placeholder="Tìm kiếm bài viết, tài liệu..."
+            placeholder="{{ __('blog.search_placeholder') }}"
           />
         </form>
         <div class="blog-tags">
-          <a href="{{ url('/blog') }}" class="blog-tag {{ $activeCategory === null ? 'active' : '' }}">Tất cả</a>
+          <a href="{{ url('/blog') }}" class="blog-tag {{ $activeCategory === null ? 'active' : '' }}">{{ __('blog.all') }}</a>
           @foreach ($categories as $c)
             <a
               href="{{ url('/blog?category=' . $c->id) }}"
@@ -430,16 +429,14 @@
     @if ($featured)
       <section class="blog-section">
         <div class="blog-section-label animate-hidden">
-          <span>Bài viết nổi bật</span>
+          <span>{{ __('blog.featured_label') }}</span>
         </div>
-        <h2 class="animate-hidden">Nội dung được quan tâm nhiều nhất</h2>
+        <h2 class="animate-hidden">{{ __('blog.featured_heading') }}</h2>
 
         <div class="featured-card animate-hidden delay-100">
           <div class="featured-card-img">
             <img
-              src="{{ $featured->featured_image
-                ? asset($featured->featured_image)
-                : 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1000&q=80' }}"
+              src="{{ $featured->featured_image_url ?: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1000&q=80' }}"
               alt="{{ $featured->title }}"
             />
             <div class="featured-card-img-overlay">
@@ -456,7 +453,7 @@
               <span class="featured-card-meta">
                 {{ $featured->created_at?->format('d/m/Y') }} · Viger EDU
               </span>
-              <a href="{{ url('/bai-viet/' . $featured->slug) }}" class="read-more-link">Đọc thêm →</a>
+              <a href="{{ url('/bai-viet/' . $featured->slug) }}" class="read-more-link">{{ __('blog.read_more') }}</a>
             </div>
           </div>
         </div>
@@ -466,9 +463,9 @@
     <!-- 3. BÀI VIẾT MỚI NHẤT -->
     <section class="blog-section" style="padding-top: 0">
       <div class="blog-section-label animate-hidden">
-        <span>Bài viết mới</span>
+        <span>{{ __('blog.latest_label') }}</span>
       </div>
-      <h2 class="animate-hidden">Bài viết mới nhất về du học tại Đức</h2>
+      <h2 class="animate-hidden">{{ __('blog.latest_heading') }}</h2>
 
       @if ($posts->isNotEmpty())
         <div class="post-grid">
@@ -476,9 +473,7 @@
             <a href="{{ url('/bai-viet/' . $post->slug) }}" class="post-card animate-hidden">
               <div class="post-card-img">
                 <img
-                  src="{{ $post->featured_image
-                    ? asset($post->featured_image)
-                    : 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=80' }}"
+                  src="{{ $post->featured_image_url ?: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=80' }}"
                   alt="{{ $post->title }}"
                 />
               </div>
@@ -495,7 +490,7 @@
                   @else
                     <span></span>
                   @endif
-                  <span class="read-more-link">Đọc thêm →</span>
+                  <span class="read-more-link">{{ __('blog.read_more') }}</span>
                 </div>
               </div>
             </a>
@@ -503,7 +498,7 @@
         </div>
       @elseif (! $featured)
         <p style="text-align: center; color: var(--text-muted); padding: 3rem 0;">
-          Không tìm thấy bài viết nào.
+          {{ __('blog.no_results') }}
         </p>
       @endif
 
@@ -542,14 +537,13 @@
     <section class="cta-section animate-hidden">
       <div class="page-container">
         <div class="section-pretitle" style="justify-content: center">
-          <span>✨ Bắt đầu hành trình của riêng bạn</span>
+          <span>{{ __('blog.cta_pretitle') }}</span>
         </div>
-        <h2 class="cta-title">Khởi đầu hành trình chinh phục tương lai</h2>
+        <h2 class="cta-title">{{ __('blog.cta_title') }}</h2>
         <p class="cta-desc">
-          Liên hệ với chúng tôi ngay hôm nay để được tư vấn lộ trình học tập và
-          sự nghiệp vững chắc tại nước ngoài.
+          {{ __('blog.cta_description') }}
         </p>
-        <a class="cta-pill" href="/lien-he">Bắt đầu ngay</a>
+        <a class="cta-pill" href="/lien-he">{{ __('blog.cta_button') }}</a>
       </div>
     </section>
   </main>

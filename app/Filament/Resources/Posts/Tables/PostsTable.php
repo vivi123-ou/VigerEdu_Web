@@ -12,7 +12,6 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostsTable
@@ -24,19 +23,7 @@ class PostsTable
             ->columns([
                 ImageColumn::make('featured_image')
                     ->label('Ảnh')
-                    ->state(function (Post $record) {
-                        if (empty($record->featured_image)) {
-                            return null;
-                        }
-                        if (Str::startsWith($record->featured_image, ['http://', 'https://', '//'])) {
-                            return $record->featured_image;
-                        }
-                        if (Storage::disk('public')->exists($record->featured_image)) {
-                            return Storage::disk('public')->url($record->featured_image);
-                        }
-
-                        return asset($record->featured_image);
-                    })
+                    ->state(fn (Post $record) => $record->featured_image_url)
                     ->width('80px'),
                 TextColumn::make('title')
                     ->label('Tiêu đề')

@@ -9,11 +9,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Translatable\HasTranslations;
 
 class Page extends Model
 {
     /** @use HasFactory<PageFactory> */
-    use HasFactory;
+    use HasFactory, HasTranslations;
+
+    /**
+     * Các cột đa ngôn ngữ, lưu dạng JSON {"vi": "...", "en": "..."}.
+     *
+     * @var list<string>
+     */
+    public array $translatable = ['title', 'subtitle', 'content', 'sections', 'meta_description'];
 
     protected $fillable = [
         'title',

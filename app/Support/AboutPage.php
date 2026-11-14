@@ -60,6 +60,60 @@ class AboutPage extends SiteContent
 
     public const JSON_KEYS = ['about_values_items'];
 
+    /** Trường cần dịch trong mỗi mục của accordion giá trị. */
+    public const TRANSLATABLE_ITEM_FIELDS = [
+        'about_values_items' => ['title', 'body'],
+    ];
+
+    /** Bản tiếng Anh mặc định. */
+    public const TRANSLATIONS = [
+        'en' => [
+            // Banner đầu trang
+            'about_hero_pretitle' => 'Our story',
+            'about_hero_title' => 'ABOUT US',
+            'about_hero_description' => 'Your Trusted Partner on the International Education Journey with VIGER EDU',
+
+            // Khối giới thiệu lộ trình
+            'about_intro_label' => 'EXPLORE THE PATHWAY',
+            'about_intro_heading' => 'Discover Your Pathway into Higher Education',
+            'about_intro_highlight' => '**VIGER EDU** is a specialist study abroad consultancy focused on higher education pathways in Europe, especially in Germany.',
+            'about_intro_description' => 'At VIGER EDU, we have supported countless students in making their dreams come true through personalized education pathways, in-depth guidance and successful university applications, resulting in high admission rates at international institutions.',
+
+            // Khối giá trị (accordion)
+            'about_values_heading' => "EMPOWERING STUDENTS\nWITH DEDICATED\nGUIDANCE",
+            'about_values_description' => 'We tailor our services to the unique needs of each student, helping them enroll successfully at reputable institutions across Europe and build sustainable careers.',
+            'about_values_items' => [
+                [
+                    'title' => 'Our Commitment to Your Success',
+                    'body' => 'The mission of VIGER EDU is to empower young people to make informed decisions about their studies and careers, building a sustainable future in a global environment.',
+                ],
+                [
+                    'title' => 'A Vision of a Future Full of Global Opportunities',
+                    'body' => 'We aim to become a leading study abroad consultancy in Vietnam, connecting students with renowned international universities while fostering personal growth and career success.',
+                ],
+                [
+                    'title' => 'The Philosophy Guiding Our Work',
+                    'body' => 'The core values of VIGER EDU are integrity, personalized service, a commitment to excellence and a passion for helping students achieve their academic and career goals.',
+                ],
+                [
+                    'title' => 'Recognition of Our Excellence',
+                    'body' => 'VIGER EDU has received wide praise and recognition for its outstanding contribution to student success and to international education consulting in Vietnam.',
+                ],
+            ],
+
+            // Khối hành trình phát triển
+            'about_history_label' => 'OUR JOURNEY',
+            'about_history_heading' => 'A Legacy Shaping the Future Through Education',
+            'about_history_description' => "Since its founding, VIGER EDU has been dedicated to guiding Vietnamese students toward outstanding academic achievements and valuable international career opportunities.\n\nWith years of experience, we have built a solid reputation for supporting students every step of the way, achieving countless successful admissions in Germany and across Europe.",
+
+            // Kêu gọi hành động cuối trang
+            'about_cta_pretitle' => '✨ Start your own journey',
+            'about_cta_title' => 'Begin your journey toward the future',
+            'about_cta_description' => 'Contact us today for guidance on a solid study and career pathway abroad.',
+            'about_cta_button_text' => 'Get started',
+        ],
+    ];
+
     public const DEFAULT_HERO_IMAGE = 'https://viger.edu.vn/wp-content/uploads/2026/04/pexels-photo-7972313.jpeg';
 
     public const DEFAULT_INTRO_IMAGE = 'https://viger.edu.vn/wp-content/uploads/2026/04/pexels-photo-34475611.jpeg';

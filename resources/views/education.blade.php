@@ -1,34 +1,29 @@
 @extends('layouts.app')
 
-@section('title', 'Giáo dục tại Đức')
+@section('title', __('education.page_title'))
 
 @php
   $page = \App\Models\Page::where('slug', 'giao-duc-tai-duc')->first();
   $bannerImg = ($page && $page->bannerImageUrl) ? $page->bannerImageUrl : 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80';
 
-  // Dữ liệu 4 card ưu điểm. 'icon' là phần bên trong thẻ <svg>.
-  $features = [
-    [
-      'title' => 'Hệ Thống Giáo Dục Lâu Đời',
-      'body' => 'Các trường đại học (Uni) và Đại học Ứng dụng (FH) của Đức nổi tiếng với phương pháp giảng dạy mang tính thực tiễn cao, tập trung đào tạo kiến thức chuyên sâu và tư duy phản biện.',
-      'icon' => '<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path>',
-    ],
-    [
-      'title' => 'Miễn Phí 100% Học Phí',
-      'body' => 'Hầu hết các trường đại học công lập tại Đức không thu học phí đối với sinh viên quốc tế, bạn chỉ cần đóng một khoản phí hành chính (Semesterbeitrag) rất nhỏ mỗi học kỳ.',
-      'icon' => '<circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path>',
-    ],
-    [
-      'title' => 'Nghiên Cứu và Ứng Dụng',
-      'body' => 'Sinh viên được khuyến khích tham gia các dự án nghiên cứu ngay từ sớm. Các phòng thí nghiệm và thư viện tại Đức luôn được trang bị những công nghệ tiên tiến nhất.',
-      'icon' => '<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>',
-    ],
-    [
-      'title' => 'Cơ Hội Nghề Nghiệp',
-      'body' => 'Đức cho phép sinh viên quốc tế ở lại đến 18 tháng sau khi tốt nghiệp để tìm việc. Các khối ngành Kỹ thuật, Công nghệ, Y tế luôn khát nhân lực với mức lương khởi điểm cực kỳ hấp dẫn.',
-      'icon' => '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>',
-    ],
+  // Nội dung của Page trong admin chỉ dùng khi có bản đúng ngôn ngữ đang xem,
+  // không có => dùng nội dung mặc định trong lang/{locale}/education.php.
+  $locale = app()->getLocale();
+  $pageText = fn (string $field) => $page?->getTranslation($field, $locale, false);
+  $pageTitle = filled($pageText('title')) ? $pageText('title') : __('education.hero_title');
+  $pageSubtitle = filled($pageText('subtitle')) ? $pageText('subtitle') : __('education.hero_subtitle');
+  $pageContent = $pageText('content');
+
+  // Icon của 4 card ưu điểm (phần bên trong thẻ <svg>), chữ lấy từ lang theo cùng vị trí.
+  $featureIcons = [
+    '<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path>',
+    '<circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path>',
+    '<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>',
+    '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>',
   ];
+  $features = collect(__('education.features'))
+    ->map(fn (array $feature, int $index) => $feature + ['icon' => $featureIcons[$index] ?? ''])
+    ->all();
 @endphp
 
 @section('content')
@@ -52,14 +47,14 @@
         <div class="text-center animate-hidden">
           <div class="section-pretitle" style="justify-content: center; margin-bottom: 1rem">
             <span style="color: var(--accent-alt); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;"
-              >Khám Phá Châu Âu</span
+              >{{ __('education.hero_pretitle') }}</span
             >
           </div>
           <h1 class="hero-heading" style="color: white; margin-bottom: 1rem">
-            {{ $page->title ?? 'GIÁO DỤC TẠI ĐỨC' }}
+            {{ $pageTitle }}
           </h1>
           <p class="cta-desc" style="max-width: 750px; margin: 1.5rem auto 0; font-weight: 300;">
-            {{ $page->subtitle ?? 'Nền giáo dục đẳng cấp thế giới, miễn 100% học phí tại trường công lập và cơ hội định cư làm việc rộng mở tại trái tim của Châu Âu.' }}
+            {{ $pageSubtitle }}
           </p>
         </div>
       </div>
@@ -73,31 +68,21 @@
           <div class="hero-text animate-hidden">
             <div class="section-pretitle">
               <span style="color: var(--accent-alt-hover); background-color: #fff9e6; padding: 0.35rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;"
-                >LÝ DO CHỌN ĐỨC</span
+                >{{ __('education.overview_label') }}</span
               >
             </div>
             <h2 class="about-heading" style="margin-top: 1.5rem">
-              Điểm Đến Học Thuật Tuyệt Vời Nhất Thế Giới
+              {{ __('education.overview_heading') }}
             </h2>
 
-            @if ($page && !empty($page->content))
+            @if (filled($pageContent))
               <div class="about-desc">
-                {!! $page->content !!}
+                {!! $pageContent !!}
               </div>
             @else
-              <p class="about-desc">
-                Đức không chỉ là một cường quốc về kinh tế và công nghiệp, mà còn
-                là một trong những điểm đến du học hấp dẫn nhất trên toàn cầu dành
-                cho sinh viên quốc tế. Sự kết hợp hoàn hảo giữa chất lượng giảng
-                dạy xuất sắc và đời sống văn hóa phong phú biến nơi đây thành
-                "miền đất hứa" cho những người trẻ.
-              </p>
+              <p class="about-desc">{{ __('education.overview_paragraph_1') }}</p>
 
-              <p class="about-desc" style="margin-bottom: 0">
-                Bằng cấp từ các trường đại học tại Đức được công nhận trên toàn thế
-                giới, mang lại cho bạn lợi thế cạnh tranh vô cùng lớn trên thị
-                trường lao động toàn cầu.
-              </p>
+              <p class="about-desc" style="margin-bottom: 0">{{ __('education.overview_paragraph_2') }}</p>
             @endif
           </div>
 
@@ -105,7 +90,7 @@
           <div class="hero-image animate-hidden delay-100">
             <img
               src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80"
-              alt="Trường đại học Đức"
+              alt="{{ __('education.overview_image_alt') }}"
             />
           </div>
         </div>
@@ -116,10 +101,9 @@
     <section style="padding: 6rem 0; background-color: var(--bg-white)">
       <div class="page-container">
         <div class="text-center animate-hidden" style="margin-bottom: 4rem">
-          <h2 class="section-title">Tại Sao Sinh Viên Yêu Thích Nước Đức?</h2>
+          <h2 class="section-title">{{ __('education.features_heading') }}</h2>
           <p class="about-desc" style="max-width: 600px; margin: 0 auto">
-            Những đặc quyền chỉ có tại hệ thống giáo dục Đức dành riêng cho sinh
-            viên quốc tế.
+            {{ __('education.features_description') }}
           </p>
         </div>
 
@@ -160,14 +144,11 @@
     <section class="cta-section animate-hidden">
       <div class="page-container">
         <div class="section-pretitle" style="justify-content: center">
-          <span>✨ Biến ước mơ thành hiện thực</span>
+          <span>{{ __('education.cta_pretitle') }}</span>
         </div>
-        <h2 class="cta-title">Sẵn Sàng Chinh Phục Giảng Đường Đức?</h2>
-        <p class="cta-desc">
-          Hàng ngàn sinh viên đã thành công. Hãy để VIGER EDU vẽ lộ trình dành
-          riêng cho bạn ngay hôm nay.
-        </p>
-        <a class="cta-pill" href="/lien-he">Bắt đầu ngay</a>
+        <h2 class="cta-title">{{ __('education.cta_title') }}</h2>
+        <p class="cta-desc">{{ __('education.cta_description') }}</p>
+        <a class="cta-pill" href="/lien-he">{{ __('education.cta_button') }}</a>
       </div>
     </section>
   </main>

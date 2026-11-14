@@ -42,6 +42,23 @@ class ContactPage extends SiteContent
         'contact_map_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.3500190135123!2d106.69857019999999!3d10.7844813!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f35e7dcdebb%3A0x9f036d91414b18fa!2zNiBQaMO5bmcgS2jhuq9jIEtob2FuLCBTw6BpIEfDsm4sIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2sus!4v1791193058666!5m2!1svi!2sus',
     ];
 
+    /** Bản tiếng Anh mặc định (ảnh, số điện thoại, email, liên kết dùng chung). */
+    public const TRANSLATIONS = [
+        'en' => [
+            'contact_hero_pretitle' => 'Contact us',
+            'contact_hero_title' => 'CONNECT WITH VIGER EDU',
+            'contact_hero_description' => 'The VIGER EDU team is always ready to support you and answer every question about your study abroad journey.',
+            'contact_heading' => 'Get in Touch with',
+            'contact_heading_highlight' => 'VIGER EDU',
+            'contact_address' => "6 Phung Khac Khoan,\nSai Gon Ward, Ho Chi Minh City",
+            'contact_form_pretitle' => 'Start your own journey',
+            'contact_form_title' => "**Germany** is waiting for you.\nSo is Viger **EDU**.",
+            'contact_form_description' => 'Leave your email — we will contact you for a free consultation within 24 hours.',
+            'contact_form_button' => 'Register now',
+            'contact_success_message' => 'Thank you! VIGER EDU will contact you within 24 hours.',
+        ],
+    ];
+
     public const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80';
 
     public const DEFAULT_SIDE_IMAGE = 'img/contact man.png';

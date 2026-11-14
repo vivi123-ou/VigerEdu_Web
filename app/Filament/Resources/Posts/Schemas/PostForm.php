@@ -3,12 +3,15 @@
 namespace App\Filament\Resources\Posts\Schemas;
 
 use App\Enums\PostStatus;
-use Filament\Forms\Components\FileUpload;
 use App\Filament\Forms\Components\CKEditor;
-use Filament\Schemas\Components\Section;
+use App\Filament\Forms\Components\TranslatableTabs;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -18,14 +21,35 @@ class PostForm
     {
         return $schema
             ->components([
+                Section::make('Nội dung bài viết')
+                    ->description('Bài chỉ hiển thị ở ngôn ngữ có tiêu đề và nội dung: điền tab Tiếng Việt để hiện ở chế độ tiếng Việt, tab English để hiện ở chế độ tiếng Anh. Bài cho chuyên mục tiếng Anh chỉ cần điền tab English.')
+                    ->schema([
+                        TranslatableTabs::make(fn (string $locale, bool $isPrimary) => [
+                            TextInput::make("title.{$locale}")
+                                ->label('Tiêu đề bài viết')
+                                // Cần tiêu đề ở ít nhất một ngôn ngữ
+                                ->required(fn (Get $get) => collect(config('app.supported_locales'))
+                                    ->every(fn (string $otherLocale) => $otherLocale === $locale || blank($get("title.{$otherLocale}"))))
+                                ->validationMessages(['required' => 'Cần nhập tiêu đề ở ít nhất một ngôn ngữ.'])
+                                ->maxLength(500)
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(function ($state, Get $get, Set $set) use ($isPrimary) {
+                                    if ($isPrimary || blank($get('slug'))) {
+                                        $set('slug', Str::slug($state));
+                                    }
+                                }),
+                            Textarea::make("excerpt.{$locale}")
+                                ->label('Tóm tắt ngắn (Excerpt)')
+                                ->rows(3),
+                            CKEditor::make("content.{$locale}")
+                                ->label('Nội dung bài viết')
+                                // Đã có tiêu đề ở ngôn ngữ này thì phải có nội dung
+                                ->required(fn (Get $get) => filled($get("title.{$locale}"))),
+                        ]),
+                    ]),
+
                 Section::make('Thông tin bài viết')
                     ->schema([
-                        TextInput::make('title')
-                            ->label('Tiêu đề bài viết')
-                            ->required()
-                            ->maxLength(500)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
                         TextInput::make('slug')
                             ->label('Đường dẫn (Slug)')
                             ->required()
@@ -50,19 +74,7 @@ class PostForm
                             ->disk('public')
                             ->directory('posts')
                             ->columnSpanFull(),
-                        Textarea::make('excerpt')
-                            ->label('Tóm tắt ngắn (Excerpt)')
-                            ->rows(3)
-                            ->columnSpanFull(),
                     ])->columns(2),
-
-                Section::make('Nội dung chi tiết')
-                    ->schema([
-                        CKEditor::make('content')
-                            ->label('Nội dung bài viết')
-                            ->required()
-                            ->columnSpanFull(),
-                    ]),
             ]);
     }
 }

@@ -112,3 +112,16 @@ Route::middleware(['auth', 'admin'])
         Route::post('/delete/{post}', [AdminPostController::class, 'destroy']);
         Route::post('/api/upload-image', [AdminPostController::class, 'uploadImage']);
     });
+
+/*
+|--------------------------------------------------------------------------
+| Chuyển ngôn ngữ
+|--------------------------------------------------------------------------
+*/
+Route::get('/lang/{locale}', function (string $locale) {
+    if (in_array($locale, config('app.supported_locales'), true)) {
+        session()->put('locale', $locale);
+    }
+
+    return redirect()->back(fallback: '/');
+})->name('switch.language');

@@ -78,9 +78,15 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'vi'),
 
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'vi'),
+
+    /*
+    | Các ngôn ngữ website hỗ trợ (nút chuyển ngôn ngữ trên header, SetLocale,
+    | các tab ngôn ngữ trong Filament). Ngôn ngữ đầu tiên là ngôn ngữ chính.
+    */
+    'supported_locales' => ['vi', 'en'],
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 

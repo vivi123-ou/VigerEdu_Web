@@ -26,7 +26,7 @@ class CategoryMenuTest extends TestCase
     public function test_choosing_a_menu_group_shows_new_category_in_header_and_page_works(): void
     {
         Livewire::test(CreateCategory::class)
-            ->fillForm(['name' => 'Học bổng', 'slug' => 'hoc-bong'])
+            ->fillForm(['name' => ['vi' => 'Học bổng'], 'slug' => 'hoc-bong'])
             ->fillForm(['menu_group' => 'giao-duc-tai-duc'])
             ->call('create')
             ->assertHasNoFormErrors();
@@ -83,7 +83,7 @@ class CategoryMenuTest extends TestCase
         $parent = Category::create(['name' => 'Dịch vụ', 'slug' => 'dich-vu', 'menu_group' => 'main', 'is_in_menu' => true, 'url' => '/dich-vu']);
 
         Livewire::test(CreateCategory::class)
-            ->fillForm(['name' => 'Luyện thi', 'slug' => 'luyen-thi'])
+            ->fillForm(['name' => ['vi' => 'Luyện thi'], 'slug' => 'luyen-thi'])
             ->fillForm(['menu_group' => 'main'])
             ->fillForm(['parent_id' => $parent->id, 'url' => '/luyen-thi'])
             ->call('create')

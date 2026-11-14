@@ -89,6 +89,62 @@ class HomePage extends SiteContent
         'home_cta_button_url' => '/lien-he',
     ];
 
+    /** Trường cần dịch trong mỗi mục của các danh sách (số liệu, ảnh, tên học viên dùng chung). */
+    public const TRANSLATABLE_ITEM_FIELDS = [
+        'home_hero_stats' => ['label'],
+        'home_process_steps' => ['title', 'description'],
+        'home_testimonials' => ['content'],
+    ];
+
+    /** Bản tiếng Anh mặc định (admin sửa ở Trang chủ > Sửa bản English). */
+    public const TRANSLATIONS = [
+        'en' => [
+            // 1. Hero
+            'home_hero_heading' => 'Your journey',
+            'home_hero_subheading' => 'Starts in Germany...',
+            'home_hero_description' => 'Viger EDU supports you from choosing your major and preparing your application to your first day at a German university — with a team of experts who have studied and worked there.',
+            'home_hero_stats' => [
+                ['label' => 'Students enrolled'],
+                ['label' => 'Visa success rate'],
+                ['label' => 'Years of experience'],
+            ],
+            'home_hero_button_text' => 'Book a free consultation',
+            'home_roadmap_button_text' => 'View study roadmap',
+
+            // 3. Về chúng tôi
+            'home_about_label' => '✨ About us',
+            'home_about_heading' => 'Your most trusted companion on the road to Germany',
+            'home_about_description' => 'We do more than advise — we walk alongside you. The Viger EDU team consists of graduates from leading German universities who know every step of the journey, from day one to enrollment.',
+            'home_about_link_text' => 'Learn more about us',
+            'home_about_stat_label' => 'Partner universities',
+
+            // 4. Quy trình
+            'home_process_pretitle' => '✨ Study abroad process',
+            'home_process_title' => '5 steps to a German university',
+            'home_process_steps' => [
+                ['title' => 'Free consultation', 'description' => 'Profile assessment and a personalized study plan'],
+                ['title' => 'German language training', 'description' => 'Reach the language level your university requires'],
+                ['title' => 'Application preparation', 'description' => 'Complete all documents and submit your application'],
+                ['title' => 'Student visa', 'description' => 'Full support with the student visa process'],
+                ['title' => 'Enrollment & settling in', 'description' => 'By your side from your first day in Germany'],
+            ],
+            'home_process_link_text' => 'View the detailed roadmap',
+
+            // 5. Cảm nhận học viên
+            'home_testimonial_title' => 'Journeys we are proud of',
+            'home_testimonials' => [
+                ['content' => 'Thanks to VIGER EDU, I found the best-fitting university in Germany for my engineering major. The support from the team was truly amazing!'],
+                ['content' => 'I never thought studying abroad could be this easy! VIGER EDU made every procedure fast and stress-free.'],
+            ],
+
+            // 6. CTA cuối trang
+            'home_cta_pretitle' => '✨ Start your own journey',
+            'home_cta_title' => 'Begin your journey to a brighter future',
+            'home_cta_description' => 'Contact us today for guidance on a solid study and career path abroad.',
+            'home_cta_button_text' => 'Get started',
+        ],
+    ];
+
     /** Ảnh mặc định cho các key ảnh (khi admin chưa upload). */
     public const DEFAULT_IMAGES = [
         'home_hero_background' => 'https://images.unsplash.com/photo-1618259278412-2819cbdea4dc?q=80&w=1121&auto=format&fit=crop',

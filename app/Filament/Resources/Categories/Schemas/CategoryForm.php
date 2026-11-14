@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Categories\Schemas;
 
+use App\Filament\Forms\Components\TranslatableTabs;
 use App\Models\Category;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -21,17 +22,41 @@ class CategoryForm
             ->components([
                 Section::make('Thông tin chuyên mục & Menu')
                     ->schema([
-                        TextInput::make('name')
-                            ->label('Tên chuyên mục')
-                            ->required()
-                            ->maxLength(255)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+                        TranslatableTabs::make(fn (string $locale, bool $isPrimary) => [
+                            TextInput::make("name.{$locale}")
+                                ->label('Tên chuyên mục')
+                                ->required($isPrimary)
+                                ->maxLength(255)
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(function ($state, callable $set) use ($isPrimary) {
+                                    if ($isPrimary) {
+                                        $set('slug', Str::slug($state));
+                                    }
+                                }),
+                            Textarea::make("description.{$locale}")
+                                ->label('Mô tả chuyên mục'),
+                        ]),
                         TextInput::make('slug')
                             ->label('Đường dẫn (Slug)')
                             ->required()
                             ->maxLength(255)
                             ->helperText('Đường dẫn định danh chuyên mục, ví dụ: "tong-quan", "he-thong-giao-duc"'),
+                        Select::make('translation_of_id')
+                            ->label('Là bản tiếng Anh của chuyên mục')
+                            ->helperText('Chọn nếu đây là chuyên mục tiếng Anh riêng (vd. "German education overview" là bản tiếng Anh của "Tổng quan"). Khi website ở chế độ tiếng Anh, menu và trang của chuyên mục gốc sẽ hiển thị chuyên mục này.')
+                            ->options(fn (?Category $record) => Category::query()
+                                ->whereNull('translation_of_id')
+                                ->when($record, fn ($q) => $q->whereKeyNot($record->getKey()))
+                                ->get()
+                                ->mapWithKeys(fn (Category $category) => [$category->getKey() => $category->getTranslation('name', 'vi')])
+                                ->all())
+                            ->unique(ignoreRecord: true)
+                            ->validationMessages(['unique' => 'Chuyên mục này đã có bản tiếng Anh khác.'])
+                            ->searchable()
+                            ->placeholder('— Không (chuyên mục tiếng Việt / dùng chung) —')
+                            ->nullable()
+                            // Chuyên mục đã có bản tiếng Anh thì không thể là bản dịch của chuyên mục khác
+                            ->disabled(fn (?Category $record) => $record?->englishVersion()->exists() ?? false),
                         Select::make('menu_group')
                             ->label('Nhóm hiển thị trên Header')
                             ->options([
@@ -83,9 +108,6 @@ class CategoryForm
                             ->helperText('Số nhỏ hiển thị trước. Để trống: xếp cuối nhóm.')
                             ->numeric()
                             ->visible(fn (Get $get) => filled($get('menu_group'))),
-                        Textarea::make('description')
-                            ->label('Mô tả chuyên mục')
-                            ->columnSpanFull(),
                     ])->columns(2),
             ]);
     }

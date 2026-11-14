@@ -2,10 +2,12 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Forms\Components\TranslatableTabs;
 use App\Models\Setting;
 use App\Support\ContactPage;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -18,6 +20,7 @@ use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Livewire\Attributes\Url;
 use UnitEnum;
 
 class ManageContactPage extends Page
@@ -71,9 +74,17 @@ class ManageContactPage extends Page
     /** @var array<string, mixed>|null */
     public ?array $data = [];
 
+    /** Ngôn ngữ đang sửa (?lang=en): bản dịch chỉ sửa phần chữ, ảnh/liên kết/số điện thoại dùng chung. */
+    #[Url(as: 'lang')]
+    public string $editLocale = 'vi';
+
     public function mount(): void
     {
-        $data = ContactPage::all();
+        if (! in_array($this->editLocale, config('app.supported_locales'), true)) {
+            $this->editLocale = ContactPage::primaryLocale();
+        }
+
+        $data = ContactPage::all($this->editLocale);
 
         foreach (self::IMAGE_KEYS as $key) {
             $data[$key] = Setting::get($key);
@@ -82,6 +93,37 @@ class ManageContactPage extends Page
         $data['contact_show_map'] = (bool) (int) $data['contact_show_map'];
 
         $this->form->fill($data);
+    }
+
+    public function isTranslating(): bool
+    {
+        return $this->editLocale !== ContactPage::primaryLocale();
+    }
+
+    public function getSubheading(): ?string
+    {
+        $language = TranslatableTabs::LOCALE_LABELS[$this->editLocale] ?? strtoupper($this->editLocale);
+
+        return $this->isTranslating()
+            ? "Đang sửa bản {$language}. Chỉ sửa được phần chữ; ảnh, số điện thoại, email, liên kết và bản đồ dùng chung với bản Tiếng Việt. Ô để trống sẽ dùng bản dịch mặc định."
+            : "Đang sửa bản {$language}.";
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return collect(config('app.supported_locales'))
+            ->map(fn (string $locale) => Action::make("edit_{$locale}")
+                ->label('Sửa bản '.(TranslatableTabs::LOCALE_LABELS[$locale] ?? strtoupper($locale)))
+                ->icon(Heroicon::OutlinedLanguage)
+                ->color($locale === $this->editLocale ? 'primary' : 'gray')
+                ->url(static::getUrl(['lang' => $locale])))
+            ->all();
+    }
+
+    /** Trường dùng chung cho mọi ngôn ngữ: khóa khi sửa bản dịch. */
+    private function shared(Field $field): Field
+    {
+        return $field->disabled(fn (): bool => $this->isTranslating());
     }
 
     public function form(Schema $schema): Schema
@@ -94,45 +136,45 @@ class ManageContactPage extends Page
                         TextInput::make('contact_hero_pretitle')->label('Dòng chữ nhỏ phía trên')->maxLength(255),
                         TextInput::make('contact_hero_title')->label('Tiêu đề lớn')->required()->maxLength(255),
                         Textarea::make('contact_hero_description')->label('Mô tả')->rows(2)->columnSpanFull(),
-                        FileUpload::make('contact_hero_image')
+                        $this->shared(FileUpload::make('contact_hero_image')
                             ->label('Ảnh nền banner')
                             ->helperText('Bỏ trống để dùng ảnh mặc định.')
                             ->image()
                             ->disk('public')
                             ->directory('contact')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()),
                     ])->columns(2),
 
                 Section::make('Thông tin liên hệ')
                     ->schema([
                         TextInput::make('contact_heading')->label('Tiêu đề')->maxLength(255),
                         TextInput::make('contact_heading_highlight')->label('Tiêu đề (dòng tô màu)')->maxLength(255),
-                        TextInput::make('contact_phone')->label('Điện thoại')->tel()->maxLength(50),
-                        TextInput::make('contact_email')
+                        $this->shared(TextInput::make('contact_phone')->label('Điện thoại')->tel()->maxLength(50)),
+                        $this->shared(TextInput::make('contact_email')
                             ->label('Email')
                             ->email()
                             ->maxLength(255)
-                            ->helperText('Dùng chung với Footer.'),
+                            ->helperText('Dùng chung với Footer.')),
                         Textarea::make('contact_address')
                             ->label('Địa chỉ')
                             ->rows(2)
                             ->helperText('Xuống dòng sẽ được giữ nguyên khi hiển thị.')
                             ->columnSpanFull(),
-                        FileUpload::make('contact_side_image')
+                        $this->shared(FileUpload::make('contact_side_image')
                             ->label('Ảnh minh họa bên phải')
                             ->helperText('Bỏ trống để dùng ảnh mặc định.')
                             ->image()
                             ->disk('public')
                             ->directory('contact')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()),
                     ])->columns(2),
 
                 Section::make('Mạng xã hội')
                     ->description('Dùng chung với Footer. Các ô văn bản để trống sẽ dùng nội dung mặc định.')
                     ->schema([
-                        TextInput::make('social_facebook')->label('Facebook')->url()->maxLength(255),
-                        TextInput::make('social_tiktok')->label('TikTok')->url()->maxLength(255),
-                        TextInput::make('social_youtube')->label('YouTube')->url()->maxLength(255),
+                        $this->shared(TextInput::make('social_facebook')->label('Facebook')->url()->maxLength(255)),
+                        $this->shared(TextInput::make('social_tiktok')->label('TikTok')->url()->maxLength(255)),
+                        $this->shared(TextInput::make('social_youtube')->label('YouTube')->url()->maxLength(255)),
                     ])->columns(3),
 
                 Section::make('Form đăng ký tư vấn')
@@ -153,8 +195,8 @@ class ManageContactPage extends Page
 
                 Section::make('Bản đồ')
                     ->schema([
-                        Toggle::make('contact_show_map')->label('Hiển thị bản đồ'),
-                        Textarea::make('contact_map_url')
+                        $this->shared(Toggle::make('contact_show_map')->label('Hiển thị bản đồ')),
+                        $this->shared(Textarea::make('contact_map_url')
                             ->label('Link nhúng Google Maps')
                             ->rows(3)
                             ->helperText('Trên Google Maps: Chia sẻ → Nhúng bản đồ → Sao chép HTML, rồi dán nguyên đoạn <iframe> hoặc chỉ link src (https://www.google.com/maps/embed?...) vào đây.')
@@ -162,7 +204,7 @@ class ManageContactPage extends Page
                                 if (filled($value) && ContactPage::mapSrc($value) === null) {
                                     $fail('Link bản đồ không hợp lệ (phải là link https hoặc đoạn <iframe> của Google Maps).');
                                 }
-                            }),
+                            })),
                     ]),
             ]);
     }
@@ -192,6 +234,12 @@ class ManageContactPage extends Page
     {
         $data = $this->form->getState();
 
+        if ($this->isTranslating()) {
+            $this->saveTranslation($data);
+
+            return;
+        }
+
         $data['contact_show_map'] = ! empty($data['contact_show_map']) ? '1' : '0';
 
         if (filled($data['contact_map_url'] ?? null)) {
@@ -213,5 +261,30 @@ class ManageContactPage extends Page
         }
 
         Notification::make()->success()->title('Đã lưu nội dung trang Liên hệ.')->send();
+    }
+
+    /**
+     * Lưu bản dịch vào setting "{key}_{locale}".
+     *
+     * @param  array<string, mixed>  $data
+     */
+    private function saveTranslation(array $data): void
+    {
+        foreach (array_keys(ContactPage::TRANSLATIONS[$this->editLocale] ?? []) as $key) {
+            if (! array_key_exists($key, $data)) {
+                continue;
+            }
+
+            Setting::set(
+                ContactPage::translationKey($key, $this->editLocale),
+                $data[$key],
+                'contact',
+                'text',
+                (self::LABELS[$key] ?? $key).' ['.strtoupper($this->editLocale).']',
+            );
+        }
+
+        $language = TranslatableTabs::LOCALE_LABELS[$this->editLocale] ?? $this->editLocale;
+        Notification::make()->success()->title("Đã lưu bản {$language} của trang Liên hệ.")->send();
     }
 }

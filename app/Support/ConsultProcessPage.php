@@ -63,6 +63,62 @@ class ConsultProcessPage extends SiteContent
 
     public const JSON_KEYS = ['consult_process_steps', 'consult_process_services'];
 
+    /** Trường cần dịch trong mỗi mục của các danh sách (icon dùng chung). */
+    public const TRANSLATABLE_ITEM_FIELDS = [
+        'consult_process_steps' => ['title', 'description'],
+        'consult_process_services' => ['title', 'body'],
+    ];
+
+    /** Bản tiếng Anh mặc định. */
+    public const TRANSLATIONS = [
+        'en' => [
+            // Banner đầu trang
+            'consult_process_hero_pretitle' => 'By your side',
+            'consult_process_hero_title' => 'STUDY ABROAD CONSULTING PROCESS',
+            'consult_process_hero_description' => 'Transparent, professional and dedicated. At VIGER EDU, we design a clear pathway so you can easily follow every step of your journey to study in Germany.',
+
+            // Các bước quy trình
+            'consult_process_steps_pretitle' => '✨ Study abroad process',
+            'consult_process_steps_title' => '5 steps to a German university',
+            'consult_process_steps' => [
+                ['title' => 'Free consultation', 'description' => 'Profile assessment and a personalized study plan'],
+                ['title' => 'German language training', 'description' => 'Reach the language level your university requires'],
+                ['title' => 'Application preparation', 'description' => 'Complete all documents and submit your application'],
+                ['title' => 'Student visa', 'description' => 'Full support with the student visa process'],
+                ['title' => 'Enrollment & settling in', 'description' => 'By your side from your first day in Germany'],
+            ],
+
+            // Dịch vụ tư vấn
+            'consult_process_services_pretitle' => '✨ Consulting services',
+            'consult_process_services_title' => 'Comprehensive support for students',
+            'consult_process_services_description' => 'A complete ecosystem of services, from your very first preparations in Vietnam until you are fully settled in Germany.',
+            'consult_process_services' => [
+                [
+                    'title' => 'Choosing a Field & University',
+                    'body' => 'Review of your academic records, assessment of your finances and a pathway into Germany\'s top universities.',
+                ],
+                [
+                    'title' => 'Application Preparation',
+                    'body' => 'Translation, notarization, Motivation Letter writing, APS certification and support with applying via Uni-Assist.',
+                ],
+                [
+                    'title' => 'Visa & Financial Procedures',
+                    'body' => 'Help opening a blocked account (Sperrkonto) and one-on-one visa interview practice with a high success rate.',
+                ],
+                [
+                    'title' => 'Support After Arrival',
+                    'body' => 'Finding accommodation, airport pickup, guidance on residence registration (Anmeldung) and university enrollment.',
+                ],
+            ],
+
+            // Kêu gọi hành động cuối trang
+            'consult_process_cta_pretitle' => '✨ Start your own journey',
+            'consult_process_cta_title' => 'Begin your journey toward the future',
+            'consult_process_cta_description' => 'Contact us today for guidance on a solid study and career pathway abroad.',
+            'consult_process_cta_button_text' => 'Get started',
+        ],
+    ];
+
     public const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=80';
 
     /** Biểu tượng cho thẻ dịch vụ: key => [nhãn, thuộc tính d của <path> (heroicons outline 24px)]. */
