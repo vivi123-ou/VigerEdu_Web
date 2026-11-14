@@ -1,6 +1,6 @@
 # CLAUDE.md – VigerEdu_Holland (web Test Holland, `holland.viger.edu.vn`)
 
-> File này Claude Code tự đọc mỗi phiên. **Đặc tả hiện hành:** `docs/PROMPT_3_CAP_NHAT_HOLLAND.md` + các quyết định ở mục 4 dưới đây (ưu tiên hơn PROMPT 3 khi khác nhau). `docs/PROMPT_2_HOLLAND.md` là bản cũ, chỉ tham khảo phần hạ tầng.
+> File này Claude Code tự đọc mỗi phiên. **Đặc tả hiện hành (ưu tiên cao nhất):** `docs/THIET_KE_TONG_THE_V1.md` (chốt 14/11/2026) và `docs/HOP_DONG_KET_NOI.md` bản 3. Sau đó mới đến mục 4 dưới đây và `docs/PROMPT_3_CAP_NHAT_HOLLAND.md`. Giao diện làm theo `docs/mau_giao_dien_v3/index.html`. `docs/PROMPT_2_HOLLAND.md` là bản cũ, chỉ tham khảo phần hạ tầng.
 > **Tiến độ:** `docs/TIEN_DO.md`. Đọc đầu mỗi phiên và cập nhật cuối mỗi phiên.
 
 ## 1. Tôi là ai, dự án là gì
@@ -15,11 +15,13 @@
 
 ## 2. Sản phẩm: VIGER EDU Career Map (bản làm lại từ 11/11/2026)
 
-- **Luồng khách** (điện thoại trước): giới thiệu → **điền thông tin** → **làm bài 36 câu** (1 câu / màn hình, thang Likert 1–5, **không có nút "Chưa biết"**, câu nào cũng bắt buộc) → **báo cáo cho khách** → email kết quả. **Không có nút đặt lịch** (tư vấn viên liên hệ qua CRM).
+- **Luồng khách** (điện thoại trước, chốt 14/11): giới thiệu → **làm bài 36 câu, 6 câu / trang, chấm ngôi sao 1–5** (không có "Chưa biết", câu nào cũng bắt buộc) → **kết quả sơ lược** → **điền thông tin** (họ tên, SĐT, năm sinh, email, đồng ý) → **mã OTP qua email** → **báo cáo đầy đủ** + email link báo cáo. **Không có nút đặt lịch** (tư vấn viên liên hệ qua CRM).
 - **Hai phiên bản báo cáo** từ cùng một kết quả:
   - *External (khách)*: biểu đồ 6 nhóm, **mã 2 chữ**; chữ thứ 3 chỉ đọc chi tiết khi đủ điều kiện; 3–5 ngành gợi ý với nhãn chữ (không %), nghề tham khảo, bước tiếp theo. Không hứa đậu. `noindex`.
   - *Internal (tư vấn viên / quản trị, phải đăng nhập)*: đủ 6 điểm, mã 3 chữ, mã thay thế, quan hệ lục giác, độ tin cậy, 36 câu đã làm, thông tin khách, JSON cho AI.
-- **Admin**: thư viện câu hỏi, cài đặt bài test, danh mục (6 nhóm, 15 cặp, 120 mã, ngành, nghề, môi trường), trường thông tin khách, lượt làm bài, nội dung trang, kết nối, tài khoản. Vai trò: quản trị viên, tư vấn viên, marketing.
+- **Admin** (`/admin`): thư viện câu hỏi, cài đặt bài test, danh mục (6 nhóm, 15 cặp, 120 mã, ngành, nghề, môi trường), trường thông tin khách, lượt làm bài, nội dung trang, kết nối CRM, tài khoản, nhật ký.
+- **Vai trò (chốt 14/11): Quản trị viên > Tư vấn viên > Nhân viên**, lưu trong bảng `roles/permissions` (quản trị viên thêm được vai trò, ví dụ Marketing). **Chỉ quản trị viên xem toàn bộ và xuất dữ liệu.** Công việc chăm sóc khách nằm ở CRM, không làm trong Holland.
+- **Code chia module** (`app/Modules/...`), mỗi class có chú thích tiếng Việt *Làm gì / Ai gọi / Dữ liệu* (xem THIET_KE mục 3).
 
 ## 3. Công nghệ và quy tắc
 
@@ -36,7 +38,7 @@
   - **không ghi SĐT, email, họ tên vào log** (cần thì che: `09xx xxx 678`);
   - `/admin` và mọi trang có dữ liệu khách: bắt buộc đăng nhập + `noindex, nofollow`; `robots.txt` chặn `/admin`;
   - **migration**: bản v3 được làm sạch một lần khi chưa có dữ liệu thật (Vân duyệt 11/11/2026). **Từ khi lên máy chủ thật: chỉ thêm bảng / cột cho phép rỗng**, không xóa, không đổi tên. Chặn `migrate:fresh` / `reset` / `db:wipe` khi production.
-- Tài liệu chỉ viết: `README.md`, `docs/API_HOLLAND.md`, `docs/THAY_THUAT_TOAN.md`, `docs/SO_TAY_SU_DUNG.md`, `docs/TIEN_DO.md`, `docs/NGHIEM_THU.md`.
+- Tài liệu chỉ viết: `README.md`, `app/Modules/*/README.md`, `docs/API_HOLLAND.md`, `docs/THAY_THUAT_TOAN.md`, `docs/SO_TAY_SU_DUNG.md`, `docs/TIEN_DO.md`, `docs/NGHIEM_THU.md`.
 - Chưa rõ hoặc thấy mâu thuẫn: **hỏi tôi**, đừng đoán.
 
 ## 4. Thuật toán và đề thi (theo tài liệu của Thầy, chốt 11/11/2026)
@@ -70,16 +72,18 @@
 2. Mỗi giai đoạn: **báo kế hoạch → chờ tôi duyệt → làm → `php artisan test` + `vendor/bin/pint --dirty` → commit → cập nhật `docs/TIEN_DO.md` → báo kết quả rồi dừng.**
 3. Hết giai đoạn thì liệt kê việc trong bảng nghiệm thu đã làm được để tôi đưa Thầy thử.
 
-## 7. Giai đoạn (bản làm lại)
+## 7. Giai đoạn (theo `docs/THIET_KE_TONG_THE_V1.md` mục 10)
 
-- [x] 0. Nhánh `feature/holland-v3`, gỡ phần nghiệp vụ cũ (FIT, bộ câu Google Form, Phần A, 75 ngành), giữ hạ tầng
-- [ ] 1. Bảng dữ liệu + nạp 300 câu, 60 chủ đề, danh mục, cài đặt, trường thông tin; trang Cài đặt bài test
-- [ ] 2. Bộ máy: rút đề, chấm, phân tích, gợi ý ngành + test (8 ca của Thầy, ràng buộc rút đề)
-- [ ] 3. Luồng khách: thông tin → làm bài → báo cáo khách → email
-- [ ] 4. Admin thư viện câu hỏi + thống kê từng câu + nhập/xuất Excel
-- [ ] 5. Admin danh mục (nhóm, cặp, 120 mã, ngành, nghề), trường thông tin khách, chú thích
-- [ ] 6. Báo cáo nội bộ, vai trò tư vấn viên, lượt làm bài
-- [ ] 7. API, CRM (outbox + thử lại), tài khoản, sao lưu, tài liệu, nghiệm thu
+- [x] 0. Nhánh `feature/holland-v3`, gỡ phần nghiệp vụ cũ, giữ hạ tầng
+- [ ] H1. Dọn phần đang dở (model, migration, trang Cài đặt bài test chưa commit), bảng dữ liệu, seeder 300 câu, danh mục, `form_fields.crm_key`, `roles/permissions`
+- [ ] H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + test 8 ca
+- [ ] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
+- [ ] H4. Module Respondent: form thông tin, OTP email, đồng ý, báo cáo đầy đủ, email link
+- [ ] H5. Module CrmSync + Tracking: outbox, job, thử lại, trang Kết nối CRM (`docs/PROMPT_4_THU_THAP_THONG_TIN_CRM.md`)
+- [ ] H6. Admin theo mẫu v3: lượt làm bài, câu hỏi, danh mục, trường thông tin, phân quyền, nhật ký
+- [ ] H7. API cho chatbot, sao lưu, tài liệu, nghiệm thu
+
+**Chỉ làm một giai đoạn mỗi lần.** Không sửa file ngoài phạm vi giai đoạn; cần sửa thì hỏi trước.
 
 ## 8. Lệnh hay dùng
 
