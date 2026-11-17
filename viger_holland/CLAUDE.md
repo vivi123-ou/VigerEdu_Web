@@ -66,8 +66,9 @@
 3. Mã 2 chữ luôn có. Chữ thứ 3 chỉ đọc chi tiết cho khách khi điểm nhóm 3 **> 4,2** và đủ số câu (tương đương ≥ 26/30). Nội bộ luôn thấy đủ.
 4. Mã thay thế khi các vị trí 1–2, 2–3, 3–4 cách nhau ≤ 0,25, hoặc nhóm 3 gần ngưỡng.
 5. Quan hệ lục giác: liền kề / cách một / đối kháng; độ nhất quán Cao / Trung bình / Thấp.
-6. Gợi ý ngành: chỉ số C (Brown & Gore, 0–18) theo mã có thứ tự (ISA ≠ SIA); nhãn ≥ 15 "Liên quan nhiều", ≥ 11 "Liên quan", ≥ 7 "Có thể khám phá"; **không hiện %**.
-7. Mọi con số (6 câu, 4,2, 0,25, trọng số, nhãn, số ngành…) đọc từ cài đặt admin, không viết cứng.
+6. **Ngành gợi ý cho khách phải là ngành có thật ở Đức, kiểm tra theo nguồn chính thức** (Vân chốt 17/11): mỗi ngành có link nguồn và đánh dấu "Đã kiểm tra"; bật "Chỉ gợi ý ngành đã kiểm tra nguồn chính thức" thì khách chỉ thấy ngành đã kiểm tra. Hiện 46 ngành đều "Đề xuất – chưa kiểm định".
+7. Gợi ý ngành: chỉ số C (Brown & Gore, 0–18) theo mã có thứ tự (ISA ≠ SIA); nhãn ≥ 15 "Liên quan nhiều", ≥ 11 "Liên quan", ≥ 7 "Có thể khám phá"; **không hiện %**.
+8. Mọi con số (6 câu, 4,2, 0,25, trọng số, nhãn, số ngành…) và công tắc (ưu tiên ngành nền của cặp, chỉ ngành đã kiểm tra) đọc từ cài đặt admin, không viết cứng.
 
 ## 5. Dữ liệu có sẵn
 
@@ -90,7 +91,7 @@
 - [x] H1. Dọn phần đang dở (model, migration, trang Cài đặt bài test chưa commit), bảng dữ liệu, seeder 300 câu, danh mục, `form_fields.crm_key`, `roles/permissions`
 - [x] F. Nền trang quản trị Filament: đăng nhập, bảng điều khiển, Thư viện câu hỏi, Cài đặt bài test, Tài khoản, Vai trò & quyền; bỏ vai trò Marketing
 - [x] F2. Admin theo mẫu `docs/mau_giao_dien/admin-filament.html`: menu đặt tên theo việc làm (một chỗ: `config/admin_menu.php`), quyền viết thành câu "Được…", nút "?" hướng dẫn từng bước, ô lối tắt theo vai trò, trang "Sắp có", báo 404 thay 403
-- [ ] H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + test 8 ca
+- [x] H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + test 8 ca
 - [ ] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
 - [ ] H4. Module Respondent: form thông tin, OTP email, đồng ý, báo cáo đầy đủ, email link
 - [ ] H5. Module CrmSync + Tracking: outbox, job, thử lại, trang Kết nối CRM (`docs/PROMPT_4_THU_THAP_THONG_TIN_CRM.md`)

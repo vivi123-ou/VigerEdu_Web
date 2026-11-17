@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Ai gọi:   MajorMatcher (H2) xếp ngành theo chỉ số C; báo cáo; trang Ngành và nghề (H6).
  * Dữ liệu:  bảng majors, pair_major, major_occupation.
  */
-#[Fillable(['code', 'name_vi', 'name_de', 'name_en', 'major_group_id', 'holland_codes', 'code_source', 'routes', 'validation_status', 'source_url', 'is_active', 'sort_order'])]
+#[Fillable(['code', 'name_vi', 'name_de', 'name_en', 'major_group_id', 'holland_codes', 'code_source', 'routes', 'validation_status', 'source_url', 'is_verified', 'is_active', 'sort_order'])]
 class Major extends Model
 {
     use SoftDeletes;
@@ -25,6 +25,7 @@ class Major extends Model
     {
         return [
             'holland_codes' => 'array',
+            'is_verified' => 'boolean',
             'is_active' => 'boolean',
         ];
     }

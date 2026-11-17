@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn () => media_url(setting('logo_path', 'img/logo.png')))
             ->brandLogoHeight('2.25rem')
             ->favicon(fn () => media_url(setting('favicon_path', 'img/favicon.png')))
-            ->colors(fn () => ['primary' => Color::hex((string) setting('primary_color', '#c1121f'))])
+            ->colors(fn () => ['primary' => self::brandPalette((string) setting('primary_color', '#c1121f'))])
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('22rem')
             ->globalSearch(false)
@@ -110,5 +110,26 @@ class AdminPanelProvider extends PanelProvider
                 ->visible(fn () => AdminMenu::allows(auth()->user() instanceof User ? auth()->user() : null, $item['key'])))
             ->values()
             ->all();
+    }
+
+    /**
+     * Bảng màu chính từ màu thương hiệu: nút chính (sắc độ 600) dùng đúng màu thương hiệu, các sắc độ khác sáng / tối dần quanh nó.
+     * Filament tự sinh bảng màu thì nút bị nhạt (hồng), trông như đang bị khóa.
+     *
+     * @return array<int, string>
+     */
+    public static function brandPalette(string $hex): array
+    {
+        $palette = Color::hex($hex);
+        [$lightness, $chroma, $hue] = sscanf(Color::convertToOklch($hex), 'oklch(%f %f %f)');
+        $shade = fn (float $deltaL, float $chromaFactor): string => sprintf('oklch(%.4f %.4f %.3f)', max(0.05, min(0.98, $lightness + $deltaL)), $chroma * $chromaFactor, $hue);
+
+        return array_replace($palette, [
+            400 => $shade(0.16, 0.80),
+            500 => $shade(0.07, 0.95),
+            600 => $shade(0, 1),
+            700 => $shade(-0.07, 0.95),
+            800 => $shade(-0.14, 0.85),
+        ]);
     }
 }

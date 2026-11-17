@@ -81,7 +81,8 @@ return new class extends Migration
             $table->string('code_source')->nullable();
             $table->string('routes', 100)->nullable()->comment('Uni, HAW, Dual…');
             $table->string('validation_status', 100)->nullable();
-            $table->string('source_url')->nullable();
+            $table->string('source_url')->nullable()->comment('Link nguồn chính thức (Hochschulkompass, studienwahl.de…)');
+            $table->boolean('is_verified')->default(false)->comment('Đã kiểm tra ngành có thật, theo nguồn chính thức');
             $table->boolean('is_active')->default(true);
             $table->unsignedSmallInteger('sort_order')->default(0);
             $table->timestamps();

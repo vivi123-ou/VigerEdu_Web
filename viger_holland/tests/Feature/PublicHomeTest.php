@@ -68,4 +68,15 @@ class PublicHomeTest extends TestCase
             ->assertHeaderMissing('X-Robots-Tag')
             ->assertDontSee('noindex', false);
     }
+
+    public function test_quiz_page_shows_approved_mockup_only_on_local_machine(): void
+    {
+        $this->get(route('test.show'))->assertOk()->assertDontSee('Bố cục luồng khách');
+
+        $this->app['env'] = 'local';
+        $this->get(route('test.show'))->assertOk()
+            ->assertSee('Bố cục luồng khách')
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+            ->assertDontSee('../../public/', false);
+    }
 }

@@ -1,6 +1,6 @@
 # Module Assessment (bài trắc nghiệm Holland)
 
-**Làm gì:** giữ thư viện 300 câu, danh mục Career Map (6 nhóm, 15 cặp, 6 hướng chuyên sâu, ngành, nghề, môi trường) và cài đặt bài test. Từ H2 sẽ có thêm phần rút đề, chấm điểm, phân tích, gợi ý ngành (`Services/`).
+**Làm gì:** giữ thư viện 300 câu, danh mục Career Map (6 nhóm, 15 cặp, 6 hướng chuyên sâu, ngành, nghề, môi trường) và cài đặt bài test. Bộ máy bốc đề, chấm điểm, phân tích, gợi ý ngành nằm ở `Services/` (H2).
 
 **Bảng:**
 - `question_facets`, `questions`, `question_weight_audits`: thư viện câu hỏi;
@@ -20,6 +20,12 @@
   - câu mới tự đặt mã (R051…) và ở trạng thái Nháp;
 - `Filament/Pages/TestSettings.php`: trang **Cách bốc đề & chấm điểm** (`/admin/test-settings`, quyền `test_settings.manage`), các ô ít dùng nằm trong phần "Nâng cao" thu gọn. Mỗi lần lưu là một phiên bản; có lịch sử và nút "Quay lại bản này".
 
+**Bộ máy (H2, `Services/`):**
+- `QuestionPicker`: bốc đề. Mỗi nhóm 6 câu "Đang dùng", ngẫu nhiên theo mức ưu tiên (Efraimidis–Spirakis), ít nhất 4 chủ đề, hạn chế lặp câu lần trước trên cùng máy, câu luôn có trong mọi đề, trộn thứ tự; thiếu câu / thiếu chủ đề thì vẫn ra đề và ghi cảnh báo. Có hạt giống ngẫu nhiên để dựng lại đúng đề.
+- `ScoringEngine`: chấm và phân tích, giữ nguyên kết quả bản tham chiếu `docs/holland_v3/HollandEngine.php`: điểm trung bình, thứ tự, mã 2 / 3 chữ, chữ thứ 3 cho khách, mã thay thế, quan hệ lục giác, độ nhất quán, trục Prediger, kiểu hồ sơ A–D, cờ chất lượng.
+- `MajorMatcher`: gợi ý ngành theo chỉ số C. Có 2 công tắc trong cài đặt: "Ưu tiên ngành nền của cặp mã" và "Chỉ gợi ý ngành đã kiểm tra nguồn chính thức" (cột `majors.is_verified`, `source_url`).
+- `AssessmentService`: `start()` phát đề (lưu nội dung, phiên bản câu, phiên bản cài đặt); `finish()` kiểm tra câu trả lời, chấm, lưu kết quả bản nội bộ và phần khách được thấy. Kết quả cũ không đổi khi admin sửa sau.
+
 **Dữ liệu ban đầu:** `CatalogSeeder`, `QuestionBankSeeder` (từ `question_bank_300.csv`, nạp ở trạng thái đã duyệt, đổi "Em" thành "Tôi"), `TestConfigSeeder`. Chạy lại không trùng, không ghi đè chỗ admin đã sửa.
 
-**Test:** `tests/Feature/Assessment/SeedDataTest.php`, `TestSettingsTest.php`, `QuestionLibraryTest.php`.
+**Test:** `tests/Feature/Assessment/`: `ReferenceCasesTest` (8 ca của Thầy), `QuestionPickerTest`, `AssessmentServiceTest`, `SeedDataTest`, `TestSettingsTest`, `QuestionLibraryTest`.

@@ -26,12 +26,50 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | H1. Dọn phần đang dở, bảng dữ liệu, seeder 300 câu, danh mục, `crm_key`, `roles/permissions` | ✅ Xong (17/11) |
 | F. Nền trang quản trị Filament, bỏ vai trò Marketing | ✅ Xong (17/11) |
 | F2. Admin theo mẫu `admin-filament.html`: tên theo việc làm, quyền "Được…", nút "?", lối tắt, "Sắp có", 404 | ✅ Xong (17/11) |
-| H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | Chưa làm (tiếp theo) |
-| H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | Chưa làm |
+| H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | ✅ Xong (17/11) |
+| H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | Chưa làm (tiếp theo) |
 | H4. Form thông tin, OTP email, báo cáo đầy đủ | Chưa làm |
 | H5. CrmSync + Tracking | Chưa làm |
 | H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+### Vân chốt 17/11 (chiều)
+
+- **34 tỉnh / thành:** Vân đã kiểm tra, đúng.
+- **Ngành gợi ý phải là ngành có thật ở Đức, theo nguồn chính thức**, không lấy từ nguồn không chính thống trên mạng.
+  - Hiện **46 ngành** đều "Đề xuất – chưa kiểm định".
+  - Mã Holland: 39 ngành lấy từ bài test SIT của HRK (Hội đồng Hiệu trưởng các trường đại học Đức, 2014); 7 ngành chưa có mã.
+  - Đức không có một "danh mục ngành của Bộ Giáo dục" chung như Việt Nam (giáo dục đại học do từng bang quản lý).
+  - Nguồn chính thức đề xuất: **Hochschulkompass** (HRK, danh sách chương trình được nhà nước công nhận), **studienwahl.de** (Cơ quan Lao động Liên bang và các bang).
+- **Giao diện:** căn chỉnh cho dễ nhìn. Đã sửa nút chính (đỏ đúng màu thương hiệu, trước bị hồng nhạt như bị khóa).
+- Nút **"Xem trang làm bài như khách"** mở `/lam-bai`. Trên máy chạy thử, trang này hiện bản mẫu luồng khách đã chốt cho tới khi H3 làm xong.
+
+### H2 đã làm (17/11/2026)
+
+- **Bốc đề** (`QuestionPicker`):
+  - mỗi nhóm 6 câu "Đang dùng", ngẫu nhiên theo mức ưu tiên (Efraimidis–Spirakis), ít nhất 4 chủ đề;
+  - hạn chế lặp câu lần trước trên cùng máy; câu luôn có trong mọi đề (khi bật); trộn thứ tự 36 câu;
+  - thiếu câu hoặc thiếu chủ đề thì vẫn ra đề và ghi cảnh báo cho quản trị viên;
+  - lưu hạt giống ngẫu nhiên để dựng lại đúng đề.
+- **Chấm điểm và phân tích** (`ScoringEngine`): chuyển nguyên bản tham chiếu của Thầy.
+  - Điểm trung bình, thứ tự (bằng điểm theo R I A S E C), mã 2 / 3 chữ, khi nào khách thấy chữ thứ 3, mã thay thế.
+  - Quan hệ lục giác, độ nhất quán, trục Prediger, kiểu hồ sơ A–D (cần tư vấn riêng khi ≤ 1 nhóm trên mốc), cờ chất lượng bài làm.
+- **Gợi ý ngành** (`MajorMatcher`): theo chỉ số C. Thêm 2 công tắc trong "Cách bốc đề & chấm điểm":
+  - **"Ưu tiên ngành nền của cặp mã"**: bật mặc định, đúng bản tham chiếu;
+  - **"Chỉ gợi ý ngành đã kiểm tra nguồn chính thức"**: tắt mặc định, vì chưa ngành nào được kiểm tra; bật thì khách chỉ thấy ngành có dấu "Đã kiểm tra".
+  - Thêm cột `majors.is_verified`, dùng cùng `source_url` (link nguồn). Tư vấn viên vẫn thấy mọi ngành, kèm dấu chưa kiểm tra.
+- **Lượt làm bài** (`AssessmentService`):
+  - `start()` lưu 36 câu kèm nội dung và phiên bản câu lúc phát đề, phiên bản cài đặt;
+  - `finish()` kiểm tra đủ 36 câu và thang 1–5, chấm, lưu kết quả nội bộ và phần khách được thấy (mã 2 chữ hoặc 3 chữ, tối đa 5 ngành, chỉ nhãn chữ);
+  - admin sửa cài đặt hay câu hỏi sau đó thì kết quả cũ không đổi.
+- **Kiểm thử: 102/102 đạt.**
+  - **8/8 ca của Thầy khớp hoàn toàn** bản tham chiếu, gồm cả 5 ngành đầu.
+  - Test bốc đề: 20 hạt giống, câu ưu tiên cao được bốc nhiều hơn rõ rệt, không lặp câu, câu luôn có, cảnh báo.
+  - Test lượt làm bài: lưu, từ chối câu trả lời sai, dùng cài đặt lúc bắt đầu, 2 công tắc ngành, máy cũ gặp câu mới.
+
+**Việc cần làm tiếp về dữ liệu ngành** (team, trước khi bật "Chỉ gợi ý ngành đã kiểm tra"):
+1. Mỗi ngành: tìm trang chính thức trên Hochschulkompass hoặc studienwahl.de, dán link, đánh dấu "Đã kiểm tra". Trang sửa ngành làm ở H6; cần sớm thì mình làm file Excel để điền.
+2. Gán mã Holland cho 7 ngành chưa có mã (chuyên gia).
 
 ### Vân chốt sau trang mẫu admin (17/11/2026)
 
@@ -150,7 +188,7 @@ Vân chốt: trang quản trị dùng **Filament** (đỡ làm từ đầu, dễ
 
 **Câu hỏi / việc chờ (cập nhật 17/11):**
 1. **Tỉ trọng môn theo cụm ngành** (`CatalogSeeder::SUBJECT_WEIGHTS`) là đề xuất ban đầu của mình, dựa trên cột môn nền. Cần Thầy duyệt; sửa được ở admin từ H6.
-2. **34 tỉnh / thành** trong ô Tỉnh là danh sách sau sắp xếp năm 2025. Vân kiểm lại giúp.
+2. ~~34 tỉnh / thành~~: Vân đã kiểm tra, đúng.
 3. Mã `KHAC` cần thêm vào `TU_DIEN_DU_LIEU_CHUNG.xlsx` / `lua_chon_chuan.json` bên CRM.
 4. ~~File cũ `settings.json`, `form_fields.json`~~: đã xóa (Vân đồng ý).
 5. Hỏi Thầy:

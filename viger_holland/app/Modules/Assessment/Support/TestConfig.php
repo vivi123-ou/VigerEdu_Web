@@ -51,6 +51,8 @@ final class TestConfig
             ['min' => 7, 'label' => 'Có thể khám phá'],
         ],
         'max_majors_public' => 5,
+        'pair_majors_first' => true,
+        'only_verified_majors' => false,
         // Chỉ số nền tảng học tập (chỉ tư vấn viên xem)
         'academic_labels' => [
             ['min' => 8.0, 'label' => 'Thuận lợi'],
@@ -81,6 +83,8 @@ final class TestConfig
         'Đọc kết quả' => [
             'third_letter_threshold' => ['Khi nào khách thấy mã 3 chữ', 'Nhóm đứng thứ 3 phải có điểm trên mức này (4,2 ≈ từ 26/30 điểm). Dưới mức này khách chỉ thấy mã 2 chữ. Tư vấn viên luôn thấy đủ 3 chữ.', 'decimal', 'điểm'],
             'max_majors_public' => ['Gợi ý tối đa mấy ngành cho khách', 'Tư vấn viên xem được toàn bộ danh sách ngành.', 'int', 'ngành'],
+            'pair_majors_first' => ['Ưu tiên ngành nền của cặp mã', 'Bật: các ngành nền của cặp 2 chữ đầu (ví dụ cặp IS) luôn đứng đầu danh sách, kể cả khi mức khớp thấp. Tắt: mọi ngành xếp chung theo mức khớp.', 'bool'],
+            'only_verified_majors' => ['Chỉ gợi ý ngành đã kiểm tra nguồn chính thức', 'Bật: khách chỉ thấy ngành đã được đánh dấu "Đã kiểm tra" (có link nguồn chính thức như Hochschulkompass, studienwahl.de) ở trang Ngành học. Tư vấn viên vẫn thấy mọi ngành, kèm ghi chú chưa kiểm tra.', 'bool'],
             'interest_mark' => ['Mốc xét ngành ngoài cặp', 'Một ngành không phải ngành nền của cặp mã chỉ được gợi ý khi nhóm đứng đầu của ngành đó có điểm của khách trên mốc này. Tăng lên thì gợi ý chặt hơn.', 'decimal', 'điểm'],
         ],
         'Nâng cao – cách bốc đề' => [
@@ -182,6 +186,8 @@ final class TestConfig
             'c_labels.*.min' => ['required', 'integer', 'min:0', 'max:18'],
             'c_labels.*.label' => ['required', 'string', 'max:60'],
             'max_majors_public' => ['required', 'integer', 'min:1', 'max:20'],
+            'pair_majors_first' => ['boolean'],
+            'only_verified_majors' => ['boolean'],
             'academic_labels' => ['required', 'array', 'min:1', 'max:5'],
             'academic_labels.*.min' => ['required', 'numeric', 'min:0', 'max:10'],
             'academic_labels.*.label' => ['required', 'string', 'max:60'],
