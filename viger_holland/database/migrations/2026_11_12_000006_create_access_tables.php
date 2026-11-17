@@ -8,7 +8,7 @@ return new class extends Migration
 {
     /**
      * Phân quyền bằng dữ liệu: vai trò, quyền, quyền của từng vai trò.
-     * Quản trị viên thêm vai trò mới (ví dụ Marketing) và tick quyền trên giao diện, không sửa code.
+     * Quản trị viên thêm vai trò mới (ví dụ Kế toán) và tick quyền trên giao diện, không sửa code.
      * users.role lưu mã vai trò (ADMIN, COUNSELOR…) trỏ tới roles.code.
      */
     public function up(): void

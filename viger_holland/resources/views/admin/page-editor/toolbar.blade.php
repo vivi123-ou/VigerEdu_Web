@@ -13,7 +13,7 @@
             <a class="pe-btn" href="{{ $viewUrl }}" target="_blank" rel="noopener">Xem như khách ↗</a>
         @endif
         <a class="pe-btn pe-btn--plain" href="{{ $formUrl }}">Sửa dạng biểu mẫu</a>
-        <a class="pe-btn pe-btn--plain" href="{{ route('admin.dashboard') }}">← Về trang quản trị</a>
+        <a class="pe-btn pe-btn--plain" href="{{ \App\Support\AdminMenu::homeUrl() }}">← Về trang quản trị</a>
     </div>
     @if ($isEmail)
         <div class="pe-bar__email">Tiêu đề email: {{ ed('email_subject', null, 'Tiêu đề email') }}</div>

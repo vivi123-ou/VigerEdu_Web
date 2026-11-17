@@ -33,11 +33,12 @@ return [
         'email' => env('HOLLAND_ADMIN_EMAIL'),
     ],
 
-    // Tài khoản marketing mẫu (không bắt buộc), do AdminSeeder tạo để thử nghiệm thu
-    'editor' => [
-        'username' => env('HOLLAND_EDITOR_USERNAME'),
-        'password' => env('HOLLAND_EDITOR_PASSWORD'),
-        'name' => env('HOLLAND_EDITOR_NAME', 'Marketing'),
+    // Tài khoản nhân viên mẫu (không bắt buộc), do AdminSeeder tạo để thử nghiệm thu.
+    // Đọc thêm tên biến cũ HOLLAND_EDITOR_* để file .env đang có vẫn chạy.
+    'staff' => [
+        'username' => env('HOLLAND_STAFF_USERNAME', env('HOLLAND_EDITOR_USERNAME')),
+        'password' => env('HOLLAND_STAFF_PASSWORD', env('HOLLAND_EDITOR_PASSWORD')),
+        'name' => env('HOLLAND_STAFF_NAME', 'Nhân viên'),
     ],
 
     // Vai trò và quyền: bảng roles / permissions (app/Modules/Access), không cấu hình ở đây.

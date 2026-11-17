@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use App\Modules\Access\Models\Role;
+use App\Modules\Access\Permissions;
+use App\Modules\Access\Policies\UserPolicy;
 use App\Support\AdminMenu;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,12 +19,13 @@ use Illuminate\Notifications\Notifiable;
 
 /**
  * Làm gì:   Tài khoản quản trị Holland. Quyền lấy theo vai trò (bảng roles / permissions), không viết cứng.
- * Ai gọi:   đăng nhập admin, middleware admin / menu, mọi controller kiểm tra quyền.
+ * Ai gọi:   đăng nhập admin (Filament), middleware admin / menu, các Policy kiểm tra quyền.
  * Dữ liệu:  bảng users (cột role = mã vai trò, ví dụ ADMIN), roles, role_permission.
  */
 #[Fillable(['name', 'username', 'email', 'password', 'role', 'is_active', 'last_login_at'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+#[UsePolicy(UserPolicy::class)]
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -30,8 +36,6 @@ class User extends Authenticatable
     public const ROLE_COUNSELOR = 'COUNSELOR';
 
     public const ROLE_STAFF = 'STAFF';
-
-    public const ROLE_EDITOR = 'EDITOR';
 
     /** @var list<string>|null Quyền của tài khoản, nạp một lần mỗi request. */
     private ?array $permissionCodes = null;
@@ -71,6 +75,10 @@ class User extends Authenticatable
             return true;
         }
 
+        if ($code === Permissions::EXPORT) {
+            return false;
+        }
+
         $this->permissionCodes ??= ($this->roleModel?->is_active ?? false)
             ? $this->roleModel->permissions()->pluck('code')->all()
             : [];
@@ -84,6 +92,14 @@ class User extends Authenticatable
     public function canAccessAdmin(): bool
     {
         return $this->is_active && ($this->isAdmin() || ($this->roleModel?->is_active ?? false));
+    }
+
+    /**
+     * Filament hỏi trước khi cho đăng nhập và mỗi lần mở trang quản trị.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->canAccessAdmin();
     }
 
     /**

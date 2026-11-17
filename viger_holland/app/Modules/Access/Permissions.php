@@ -9,6 +9,9 @@ namespace App\Modules\Access;
  */
 final class Permissions
 {
+    /** Quyền xuất dữ liệu: chỉ quản trị viên (Vân chốt 14/11), không cấp được cho vai trò khác. */
+    public const EXPORT = 'data.export';
+
     /**
      * Mã quyền => [tên, nhóm].
      *
@@ -32,13 +35,13 @@ final class Permissions
     /**
      * Vai trò có sẵn: mã => [tên, mô tả, quyền ('*' = tất cả), vai trò lõi?].
      * Thiết kế tổng thể 14/11: Quản trị viên > Tư vấn viên > Nhân viên; chăm sóc khách làm ở CRM.
+     * Vân chốt 17/11: không có vai trò Marketing riêng, marketing là Nhân viên.
      *
      * @var array<string, array{0: string, 1: string, 2: list<string>, 3: bool}>
      */
     public const DEFAULT_ROLES = [
         'ADMIN' => ['Quản trị viên', 'Toàn quyền; người duy nhất được xuất dữ liệu.', ['*'], true],
         'COUNSELOR' => ['Tư vấn viên', 'Xem lượt làm bài và báo cáo nội bộ đầy đủ.', ['dashboard.view', 'attempts.view'], true],
-        'STAFF' => ['Nhân viên', 'Làm việc chủ yếu ở CRM; ở Holland chỉ xem tổng quan.', ['dashboard.view'], true],
-        'EDITOR' => ['Marketing', 'Sửa nội dung trang khách và thư viện ảnh.', ['dashboard.view', 'content.manage'], false],
+        'STAFF' => ['Nhân viên', 'Gồm cả marketing: sửa nội dung trang khách và thư viện ảnh. Chăm sóc khách làm ở CRM.', ['dashboard.view', 'content.manage'], true],
     ];
 }

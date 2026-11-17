@@ -8,7 +8,7 @@ use App\Modules\Access\Permissions;
 use Illuminate\Database\Seeder;
 
 /**
- * Làm gì:   Nạp danh mục quyền và 4 vai trò có sẵn (Quản trị viên, Tư vấn viên, Nhân viên, Marketing).
+ * Làm gì:   Nạp danh mục quyền và 3 vai trò có sẵn (Quản trị viên, Tư vấn viên, Nhân viên).
  * Ai gọi:   DatabaseSeeder. Chạy lại không trùng; vai trò đã có thì giữ nguyên quyền admin đã sửa.
  * Dữ liệu:  bảng permissions, roles, role_permission.
  */

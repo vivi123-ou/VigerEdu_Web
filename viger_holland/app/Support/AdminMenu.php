@@ -5,7 +5,7 @@ namespace App\Support;
 use Illuminate\Support\Collection;
 
 /**
- * Đọc menu trái của trang quản trị từ config/admin_menu.php.
+ * Đọc danh sách các trang nội dung cũ (chưa chuyển sang Filament) từ config/admin_menu.php.
  */
 class AdminMenu
 {
@@ -34,17 +34,18 @@ class AdminMenu
     }
 
     /**
-     * Các mục chưa làm (hiện trang "Đang xây dựng").
-     *
-     * @return list<string>
+     * @param  array<string, mixed>  $item
      */
-    public static function pendingKeys(): array
-    {
-        return self::items()->whereNotNull('stage')->pluck('key')->values()->all();
-    }
-
     public static function url(array $item): string
     {
-        return isset($item['route']) ? route($item['route'], $item['params'] ?? []) : route('admin.section', $item['key']);
+        return route($item['route'], $item['params'] ?? []);
+    }
+
+    /**
+     * Trang đầu khu quản trị (Bảng điều khiển của Filament), dùng cho nút "Về trang quản trị" ở các trang cũ.
+     */
+    public static function homeUrl(): string
+    {
+        return route('filament.admin.pages.dashboard');
     }
 }

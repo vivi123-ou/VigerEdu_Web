@@ -9,10 +9,17 @@
 - `test_config_versions`: cài đặt theo phiên bản;
 - `test_sessions`, `session_questions`, `responses`: lượt làm bài (dùng từ H2–H3).
 
-**Code:** `Models/`, `Support/TestConfig.php` (đọc và ghi cài đặt). Mọi con số (6 câu, 4,2, 0,25, trọng số…) lấy qua `TestConfig::get()`, không viết cứng.
-
-**Route:** `admin/test-settings` (`admin.test-settings.*`, quyền `test_settings.manage`).
+**Code:**
+- `Models/`;
+- `Support/TestConfig.php`: đọc, ghi, kiểm tra cài đặt. Mọi con số (6 câu, 4,2, 0,25, trọng số…) lấy qua `TestConfig::get()`, không viết cứng;
+- `Policies/QuestionPolicy.php`: quyền `questions.manage`; không ai xóa hẳn câu hỏi;
+- `Filament/Resources/Questions`: trang **Thư viện câu hỏi** (`/admin/questions`):
+  - lọc theo nhóm, chủ đề, loại, trạng thái; duyệt / tạm ngưng nhiều câu; thùng rác;
+  - sửa chữ thì phiên bản câu tăng (1.0 → 1.1);
+  - đổi trọng số phải ghi lý do (bảng `question_weight_audits`);
+  - câu mới tự đặt mã (R051…) và ở trạng thái Nháp;
+- `Filament/Pages/TestSettings.php`: trang **Cài đặt bài test** (`/admin/test-settings`, quyền `test_settings.manage`). Mỗi lần lưu là một phiên bản; có lịch sử và nút "Quay lại bản này".
 
 **Dữ liệu ban đầu:** `CatalogSeeder`, `QuestionBankSeeder` (từ `question_bank_300.csv`, nạp ở trạng thái đã duyệt, đổi "Em" thành "Tôi"), `TestConfigSeeder`. Chạy lại không trùng, không ghi đè chỗ admin đã sửa.
 
-**Test:** `tests/Feature/Assessment/SeedDataTest.php`, `TestSettingsTest.php`.
+**Test:** `tests/Feature/Assessment/SeedDataTest.php`, `TestSettingsTest.php`, `QuestionLibraryTest.php`.

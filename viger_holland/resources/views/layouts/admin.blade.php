@@ -22,7 +22,7 @@
     <div class="layout">
         {{-- Menu trái (nền tối) --}}
         <aside id="sidebar" class="sidebar" aria-label="Menu quản trị">
-            <a class="sidebar__brand" href="{{ route('admin.dashboard') }}">
+            <a class="sidebar__brand" href="{{ AdminMenu::homeUrl() }}">
                 <img src="{{ media_url(setting('logo_path', 'img/logo.png')) }}" alt="" width="34" height="34">
                 <span>Quản trị <strong>{{ setting('site_name') }}</strong></span>
             </a>
@@ -36,6 +36,14 @@
             </div>
 
             <nav class="sidebar__nav">
+                <ul class="sidebar__list">
+                    <li>
+                        <a class="sidebar__link" href="{{ AdminMenu::homeUrl() }}">
+                            @include('partials.icon', ['name' => 'arrow-left', 'size' => 18])
+                            <span class="sidebar__label">Về trang quản trị</span>
+                        </a>
+                    </li>
+                </ul>
                 @foreach (AdminMenu::groups() as $group)
                     {{-- Mỗi người chỉ thấy mục của vai trò mình --}}
                     @php $visibleItems = array_filter($group['items'], fn ($item) => $user->canAccessMenu($item['key'])); @endphp
@@ -82,7 +90,7 @@
                         @if (filled(setting('crm_url')))
                             <a href="{{ setting('crm_url') }}" target="_blank" rel="noopener">Mở CRM</a>
                         @endif
-                        <form method="post" action="{{ route('admin.logout') }}">
+                        <form method="post" action="{{ route('filament.admin.auth.logout') }}">
                             @csrf
                             <button type="submit">@include('partials.icon', ['name' => 'logout', 'size' => 16]) Đăng xuất</button>
                         </form>
@@ -99,7 +107,7 @@
                         @endif
                     </div>
                     <nav class="breadcrumb" aria-label="Vị trí">
-                        <a href="{{ route('admin.dashboard') }}">Trang chủ</a>
+                        <a href="{{ AdminMenu::homeUrl() }}">Trang chủ</a>
                         @if ($currentKey !== 'dashboard')
                             @isset($currentGroup['title'])<span>›</span> <span>{{ $currentGroup['title'] }}</span>@endisset
                             <span>›</span> <span>{{ $currentItem['label'] ?? '' }}</span>

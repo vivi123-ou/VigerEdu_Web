@@ -21,18 +21,22 @@
   - Form 7 ô kiểu UEH: bắt buộc Họ tên, Năm sinh của học sinh, Email, Điện thoại / Zalo, Thuộc đối tượng (Học sinh / sinh viên, Phụ huynh, Khác → mã `KHAC`); không bắt buộc Trường, Tỉnh / thành phố. **Không có ô tick**: đồng ý bằng một câu dưới nút "Xem báo cáo"; Turnstile chạy ẩn. Học lực, ngoại ngữ, điểm, ngân sách: CRM thu sau.
   - Câu hỏi xưng **"Tôi…"**; 5 nhãn sao: Hoàn toàn không giống tôi / Không giống lắm / Phân vân / Khá giống tôi / Hoàn toàn giống tôi. Thanh tiến độ một dải liền, không "Phần x/6".
   - Đầu trang khách chỉ có logo, không menu; chân trang gọn (hotline 0819 949 968, info@spn.com.vn, 6 Phùng Khắc Khoan, Phường Sài Gòn, TP.HCM). Mẫu: `docs/mau_giao_dien/luong-khach.html`.
-  - Bỏ SMS, bỏ đăng nhập Google. Marketing gộp vào Nhân viên (vai trò EDITOR "Marketing" vẫn có sẵn, xóa được).
+  - Bỏ SMS, bỏ đăng nhập Google. **Không có vai trò Marketing riêng**: marketing là Nhân viên (Nhân viên được sửa nội dung trang, thư viện ảnh).
+  - **Trang quản trị dùng Filament** (17/11): đỡ làm từ đầu, dễ sửa và mở rộng. Trang khách vẫn Blade thuần theo mẫu.
 - **Hai phiên bản báo cáo** từ cùng một kết quả:
   - *External (khách)*: biểu đồ 6 nhóm, **mã 2 chữ**; chữ thứ 3 chỉ đọc chi tiết khi đủ điều kiện; 3–5 ngành gợi ý với nhãn chữ (không %), nghề tham khảo, bước tiếp theo. Không hứa đậu. `noindex`.
   - *Internal (tư vấn viên / quản trị, phải đăng nhập)*: đủ 6 điểm, mã 3 chữ, mã thay thế, quan hệ lục giác, độ tin cậy, 36 câu đã làm, thông tin khách, JSON cho AI.
 - **Admin** (`/admin`): thư viện câu hỏi, cài đặt bài test, danh mục (6 nhóm, 15 cặp, 120 mã, ngành, nghề, môi trường), trường thông tin khách, lượt làm bài, nội dung trang, kết nối CRM, tài khoản, nhật ký.
-- **Vai trò (chốt 14/11): Quản trị viên > Tư vấn viên > Nhân viên**, lưu trong bảng `roles/permissions` (quản trị viên thêm được vai trò, ví dụ Marketing). **Chỉ quản trị viên xem toàn bộ và xuất dữ liệu.** Công việc chăm sóc khách nằm ở CRM, không làm trong Holland.
+- **Vai trò (chốt 14/11): Quản trị viên > Tư vấn viên > Nhân viên**, lưu trong bảng `roles/permissions` (quản trị viên thêm được vai trò mới và tick quyền ở trang "Vai trò & quyền"). **Chỉ quản trị viên xem toàn bộ và xuất dữ liệu.** Công việc chăm sóc khách nằm ở CRM, không làm trong Holland.
 - **Code chia module** (`app/Modules/...`), mỗi class có chú thích tiếng Việt *Làm gì / Ai gọi / Dữ liệu* (xem THIET_KE mục 3).
 
 ## 3. Công nghệ và quy tắc
 
-- **Laravel 13, PHP ≥ 8.3**, MySQL (production) / SQLite (test), Blade + CSS/JS thuần (không Tailwind, không SPA).
-- Package ngoài Laravel: **chỉ `openspout/openspout`**. Muốn thêm package khác thì **hỏi tôi trước**.
+- **Laravel 13, PHP ≥ 8.3**, MySQL (production) / SQLite (test).
+  - **Trang khách:** Blade + CSS/JS thuần (không Tailwind, không SPA), theo `docs/mau_giao_dien/`.
+  - **Trang quản trị `/admin`:** **Filament v5** (có Livewire, Tailwind riêng của Filament). Panel ở `app/Providers/Filament/AdminPanelProvider.php`. Trang của từng module nằm ở `app/Modules/<Module>/Filament/`. Quyền kiểm tra bằng Policy (`app/Modules/*/Policies`). Các trang nội dung cũ (sửa trang giới thiệu, nhúng, giao diện, thư viện ảnh) chuyển dần sang Filament ở H6.
+- Package ngoài Laravel: **`filament/filament` v5 và `openspout/openspout` v4** (Filament cần bản 4). Plugin Filament hoặc package khác: **hỏi tôi trước**. Chỉ chọn plugin có tác giả uy tín, còn cập nhật, hỗ trợ đúng bản Filament. Chạy `composer audit` định kỳ.
+- Thông báo kiểm tra dữ liệu tiếng Việt ở `lang/vi/validation.php`. Không để lộ mã `validation.*` cho người dùng.
 - Git: nhánh `feature/holland-v3` (tách từ `dev`), commit theo giai đoạn, message tiếng Việt. **Không push, không merge.** Không commit `.env`.
 - Giao diện và thông báo **tiếng Việt**. Class, bảng, cột **tiếng Anh**.
 - Tên trường thông tin khách / khóa gửi CRM: đúng `docs/TU_DIEN_DU_LIEU_CHUNG.xlsx` và `docs/lua_chon_chuan.json`.
@@ -82,11 +86,12 @@
 
 - [x] 0. Nhánh `feature/holland-v3`, gỡ phần nghiệp vụ cũ, giữ hạ tầng
 - [x] H1. Dọn phần đang dở (model, migration, trang Cài đặt bài test chưa commit), bảng dữ liệu, seeder 300 câu, danh mục, `form_fields.crm_key`, `roles/permissions`
+- [x] F. Nền trang quản trị Filament: đăng nhập, bảng điều khiển, Thư viện câu hỏi, Cài đặt bài test, Tài khoản, Vai trò & quyền; bỏ vai trò Marketing
 - [ ] H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + test 8 ca
 - [ ] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
 - [ ] H4. Module Respondent: form thông tin, OTP email, đồng ý, báo cáo đầy đủ, email link
 - [ ] H5. Module CrmSync + Tracking: outbox, job, thử lại, trang Kết nối CRM (`docs/PROMPT_4_THU_THAP_THONG_TIN_CRM.md`)
-- [ ] H6. Admin theo mẫu v3: lượt làm bài, câu hỏi, danh mục, trường thông tin, phân quyền, nhật ký
+- [ ] H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt các trang nội dung cũ sang Filament
 - [ ] H7. API cho chatbot, sao lưu, tài liệu, nghiệm thu
 
 **Chỉ làm một giai đoạn mỗi lần.** Không sửa file ngoài phạm vi giai đoạn; cần sửa thì hỏi trước.

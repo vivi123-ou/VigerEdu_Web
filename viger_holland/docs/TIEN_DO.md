@@ -24,12 +24,50 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | Giai đoạn | Trạng thái |
 |---|---|
 | H1. Dọn phần đang dở, bảng dữ liệu, seeder 300 câu, danh mục, `crm_key`, `roles/permissions` | ✅ Xong (17/11) |
+| F. Nền trang quản trị Filament, bỏ vai trò Marketing | ✅ Xong (17/11) |
 | H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | Chưa làm |
 | H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | Chưa làm |
 | H4. Form thông tin, OTP email, báo cáo đầy đủ | Chưa làm |
 | H5. CrmSync + Tracking | Chưa làm |
-| H6. Admin: lượt làm bài, câu hỏi, danh mục, trường thông tin, phân quyền, nhật ký | Chưa làm |
+| H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+### F đã làm (17/11/2026)
+
+Vân chốt: trang quản trị dùng **Filament** (đỡ làm từ đầu, dễ sửa, dễ mở rộng); trang khách vẫn Blade thuần theo mẫu. **Bỏ vai trò Marketing**: marketing là Nhân viên.
+
+- **Cài đặt:**
+  - Filament v5.11 (miễn phí, MIT), không cài plugin nào;
+  - `openspout` hạ xuống 4.x vì Filament cần bản này (chưa có code nào dùng);
+  - `composer audit` không báo lỗ hổng nào.
+- **Khu quản trị `/admin`:**
+  - logo, màu đỏ, tên đơn vị lấy từ cài đặt; giao diện tiếng Việt; `noindex`;
+  - đăng nhập tại `/admin/dang-nhap` bằng tên đăng nhập hoặc email; sai 5 lần / phút thì tạm khóa;
+  - tài khoản bị khóa giữa phiên sẽ bị đăng xuất.
+- **Trang mới:**
+  - **Bảng điều khiển:** 4 ô số liệu (câu đã duyệt và nhóm nào thiếu câu, câu tạm ngưng / nháp, lượt làm bài, phiên bản cài đặt);
+  - **Thư viện câu hỏi:**
+    - thẻ theo 6 nhóm, tìm kiếm, lọc chủ đề / loại / trạng thái, duyệt / tạm ngưng nhiều câu, thùng rác và khôi phục;
+    - sửa chữ thì phiên bản câu tăng; đổi trọng số phải ghi lý do (lưu người đổi);
+    - câu mới tự đặt mã R051…, ở trạng thái Nháp; không ai xóa hẳn được;
+  - **Cài đặt bài test:** chuyển sang Filament, giữ phiên bản, ghi ô nào đổi, nút "Quay lại bản này";
+  - **Tài khoản:** thêm / sửa / khóa, đặt lại mật khẩu (ít nhất 10 ký tự, có chữ và số);
+    - không ai tự đổi vai trò, tự khóa hay tự xóa mình;
+    - chỉ quản trị viên sửa được quản trị viên;
+  - **Vai trò & quyền:** thêm vai trò, tick quyền;
+    - vai trò Quản trị viên khóa cứng;
+    - vai trò lõi hoặc còn tài khoản thì không xóa được;
+    - quyền "xuất dữ liệu" không cấp được cho ai ngoài quản trị viên.
+- **Trang cũ giữ lại**, mở từ menu nhóm "Nội dung trang": Trang giới thiệu, Nhúng vào web chính, Giao diện & chân trang, Thư viện ảnh. Có nút "Về trang quản trị". Chuyển hẳn sang Filament ở H6.
+- **Đã gỡ:** đăng nhập cũ, bảng điều khiển cũ, trang "Đang xây dựng", controller Cài đặt bài test cũ.
+- **Vai trò:** còn 3 (Quản trị viên, Tư vấn viên, Nhân viên); Nhân viên có thêm quyền nội dung trang.
+  - Biến `.env` mới: `HOLLAND_STAFF_*`. Biến cũ `HOLLAND_EDITOR_*` vẫn đọc được.
+- **Thêm `lang/vi/validation.php`:** trước đây dự án không có file này, nên form Filament sẽ hiện mã kiểu `validation.required`. Nay mọi lỗi nhập đều bằng tiếng Việt.
+- **Kiểm thử:** **71/71 đạt**. Gồm test mới: thư viện câu hỏi, tài khoản & vai trò, đăng nhập Filament, các trang mở được, thông báo lỗi tiếng Việt.
+
+**Lưu ý khi cài trên máy khác / máy chủ:**
+- `composer install` sẽ tự chạy `php artisan filament:upgrade`, chép CSS / JS của Filament vào `public/` (thư mục này không đưa lên git).
+- Mục "Hồ sơ của tôi" (tự đổi mật khẩu) và xác thực 2 lớp: chưa bật. Đề xuất bật xác thực 2 lớp cho quản trị viên trước khi lên máy chủ thật.
 
 ### H1 đã làm (17/11/2026)
 
@@ -64,7 +102,9 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 3. Mã `KHAC` cần thêm vào `TU_DIEN_DU_LIEU_CHUNG.xlsx` / `lua_chon_chuan.json` bên CRM.
 4. Trong `database/seeders/data/holland_v3/` còn `settings.json` (bản cũ có "Chưa biết", đề cố định) và `form_fields.json` (18 ô cũ). **Không seeder nào dùng.** Có xóa không?
 
-**Việc Vân cần làm:** trên máy Vân chạy `php artisan migrate:fresh --seed` một lần (bảng mới + dữ liệu). Sau đó vào `/admin/test-settings` xem thử.
+**Việc Vân cần làm:**
+- Trên máy Vân chạy `composer install`, rồi `php artisan migrate:fresh --seed` một lần (bảng mới, dữ liệu, 3 vai trò). Sau đó vào `/admin` xem thử.
+- Trong `.env` nên đổi `HOLLAND_EDITOR_*` thành `HOLLAND_STAFF_*` (không đổi vẫn chạy).
 
 ## Làm lại theo VIGER EDU Career Map (từ 11/11/2026, nhánh `feature/holland-v3`)
 

@@ -81,9 +81,9 @@ class PageEditorTest extends TestCase
         $this->postJson(route('admin.page-editor.save'), ['changes' => ['block:faq01:data.evil' => 'x']])->assertStatus(422);
     }
 
-    public function test_marketing_can_edit_content_but_not_footer_contact(): void
+    public function test_staff_can_edit_content_but_not_footer_contact(): void
     {
-        $this->actingAs(User::factory()->create(['role' => User::ROLE_EDITOR]));
+        $this->actingAs(User::factory()->create(['role' => User::ROLE_STAFF]));
 
         $this->get(route('admin.page-editor.show', 'trang-gioi-thieu'))->assertOk()
             ->assertSee('data-ed="intro_title"', false)

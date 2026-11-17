@@ -19,7 +19,7 @@ class HistoryController extends Controller
     {
         abort_unless($activity->canRevert(), 404);
 
-        // Marketing chỉ quay lại được nội dung trang mà tài khoản được vào.
+        // Nhân viên chỉ quay lại được nội dung trang mà tài khoản được vào.
         $user = auth()->user();
         if (! $user->isAdmin()) {
             $menuKey = match (true) {

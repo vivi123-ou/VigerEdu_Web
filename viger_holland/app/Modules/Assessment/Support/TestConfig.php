@@ -4,7 +4,9 @@ namespace App\Modules\Assessment\Support;
 
 use App\Models\User;
 use App\Modules\Assessment\Models\TestConfigVersion;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 /**
@@ -218,6 +220,70 @@ final class TestConfig
         }
 
         return $settings;
+    }
+
+    /**
+     * Kiểm tra dữ liệu trước khi lưu: quy tắc của từng ô, cộng các ràng buộc giữa nhiều dòng
+     * (bảng nhãn mức độ quan tâm phải kết thúc ở 5, mốc không trùng). Thông báo tiếng Việt, dùng tên ô.
+     *
+     * @param  array<string, mixed>  $input
+     */
+    public static function validator(array $input): ValidatorContract
+    {
+        $attributes = [];
+        foreach (self::FIELDS as $fields) {
+            foreach ($fields as $key => [$label]) {
+                $attributes[$key] = '"'.$label.'"';
+            }
+        }
+
+        $validator = Validator::make($input, self::rules(), [], $attributes + [
+            'likert_labels.*' => 'chữ của mức sao',
+            'bands.*.max' => 'mốc điểm',
+            'c_labels.*.min' => 'mốc chỉ số C',
+            'academic_labels.*.min' => 'mốc điểm',
+            'bands.*.label' => 'nhãn', 'c_labels.*.label' => 'nhãn', 'academic_labels.*.label' => 'nhãn',
+        ]);
+
+        return $validator->after(function (ValidatorContract $validator) use ($input): void {
+            $bands = collect((array) ($input['bands'] ?? []))->pluck('max')->map(fn ($value) => (float) $value);
+            if ($bands->isNotEmpty() && abs($bands->max() - 5.0) > 0.0001) {
+                $validator->errors()->add('bands', 'Dòng cuối của bảng nhãn mức độ quan tâm phải có mốc 5 (điểm cao nhất).');
+            }
+            if ($bands->count() !== $bands->unique()->count()) {
+                $validator->errors()->add('bands', 'Các mốc trong bảng nhãn mức độ quan tâm không được trùng nhau.');
+            }
+
+            foreach (['c_labels' => 'chỉ số C', 'academic_labels' => 'nền tảng học tập'] as $table => $name) {
+                $mins = collect((array) ($input[$table] ?? []))->pluck('min')->map(fn ($value) => (float) $value);
+                if ($mins->count() !== $mins->unique()->count()) {
+                    $validator->errors()->add($table, "Các mốc trong bảng nhãn {$name} không được trùng nhau.");
+                }
+            }
+        });
+    }
+
+    /**
+     * Mô tả ngắn các ô đã đổi, hiện trong lịch sử phiên bản ("Đổi Số câu mỗi trang: 6 → 4").
+     *
+     * @param  array<string, mixed>  $before
+     * @param  array<string, mixed>  $after
+     */
+    public static function describeChanges(array $before, array $after): string
+    {
+        $format = fn (mixed $value): string => match (true) {
+            is_bool($value) => $value ? 'bật' : 'tắt',
+            is_float($value) => rtrim(rtrim(number_format($value, 4, ',', ''), '0'), ','),
+            default => (string) $value,
+        };
+
+        $changed = collect($after)
+            ->filter(fn ($value, $key) => ($before[$key] ?? null) != $value)
+            ->map(fn ($value, string $key) => is_scalar($value) && is_scalar($before[$key] ?? null)
+                ? self::label($key).': '.$format($before[$key]).' → '.$format($value)
+                : self::label($key));
+
+        return $changed->isEmpty() ? 'Lưu cài đặt' : 'Đổi '.$changed->implode('; ');
     }
 
     /**

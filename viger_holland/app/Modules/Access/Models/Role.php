@@ -2,16 +2,19 @@
 
 namespace App\Modules\Access\Models;
 
+use App\Modules\Access\Policies\RolePolicy;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * Làm gì:   Một vai trò tài khoản quản trị (Quản trị viên, Tư vấn viên, Nhân viên, Marketing…).
- * Ai gọi:   User::hasPermission(), trang Tài khoản & phân quyền (H6), RoleSeeder.
+ * Làm gì:   Một vai trò tài khoản quản trị (Quản trị viên, Tư vấn viên, Nhân viên…).
+ * Ai gọi:   User::hasPermission(), trang Vai trò & quyền (Filament), RoleSeeder.
  * Dữ liệu:  bảng roles, role_permission. Không có dữ liệu khách.
  */
 #[Fillable(['code', 'name', 'description', 'is_system', 'is_active', 'sort_order'])]
+#[UsePolicy(RolePolicy::class)]
 class Role extends Model
 {
     /**

@@ -2,7 +2,9 @@
 
 namespace App\Modules\Assessment\Models;
 
+use App\Modules\Assessment\Policies\QuestionPolicy;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,9 +13,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Làm gì:   Một câu trong thư viện 300 câu; selection_weight chỉ quyết định khả năng được rút vào đề, không dùng tính điểm.
- * Ai gọi:   QuestionPicker (H2) rút đề; thư viện câu hỏi (H6); QuestionBankSeeder.
+ * Ai gọi:   QuestionPicker (H2) rút đề; trang Thư viện câu hỏi (Filament); QuestionBankSeeder.
  * Dữ liệu:  bảng questions (xóa mềm), question_weight_audits.
  */
+#[UsePolicy(QuestionPolicy::class)]
 #[Fillable(['code', 'group', 'question_facet_id', 'text', 'priority_tier', 'selection_weight', 'is_anchor', 'review_status', 'validation_status', 'language', 'target_group', 'item_version', 'review_note', 'source_reference', 'last_reviewed_at'])]
 class Question extends Model
 {

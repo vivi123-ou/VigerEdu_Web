@@ -33,16 +33,16 @@ class AdminSeeder extends Seeder
             ? "Đã tạo tài khoản quản trị: {$user->username}"
             : "Tài khoản quản trị {$user->username} đã có, giữ nguyên.");
 
-        // Tài khoản marketing mẫu (không bắt buộc) để thử nghiệm thu. Trang quản lý tài khoản làm ở giai đoạn 6.
-        $editor = config('holland.editor');
-        if (filled($editor['username'] ?? null) && filled($editor['password'] ?? null)) {
-            $created = User::firstOrCreate(['username' => $editor['username']], [
-                'name' => $editor['name'] ?: 'Marketing',
-                'password' => $editor['password'],
-                'role' => User::ROLE_EDITOR,
+        // Tài khoản nhân viên mẫu (không bắt buộc) để thử nghiệm thu. Thêm tài khoản khác ở trang Tài khoản.
+        $staff = config('holland.staff');
+        if (filled($staff['username'] ?? null) && filled($staff['password'] ?? null)) {
+            $created = User::firstOrCreate(['username' => $staff['username']], [
+                'name' => $staff['name'] ?: 'Nhân viên',
+                'password' => $staff['password'],
+                'role' => User::ROLE_STAFF,
                 'is_active' => true,
             ]);
-            $this->command?->info($created->wasRecentlyCreated ? "Đã tạo tài khoản marketing: {$created->username}" : "Tài khoản marketing {$created->username} đã có, giữ nguyên.");
+            $this->command?->info($created->wasRecentlyCreated ? "Đã tạo tài khoản nhân viên: {$created->username}" : "Tài khoản nhân viên {$created->username} đã có, giữ nguyên.");
         }
     }
 }
