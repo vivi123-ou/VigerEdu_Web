@@ -36,8 +36,8 @@ class UserForm
                     ->options(fn () => UserResource::roleOptions())
                     ->required()
                     ->disabled($isSelf)
-                    ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Quản trị viên: toàn quyền, duy nhất được xuất dữ liệu. Tư vấn viên: xem lượt làm bài và báo cáo nội bộ. Nhân viên: tổng quan, nội dung trang, thư viện ảnh.'),
-                Toggle::make('is_active')->label('Đang hoạt động')->default(true)->inline(false)
+                    ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Vai trò quyết định người này được làm việc gì. Xem và đổi ở trang "Phân quyền".'),
+                Toggle::make('is_active')->label('Đang dùng (bỏ tick = khóa)')->default(true)->inline(false)
                     ->disabled($isSelf)
                     ->helperText('Tắt thì người này không đăng nhập được nữa; đang đăng nhập sẽ bị đăng xuất.'),
             ]),

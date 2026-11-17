@@ -1,6 +1,6 @@
 @extends('layouts.admin', ['menuKey' => 'intro'])
 
-@section('title', 'Trang giới thiệu – Các khối nội dung')
+@section('title', 'Trang mở đầu – Các khối nội dung')
 
 @section('content')
     @include('admin.intro-blocks.tabs', ['active' => 'blocks'])

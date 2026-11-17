@@ -26,9 +26,10 @@ return new class extends Migration
 
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 60)->unique()->comment('Ví dụ attempts.view, data.export');
-            $table->string('name', 150);
+            $table->string('code', 60)->unique()->comment('Ví dụ reports.lookup, data.export');
+            $table->string('name', 150)->comment('Câu "Được…" hiện trên trang Phân quyền');
             $table->string('group', 60)->nullable();
+            $table->string('description', 255)->nullable()->comment('Giải thích thêm dưới câu "Được…"');
             $table->unsignedSmallInteger('sort_order')->default(0);
             $table->timestamps();
         });

@@ -16,6 +16,11 @@ class CreateUser extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
+    protected function getHeaderActions(): array
+    {
+        return [UserResource::helpAction()];
+    }
+
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');

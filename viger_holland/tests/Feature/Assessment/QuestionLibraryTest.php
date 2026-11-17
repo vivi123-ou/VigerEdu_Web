@@ -37,7 +37,7 @@ class QuestionLibraryTest extends TestCase
     {
         $this->get(route('filament.admin.resources.questions.index'))
             ->assertOk()
-            ->assertSee('Thư viện 300 câu')
+            ->assertSee('Kho 300 câu')
             ->assertSee('R – Thực hành');
 
         $rQuestions = Question::where('group', 'R')->orderBy('code')->limit(5)->get();
@@ -125,7 +125,7 @@ class QuestionLibraryTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => User::ROLE_STAFF]));
 
-        $this->get(route('filament.admin.resources.questions.index'))->assertForbidden();
-        $this->get(route('filament.admin.resources.questions.edit', Question::first()))->assertForbidden();
+        $this->get(route('filament.admin.resources.questions.index'))->assertNotFound();
+        $this->get(route('filament.admin.resources.questions.edit', Question::first()))->assertNotFound();
     }
 }

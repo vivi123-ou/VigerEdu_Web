@@ -34,11 +34,13 @@ class TestSettingsTest extends TestCase
         $this->get(route('filament.admin.pages.test-settings'))
             ->assertOk()
             ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
-            ->assertSee('Các con số quyết định cách rút đề')
-            ->assertSee('Số câu mỗi trang')
-            ->assertSee('Chữ của 5 mức sao')
+            ->assertSee('Cách bốc đề &amp; chấm điểm', false)
+            ->assertSee('Đề có bao nhiêu câu')
+            ->assertSee('Mỗi trang hiện mấy câu')
+            ->assertSee('Chữ hiện cạnh số sao')
             ->assertSeeInOrder(['1 sao', '5 sao'])
-            ->assertSee('Lịch sử các phiên bản cài đặt');
+            ->assertSee('Nâng cao – cách bốc đề')
+            ->assertSee('Lịch sử thay đổi');
 
         Livewire::test(TestSettings::class)
             ->assertSchemaStateSet(['items_per_page' => 6, 'likert_labels' => TestConfig::DEFAULTS['likert_labels']])
@@ -57,7 +59,7 @@ class TestSettingsTest extends TestCase
 
         $this->assertSame(4, TestConfig::get('items_per_page'));
         $this->assertSame(2, TestConfigVersion::count());
-        $this->assertStringContainsString('Số câu mỗi trang: 6 → 4', TestConfig::currentVersion()->note);
+        $this->assertStringContainsString('Mỗi trang hiện mấy câu: 6 → 4', TestConfig::currentVersion()->note);
         $this->assertSame(auth()->id(), TestConfig::currentVersion()->user_id);
 
         Livewire::test(TestSettings::class)
@@ -105,7 +107,7 @@ class TestSettingsTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => User::ROLE_COUNSELOR]));
 
-        $this->get(route('filament.admin.pages.test-settings'))->assertForbidden();
+        $this->get(route('filament.admin.pages.test-settings'))->assertNotFound();
         $this->assertFalse(TestSettings::canAccess());
     }
 }

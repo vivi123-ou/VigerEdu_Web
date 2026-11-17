@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Làm gì:   Một vai trò tài khoản quản trị (Quản trị viên, Tư vấn viên, Nhân viên…).
- * Ai gọi:   User::hasPermission(), trang Vai trò & quyền (Filament), RoleSeeder.
+ * Ai gọi:   User::hasPermission(), trang Phân quyền (Filament), RoleSeeder.
  * Dữ liệu:  bảng roles, role_permission. Không có dữ liệu khách.
  */
 #[Fillable(['code', 'name', 'description', 'is_system', 'is_active', 'sort_order'])]

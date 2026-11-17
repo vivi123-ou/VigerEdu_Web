@@ -7,6 +7,7 @@ use App\Modules\Access\Filament\Resources\Roles\Pages\CreateRole;
 use App\Modules\Access\Filament\Resources\Roles\Pages\EditRole;
 use App\Modules\Access\Filament\Resources\Users\Pages\CreateUser;
 use App\Modules\Access\Filament\Resources\Users\Pages\EditUser;
+use App\Modules\Access\Filament\Resources\Users\Pages\ListUsers;
 use App\Modules\Access\Models\Permission;
 use App\Modules\Access\Models\Role;
 use App\Modules\Access\Permissions;
@@ -89,15 +90,17 @@ class AccountManagementTest extends TestCase
         $this->assertFalse($this->admin->can('delete', $this->admin));
     }
 
-    public function test_non_admin_account_manager_cannot_touch_admins_or_create_admins(): void
+    public function test_non_admin_account_manager_cannot_touch_admins_create_admins_or_raise_own_role(): void
     {
         $role = Role::create(['code' => 'TRUONG_NHOM', 'name' => 'Trưởng nhóm', 'is_active' => true, 'sort_order' => 9]);
-        $role->permissions()->attach(Permission::whereIn('code', ['dashboard.view', 'accounts.manage'])->pluck('id'));
+        $role->permissions()->attach(Permission::whereIn('code', ['accounts.manage'])->pluck('id'));
         $manager = User::factory()->create(['role' => 'TRUONG_NHOM']);
         $this->actingAs($manager);
 
         $this->get(route('filament.admin.resources.users.index'))->assertOk();
-        $this->get(route('filament.admin.resources.users.edit', $this->admin))->assertForbidden();
+        $this->get(route('filament.admin.resources.users.edit', $this->admin))->assertNotFound();
+        $this->get(route('filament.admin.resources.roles.edit', $role))->assertNotFound();
+        $this->assertFalse($manager->can('update', $role), 'Không tự tick thêm quyền cho vai trò của chính mình');
 
         Livewire::test(CreateUser::class)
             ->fillForm(['name' => 'X', 'username' => 'leoquyen', 'role' => User::ROLE_ADMIN, 'password' => 'MatKhau2026', 'password_confirmation' => 'MatKhau2026'])
@@ -107,25 +110,60 @@ class AccountManagementTest extends TestCase
         $this->assertDatabaseMissing('users', ['username' => 'leoquyen']);
     }
 
-    public function test_admin_adds_a_role_and_ticks_permissions_but_cannot_grant_export(): void
+    public function test_admin_adds_a_role_and_ticks_permissions_by_group_but_cannot_grant_export(): void
     {
+        $id = fn (string $code) => Permission::where('code', $code)->value('id');
+
+        $this->get(route('filament.admin.resources.roles.create'))->assertOk()
+            ->assertSeeInOrder(['Có thông tin cá nhân của khách', 'Không có thông tin cá nhân', 'Bài trắc nghiệm', 'Quản lý hệ thống'])
+            ->assertSee('Được tra cứu và đọc báo cáo của từng khách')
+            ->assertSee('Được tải dữ liệu khách ra Excel, sao lưu 🔒');
+
         Livewire::test(CreateRole::class)
-            ->assertFormFieldExists('permissions')
             ->fillForm([
                 'name' => 'Kế toán', 'code' => 'KE_TOAN', 'is_active' => true,
-                'permissions' => Permission::whereIn('code', ['dashboard.view', 'attempts.view'])->pluck('id')->all(),
+                'permissions_0' => [$id('reports.lookup')],
+                'permissions_1' => [$id('stats.view')],
             ])
             ->call('create')
             ->assertHasNoFormErrors();
 
         $role = Role::where('code', 'KE_TOAN')->firstOrFail();
         $this->assertFalse($role->is_system, 'Vai trò thêm mới xóa được');
-        $this->assertSame(['attempts.view', 'dashboard.view'], $role->permissions->pluck('code')->sort()->values()->all());
+        $this->assertSame(['reports.lookup', 'stats.view'], $role->permissions->pluck('code')->sort()->values()->all());
 
         Livewire::test(CreateRole::class)
-            ->fillForm(['name' => 'Xuất', 'code' => 'XUAT', 'permissions' => [Permission::where('code', Permissions::EXPORT)->value('id')]])
+            ->fillForm(['name' => 'Xuất', 'code' => 'XUAT', 'permissions_0' => [$id(Permissions::EXPORT), $id('customers.list')]])
             ->call('create');
         $this->assertFalse(Role::where('code', 'XUAT')->first()?->permissions()->where('code', Permissions::EXPORT)->exists() ?? false);
+    }
+
+    public function test_editing_a_role_shows_and_saves_its_ticks(): void
+    {
+        $staffRole = Role::where('code', User::ROLE_STAFF)->first();
+        $id = fn (string $code) => Permission::where('code', $code)->value('id');
+
+        Livewire::test(EditRole::class, ['record' => $staffRole->getRouteKey()])
+            ->assertSee('Nhân viên được làm gì?')
+            ->assertSchemaStateSet(['permissions_0' => [$id('contacts.view')], 'permissions_1' => [$id('content.manage')]])
+            ->fillForm(['permissions_1' => [$id('content.manage'), $id('stats.view')]])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame(['contacts.view', 'content.manage', 'stats.view'], $staffRole->permissions()->pluck('code')->sort()->values()->all());
+    }
+
+    public function test_admin_can_lock_and_unlock_an_account_but_not_their_own(): void
+    {
+        $staff = User::factory()->create(['role' => User::ROLE_STAFF]);
+
+        Livewire::test(ListUsers::class)
+            ->assertTableActionHidden('toggle_active', $this->admin)
+            ->callTableAction('toggle_active', $staff);
+        $this->assertFalse($staff->fresh()->is_active);
+
+        Livewire::test(ListUsers::class)->callTableAction('toggle_active', $staff);
+        $this->assertTrue($staff->fresh()->is_active);
     }
 
     public function test_admin_role_is_locked_and_core_or_used_roles_cannot_be_deleted(): void
@@ -134,7 +172,7 @@ class AccountManagementTest extends TestCase
         $staffRole = Role::where('code', User::ROLE_STAFF)->first();
         $extra = Role::create(['code' => 'TAM', 'name' => 'Tạm', 'is_active' => true, 'sort_order' => 9]);
 
-        $this->get(route('filament.admin.resources.roles.edit', $adminRole))->assertForbidden();
+        $this->get(route('filament.admin.resources.roles.edit', $adminRole))->assertNotFound();
         $this->assertFalse($this->admin->can('delete', $staffRole), 'Vai trò lõi không xóa được');
         $this->assertTrue($this->admin->can('delete', $extra));
 

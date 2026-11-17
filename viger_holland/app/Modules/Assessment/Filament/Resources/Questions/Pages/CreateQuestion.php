@@ -17,6 +17,11 @@ class CreateQuestion extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
+    protected function getHeaderActions(): array
+    {
+        return [QuestionResource::helpAction()];
+    }
+
     /**
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>

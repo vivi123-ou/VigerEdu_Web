@@ -7,6 +7,7 @@ use App\Modules\Assessment\Models\Question;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -19,10 +20,16 @@ class EditQuestion extends EditRecord
 {
     protected static string $resource = QuestionResource::class;
 
+    public function getTitle(): string|Htmlable
+    {
+        return 'Sửa câu '.$this->getRecord()->code;
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make()->label('Cho vào thùng rác'),
+            QuestionResource::helpAction(),
+            DeleteAction::make()->label('Bỏ vào thùng rác'),
             RestoreAction::make()->label('Khôi phục'),
         ];
     }

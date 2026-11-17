@@ -1,6 +1,6 @@
 @php
     use App\Support\AdminMenu;
-    $currentKey = $menuKey ?? 'dashboard';
+    $currentKey = $menuKey ?? 'home';
     $currentItem = AdminMenu::find($currentKey);
     $currentGroup = collect(AdminMenu::groups())->first(fn ($group) => collect($group['items'])->contains('key', $currentKey));
     $user = auth()->user();
@@ -57,7 +57,7 @@
                                 <a href="{{ AdminMenu::url($item) }}"
                                    @class(['sidebar__link', 'is-active' => $item['key'] === $currentKey, 'is-soon' => isset($item['stage'])])
                                    @if ($item['key'] === $currentKey) aria-current="page" @endif>
-                                    @include('partials.icon', ['name' => $item['icon'] ?? 'list', 'size' => 18])
+                                    {{ svg($item['icon'], '', ['width' => 18, 'height' => 18, 'aria-hidden' => 'true']) }}
                                     <span class="sidebar__label">{{ $item['label'] }}</span>
                                     @isset($item['stage'])
                                         <span class="tag">Sắp có</span>
@@ -108,7 +108,7 @@
                     </div>
                     <nav class="breadcrumb" aria-label="Vị trí">
                         <a href="{{ AdminMenu::homeUrl() }}">Trang chủ</a>
-                        @if ($currentKey !== 'dashboard')
+                        @if ($currentKey !== 'home')
                             @isset($currentGroup['title'])<span>›</span> <span>{{ $currentGroup['title'] }}</span>@endisset
                             <span>›</span> <span>{{ $currentItem['label'] ?? '' }}</span>
                         @endif
@@ -133,8 +133,8 @@
 
     @if (filled($currentItem['help'] ?? null))
         <dialog class="help-dialog" id="help-dialog">
-            <h2>Hướng dẫn: {{ $currentItem['label'] }}</h2>
-            <p>{{ $currentItem['help'] }}</p>
+            <h2>Trang này dùng để làm gì?</h2>
+            @include('admin.partials.help-content', ['help' => $currentItem['help']])
             <form method="dialog"><button class="btn btn--primary" type="submit">Đã hiểu</button></form>
         </dialog>
     @endif

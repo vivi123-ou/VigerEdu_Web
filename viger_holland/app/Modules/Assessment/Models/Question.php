@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Làm gì:   Một câu trong thư viện 300 câu; selection_weight chỉ quyết định khả năng được rút vào đề, không dùng tính điểm.
- * Ai gọi:   QuestionPicker (H2) rút đề; trang Thư viện câu hỏi (Filament); QuestionBankSeeder.
+ * Ai gọi:   QuestionPicker (H2) rút đề; trang Câu hỏi trắc nghiệm (Filament); QuestionBankSeeder.
  * Dữ liệu:  bảng questions (xóa mềm), question_weight_audits.
  */
 #[UsePolicy(QuestionPolicy::class)]
@@ -30,13 +30,13 @@ class Question extends Model
 
     /** @var array<string, string> */
     public const STATUS_LABELS = [
-        self::STATUS_DRAFT => 'Nháp',
-        self::STATUS_APPROVED => 'Đã duyệt',
+        self::STATUS_APPROVED => 'Đang dùng',
         self::STATUS_SUSPENDED => 'Tạm ngưng',
+        self::STATUS_DRAFT => 'Nháp',
     ];
 
     /** @var array<string, string> */
-    public const TIER_LABELS = ['A' => 'Lõi', 'B' => 'Chuẩn', 'C' => 'Mở rộng'];
+    public const TIER_LABELS = ['A' => 'Cao', 'B' => 'Vừa', 'C' => 'Thấp'];
 
     /**
      * @return array<string, string>

@@ -5,7 +5,6 @@ namespace App\Modules\Assessment\Filament\Resources\Questions\Tables;
 use App\Modules\Assessment\Filament\Resources\Questions\QuestionResource;
 use App\Modules\Assessment\Models\Question;
 use Filament\Actions\BulkAction;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\RestoreBulkAction;
@@ -19,7 +18,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
- * Làm gì:   Bảng danh sách câu hỏi: cột, bộ lọc (nhóm, chủ đề, loại, trạng thái, thùng rác), duyệt / tạm ngưng nhiều câu.
+ * Làm gì:   Bảng câu hỏi: mã, chủ đề, câu hỏi, mức ưu tiên, tình trạng; lọc; nút "Dùng", "Tạm ngưng", "Bỏ vào thùng rác"
+ *           cho nhiều câu cùng lúc. Con số ưu tiên (trọng số) chỉ hiện trong trang Sửa cho đỡ rối.
  * Ai gọi:   QuestionResource::table().
  * Dữ liệu:  bảng questions, question_facets.
  */
@@ -32,20 +32,21 @@ class QuestionsTable
             ->defaultSort('code')
             ->defaultPaginationPageOption(25)
             ->striped()
+            ->searchPlaceholder('Tìm theo chữ trong câu…')
             ->columns([
                 TextColumn::make('code')->label('Mã')->sortable()->searchable(),
-                TextColumn::make('group')->label('Nhóm')->badge()->sortable()
+                TextColumn::make('group')->label('Nhóm')->badge()->color('gray')->sortable()->toggleable()
                     ->formatStateUsing(fn (string $state) => QuestionResource::groupOptions()[$state] ?? $state),
-                TextColumn::make('facet.name')->label('Chủ đề')->wrap()->toggleable()
-                    ->searchable(query: fn (Builder $query, string $search) => $query->whereHas('facet', fn (Builder $facet) => $facet->where('name', 'like', "%{$search}%"))),
+                TextColumn::make('facet.name')->label('Chủ đề')->wrap()->toggleable(),
                 TextColumn::make('text')->label('Câu hỏi')->wrap()->searchable()->grow(),
-                TextColumn::make('priority_tier')->label('Loại')->badge()->sortable()
+                TextColumn::make('priority_tier')->label('Mức ưu tiên')->badge()->sortable()
+                    ->formatStateUsing(fn (string $state) => Question::TIER_LABELS[$state] ?? $state)
                     ->color(fn (string $state) => match ($state) {
                         'A' => 'success', 'B' => 'info', default => 'gray'
-                    })
-                    ->tooltip(fn (string $state) => Question::TIER_LABELS[$state] ?? null),
-                TextColumn::make('selection_weight')->label('Trọng số')->numeric(decimalPlaces: 1)->sortable()->alignEnd(),
-                TextColumn::make('review_status')->label('Trạng thái')->badge()->sortable()
+                    }),
+                TextColumn::make('selection_weight')->label('Con số ưu tiên')->numeric(decimalPlaces: 1)->sortable()->alignEnd()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('review_status')->label('Tình trạng')->badge()->sortable()
                     ->formatStateUsing(fn (string $state) => Question::STATUS_LABELS[$state] ?? $state)
                     ->color(fn (string $state) => match ($state) {
                         Question::STATUS_APPROVED => 'success',
@@ -55,27 +56,24 @@ class QuestionsTable
                 TextColumn::make('updated_at')->label('Sửa lần cuối')->dateTime('H:i d/m/Y')->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('group')->label('Nhóm')->options(fn () => QuestionResource::groupOptions()),
                 SelectFilter::make('question_facet_id')->label('Chủ đề')->relationship('facet', 'name')->searchable()->preload(),
-                SelectFilter::make('priority_tier')->label('Loại')->options(fn () => QuestionResource::tierOptions()),
-                SelectFilter::make('review_status')->label('Trạng thái')->options(Question::STATUS_LABELS),
+                SelectFilter::make('priority_tier')->label('Mức ưu tiên')->options(fn () => QuestionResource::tierOptions()),
+                SelectFilter::make('review_status')->label('Tình trạng')->options(Question::STATUS_LABELS),
                 TrashedFilter::make()->label('Thùng rác'),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->label('Sửa'),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    self::statusBulkAction(Question::STATUS_APPROVED, 'Duyệt các câu đã chọn', Heroicon::OutlinedCheckCircle, 'success'),
-                    self::statusBulkAction(Question::STATUS_SUSPENDED, 'Tạm ngưng các câu đã chọn', Heroicon::OutlinedPauseCircle, 'warning'),
-                    DeleteBulkAction::make()->label('Cho vào thùng rác'),
-                    RestoreBulkAction::make()->label('Khôi phục từ thùng rác'),
-                ]),
+                self::statusBulkAction(Question::STATUS_APPROVED, 'Dùng', Heroicon::OutlinedCheckCircle, 'success'),
+                self::statusBulkAction(Question::STATUS_SUSPENDED, 'Tạm ngưng', Heroicon::OutlinedPauseCircle, 'warning'),
+                DeleteBulkAction::make()->label('Bỏ vào thùng rác'),
+                RestoreBulkAction::make()->label('Khôi phục'),
             ]);
     }
 
     /**
-     * Đổi trạng thái nhiều câu một lần (ví dụ tạm ngưng cả một chủ đề để Thầy xem lại).
+     * Đổi tình trạng nhiều câu một lần (ví dụ tạm ngưng cả một chủ đề để Thầy xem lại).
      */
     private static function statusBulkAction(string $status, string $label, Heroicon $icon, string $color): BulkAction
     {
@@ -84,7 +82,8 @@ class QuestionsTable
             ->icon($icon)
             ->color($color)
             ->requiresConfirmation()
-            ->modalDescription('Lượt làm bài mới chỉ rút câu "Đã duyệt". Lượt đã làm không bị ảnh hưởng.')
+            ->modalHeading($label.' các câu đã chọn?')
+            ->modalDescription('Người làm bài sau đó chỉ được bốc câu "Đang dùng". Người đã làm bài trước đó không bị ảnh hưởng.')
             ->authorize(fn () => auth()->user()?->can('update', new Question) ?? false)
             ->action(function (Collection $records) use ($status): void {
                 $changed = Question::query()->whereKey($records->modelKeys())->where('review_status', '!=', $status)

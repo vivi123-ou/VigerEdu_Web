@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Làm gì:   Một phiên bản cài đặt bài test; dòng mới nhất là bản đang dùng.
- * Ai gọi:   TestConfig, trang Cài đặt bài test; lượt làm bài ghi lại phiên bản đã dùng.
+ * Ai gọi:   TestConfig, trang "Cách bốc đề & chấm điểm"; lượt làm bài ghi lại phiên bản đã dùng.
  * Dữ liệu:  bảng test_config_versions.
  */
 #[Fillable(['settings', 'note', 'user_id'])]

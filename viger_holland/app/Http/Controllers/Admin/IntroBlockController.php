@@ -51,7 +51,7 @@ class IntroBlockController extends Controller
 
         IntroBlocks::save($this->replace($block), 'Sửa khối "'.($block['data']['title'] ?: IntroBlocks::typeLabel($block['type'])).'"');
 
-        return redirect()->route('admin.intro-blocks.index')->with('status', 'Đã lưu khối. Trang giới thiệu hiện ngay nội dung mới.');
+        return redirect()->route('admin.intro-blocks.index')->with('status', 'Đã lưu khối. Trang mở đầu hiện ngay nội dung mới.');
     }
 
     /**

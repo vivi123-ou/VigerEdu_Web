@@ -17,7 +17,7 @@ class PageEditorController extends Controller
 {
     /** Trang sửa được => [tên, mục menu (quyền), trang biểu mẫu tương ứng]. */
     public const PAGES = [
-        'trang-gioi-thieu' => ['Trang giới thiệu', 'intro', 'admin.content.edit:intro'],
+        'trang-gioi-thieu' => ['Trang mở đầu', 'intro', 'admin.content.edit:intro'],
     ];
 
     public function show(Request $request, string $page): Response

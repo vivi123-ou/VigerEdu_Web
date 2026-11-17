@@ -17,8 +17,9 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $sort = 0;
-        foreach (Permissions::ALL as $code => [$name, $group]) {
-            Permission::firstOrCreate(['code' => $code], ['name' => $name, 'group' => $group, 'sort_order' => ++$sort]);
+        // Chữ của quyền do code định nghĩa (admin không sửa), nên chạy lại thì cập nhật theo bản mới nhất.
+        foreach (Permissions::ALL as $code => [$name, $group, $description]) {
+            Permission::updateOrCreate(['code' => $code], ['name' => $name, 'group' => $group, 'description' => $description, 'sort_order' => ++$sort]);
         }
 
         $sort = 0;

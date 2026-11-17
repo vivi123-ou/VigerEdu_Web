@@ -2,10 +2,10 @@
 
 namespace App\Modules\Assessment\Filament\Pages;
 
+use App\Filament\Concerns\UsesAdminMenu;
 use App\Models\User;
 use App\Modules\Assessment\Models\TestConfigVersion;
 use App\Modules\Assessment\Support\TestConfig;
-use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
@@ -26,11 +26,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Validation\ValidationException;
-use UnitEnum;
 
 /**
- * Làm gì:   Trang "Cài đặt bài test": mọi con số của rút đề, trang làm bài, chấm điểm, gợi ý ngành, cảnh báo.
+ * Làm gì:   Trang "Cách bốc đề & chấm điểm": mọi con số của rút đề, trang làm bài, chấm điểm, gợi ý ngành, cảnh báo.
  *           Mỗi lần lưu là một phiên bản mới (ghi rõ ô nào đổi); "Quay lại bản này" tạo phiên bản mới từ bản cũ.
  * Ai gọi:   Filament (đường dẫn /admin/test-settings). Quyền: test_settings.manage.
  * Dữ liệu:  bảng test_config_versions (qua TestConfig).
@@ -38,20 +38,11 @@ use UnitEnum;
 class TestSettings extends Page implements HasTable
 {
     use InteractsWithTable;
+    use UsesAdminMenu;
 
     protected static ?string $slug = 'test-settings';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAdjustmentsHorizontal;
-
-    protected static string|UnitEnum|null $navigationGroup = 'Bài trắc nghiệm';
-
-    protected static ?string $navigationLabel = 'Cài đặt bài test';
-
-    protected static ?string $title = 'Cài đặt bài test';
-
-    protected static ?int $navigationSort = 2;
-
-    protected ?string $subheading = 'Các con số quyết định cách rút đề, cách đọc mã Holland và cách gợi ý ngành. Bấm "Lưu" thì lượt làm bài mới dùng ngay; lượt đã làm giữ kết quả cũ. Lưu nhầm thì bấm "Quay lại bản này" ở Lịch sử cuối trang. Các ngưỡng hiện là ngưỡng thử nghiệm theo tài liệu của Thầy, sẽ hiệu chỉnh sau thí điểm.';
+    protected static string $menuKey = 'settings';
 
     /** @var array<string, mixed>|null */
     public ?array $data = [];
@@ -61,6 +52,21 @@ class TestSettings extends Page implements HasTable
         $user = auth()->user();
 
         return $user instanceof User && $user->canAccessAdmin() && $user->hasPermission('test_settings.manage');
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        return static::getNavigationLabel();
+    }
+
+    public function getSubheading(): string|Htmlable|null
+    {
+        return static::menuItem()['summary'] ?? null;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [static::helpAction()];
     }
 
     public function mount(): void
@@ -75,6 +81,8 @@ class TestSettings extends Page implements HasTable
         foreach (TestConfig::FIELDS as $title => $fields) {
             $sections[] = Section::make($title)
                 ->columns(2)
+                ->collapsible()
+                ->collapsed(str_starts_with($title, 'Nâng cao'))
                 ->components(collect($fields)->map(fn (array $field, string $key) => $this->field($key, $field))->values()->all());
         }
 
@@ -92,7 +100,7 @@ class TestSettings extends Page implements HasTable
                         Action::make('save')->label('Lưu')->submit('save')->keyBindings(['mod+s']),
                     ])->sticky(),
                 ]),
-            Section::make('Lịch sử các phiên bản cài đặt')
+            Section::make('Lịch sử thay đổi')
                 ->description('Bản mới nhất là bản đang dùng. Quay lại bản cũ cũng lưu thành một phiên bản mới, không xóa lịch sử.')
                 ->components([EmbeddedTable::make()]),
         ]);
@@ -133,11 +141,11 @@ class TestSettings extends Page implements HasTable
             ->defaultSort('id', 'desc')
             ->paginated([10, 25])
             ->columns([
-                TextColumn::make('id')->label('Phiên bản')->badge()
+                TextColumn::make('id')->label('Bản')->badge()
                     ->formatStateUsing(fn (int $state) => $state === $currentId ? "Bản {$state} · đang dùng" : "Bản {$state}")
                     ->color(fn (int $state) => $state === $currentId ? 'success' : 'gray'),
-                TextColumn::make('note')->label('Thay đổi')->wrap(),
-                TextColumn::make('user.name')->label('Người lưu')->default('Hệ thống'),
+                TextColumn::make('note')->label('Đã đổi gì')->wrap(),
+                TextColumn::make('user.name')->label('Ai đổi')->default('Hệ thống'),
                 TextColumn::make('created_at')->label('Lúc')->dateTime('H:i d/m/Y'),
             ])
             ->recordActions([

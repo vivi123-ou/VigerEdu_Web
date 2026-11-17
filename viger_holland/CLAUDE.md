@@ -27,6 +27,7 @@
   - *External (khách)*: biểu đồ 6 nhóm, **mã 2 chữ**; chữ thứ 3 chỉ đọc chi tiết khi đủ điều kiện; 3–5 ngành gợi ý với nhãn chữ (không %), nghề tham khảo, bước tiếp theo. Không hứa đậu. `noindex`.
   - *Internal (tư vấn viên / quản trị, phải đăng nhập)*: đủ 6 điểm, mã 3 chữ, mã thay thế, quan hệ lục giác, độ tin cậy, 36 câu đã làm, thông tin khách, JSON cho AI.
 - **Admin** (`/admin`): thư viện câu hỏi, cài đặt bài test, danh mục (6 nhóm, 15 cặp, 120 mã, ngành, nghề, môi trường), trường thông tin khách, lượt làm bài, nội dung trang, kết nối CRM, tài khoản, nhật ký.
+- **Phân quyền theo việc thật (chốt 17/11):** tư vấn viên chỉ **tra cứu từng khách** và đọc báo cáo nội bộ (không danh sách, không số liệu); nhân viên chỉ **xem thông tin liên lạc** khách mới và sửa trang khách xem (không kết quả, không số liệu); **số liệu, danh sách toàn bộ khách, tải dữ liệu: quản trị viên**. Trang của vai trò bị giới hạn **không ghi ra giới hạn**; trang không có quyền báo 404. Danh sách trường: chỉ tư vấn viên và quản trị viên thấy.
 - **Vai trò (chốt 14/11): Quản trị viên > Tư vấn viên > Nhân viên**, lưu trong bảng `roles/permissions` (quản trị viên thêm được vai trò mới và tick quyền ở trang "Vai trò & quyền"). **Chỉ quản trị viên xem toàn bộ và xuất dữ liệu.** Công việc chăm sóc khách nằm ở CRM, không làm trong Holland.
 - **Code chia module** (`app/Modules/...`), mỗi class có chú thích tiếng Việt *Làm gì / Ai gọi / Dữ liệu* (xem THIET_KE mục 3).
 
@@ -72,7 +73,8 @@
 
 - `docs/VIGER_Holland_QuestionBank_300_V1.xlsx` / `.csv`: 300 câu, 60 chủ đề, cấu hình rút đề.
 - `docs/VIGER_RIASEC_120_codes.xlsx`, `docs/VIGER_CareerMap_Layer4_Germany_V1.xlsx`, `docs/Sơ đồ kiến trúc ứng dụng VIGER EDU Career Map-chitiet.docx`: 120 mã, 15 cặp, nghề, môi trường, quy tắc.
-- `database/seeders/data/holland_v3/`: dữ liệu chuẩn hóa (6 nhóm, 15 cặp, 6 chữ thứ ba, 46 ngành, nghề, liên kết, môi trường, trường thông tin, cài đặt). File `questions.json` trong đó là 54 câu giả cũ → **không dùng**, thay bằng thư viện 300 câu.
+- `database/seeders/data/holland_v3/`: dữ liệu chuẩn hóa (6 nhóm, 15 cặp, 6 chữ thứ ba, 46 ngành, nghề, liên kết, môi trường) và `question_bank_300.csv`. Các file cũ `questions.json`, `settings.json`, `form_fields.json` đã xóa.
+- `docs/du_lieu_390_truong_DH_da_phien_dich.xlsx` (390 trường ĐH Đức, chưa có cột ngành) và `docs/du_lieu_16_bang_duc.xlsx` (16 bang): nạp thành danh mục Trường / Bang ở H6, thiết kế mở cho nhiều nước (Quốc gia, Vùng, Loại trường là dữ liệu; nhập Excel có bước ghép cột). Gợi ý "trường có ngành này" cần thêm file trường ↔ ngành do team điền.
 - `database/seeders/data/shared/regions.json`: khu vực ở Đức (dữ liệu thật, Ý thu thập).
 - **Không dùng** các file bản cũ đã xóa (`Holland_de_xuat_nganh_v2*`, `DEMO_Holland_de_xuat_nganh.xlsx`, dữ liệu `database/seeders/data/holland/`).
 
@@ -87,6 +89,7 @@
 - [x] 0. Nhánh `feature/holland-v3`, gỡ phần nghiệp vụ cũ, giữ hạ tầng
 - [x] H1. Dọn phần đang dở (model, migration, trang Cài đặt bài test chưa commit), bảng dữ liệu, seeder 300 câu, danh mục, `form_fields.crm_key`, `roles/permissions`
 - [x] F. Nền trang quản trị Filament: đăng nhập, bảng điều khiển, Thư viện câu hỏi, Cài đặt bài test, Tài khoản, Vai trò & quyền; bỏ vai trò Marketing
+- [x] F2. Admin theo mẫu `docs/mau_giao_dien/admin-filament.html`: menu đặt tên theo việc làm (một chỗ: `config/admin_menu.php`), quyền viết thành câu "Được…", nút "?" hướng dẫn từng bước, ô lối tắt theo vai trò, trang "Sắp có", báo 404 thay 403
 - [ ] H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + test 8 ca
 - [ ] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
 - [ ] H4. Module Respondent: form thông tin, OTP email, đồng ý, báo cáo đầy đủ, email link

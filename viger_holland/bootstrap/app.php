@@ -3,11 +3,14 @@
 use App\Http\Middleware\EnsureAdminAccess;
 use App\Http\Middleware\EnsureMenuAccess;
 use App\Http\Middleware\NoIndex;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -34,4 +37,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Trang quản trị không có quyền: báo "không tìm thấy" (404) thay vì "không có quyền" (403),
+        // để tư vấn viên, nhân viên không biết trang đó tồn tại (Vân chốt 17/11).
+        $isAdminRequest = fn (): bool => request()->is('admin', 'admin/*');
+        $exceptions->map(fn (AuthorizationException $e) => $isAdminRequest() ? new NotFoundHttpException(previous: $e) : $e);
+        $exceptions->map(fn (HttpException $e) => $e->getStatusCode() === 403 && $isAdminRequest() ? new NotFoundHttpException(previous: $e) : $e);
     })->create();

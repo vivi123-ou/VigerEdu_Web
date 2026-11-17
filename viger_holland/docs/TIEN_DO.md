@@ -25,12 +25,64 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 |---|---|
 | H1. Dọn phần đang dở, bảng dữ liệu, seeder 300 câu, danh mục, `crm_key`, `roles/permissions` | ✅ Xong (17/11) |
 | F. Nền trang quản trị Filament, bỏ vai trò Marketing | ✅ Xong (17/11) |
-| H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | Chưa làm |
+| F2. Admin theo mẫu `admin-filament.html`: tên theo việc làm, quyền "Được…", nút "?", lối tắt, "Sắp có", 404 | ✅ Xong (17/11) |
+| H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | Chưa làm (tiếp theo) |
 | H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | Chưa làm |
 | H4. Form thông tin, OTP email, báo cáo đầy đủ | Chưa làm |
 | H5. CrmSync + Tracking | Chưa làm |
 | H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+### Vân chốt sau trang mẫu admin (17/11/2026)
+
+- **Phân quyền theo việc thật:**
+  - Tư vấn viên chỉ **tra cứu từng khách** để đọc báo cáo nội bộ: không có danh sách, không xem số liệu.
+  - Nhân viên chỉ **xem thông tin liên lạc** của khách mới và sửa trang khách xem: không thấy kết quả, không xem số liệu.
+  - **Số liệu làm bài, danh sách toàn bộ khách, tải dữ liệu**: chỉ quản trị viên.
+- **Không lộ giới hạn:** trang của tư vấn viên, nhân viên không ghi ra họ bị giới hạn gì; trang không có quyền báo "không tìm thấy" (404).
+- **Báo cáo nội bộ:** nút "In / PDF" và "Sao chép cho AI" chỉ quản trị viên thấy.
+- **Ghi kết quả cuộc gọi:** ở CRM như đã chốt 14/11.
+- **Ô giới thiệu trên viger.edu.vn:** giữ chức năng; đoạn mã gửi người làm web chính thu gọn, chỉ quản trị viên thấy.
+- **Tra cứu báo cáo khách** và **Khách cần liên lạc** làm ở H4 (cùng báo cáo); **Số liệu làm bài** làm ở H5–H6, chỉ quản trị viên.
+- **Danh sách trường** (H6):
+  - chỉ tư vấn viên và quản trị viên thấy;
+  - ẩn mặc định 20 trường ĐH Hành chính / Đặc thù;
+  - file 16 bang bỏ cột thủ hiến, bỏ ký hiệu "[8]";
+  - thiết kế mở cho nhiều nước (Quốc gia, Vùng, Loại trường là dữ liệu; nhập Excel có bước ghép cột);
+  - "trường có ngành này" chờ team điền file trường ↔ ngành.
+- **Thuật toán (cho Thầy chỉnh sau, không cần sửa code):**
+  - "ngành nền đứng trước" làm thành công tắc trong "Cách bốc đề & chấm điểm" ở H2;
+  - chặn ngành khi nhóm thấp: tăng ô "Mốc xét ngành ngoài cặp";
+  - tỉ trọng môn: sửa ở trang Ngành học (H6).
+
+### F2 đã làm (17/11/2026)
+
+- **Menu một chỗ:** `config/admin_menu.php` giữ tên, nhóm, quyền, biểu tượng, câu mô tả, hướng dẫn nút "?" và nhãn "Sắp có" của mọi mục. Đổi tên một mục chỉ sửa một dòng.
+- **Tên theo việc làm:**
+  - menu: Trang chủ quản trị; nhóm Khách hàng / Bài trắc nghiệm / Trang khách xem / Quản lý hệ thống;
+  - trang: Câu hỏi trắc nghiệm; Cách bốc đề & chấm điểm; Ô giới thiệu trên viger.edu.vn; Kho ảnh; Tài khoản nhân sự; Phân quyền…;
+  - câu hỏi: tình trạng "Đang dùng / Tạm ngưng / Nháp", mức ưu tiên "Cao / Vừa / Thấp";
+  - các ô trong "Cách bốc đề & chấm điểm" viết thành câu hỏi, ô ít dùng gom vào phần "Nâng cao" thu gọn.
+- **Phân quyền mới:**
+  - 14 quyền viết thành câu "Được…", chia 4 nhóm (có / không có thông tin cá nhân của khách, bài trắc nghiệm, quản lý hệ thống), mỗi quyền có dòng giải thích;
+  - trang Phân quyền chia ô tick theo nhóm; quyền tải dữ liệu hiện 🔒, không tick được;
+  - mặc định: Tư vấn viên = tra cứu từng khách; Nhân viên = thông tin liên lạc khách mới + sửa trang khách xem;
+  - chặn thêm: người không phải quản trị viên không sửa được vai trò của chính mình.
+- **Nút "?"** vàng trên mọi trang Filament: hộp "Trang này dùng để làm gì?" với các bước "muốn làm gì → bấm gì". Trang cũ dùng chung nội dung.
+- **Trang chủ quản trị:**
+  - lời chào; tối đa 6 ô lối tắt, việc dùng được ngay đứng trước;
+  - 4 ô số liệu chỉ hiện cho người có quyền.
+- **Thanh trên:** "Xem trang làm bài như khách", "Web chính" (quản trị viên, khi đã nhập địa chỉ), "Mở CRM" (khi đã nhập địa chỉ), tên và vai trò.
+- **Mục "Sắp có":** hiện trong menu với nhãn, bấm vào mở trang giải thích phần đó làm gì, giai đoạn nào xong. Chỉ hiện cho người có quyền tương ứng.
+- **404 thay 403** trong khu quản trị.
+- **Tài khoản nhân sự:** nút Khóa / Mở khóa ngay trên bảng (kiểm tra quyền phía máy chủ, không chỉ ẩn nút).
+- **Ô giới thiệu:** đoạn mã nhúng thu gọn vào "Dành cho người làm web chính", chỉ quản trị viên thấy.
+- **Đã xóa** `settings.json`, `form_fields.json` cũ (D-17). Đưa vào git 2 file trường / bang và trang mẫu admin.
+- **Kiểm thử: 80/80 đạt.** Test mới:
+  - menu và ô lối tắt từng vai trò; trang "Sắp có";
+  - nút "?" trên các trang; thứ tự ô lối tắt;
+  - trang của vai trò bị giới hạn không ghi giới hạn; 404;
+  - Phân quyền chia nhóm và không cấp được quyền tải dữ liệu; khóa / mở khóa tài khoản; chặn tự nâng quyền.
 
 ### F đã làm (17/11/2026)
 
@@ -96,11 +148,17 @@ Vân chốt: trang quản trị dùng **Filament** (đỡ làm từ đầu, dễ
   - `migrate:fresh --seed` rồi `db:seed` lần 2 trên SQLite: không lỗi, số lượng giữ nguyên;
   - 14 test mới (nạp dữ liệu, cài đặt, phân quyền); tổng **55/55 đạt**.
 
-**Câu hỏi / việc chờ:**
+**Câu hỏi / việc chờ (cập nhật 17/11):**
 1. **Tỉ trọng môn theo cụm ngành** (`CatalogSeeder::SUBJECT_WEIGHTS`) là đề xuất ban đầu của mình, dựa trên cột môn nền. Cần Thầy duyệt; sửa được ở admin từ H6.
 2. **34 tỉnh / thành** trong ô Tỉnh là danh sách sau sắp xếp năm 2025. Vân kiểm lại giúp.
 3. Mã `KHAC` cần thêm vào `TU_DIEN_DU_LIEU_CHUNG.xlsx` / `lua_chon_chuan.json` bên CRM.
-4. Trong `database/seeders/data/holland_v3/` còn `settings.json` (bản cũ có "Chưa biết", đề cố định) và `form_fields.json` (18 ô cũ). **Không seeder nào dùng.** Có xóa không?
+4. ~~File cũ `settings.json`, `form_fields.json`~~: đã xóa (Vân đồng ý).
+5. Hỏi Thầy:
+   - Khoa học sức khỏe khớp 5/18 vẫn đứng thứ 2 (ngành nền cặp IS);
+   - Kinh tế học (IEC) vẫn được gợi ý cho HS01 dù nhóm E thấp.
+   - Cả hai chỉnh được bằng cài đặt, không gấp.
+6. Team: danh sách **trường ↔ ngành** Viger hay gửi hồ sơ; xác định hệ đào tạo cho **22 ngành** đang ghi "Cần tra".
+7. Trước khi lên máy chủ thật: bật xác thực 2 lớp cho quản trị viên.
 
 **Việc Vân cần làm:**
 - Trên máy Vân chạy `composer install`, rồi `php artisan migrate:fresh --seed` một lần (bảng mới, dữ liệu, 3 vai trò). Sau đó vào `/admin` xem thử.

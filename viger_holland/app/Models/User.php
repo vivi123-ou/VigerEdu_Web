@@ -107,7 +107,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canExportData(): bool
     {
-        return $this->hasPermission('data.export');
+        return $this->hasPermission(Permissions::EXPORT);
     }
 
     /**
@@ -115,13 +115,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessMenu(string $key): bool
     {
-        $item = AdminMenu::find($key);
-
-        if ($item === null) {
-            return false;
-        }
-
-        return isset($item['permission']) ? $this->hasPermission($item['permission']) : $this->isAdmin();
+        return AdminMenu::allows($this, $key);
     }
 
     public function roleLabel(): string

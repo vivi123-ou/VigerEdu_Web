@@ -10,5 +10,5 @@ use Illuminate\Database\Eloquent\Model;
  * Ai gọi:   User::hasPermission(), RoleSeeder, trang phân quyền (H6).
  * Dữ liệu:  bảng permissions.
  */
-#[Fillable(['code', 'name', 'group', 'sort_order'])]
+#[Fillable(['code', 'name', 'group', 'description', 'sort_order'])]
 class Permission extends Model {}

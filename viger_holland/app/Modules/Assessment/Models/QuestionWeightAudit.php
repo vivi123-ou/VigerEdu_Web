@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Làm gì:   Lịch sử đổi trọng số rút đề của một câu: giá trị cũ, mới, lý do, người sửa.
- * Ai gọi:   Thư viện câu hỏi (H6) khi đổi trọng số.
+ * Ai gọi:   trang Sửa câu hỏi (Filament) khi đổi con số ưu tiên.
  * Dữ liệu:  bảng question_weight_audits.
  */
 #[Fillable(['question_id', 'old_weight', 'new_weight', 'reason', 'user_id'])]

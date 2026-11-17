@@ -57,7 +57,7 @@ class EmbedAndRolesTest extends TestCase
         $this->actingAs($staff);
 
         $this->get(route('filament.admin.pages.dashboard'))->assertOk()
-            ->assertSee('Trang giới thiệu')->assertSee('Thư viện ảnh')
+            ->assertSee('Trang mở đầu')->assertSee('Kho ảnh')
             ->assertDontSee(route('filament.admin.resources.questions.index'), false)
             ->assertDontSee(route('filament.admin.pages.test-settings'), false)
             ->assertDontSee(route('filament.admin.resources.users.index'), false)
@@ -68,11 +68,11 @@ class EmbedAndRolesTest extends TestCase
         $this->get(route('admin.intro-blocks.index'))->assertOk();
         $this->get(route('admin.media.index'))->assertOk();
 
-        // Câu hỏi, cài đặt bài test, tài khoản, giao diện chung: không có quyền.
-        $this->get(route('filament.admin.resources.questions.index'))->assertForbidden();
-        $this->get(route('filament.admin.pages.test-settings'))->assertForbidden();
-        $this->get(route('filament.admin.resources.users.index'))->assertForbidden();
-        $this->get(route('admin.content.edit', 'appearance'))->assertForbidden();
+        // Câu hỏi, cách bốc đề, tài khoản, giao diện chung: không có quyền → báo "không tìm thấy".
+        $this->get(route('filament.admin.resources.questions.index'))->assertNotFound();
+        $this->get(route('filament.admin.pages.test-settings'))->assertNotFound();
+        $this->get(route('filament.admin.resources.users.index'))->assertNotFound();
+        $this->get(route('admin.content.edit', 'appearance'))->assertNotFound();
     }
 
     public function test_staff_cannot_revert_admin_only_changes(): void
@@ -82,7 +82,7 @@ class EmbedAndRolesTest extends TestCase
 
         $this->actingAs(User::factory()->create(['role' => User::ROLE_STAFF]));
 
-        $this->post(route('admin.history.revert', $scoring))->assertForbidden();
+        $this->post(route('admin.history.revert', $scoring))->assertNotFound();
         $this->post(route('admin.history.revert', $intro))->assertRedirect();
         $this->assertSame('Cũ', Setting::where('key', 'intro_title')->value('value'));
     }

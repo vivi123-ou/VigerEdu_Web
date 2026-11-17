@@ -1,6 +1,6 @@
 @extends('layouts.admin', ['menuKey' => 'media'])
 
-@section('title', 'Thư viện ảnh')
+@section('title', 'Kho ảnh')
 
 @section('content')
     <p class="lead">Ảnh dùng cho banner, logo, khối nội dung. Ảnh rộng hơn 1920px được tự thu nhỏ và nén để trang tải nhanh. Trong các trang nội dung, bấm "Chọn ảnh" để lấy ảnh từ đây.</p>

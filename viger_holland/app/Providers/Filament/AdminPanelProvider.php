@@ -3,12 +3,12 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Auth\Login;
+use App\Filament\Pages\ComingSoon;
 use App\Filament\Pages\Dashboard;
 use App\Http\Middleware\EnsureAdminAccess;
 use App\Http\Middleware\NoIndex;
 use App\Models\User;
 use App\Support\AdminMenu;
-use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -18,7 +18,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Icons\Heroicon;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -27,10 +27,11 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /**
- * Làm gì:   Khu quản trị /admin dựng bằng Filament: đăng nhập, menu, màu và logo, các trang của từng module.
+ * Làm gì:   Khu quản trị /admin dựng bằng Filament: đăng nhập, menu (theo config/admin_menu.php), màu và logo,
+ *           thanh trên (xem trang khách, web chính, CRM, tên và vai trò), các trang của từng module.
  *           Trang khách vẫn là Blade thuần, không dùng Filament.
  * Ai gọi:   Laravel (bootstrap/providers.php).
- * Dữ liệu:  logo, màu, tên đơn vị lấy từ bảng settings (sửa ở "Giao diện & chân trang"); quyền từ bảng roles / permissions.
+ * Dữ liệu:  logo, màu, tên đơn vị, địa chỉ web chính / CRM lấy từ bảng settings; quyền từ bảng roles / permissions.
  */
 class AdminPanelProvider extends PanelProvider
 {
@@ -54,18 +55,12 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(fn () => media_url(setting('favicon_path', 'img/favicon.png')))
             ->colors(fn () => ['primary' => Color::hex((string) setting('primary_color', '#c1121f'))])
             ->sidebarCollapsibleOnDesktop()
-            ->navigationGroups([
-                NavigationGroup::make('Bài trắc nghiệm'),
-                NavigationGroup::make('Nội dung trang'),
-                NavigationGroup::make('Hệ thống'),
-            ])
-            ->navigationItems($this->contentPageItems())
-            ->userMenuItems([
-                Action::make('public-site')->label('Xem trang test như khách')
-                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
-                    ->url(fn () => route('home'), shouldOpenInNewTab: true),
-            ])
-            ->pages([Dashboard::class])
+            ->sidebarWidth('22rem')
+            ->globalSearch(false)
+            ->navigationGroups(collect(config('admin_menu.groups'))->map(fn (string $group) => NavigationGroup::make($group))->all())
+            ->navigationItems($this->extraNavigationItems())
+            ->renderHook(PanelsRenderHook::USER_MENU_BEFORE, fn () => view('filament.topbar-links'))
+            ->pages([Dashboard::class, ComingSoon::class])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->middleware([
                 EncryptCookies::class,
@@ -94,29 +89,26 @@ class AdminPanelProvider extends PanelProvider
     }
 
     /**
-     * Các trang nội dung làm từ trước (sửa trang giới thiệu, nhúng, giao diện, thư viện ảnh) chưa chuyển sang Filament:
-     * vẫn hiện trong menu, bấm vào mở trang cũ. Sẽ chuyển dần ở H6.
+     * Mục menu không phải trang Filament: trang làm từ trước (chuyển dần ở H6) và mục "Sắp có".
+     * Mỗi người chỉ thấy mục mình có quyền; mục "Sắp có" mờ đi và có nhãn.
      *
      * @return list<NavigationItem>
      */
-    private function contentPageItems(): array
+    private function extraNavigationItems(): array
     {
-        $icons = [
-            'intro' => Heroicon::OutlinedPencilSquare,
-            'embed' => Heroicon::OutlinedCodeBracket,
-            'appearance' => Heroicon::OutlinedSwatch,
-            'media' => Heroicon::OutlinedPhoto,
-        ];
-
-        return collect(AdminMenu::items())
-            ->filter(fn (array $item) => isset($item['route'], $icons[$item['key']]))
-            ->values()
-            ->map(fn (array $item, int $index) => NavigationItem::make($item['label'])
-                ->group('Nội dung trang')
-                ->icon($icons[$item['key']])
-                ->sort($index + 1)
+        return AdminMenu::items()
+            ->filter(fn (array $item) => ! isset($item['page']))
+            ->map(fn (array $item) => NavigationItem::make($item['label'])
+                ->group($item['group'])
+                ->icon($item['icon'])
+                ->sort($item['sort'])
+                ->badge(AdminMenu::isComingSoon($item) ? 'Sắp có' : null, color: 'gray')
                 ->url(fn () => AdminMenu::url($item))
-                ->visible(fn () => auth()->user() instanceof User && auth()->user()->canAccessMenu($item['key'])))
+                ->isActiveWhen(fn () => AdminMenu::isComingSoon($item)
+                    ? request()->routeIs('filament.admin.pages.sap-co') && request()->query('muc') === $item['key']
+                    : request()->url() === AdminMenu::url($item))
+                ->visible(fn () => AdminMenu::allows(auth()->user() instanceof User ? auth()->user() : null, $item['key'])))
+            ->values()
             ->all();
     }
 }

@@ -16,7 +16,7 @@
 
 return [
     'intro' => [
-        'title' => 'Trang giới thiệu – Banner',
+        'title' => 'Trang mở đầu – Banner',
         'menu' => 'intro',
         'group' => 'intro',
         'preview' => 'home',
@@ -37,7 +37,7 @@ return [
     ],
 
     'embed' => [
-        'title' => 'Khối nhúng cho web chính',
+        'title' => 'Ô giới thiệu trên viger.edu.vn',
         'menu' => 'embed',
         'group' => 'embed',
         'preview' => 'embed',
@@ -48,14 +48,14 @@ return [
                 ['key' => 'embed_image', 'label' => 'Ảnh', 'type' => 'image', 'hint' => 'Không bắt buộc. Nên rộng khoảng 800px.'],
                 ['key' => 'embed_button_text', 'label' => 'Chữ trên nút', 'type' => 'text', 'required' => true],
             ],
-            'Tên miền được phép nhúng' => [
-                ['key' => 'embed_allowed_domains', 'label' => 'Tên miền được nhúng khối này', 'type' => 'domains', 'hint' => 'Mỗi dòng một địa chỉ, ví dụ https://viger.edu.vn. Trang khác không nhúng được (chống giả mạo).'],
+            'Web nào được hiện ô này' => [
+                ['key' => 'embed_allowed_domains', 'label' => 'Địa chỉ web được hiện ô giới thiệu', 'type' => 'domains', 'hint' => 'Mỗi dòng một địa chỉ, ví dụ https://viger.edu.vn. Web khác chép mã về cũng không hiện được (chống giả mạo).'],
             ],
         ],
     ],
 
     'appearance' => [
-        'title' => 'Menu, chân trang, giao diện',
+        'title' => 'Logo, màu, hotline, chân trang',
         'menu' => 'appearance',
         'group' => 'general',
         'preview' => 'home',

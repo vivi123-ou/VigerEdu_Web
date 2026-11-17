@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Làm gì:   Ai được thêm vai trò và tick quyền cho vai trò: người có quyền accounts.manage.
- *           Chặn thêm: vai trò Quản trị viên luôn có mọi quyền, không sửa được; vai trò lõi hoặc còn tài khoản thì không xóa được.
- * Ai gọi:   Laravel Gate, trang Vai trò & quyền (Filament).
+ *           Chặn thêm: vai trò Quản trị viên luôn có mọi quyền, không sửa được; không ai (trừ quản trị viên) sửa vai trò của chính mình;
+ *           vai trò lõi hoặc còn tài khoản thì không xóa được.
+ * Ai gọi:   Laravel Gate, trang Phân quyền (Filament).
  * Dữ liệu:  bảng roles, role_permission, users.
  */
 class RolePolicy extends PermissionPolicy
@@ -24,7 +25,8 @@ class RolePolicy extends PermissionPolicy
      */
     public function update(User $user, Model $record): bool
     {
-        return $this->allowed($user) && $record->code !== User::ROLE_ADMIN;
+        // Người không phải quản trị viên không sửa được vai trò của chính mình (tránh tự tick thêm quyền cho mình).
+        return $this->allowed($user) && $record->code !== User::ROLE_ADMIN && ($user->isAdmin() || $user->role !== $record->code);
     }
 
     /**

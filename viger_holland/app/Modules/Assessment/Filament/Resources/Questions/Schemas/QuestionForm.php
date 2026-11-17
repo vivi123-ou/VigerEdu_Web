@@ -17,25 +17,22 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
 /**
- * Làm gì:   Form thêm / sửa một câu hỏi, có chú thích cạnh từng ô.
- * Ai gọi:   QuestionResource::form() (trang Thêm câu, Sửa câu).
- * Dữ liệu:  bảng questions, question_facets; trọng số mặc định theo loại đọc từ Cài đặt bài test.
+ * Làm gì:   Form thêm / sửa một câu hỏi, chữ viết cho người không làm IT, có chú thích cạnh từng ô.
+ * Ai gọi:   QuestionResource::form() (trang Thêm câu hỏi, Sửa câu).
+ * Dữ liệu:  bảng questions, question_facets; con số ưu tiên mặc định theo mức đọc từ "Cách bốc đề & chấm điểm".
  */
 class QuestionForm
 {
     public static function configure(Schema $schema): Schema
     {
         $isEditing = fn (string $operation): bool => $operation === 'edit';
+        $weightChanged = fn (Get $get, ?Question $record): bool => $record !== null && (float) $get('selection_weight') !== (float) $record->selection_weight;
 
         return $schema->columns(1)->components([
-            Section::make('Nội dung câu')
+            Section::make('Câu hỏi')
                 ->columns(3)
                 ->components([
-                    TextInput::make('code')->label('Mã câu')
-                        ->disabled()->dehydrated(false)
-                        ->placeholder('Tự đặt khi lưu')
-                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Phần mềm tự đặt theo nhóm (ví dụ R051). Không đổi được để lượt làm bài cũ vẫn khớp.'),
-                    Select::make('group')->label('Nhóm')
+                    Select::make('group')->label('Thuộc nhóm')
                         ->options(fn () => QuestionResource::groupOptions())
                         ->required()->live()
                         ->disabled($isEditing)
@@ -44,51 +41,55 @@ class QuestionForm
                     Select::make('question_facet_id')->label('Chủ đề')
                         ->options(fn (Get $get) => QuestionFacet::query()->where('group', $get('group'))->orderBy('sort_order')->pluck('name', 'id'))
                         ->required()->searchable()
-                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Mỗi nhóm có 10 chủ đề. Đề rút ra phải có ít nhất 4 chủ đề khác nhau mỗi nhóm.'),
-                    Textarea::make('text')->label('Câu hỏi khách đọc')
+                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Mỗi nhóm có 10 chủ đề. Đề bốc ra phải có ít nhất 4 chủ đề khác nhau mỗi nhóm.'),
+                    Select::make('review_status')->label('Tình trạng')
+                        ->options(Question::STATUS_LABELS)->required()
+                        ->default(Question::STATUS_DRAFT)
+                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Chỉ câu "Đang dùng" được bốc vào đề. Câu mới để "Nháp" cho tới khi Thầy duyệt.'),
+                    Textarea::make('text')->label('Câu khách đọc')
                         ->required()->maxLength(300)->rows(2)->columnSpanFull()
-                        ->helperText('Viết ở ngôi "Tôi…", một ý, dễ hiểu với học sinh. Sửa chữ thì phiên bản câu tự tăng; lượt làm bài cũ vẫn giữ câu cũ.'),
+                        ->helperText('Viết ở ngôi "Tôi…", một ý, dễ hiểu với học sinh lớp 10. Người đã làm bài trước đó vẫn giữ câu cũ.'),
                 ]),
 
-            Section::make('Rút đề')
-                ->description('Trọng số chỉ quyết định câu hay được rút vào đề đến mức nào, không dùng để tính điểm.')
+            Section::make('Mức ưu tiên khi bốc đề')
+                ->description('Câu ưu tiên cao được bốc vào đề thường xuyên hơn. Không ảnh hưởng điểm của học sinh.')
                 ->columns(3)
                 ->components([
-                    Select::make('priority_tier')->label('Loại câu')
+                    Select::make('priority_tier')->label('Mức ưu tiên')
                         ->options(fn () => QuestionResource::tierOptions())
                         ->required()->default('B')->live()
-                        ->afterStateUpdated(function (Set $set, Get $get, string $operation, ?string $state): void {
+                        ->afterStateUpdated(function (Set $set, string $operation, ?string $state): void {
                             if ($operation === 'create' && $state !== null) {
                                 $set('selection_weight', TestConfig::get('tier_weight_'.strtolower($state)));
                             }
                         })
-                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'A – Lõi: câu đại diện rõ nhất cho nhóm. B – Chuẩn. C – Mở rộng: câu bổ sung, ít được rút hơn.'),
-                    TextInput::make('selection_weight')->label('Trọng số')
+                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Cao: câu đại diện rõ nhất cho nhóm. Vừa: câu thường. Thấp: câu bổ sung, ít được bốc hơn.'),
+                    TextInput::make('selection_weight')->label('Con số ưu tiên')
                         ->numeric()->minValue(0)->maxValue(100)->step(0.5)->required()
                         ->default(fn () => TestConfig::get('tier_weight_b'))
                         ->live(onBlur: true)
-                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Mặc định A = 5, B = 3, C = 1 (đổi ở Cài đặt bài test). Đặt 0 thì câu gần như không được rút.'),
-                    Toggle::make('is_anchor')->label('Câu neo')
+                        ->helperText('Mặc định Cao = 5, Vừa = 3, Thấp = 1.')
+                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Số càng lớn càng hay được bốc. Đặt 0 thì câu gần như không được bốc.'),
+                    Toggle::make('is_anchor')->label('Luôn có trong mọi đề')
                         ->inline(false)
-                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Câu neo luôn có trong mọi đề khi bật "Dùng câu neo" ở Cài đặt bài test. Chỉ dùng khi Thầy cần so sánh các đề.'),
-                    TextInput::make('weight_change_reason')->label('Lý do đổi trọng số')
+                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Chỉ có tác dụng khi bật "Dùng câu luôn có trong mọi đề" ở trang "Cách bốc đề & chấm điểm". Dùng khi Thầy cần so sánh các đề.'),
+                    TextInput::make('weight_change_reason')->label('Vì sao đổi con số ưu tiên?')
                         ->dehydrated(false)->maxLength(500)->columnSpanFull()
-                        ->visible(fn (Get $get, ?Question $record) => $record !== null && (float) $get('selection_weight') !== (float) $record->selection_weight)
-                        ->required(fn (Get $get, ?Question $record) => $record !== null && (float) $get('selection_weight') !== (float) $record->selection_weight)
-                        ->helperText('Bắt buộc khi đổi trọng số, để sau này biết vì sao đề thay đổi.'),
+                        ->visible($weightChanged)
+                        ->required($weightChanged)
+                        ->validationMessages(['required' => 'Vui lòng ghi lý do để sau này biết vì sao đề thay đổi.']),
                 ]),
 
-            Section::make('Duyệt')
+            Section::make('Ghi chú')
                 ->columns(2)
+                ->collapsible()
+                ->collapsed($isEditing)
                 ->components([
-                    Select::make('review_status')->label('Trạng thái')
-                        ->options(Question::STATUS_LABELS)->required()
-                        ->default(Question::STATUS_DRAFT)
-                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Chỉ câu "Đã duyệt" được rút vào đề. Câu mới thêm để "Nháp" cho tới khi Thầy duyệt.'),
+                    Textarea::make('review_note')->label('Ghi chú khi duyệt')->rows(2)->maxLength(1000)->columnSpanFull(),
+                    TextInput::make('source_reference')->label('Nguồn tham khảo')->maxLength(255),
                     TextInput::make('item_version')->label('Phiên bản câu')
-                        ->disabled()->dehydrated(false)->placeholder('1.0'),
-                    Textarea::make('review_note')->label('Ghi chú duyệt')->rows(2)->maxLength(1000)->columnSpanFull(),
-                    TextInput::make('source_reference')->label('Nguồn tham khảo')->maxLength(255)->columnSpanFull(),
+                        ->disabled()->dehydrated(false)->placeholder('1.0')
+                        ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Tự tăng mỗi khi sửa chữ của câu (1.0 → 1.1).'),
                 ]),
         ]);
     }

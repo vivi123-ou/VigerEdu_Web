@@ -11,7 +11,7 @@ use Throwable;
 
 /**
  * Làm gì:   Mọi con số của bài test: rút đề, trang làm bài, chấm điểm, gợi ý ngành, cảnh báo chất lượng. Lưu theo phiên bản.
- * Ai gọi:   trang Cài đặt bài test; QuestionPicker, ScoringService, ProfileAnalyzer, MajorMatcher (H2); TestConfigSeeder.
+ * Ai gọi:   trang "Cách bốc đề & chấm điểm"; QuestionPicker, ScoringService, ProfileAnalyzer, MajorMatcher (H2); TestConfigSeeder.
  * Dữ liệu:  bảng test_config_versions (dòng mới nhất là bản đang dùng). Mặc định theo tài liệu của Thầy và quyết định 11–14/11/2026.
  */
 final class TestConfig
@@ -66,46 +66,45 @@ final class TestConfig
     ];
 
     /**
-     * Các ô trên trang "Cài đặt bài test": [nhóm => [khóa => [nhãn, giải thích, kiểu, đơn vị]]].
-     * Kiểu: int, decimal, bool, labels5 (5 nhãn thang), bands, c_labels, academic_labels.
+     * Các ô trên trang "Cách bốc đề & chấm điểm": [phần => [khóa => [tên ô, giải thích, kiểu, đơn vị]]].
+     * Tên ô viết thành câu hỏi cho người không làm IT. Phần có tên bắt đầu bằng "Nâng cao" được thu gọn sẵn.
+     * Kiểu: int, decimal, bool, labels5 (5 nhãn sao), bands, c_labels, academic_labels.
      *
      * @var array<string, array<string, array{0: string, 1: string, 2: string, 3?: string}>>
      */
     public const FIELDS = [
-        'Rút đề' => [
-            'items_per_group' => ['Số câu mỗi nhóm', 'Mỗi lượt làm bài rút bấy nhiêu câu cho mỗi nhóm R, I, A, S, E, C. 6 câu → bài 36 câu.', 'int', 'câu'],
-            'min_distinct_facets' => ['Số chủ đề khác nhau tối thiểu mỗi nhóm', 'Các câu rút ra của một nhóm phải thuộc ít nhất bấy nhiêu chủ đề hoạt động khác nhau (ví dụ nhóm R: lắp ráp, sửa chữa, vận hành…), để đề không bị lệch về một dạng hoạt động.', 'int', 'chủ đề'],
-            'max_generation_attempts' => ['Số lần thử tối đa khi rút đề', 'Nếu rút mãi không đạt điều kiện chủ đề, sau bấy nhiêu lần phần mềm nới điều kiện và ghi cảnh báo cho quản trị viên.', 'int', 'lần'],
-            'avoid_repeat' => ['Hạn chế lặp câu khi làm lại', 'Người làm lại trên cùng máy sẽ ưu tiên gặp câu khác lần trước (nhận ra bằng cookie, không dùng số điện thoại).', 'bool'],
-            'use_anchors' => ['Dùng câu neo', 'Bật thì câu được đánh dấu "câu neo" luôn có trong mọi đề. Chỉ bật khi Thầy đã chọn câu neo cho nghiên cứu so sánh đề.', 'bool'],
-            'tier_weight_a' => ['Trọng số mặc định câu loại A (lõi)', 'Câu mới thêm hoặc nhập Excel thuộc loại A nhận trọng số này. Trọng số cao thì hay được rút vào đề hơn. Không ảnh hưởng điểm của học sinh.', 'decimal'],
-            'tier_weight_b' => ['Trọng số mặc định câu loại B (chuẩn)', 'Như trên, cho câu loại B.', 'decimal'],
-            'tier_weight_c' => ['Trọng số mặc định câu loại C (mở rộng)', 'Như trên, cho câu loại C.', 'decimal'],
+        'Đề thi' => [
+            'items_per_group' => ['Mỗi nhóm bốc mấy câu', '6 câu × 6 nhóm (R, I, A, S, E, C) = đề 36 câu.', 'int', 'câu'],
+            'items_per_page' => ['Mỗi trang hiện mấy câu', 'Khách trả lời đủ các câu trên trang mới bấm "Tiếp tục" được. 6 câu → 6 trang cho đề 36 câu.', 'int', 'câu'],
+            'likert_labels' => ['Chữ hiện cạnh số sao', 'Chữ khách thấy khi chọn số sao, từ 1 sao đến 5 sao. 3 sao là "phân vân".', 'labels5'],
         ],
-        'Trang làm bài' => [
-            'items_per_page' => ['Số câu mỗi trang', 'Mỗi trang làm bài hiện bấy nhiêu câu; khách trả lời đủ mới bấm Tiếp tục được. 6 câu → 6 trang cho bài 36 câu.', 'int', 'câu'],
-            'likert_labels' => ['Chữ của 5 mức sao', 'Chữ hiện cạnh hàng sao sau khi khách chọn và trong phần chú thích, từ 1 sao đến 5 sao. 3 sao là trung lập.', 'labels5'],
+        'Đọc kết quả' => [
+            'third_letter_threshold' => ['Khi nào khách thấy mã 3 chữ', 'Nhóm đứng thứ 3 phải có điểm trên mức này (4,2 ≈ từ 26/30 điểm). Dưới mức này khách chỉ thấy mã 2 chữ. Tư vấn viên luôn thấy đủ 3 chữ.', 'decimal', 'điểm'],
+            'max_majors_public' => ['Gợi ý tối đa mấy ngành cho khách', 'Tư vấn viên xem được toàn bộ danh sách ngành.', 'int', 'ngành'],
+            'interest_mark' => ['Mốc xét ngành ngoài cặp', 'Một ngành không phải ngành nền của cặp mã chỉ được gợi ý khi nhóm đứng đầu của ngành đó có điểm của khách trên mốc này. Tăng lên thì gợi ý chặt hơn.', 'decimal', 'điểm'],
         ],
-        'Chấm điểm và đọc mã Holland' => [
-            'interest_midpoint' => ['Mốc "có quan tâm"', 'Điểm trung bình của nhóm phải TRÊN mốc này mới tính là nhóm nổi bật. 3 = điểm giữa thang (6 câu → trên 18/30). Ba nhóm đầu đều trên mốc: hồ sơ 3 nhóm; chỉ một nhóm hoặc không nhóm nào trên mốc: gắn cờ "Cần tư vấn riêng".', 'decimal', 'điểm'],
-            'third_letter_threshold' => ['Ngưỡng hiện chữ thứ 3 cho khách', 'Khách thường thấy mã 2 chữ. Chỉ khi nhóm thứ 3 có điểm trung bình TRÊN ngưỡng này (và đủ số câu) thì khách mới thấy mã 3 chữ. 4,2 với 6 câu = từ 26/30 trở lên. Tư vấn viên luôn thấy đủ 3 chữ.', 'decimal', 'điểm'],
-            'near_tie_gap' => ['Mức "sát điểm"', 'Hai nhóm liền nhau trong bảng xếp hạng cách nhau không quá bấy nhiêu điểm thì báo "sát điểm" và gợi ý mã thay thế cho tư vấn viên.', 'decimal', 'điểm'],
-            'bands' => ['Nhãn mức độ quan tâm của từng nhóm', 'Điểm trung bình của nhóm đến mức nào thì hiện nhãn nào (đọc từ trên xuống, dòng cuối phải là 5).', 'bands'],
+        'Nâng cao – cách bốc đề' => [
+            'min_distinct_facets' => ['Mỗi nhóm ít nhất mấy chủ đề khác nhau', 'Các câu bốc ra của một nhóm phải thuộc ít nhất bấy nhiêu chủ đề (ví dụ nhóm R: lắp ráp, sửa chữa, vận hành…), để đề không lệch về một dạng hoạt động.', 'int', 'chủ đề'],
+            'max_generation_attempts' => ['Bốc thử tối đa mấy lần', 'Bốc mãi không đủ chủ đề thì sau bấy nhiêu lần phần mềm nới điều kiện và ghi cảnh báo cho quản trị viên.', 'int', 'lần'],
+            'avoid_repeat' => ['Hạn chế gặp lại câu cũ khi làm lại', 'Người làm lại trên cùng máy sẽ ưu tiên gặp câu khác lần trước (nhận ra bằng cookie, không dùng số điện thoại).', 'bool'],
+            'use_anchors' => ['Dùng câu luôn có trong mọi đề', 'Bật thì câu được đánh dấu "Luôn có trong mọi đề" xuất hiện ở mọi đề. Chỉ bật khi Thầy cần so sánh các đề.', 'bool'],
+            'tier_weight_a' => ['Con số ưu tiên mặc định – mức Cao', 'Câu mới thêm ở mức Cao nhận con số này. Số càng lớn câu càng hay được bốc. Không ảnh hưởng điểm.', 'decimal'],
+            'tier_weight_b' => ['Con số ưu tiên mặc định – mức Vừa', 'Như trên, cho câu mức Vừa.', 'decimal'],
+            'tier_weight_c' => ['Con số ưu tiên mặc định – mức Thấp', 'Như trên, cho câu mức Thấp.', 'decimal'],
         ],
-        'Gợi ý ngành' => [
-            'interest_mark' => ['Mốc xét ngành ngoài cặp', 'Ngoài các ngành nền của cặp mã, một ngành khác chỉ được gợi ý khi nhóm đứng đầu mã ngành đó có điểm của học sinh TRÊN mốc này.', 'decimal', 'điểm'],
-            'c_labels' => ['Nhãn mức liên quan theo chỉ số C', 'Chỉ số C (0–18) đo độ khớp giữa mã học sinh và mã ngành. Khách chỉ thấy nhãn chữ, không thấy số. Ngành dưới mốc thấp nhất không được gợi ý.', 'c_labels'],
-            'max_majors_public' => ['Số ngành hiện cho khách', 'Báo cáo khách hiện tối đa bấy nhiêu ngành. Tư vấn viên xem được toàn bộ danh sách.', 'int', 'ngành'],
+        'Nâng cao – đọc điểm và nhãn' => [
+            'interest_midpoint' => ['Mốc "có quan tâm"', 'Điểm trung bình của nhóm phải trên mốc này mới tính là nhóm nổi bật (3 = điểm giữa thang). Không đủ nhóm trên mốc thì báo tư vấn viên "cần tư vấn riêng".', 'decimal', 'điểm'],
+            'near_tie_gap' => ['Hai nhóm "sát điểm" khi cách nhau không quá', 'Khi đó tư vấn viên thấy thêm mã thay thế để hỏi thêm khách.', 'decimal', 'điểm'],
+            'bands' => ['Nhãn mức độ quan tâm của từng nhóm', 'Điểm trung bình đến mức nào thì hiện nhãn nào (dòng cuối phải là 5).', 'bands'],
+            'c_labels' => ['Nhãn mức khớp của ngành', 'Mức khớp (0–18) giữa mã của khách và mã ngành. Khách chỉ thấy nhãn chữ, không thấy số. Ngành dưới mốc thấp nhất không được gợi ý.', 'c_labels'],
+            'academic_labels' => ['Nhãn nền tảng học tập (chỉ tư vấn viên xem)', 'Chỉ số thang 10 tính từ điểm học bạ theo tỉ trọng môn của từng cụm ngành. Chỉ để tham khảo, không loại khách khỏi ngành nào.', 'academic_labels'],
         ],
-        'Nền tảng học tập (chỉ tư vấn viên xem)' => [
-            'academic_labels' => ['Nhãn chỉ số nền tảng học tập', 'Chỉ số (thang 10) tính từ điểm học bạ và điểm môn theo tỉ trọng của từng cụm ngành. Đây là cơ sở tham khảo, không loại học sinh khỏi ngành nào.', 'academic_labels'],
-        ],
-        'Cảnh báo chất lượng bài làm' => [
-            'one_option_share' => ['Tỉ lệ chọn cùng một mức', 'Nếu khách chọn cùng một mức cho từ tỉ lệ này số câu trở lên (0,9 = 90%), báo "trả lời một kiểu".', 'decimal'],
-            'longstring' => ['Số câu liên tiếp cùng một mức', 'Chọn cùng một mức liên tiếp từ bấy nhiêu câu trở lên thì báo cho tư vấn viên.', 'int', 'câu'],
-            'fast_avg_seconds' => ['Thời gian trung bình mỗi câu quá nhanh', 'Trung bình mỗi câu dưới bấy nhiêu giây thì báo "làm quá nhanh".', 'decimal', 'giây'],
-            'rushed_run' => ['Chuỗi câu trả lời vội', 'Có từ bấy nhiêu câu liên tiếp trả lời dưới ngưỡng "trả lời vội" thì báo.', 'int', 'câu'],
-            'rushed_seconds' => ['Ngưỡng "trả lời vội"', 'Một câu trả lời trong chưa tới bấy nhiêu giây được tính là vội.', 'decimal', 'giây'],
+        'Nâng cao – cảnh báo làm bài vội' => [
+            'one_option_share' => ['Chọn cùng một mức cho bao nhiêu phần câu thì báo', '0,9 = từ 90% số câu trở lên cùng một mức sao thì báo "trả lời một kiểu".', 'decimal'],
+            'longstring' => ['Bao nhiêu câu liên tiếp cùng một mức thì báo', 'Báo cho tư vấn viên trong báo cáo nội bộ.', 'int', 'câu'],
+            'fast_avg_seconds' => ['Trung bình mỗi câu dưới bao nhiêu giây là quá nhanh', 'Báo "làm quá nhanh" trong báo cáo nội bộ.', 'decimal', 'giây'],
+            'rushed_run' => ['Bao nhiêu câu vội liên tiếp thì báo', 'Câu "vội" là câu trả lời nhanh hơn ô bên dưới.', 'int', 'câu'],
+            'rushed_seconds' => ['Một câu trả lời dưới bao nhiêu giây là vội', 'Dùng cùng ô bên trên.', 'decimal', 'giây'],
         ],
     ];
 

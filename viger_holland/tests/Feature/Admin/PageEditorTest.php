@@ -29,7 +29,7 @@ class PageEditorTest extends TestCase
 
         $this->get(route('admin.page-editor.show', 'trang-gioi-thieu'))->assertOk()
             ->assertSee('data-page-editor', false)
-            ->assertSee('Đang sửa: Trang giới thiệu')
+            ->assertSee('Đang sửa: Trang mở đầu')
             ->assertSee('data-ed="intro_title"', false)
             ->assertSee('data-ed="block:faq01:items.0.question"', false)
             ->assertSee('data-ed="group_name_R"', false)
