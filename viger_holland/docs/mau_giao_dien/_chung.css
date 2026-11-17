@@ -1,0 +1,35 @@
+/* Quy tắc trình bày chung của trang khách (mẫu). Gọn: 3 cỡ chữ, đỏ chỉ cho nút chính, không nhãn in hoa, ít khung. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap");
+:root{--ink:#12263f;--text:#3d4b5c;--mute:#7a8693;--line:#e6e8eb;--bg:#fbfaf7;--red:#c1121f;--red2:#9b0f19;--gold:#f2a900;--star-off:#d6dbe1}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:400 16px/1.7 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+h1{font:600 40px/1.15 "Playfair Display",Georgia,serif;color:var(--ink);letter-spacing:-.01em}
+h2{font:600 20px/1.4 Inter;color:var(--ink)}
+h3{font:600 16px/1.5 Inter;color:var(--ink)}
+.small{font-size:14px;color:var(--mute)}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-3px}
+/* đầu trang: chỉ logo, giống web chính */
+.hdr{background:#fff;border-bottom:1px solid var(--line)}
+.hdr__in{width:min(1080px,100% - 40px);margin:0 auto;height:68px;display:flex;align-items:center;gap:32px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{height:38px;width:auto}
+.brand b{display:block;font:700 18px/1.15 "Playfair Display",serif;color:var(--ink)}
+.brand small{display:block;font:500 12px Inter;color:#d99a00}
+/* nút */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 28px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);font:600 15.5px Inter;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn--red{background:var(--red);border-color:var(--red);color:#fff}.btn--red:hover{background:var(--red2)}
+.link{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:#c5ccd4}
+.link:hover{color:var(--red)}
+/* chân trang gọn */
+.foot{border-top:1px solid var(--line);background:#fff}
+.foot__in{width:min(1080px,100% - 40px);margin:0 auto;padding:22px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;font-size:14px;color:var(--mute)}
+.foot__in a{color:var(--mute)}
+/* sao */
+.stars{display:inline-flex}
+.stars button{width:44px;height:44px;display:grid;place-items:center;border:0;background:none;padding:0;cursor:pointer;border-radius:8px}
+.stars svg{width:28px;height:28px;fill:var(--star-off)}.stars .on svg{fill:var(--gold)}
+/* lục giác */
+.hex text{font:500 12.5px Inter;fill:var(--ink)}

@@ -81,12 +81,12 @@
       </div>
 
       <section class="kpis">
-        <div class="kpi"><p class="kpi__label">Lượt làm bài (7 ngày)</p><p class="kpi__value">126</p><p class="kpi__note"><span class="up">+18%</span> so với tuần trước</p></div>
-        <div class="kpi"><p class="kpi__label">Tỉ lệ để lại thông tin</p><p class="kpi__value">64%</p><p class="kpi__note"><span class="up">+5 điểm</span></p></div>
-        <div class="kpi"><p class="kpi__label">Khách chờ gọi</p><p class="kpi__value" style="color:var(--red)">23</p><p class="kpi__note">7 khách quá 48 giờ</p></div>
-        <div class="kpi"><p class="kpi__label">Cần tư vấn riêng</p><p class="kpi__value">9</p><p class="kpi__note">Hồ sơ C, D</p></div>
-        <div class="kpi"><p class="kpi__label">Đã gửi sang CRM</p><p class="kpi__value">79/81</p><p class="kpi__note">2 lượt đang chờ gửi lại</p></div>
+        <div class="kpi"><p class="kpi__label">Hoàn thành bài</p><p class="kpi__value">126</p><p class="kpi__note">07/11 – 13/11 · <span class="up">+18%</span> so với 7 ngày trước</p></div>
+        <div class="kpi"><p class="kpi__label">Tỉ lệ để lại thông tin</p><p class="kpi__value">64%</p><p class="kpi__note">81 xác nhận email / 126 hoàn thành bài</p></div>
+        <div class="kpi"><p class="kpi__label">Cần tư vấn riêng</p><p class="kpi__value">9</p><p class="kpi__note">hồ sơ C, D trong 7 ngày</p></div>
+        <div class="kpi"><p class="kpi__label">Gửi sang CRM</p><p class="kpi__value">79 / 81</p><p class="kpi__note">2 lượt chờ gửi lại · <a href="#" style="color:var(--red)">xem hàng đợi</a></p></div>
       </section>
+      <p class="muted" style="margin:-1rem 0 0;font-size:.8rem">Việc gọi khách và lịch hẹn theo dõi trong CRM; trang này chỉ thống kê phía bài trắc nghiệm.</p>
 
       <div class="grid-a grid-a--3">
         <section>
@@ -103,45 +103,31 @@
         <section>
           <div class="sec-a__h"><h2>Phễu chuyển đổi</h2><span>7 ngày</span></div>
           <table class="tbl funnel">
-            <tr><td>Bắt đầu làm bài</td><td><div class="bar-s"><span style="width:100%"></span></div></td><td class="num">198</td></tr>
-            <tr><td>Làm xong 36 câu</td><td><div class="bar-s"><span style="width:64%"></span></div></td><td class="num">126</td></tr>
-            <tr><td>Điền thông tin</td><td><div class="bar-s"><span style="width:41%"></span></div></td><td class="num">81</td></tr>
-            <tr><td>Xác nhận email</td><td><div class="bar-s"><span style="width:36%"></span></div></td><td class="num">72</td></tr>
-            <tr><td>Đã gọi được</td><td><div class="bar-s"><span style="width:25%"></span></div></td><td class="num">49</td></tr>
+            <thead><tr><th>Bước</th><th></th><th class="num">Số lượt</th><th class="num">Qua bước</th></tr></thead>
+            <tr><td>Bắt đầu làm bài</td><td><div class="bar-s"><span style="width:100%"></span></div></td><td class="num">198</td><td class="num">–</td></tr>
+            <tr><td>Làm xong 36 câu</td><td><div class="bar-s"><span style="width:64%"></span></div></td><td class="num">126</td><td class="num">64%</td></tr>
+            <tr><td>Điền thông tin</td><td><div class="bar-s"><span style="width:47%"></span></div></td><td class="num">93</td><td class="num">74%</td></tr>
+            <tr><td>Xác nhận email</td><td><div class="bar-s"><span style="width:41%"></span></div></td><td class="num">81</td><td class="num">87%</td></tr>
           </table>
+          <p class="muted" style="font-size:.8rem;margin:.5rem 0 0">Bước rơi nhiều nhất: <b style="color:var(--ink)">bắt đầu → làm xong</b> (mất 36%).</p>
         </section>
       </div>
 
       <section>
         <div class="sec-a__h"><h2>Khách mới</h2><a href="4-bao-cao-noi-bo.html">Xem tất cả »</a></div>
         <div class="filters">
-          <input placeholder="Tìm tên, SĐT…"><select><option>Mọi mã Holland</option></select><select><option>Mọi loại hồ sơ</option><option>A – 3 nhóm</option><option>B – 2 nhóm</option><option>C, D – cần tư vấn riêng</option></select><select><option>Mọi trạng thái gọi</option><option>Chưa gọi</option><option>Đã hẹn</option><option>Số không hợp lệ</option></select><select><option>Mọi tư vấn viên</option></select>
+          <input placeholder="Tìm tên, SĐT, mã Holland…"><select><option>Mọi loại hồ sơ</option><option>A – 3 nhóm</option><option>B – 2 nhóm</option><option>C, D – cần tư vấn riêng</option></select><select><option>Email: tất cả</option><option>Đã xác nhận</option><option>Chưa xác nhận</option></select><select><option>CRM: tất cả</option><option>Đã gửi</option><option>Chờ gửi lại</option><option>Lỗi</option></select><select><option>Mọi tư vấn viên</option></select><span class="muted" style="font-size:.8rem;align-self:center">Các bộ lọc dùng cùng lúc được</span>
         </div>
         <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th>Ngày làm ▼</th><th>Khách</th><th>Số điện thoại</th><th>Mã</th><th>Hồ sơ</th><th>Ngành đầu</th><th>Trạng thái gọi</th><th>Tư vấn viên</th><th>CRM</th><th></th></tr></thead>
+          <thead><tr><th>Ngày làm ▼</th><th>Khách</th><th>Số điện thoại</th><th>Mã</th><th>Hồ sơ</th><th>Ngành đầu</th><th>Email</th><th>Tư vấn viên</th><th>CRM</th><th></th></tr></thead>
           <tbody>
-            <tr><td class="nowrap">13/11 20:14</td><td>Nguyễn Minh Anh<br><small class="muted">Lớp 11 · lần 2</small></td><td class="nowrap">0819 123 456</td><td><b>ISA</b></td><td>A</td><td>Tâm lý học</td><td><span class="st st--wait">Chưa gọi</span></td><td>Lan</td><td><span class="st st--ok">Đã gửi</span></td><td><a href="4-bao-cao-noi-bo.html">Xem »</a></td></tr>
-            <tr><td class="nowrap">13/11 18:02</td><td>Trần Gia Bảo<br><small class="muted">Lớp 12</small></td><td class="nowrap">0903 456 789</td><td><b>IRC</b></td><td>A</td><td>Khoa học máy tính</td><td><span class="st st--warn">Đã hẹn 16/11</span></td><td>Lan</td><td><span class="st st--ok">Đã gửi</span></td><td><a href="#">Xem »</a></td></tr>
-            <tr><td class="nowrap">13/11 15:40</td><td>Lê Thảo Vy<br><small class="muted">Phụ huynh làm thay</small></td><td class="nowrap">0977 222 111</td><td><b>S</b></td><td><span class="st st--bad">C – tư vấn riêng</span></td><td>—</td><td><span class="st st--wait">Chưa gọi</span></td><td>—</td><td><span class="st st--warn">Chờ gửi lại</span></td><td><a href="#">Xem »</a></td></tr>
-            <tr><td class="nowrap">12/11 21:11</td><td>Phạm Quốc Huy<br><small class="muted">Đã tốt nghiệp</small></td><td class="nowrap">0912 000 000</td><td><b>EC</b></td><td>B</td><td>Quản trị kinh doanh</td><td><span class="st st--bad">Số không hợp lệ</span></td><td>Hà</td><td><span class="st st--ok">Đã gửi</span></td><td><a href="#">Xem »</a></td></tr>
+            <tr><td class="nowrap">13/11 20:14</td><td>Nguyễn Minh Anh<br><small class="muted">Lớp 11 · lần 2</small></td><td class="nowrap">0819 123 456</td><td><b>ISA</b></td><td>A</td><td>Tâm lý học</td><td><span class="st st--ok">Đã xác nhận</span></td><td>Lan</td><td><span class="st st--ok">Đã gửi</span></td><td><a href="4-bao-cao-noi-bo.html">Xem »</a></td></tr>
+            <tr><td class="nowrap">13/11 18:02</td><td>Trần Gia Bảo<br><small class="muted">Lớp 12</small></td><td class="nowrap">0903 456 789</td><td><b>IRC</b></td><td>A</td><td>Khoa học máy tính</td><td><span class="st st--ok">Đã xác nhận</span></td><td>Lan</td><td><span class="st st--ok">Đã gửi</span></td><td><a href="#">Xem »</a></td></tr>
+            <tr><td class="nowrap">13/11 15:40</td><td>Lê Thảo Vy<br><small class="muted">Phụ huynh làm thay</small></td><td class="nowrap">0977 222 111</td><td><b>S</b></td><td><span class="st st--bad">C – tư vấn riêng</span></td><td>—</td><td><span class="st st--mute">Chưa xác nhận</span></td><td>—</td><td><span class="st st--warn">Chờ gửi lại</span></td><td><a href="#">Xem »</a></td></tr>
+            <tr><td class="nowrap">12/11 21:11</td><td>Phạm Quốc Huy<br><small class="muted">Đã tốt nghiệp</small></td><td class="nowrap">0912 000 000</td><td><b>EC</b></td><td>B</td><td>Quản trị kinh doanh</td><td><span class="st st--ok">Đã xác nhận</span></td><td>Hà</td><td><span class="st st--ok">Đã gửi</span></td><td><a href="#">Xem »</a></td></tr>
           </tbody>
         </table></div>
         <div class="pager"><span>Hiển thị 1–4 / 126 khách</span><span><b>‹</b><b class="is-on">1</b><b>2</b><b>3</b><b>›</b></span></div>
-      </section>
-
-      <section>
-        <div class="sec-a__h"><h2>Phân quyền 3 vai trò</h2><span>Tài khoản do admin tạo · mỗi lần xuất dữ liệu đều ghi nhật ký</span></div>
-        <div class="tbl-wrap"><table class="tbl perm">
-          <thead><tr><th>Chức năng</th><th>Quản trị viên</th><th>Tư vấn viên</th><th>Văn phòng / marketing</th></tr></thead>
-          <tbody>
-            <tr><td>Danh sách khách</td><td>Tất cả</td><td>Khách được giao</td><td>7 ngày gần nhất, ít cột</td></tr>
-            <tr><td>Báo cáo nội bộ đầy đủ (6 điểm, lục giác, chỉ số học tập)</td><td>Có</td><td>Khách được giao</td><td>Không</td></tr>
-            <tr><td>Gọi điện, ghi kết quả, đánh dấu số không hợp lệ</td><td>Có</td><td>Có</td><td>Có (mở từng khách)</td></tr>
-            <tr><td>Giao khách cho tư vấn viên</td><td>Có</td><td>Không</td><td>Không</td></tr>
-            <tr><td>Thư viện câu hỏi, cài đặt, danh mục, nội dung trang</td><td>Có</td><td>Không</td><td>Không</td></tr>
-            <tr><td><b>Xuất Excel, tải cơ sở dữ liệu, sao lưu</b></td><td><b>Chỉ quản trị viên</b></td><td>Không</td><td>Không</td></tr>
-          </tbody>
-        </table></div>
       </section>
     </main>
   </div>
