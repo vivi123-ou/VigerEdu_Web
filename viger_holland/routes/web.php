@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Assessment\TestSettingsController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HistoryController;
@@ -63,6 +64,13 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
             Route::post('media', [MediaController::class, 'store'])->name('media.store');
             Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
             Route::post('media/{id}/restore', [MediaController::class, 'restore'])->whereNumber('id')->name('media.restore');
+        });
+
+        // ---- Chỉ quản trị viên ----
+        Route::middleware('menu:test-settings')->group(function (): void {
+            Route::get('test-settings', [TestSettingsController::class, 'edit'])->name('test-settings.edit');
+            Route::put('test-settings', [TestSettingsController::class, 'update'])->name('test-settings.update');
+            Route::post('test-settings/versions/{version}/restore', [TestSettingsController::class, 'restore'])->name('test-settings.restore');
         });
 
         // Mục chưa làm: trang "Đang xây dựng – giai đoạn X" (config/admin_menu.php → 'stage')

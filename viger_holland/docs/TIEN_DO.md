@@ -15,9 +15,56 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 
 **Giai đoạn mới:** H1–H7 (Holland), C1–C8 (CRM). Thứ tự ở THIET_KE mục 10.
 
-**Hiện trạng:**
-- Phần cowork làm 12/11 (model, 5 migration, trang Cài đặt bài test, vai trò) **chưa commit**, test 41/41 đạt.
-- Giữ phần này làm nền cho H1; vai trò chuyển sang bảng `roles/permissions`.
+**Quyết định thêm của Vân sau mẫu giao diện (đến 17/11):** ghi ở `CLAUDE.md` mục 2:
+- báo cáo khách chỉ xem trong tab, không email link / PDF / chia sẻ / họ tên;
+- form 7 ô kiểu UEH, vai trò `KHAC`, đồng ý bằng một câu;
+- câu hỏi xưng "Tôi", 5 nhãn sao;
+- đầu trang chỉ có logo.
+
+| Giai đoạn | Trạng thái |
+|---|---|
+| H1. Dọn phần đang dở, bảng dữ liệu, seeder 300 câu, danh mục, `crm_key`, `roles/permissions` | ✅ Xong (17/11) |
+| H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | Chưa làm |
+| H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | Chưa làm |
+| H4. Form thông tin, OTP email, báo cáo đầy đủ | Chưa làm |
+| H5. CrmSync + Tracking | Chưa làm |
+| H6. Admin: lượt làm bài, câu hỏi, danh mục, trường thông tin, phân quyền, nhật ký | Chưa làm |
+| H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+### H1 đã làm (17/11/2026)
+
+- **Module:** model, `TestConfig`, controller, request chuyển vào `app/Modules/{Assessment,Respondent,Access}`. Mỗi class có chú thích *Làm gì / Ai gọi / Dữ liệu*; mỗi module có `README.md`.
+- **6 migration:**
+  - danh mục (6 nhóm, 15 cặp, chữ thứ ba, mã riêng, cụm ngành, môn, ngành, nghề, môi trường, liên kết);
+  - thư viện câu hỏi;
+  - phiên bản cài đặt;
+  - `form_fields` (có `crm_key`, kiểu `radio`);
+  - lượt làm bài;
+  - `roles` / `permissions` / `role_permission`.
+- **Phân quyền bằng dữ liệu:**
+  - 12 mã quyền; 4 vai trò: Quản trị viên (mọi quyền), Tư vấn viên (tổng quan + lượt làm bài), Nhân viên (tổng quan), Marketing (tổng quan + nội dung trang; xóa được);
+  - mỗi mục menu ghi một mã quyền; gõ thẳng địa chỉ bị chặn 403; vai trò bị tắt thì không vào được admin;
+  - chỉ quản trị viên xuất dữ liệu.
+- **Seeder (chạy lại không trùng, không ghi đè chỗ admin đã sửa, câu / ngành đã cho vào thùng rác không bị nạp lại):**
+  - `RoleSeeder`;
+  - `CatalogSeeder`: 6 nhóm, 15 cặp (giữ thứ tự ngành), 6 chữ thứ ba, 7 cụm ngành, 9 môn, 46 ngành, 51 nghề, 14 môi trường, 53 liên kết;
+  - `QuestionBankSeeder`: 300 câu, 60 chủ đề, đã duyệt, trọng số A/B/C = 5/3/1, "Em/em" → "Tôi/tôi";
+  - `TestConfigSeeder`: phiên bản 1;
+  - `FormFieldSeeder`: 7 ô, `crm_key` theo từ điển.
+- **Trang Cài đặt bài test** (`/admin/test-settings`):
+  - thêm nhóm "Trang làm bài": số câu mỗi trang (6), chữ của 5 mức sao;
+  - lưu theo phiên bản, ghi rõ ô nào đổi, quay lại bản cũ.
+- **Kiểm thử:**
+  - `migrate:fresh --seed` rồi `db:seed` lần 2 trên SQLite: không lỗi, số lượng giữ nguyên;
+  - 14 test mới (nạp dữ liệu, cài đặt, phân quyền); tổng **55/55 đạt**.
+
+**Câu hỏi / việc chờ:**
+1. **Tỉ trọng môn theo cụm ngành** (`CatalogSeeder::SUBJECT_WEIGHTS`) là đề xuất ban đầu của mình, dựa trên cột môn nền. Cần Thầy duyệt; sửa được ở admin từ H6.
+2. **34 tỉnh / thành** trong ô Tỉnh là danh sách sau sắp xếp năm 2025. Vân kiểm lại giúp.
+3. Mã `KHAC` cần thêm vào `TU_DIEN_DU_LIEU_CHUNG.xlsx` / `lua_chon_chuan.json` bên CRM.
+4. Trong `database/seeders/data/holland_v3/` còn `settings.json` (bản cũ có "Chưa biết", đề cố định) và `form_fields.json` (18 ô cũ). **Không seeder nào dùng.** Có xóa không?
+
+**Việc Vân cần làm:** trên máy Vân chạy `php artisan migrate:fresh --seed` một lần (bảng mới + dữ liệu). Sau đó vào `/admin/test-settings` xem thử.
 
 ## Làm lại theo VIGER EDU Career Map (từ 11/11/2026, nhánh `feature/holland-v3`)
 

@@ -40,11 +40,7 @@ return [
         'name' => env('HOLLAND_EDITOR_NAME', 'Marketing'),
     ],
 
-    // Vai trò tài khoản admin. EDITOR (marketing) chỉ thấy các mục có 'editor' => true trong config/admin_menu.php.
-    'roles' => [
-        'ADMIN' => 'Quản trị viên',
-        'EDITOR' => 'Marketing (nội dung trang)',
-    ],
+    // Vai trò và quyền: bảng roles / permissions (app/Modules/Access), không cấu hình ở đây.
 
     // Danh sách font admin được chọn (Google Fonts, đều hỗ trợ tiếng Việt).
     // Tên font => [kiểu dự phòng, các độ đậm cần tải]

@@ -15,7 +15,13 @@
 
 ## 2. Sản phẩm: VIGER EDU Career Map (bản làm lại từ 11/11/2026)
 
-- **Luồng khách** (điện thoại trước, chốt 14/11): giới thiệu → **làm bài 36 câu, 6 câu / trang, chấm ngôi sao 1–5** (không có "Chưa biết", câu nào cũng bắt buộc) → **kết quả sơ lược** → **điền thông tin** (họ tên, SĐT, năm sinh, email, đồng ý) → **mã OTP qua email** → **báo cáo đầy đủ** + email link báo cáo. **Không có nút đặt lịch** (tư vấn viên liên hệ qua CRM).
+- **Luồng khách** (điện thoại trước, chốt 14/11): giới thiệu → **làm bài 36 câu, 6 câu / trang, chấm ngôi sao 1–5** (không có "Chưa biết", câu nào cũng bắt buộc) → **kết quả sơ lược** → **điền thông tin** → **mã OTP qua email** → **báo cáo đầy đủ**. **Không có nút đặt lịch** (tư vấn viên liên hệ qua CRM).
+- **Vân chốt sau mẫu giao diện (cập nhật 17/11, thay THIET_KE khi khác):**
+  - Báo cáo khách **chỉ hiện trong tab đó, đóng là mất**: không email link, không PDF, không nút chia sẻ, không hiện họ tên, không ô vàng cảnh báo. Kết quả vẫn lưu cho CRM; muốn xem lại thì làm bài lại.
+  - Form 7 ô kiểu UEH: bắt buộc Họ tên, Năm sinh của học sinh, Email, Điện thoại / Zalo, Thuộc đối tượng (Học sinh / sinh viên, Phụ huynh, Khác → mã `KHAC`); không bắt buộc Trường, Tỉnh / thành phố. **Không có ô tick**: đồng ý bằng một câu dưới nút "Xem báo cáo"; Turnstile chạy ẩn. Học lực, ngoại ngữ, điểm, ngân sách: CRM thu sau.
+  - Câu hỏi xưng **"Tôi…"**; 5 nhãn sao: Hoàn toàn không giống tôi / Không giống lắm / Phân vân / Khá giống tôi / Hoàn toàn giống tôi. Thanh tiến độ một dải liền, không "Phần x/6".
+  - Đầu trang khách chỉ có logo, không menu; chân trang gọn (hotline 0819 949 968, info@spn.com.vn, 6 Phùng Khắc Khoan, Phường Sài Gòn, TP.HCM). Mẫu: `docs/mau_giao_dien/luong-khach.html`.
+  - Bỏ SMS, bỏ đăng nhập Google. Marketing gộp vào Nhân viên (vai trò EDITOR "Marketing" vẫn có sẵn, xóa được).
 - **Hai phiên bản báo cáo** từ cùng một kết quả:
   - *External (khách)*: biểu đồ 6 nhóm, **mã 2 chữ**; chữ thứ 3 chỉ đọc chi tiết khi đủ điều kiện; 3–5 ngành gợi ý với nhãn chữ (không %), nghề tham khảo, bước tiếp theo. Không hứa đậu. `noindex`.
   - *Internal (tư vấn viên / quản trị, phải đăng nhập)*: đủ 6 điểm, mã 3 chữ, mã thay thế, quan hệ lục giác, độ tin cậy, 36 câu đã làm, thông tin khách, JSON cho AI.
@@ -75,7 +81,7 @@
 ## 7. Giai đoạn (theo `docs/THIET_KE_TONG_THE_V1.md` mục 10)
 
 - [x] 0. Nhánh `feature/holland-v3`, gỡ phần nghiệp vụ cũ, giữ hạ tầng
-- [ ] H1. Dọn phần đang dở (model, migration, trang Cài đặt bài test chưa commit), bảng dữ liệu, seeder 300 câu, danh mục, `form_fields.crm_key`, `roles/permissions`
+- [x] H1. Dọn phần đang dở (model, migration, trang Cài đặt bài test chưa commit), bảng dữ liệu, seeder 300 câu, danh mục, `form_fields.crm_key`, `roles/permissions`
 - [ ] H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + test 8 ca
 - [ ] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
 - [ ] H4. Module Respondent: form thông tin, OTP email, đồng ý, báo cáo đầy đủ, email link
