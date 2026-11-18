@@ -14,6 +14,7 @@ use App\Modules\Respondent\Filament\Pages\ContactsToCall;
 use App\Modules\Respondent\Filament\Pages\CustomersList;
 use App\Modules\Respondent\Filament\Pages\FormFields;
 use App\Modules\Respondent\Filament\Pages\LookupReports;
+use App\Modules\Schools\Filament\Pages\SchoolsCatalog;
 
 /*
 |--------------------------------------------------------------------------
@@ -173,6 +174,22 @@ return [
                     ['Không muốn gợi ý một ngành nữa', 'bấm "Sửa", tắt "Đang dùng". Ngành không bị xóa, lượt làm bài cũ vẫn đọc được.'],
                     ['Sửa tên nghề', 'chọn thẻ "Nghề", bấm "Sửa".'],
                 ],
+            ],
+        ],
+        'schools' => [
+            'group' => 'Bài trắc nghiệm', 'label' => 'Trường & vùng', 'icon' => 'heroicon-o-building-library',
+            'permission' => 'schools.view',
+            'page' => SchoolsCatalog::class,
+            'summary' => 'Trường đại học và bang ở Đức (thêm được nước khác) để tư vấn chọn trường.',
+            'help' => [
+                'intro' => 'Danh mục trường để tư vấn viên tra nhanh: loại hình, công lập / tư thục, bang, thành phố, trang web.',
+                'steps' => [
+                    ['Tìm trường', 'gõ tên, tên viết tắt hoặc thành phố vào ô tìm kiếm; lọc theo bang, loại hình.'],
+                    ['Xem trường đang ẩn', 'chọn bộ lọc "Trường đang ẩn" → "Chỉ trường đang ẩn" (ĐH Hành chính, ĐH Đặc thù ẩn sẵn).'],
+                    ['Nhập danh sách trường (quản trị viên)', 'bấm "Nhập từ Excel", chọn quốc gia và file, kiểm tra bước "Ghép cột" rồi bấm "Gửi". Trường đã có được cập nhật, không tạo trùng.'],
+                    ['Thêm nước khác', 'thẻ "Quốc gia", bấm "Thêm quốc gia", rồi nhập file trường của nước đó.'],
+                ],
+                'note' => 'Gợi ý "trường có ngành này" sẽ có khi team điền file trường ↔ ngành.',
             ],
         ],
         'form-fields' => [

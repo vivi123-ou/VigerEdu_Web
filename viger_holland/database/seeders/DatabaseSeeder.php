@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             QuestionBankSeeder::class,
             TestConfigSeeder::class,
             FormFieldSeeder::class,
+            SchoolSeeder::class,
         ]);
     }
 }

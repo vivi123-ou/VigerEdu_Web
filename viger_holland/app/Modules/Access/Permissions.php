@@ -35,6 +35,8 @@ final class Permissions
             'Toàn bộ khách, mọi thời điểm, kèm kết quả. Nên chỉ để quản trị viên.'],
         self::EXPORT => ['Được tải dữ liệu khách ra Excel, sao lưu', self::GROUP_PERSONAL,
             'Chỉ quản trị viên, không cấp được cho vai trò khác.'],
+        'schools.view' => ['Được xem danh sách trường và vùng (bang)', self::GROUP_GENERAL,
+            'Danh mục trường đại học, bang ở Đức để tư vấn. Sửa và nhập Excel cần quyền sửa danh mục.'],
         'stats.view' => ['Được xem số liệu làm bài', self::GROUP_GENERAL,
             'Bao nhiêu người làm bài, đến từ đâu, bỏ ngang ở đâu, mã nào phổ biến. Không có tên khách.'],
         'content.manage' => ['Được sửa chữ, ảnh trên các trang khách xem', self::GROUP_GENERAL,
@@ -65,7 +67,7 @@ final class Permissions
     public const DEFAULT_ROLES = [
         'ADMIN' => ['Quản trị viên', 'Toàn quyền; người duy nhất được xem toàn bộ khách và tải dữ liệu.', ['*'], true],
         'STAFF' => ['Nhân viên', 'Liên lạc với khách mới; sửa chữ, ảnh trên trang khách (gồm việc marketing).', ['contacts.view', 'content.manage'], true],
-        'COUNSELOR' => ['Tư vấn viên', 'Tra cứu từng khách và đọc báo cáo nội bộ để tư vấn.', ['reports.lookup'], true],
+        'COUNSELOR' => ['Tư vấn viên', 'Tra cứu từng khách và đọc báo cáo nội bộ để tư vấn; xem danh sách trường.', ['reports.lookup', 'schools.view'], true],
     ];
 
     /**
