@@ -116,11 +116,12 @@ class CatalogSeeder extends Seeder
 
         foreach ($this->json('occupations') as $row) {
             $occupation = Occupation::withTrashed()->firstOrCreate(['code' => $row['id']], [
-                'name_en' => $row['name_en'] ?? null, 'name_de' => $row['name_de'] ?? null, 'sector' => $row['field'] ?? null,
+                'name_vi' => $row['name_vi'] ?? null, 'name_en' => $row['name_en'] ?? null, 'name_de' => $row['name_de'] ?? null, 'sector' => $row['field'] ?? null,
                 'tasks' => $row['tasks'] ?? null, 'skills' => $row['skills'] ?? null, 'qualification' => $row['level'] ?? null,
                 'regulation' => $row['regulation'] ?? null, 'riasec_hypothesis' => $row['riasec'] ?? null,
                 'source' => $row['source'] ?? null, 'validation_status' => $row['status'] ?? null,
             ]);
+            $this->fillIfEmpty($occupation, 'name_vi', $row['name_vi'] ?? null);
 
             if ($occupation->wasRecentlyCreated) {
                 $codes = array_filter(array_map('trim', explode(',', (string) ($row['environments'] ?? ''))));

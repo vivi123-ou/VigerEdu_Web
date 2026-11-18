@@ -55,7 +55,7 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 
 **Cần Vân / Thầy / team:**
 1. **Đoạn giải thích 6 nhóm và 15 cặp:** đã nạp ngày 18/11 (Vân soạn với Claude chat), cần Thầy duyệt. Đoạn RA đã sửa lại (bản đầu tả nhầm thành nghiên cứu + sáng tạo). 6 đoạn "Chữ thứ ba" và tên hướng chuyên sâu tiếng Việt đã nạp 18/11 (giữ nguyên văn của Vân; thêm 2 cột `third_letters.specialty_vi`, `description`).
-2. **Nghề tham khảo** đang hiện tên tiếng Đức (danh mục chưa có tên tiếng Việt).
+2. **Nghề tham khảo:** đã dịch tên tiếng Việt cho 51 nghề (18/11, Claude dịch từ tên Đức / Anh), hiện dạng "Tiếng Việt (Tiếng Đức)". Cần Thầy / team duyệt lại cách dịch.
 3. **Câu đồng ý và CRM:** hợp đồng kết nối (`HOP_DONG_KET_NOI.md` mục 2.1) bắt buộc gửi `consent.agreed = true`; Nghị định 13/2023: im lặng không được coi là đồng ý. Cần chốt ở H5 gửi gì cho CRM (hỏi Thầy).
 4. **Hộp thư gửi mã** khi lên máy chủ thật (điền SMTP vào `.env`).
 5. Loại trường (Uni, HAW…) chỉ hiện cho khách khi ngành đã "Đã kiểm tra" (dữ liệu chưa kiểm tra có ghi chú nội bộ như "Cần tra").

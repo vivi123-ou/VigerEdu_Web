@@ -156,8 +156,9 @@
 .k .qa li{padding:14px 0;border-bottom:1px solid var(--line2)}.k .qa li:last-child{border-bottom:0}
 .k .qa .q2{font-weight:600;font-size:14px;color:var(--mute);margin:0 0 4px}
 .k .qa p{margin:0;font-size:15.5px}
-.k .qa li.combine{background:var(--cream);border:1px solid #efdfb8;border-radius:6px;padding:14px 16px;margin-top:6px}
-.k .qa li.combine .q2{color:#8a5a00}
+.k .combine{background:var(--cream);border:1px solid #efdfb8;border-radius:6px;padding:16px 20px;margin-top:20px}
+.k .combine .q2{font-weight:600;font-size:14px;color:#8a5a00;margin:0 0 4px}
+.k .combine p{margin:0;font-size:15.5px}
 .k .fig{margin:0;border:1px solid var(--line);border-radius:8px;padding:18px;background:#fff}
 .k .hex{display:block;max-width:360px;margin:0 auto}.k .hex text{font:500 16px var(--font-body,Inter),sans-serif;fill:var(--navy)}
 .k .scale{width:100%;border-collapse:collapse;font-size:15px}

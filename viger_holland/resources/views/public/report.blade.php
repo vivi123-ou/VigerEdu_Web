@@ -39,9 +39,6 @@
                             @if ($report['third'])
                                 <li><p class="q2">{{ $report['third']['heading'] }}</p>@if (filled($report['third']['text']))<p>{{ $report['third']['text'] }}</p>@endif</li>
                             @endif
-                            @if (filled($report['combine']))
-                                <li class="combine"><p class="q2">{{ setting('report_combine_heading', 'Khi hai nhóm kết hợp') }}</p><p>{{ $report['combine'] }}</p></li>
-                            @endif
                         </ul>
                     </div>
                     <figure class="fig">
@@ -64,6 +61,10 @@
                         </svg>
                     </figure>
                 </div>
+                @if (filled($report['combine']))
+                    {{-- Trải ngang hết bề rộng, dưới cả phần chữ và hình lục giác (Vân góp ý 18/11). --}}
+                    <div class="combine"><p class="q2">{{ setting('report_combine_heading', 'Khi hai nhóm kết hợp') }}</p><p>{{ $report['combine'] }}</p></div>
+                @endif
             </section>
 
             <section class="sec">

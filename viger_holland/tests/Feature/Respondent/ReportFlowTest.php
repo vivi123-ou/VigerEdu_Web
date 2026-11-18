@@ -162,6 +162,7 @@ class ReportFlowTest extends TestCase
             ->assertSee('Nghiên cứu – Xã hội')
             ->assertSeeInOrder(['Nhóm sở thích của bạn', 'Mức độ quan tâm theo 6 nhóm', 'Ngành học tại Đức phù hợp với bạn', 'Bước tiếp theo'])
             ->assertSee('Rất quan tâm')
+            ->assertSee('Nhà nghiên cứu tâm lý học (Psychologieforscher)')
             ->assertSee('Bạn thích quan sát, đặt câu hỏi')
             ->assertSee('Môi trường hợp thường có cả nghiên cứu lẫn làm việc với người')
             ->assertSee('Làm lại với câu hỏi mới')

@@ -116,10 +116,23 @@ final class CustomerReport
                     : $fill(setting('report_why_catalog', 'Mã Holland của ngành gần với sở thích của bạn.')),
                 'occupations' => $major
                     ? $major->occupations->where('is_active', true)->take($perMajor)
-                        ->map(fn (Occupation $o) => (string) ($o->name_vi ?: $o->name_de ?: $o->name_en))->filter()->values()->all()
+                        ->map(fn (Occupation $o) => self::occupationName($o))->filter()->values()->all()
                     : [],
             ];
         }, $rows);
+    }
+
+    /**
+     * Tên nghề cho khách: "Tiếng Việt (Tiếng Đức)", ví dụ "Nhà nghiên cứu tâm lý học (Psychologieforscher)" (Vân chốt 18/11).
+     * Chưa có tên tiếng Việt thì dùng tên tiếng Đức / tiếng Anh.
+     */
+    private static function occupationName(Occupation $occupation): string
+    {
+        if (filled($occupation->name_vi)) {
+            return $occupation->name_vi.(filled($occupation->name_de) ? ' ('.$occupation->name_de.')' : '');
+        }
+
+        return (string) ($occupation->name_de ?: $occupation->name_en);
     }
 
     /**

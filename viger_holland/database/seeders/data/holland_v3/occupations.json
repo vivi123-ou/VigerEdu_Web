@@ -1,6 +1,7 @@
 [
  {
   "id": "OCC001",
+  "name_vi": "Kỹ sư thiết kế cơ khí",
   "name_en": "Mechanical Design Engineer",
   "name_de": "Konstruktionsingenieur/in",
   "field": "ENG",
@@ -15,6 +16,7 @@
  },
  {
   "id": "OCC002",
+  "name_vi": "Kỹ sư tự động hóa",
   "name_en": "Automation Engineer",
   "name_de": "Automatisierungsingenieur/in",
   "field": "ENG",
@@ -29,6 +31,7 @@
  },
  {
   "id": "OCC003",
+  "name_vi": "Kỹ sư điện",
   "name_en": "Electrical Engineer",
   "name_de": "Elektroingenieur/in",
   "field": "ENG",
@@ -43,6 +46,7 @@
  },
  {
   "id": "OCC004",
+  "name_vi": "Kỹ sư xây dựng",
   "name_en": "Civil Engineer",
   "name_de": "Bauingenieur/in",
   "field": "ENG",
@@ -57,6 +61,7 @@
  },
  {
   "id": "OCC005",
+  "name_vi": "Lập trình viên phần mềm",
   "name_en": "Software Developer",
   "name_de": "Softwareentwickler/in",
   "field": "IT",
@@ -71,6 +76,7 @@
  },
  {
   "id": "OCC006",
+  "name_vi": "Chuyên viên phân tích dữ liệu",
   "name_en": "Data Analyst",
   "name_de": "Datenanalyst/in",
   "field": "IT",
@@ -85,6 +91,7 @@
  },
  {
   "id": "OCC007",
+  "name_vi": "Chuyên viên tư vấn công nghệ thông tin",
   "name_en": "IT Consultant",
   "name_de": "IT-Berater/in",
   "field": "IT",
@@ -99,6 +106,7 @@
  },
  {
   "id": "OCC008",
+  "name_vi": "Nhà thiết kế trải nghiệm người dùng (UX)",
   "name_en": "UX Designer",
   "name_de": "UX-Designer/in",
   "field": "IT",
@@ -113,6 +121,7 @@
  },
  {
   "id": "OCC009",
+  "name_vi": "Chuyên viên kiểm soát tài chính",
   "name_en": "Financial Controller",
   "name_de": "Controller/in",
   "field": "BUS",
@@ -127,6 +136,7 @@
  },
  {
   "id": "OCC010",
+  "name_vi": "Quản lý phát triển kinh doanh",
   "name_en": "Business Development Manager",
   "name_de": "Business-Development-Manager/in",
   "field": "BUS",
@@ -141,6 +151,7 @@
  },
  {
   "id": "OCC011",
+  "name_vi": "Quản lý marketing",
   "name_en": "Marketing Manager",
   "name_de": "Marketingmanager/in",
   "field": "BUS",
@@ -155,6 +166,7 @@
  },
  {
   "id": "OCC012",
+  "name_vi": "Chuyên viên phân tích kinh tế",
   "name_en": "Economic Analyst",
   "name_de": "Wirtschaftsanalyst/in",
   "field": "BUS",
@@ -169,6 +181,7 @@
  },
  {
   "id": "OCC013",
+  "name_vi": "Chuyên viên lập kế hoạch logistics",
   "name_en": "Logistics Planner",
   "name_de": "Logistikplaner/in",
   "field": "LOG",
@@ -183,6 +196,7 @@
  },
  {
   "id": "OCC014",
+  "name_vi": "Chuyên viên phân tích chuỗi cung ứng",
   "name_en": "Supply Chain Analyst",
   "name_de": "Supply-Chain-Analyst/in",
   "field": "LOG",
@@ -197,6 +211,7 @@
  },
  {
   "id": "OCC015",
+  "name_vi": "Chuyên viên quy hoạch giao thông",
   "name_en": "Transport Planner",
   "name_de": "Verkehrsplaner/in",
   "field": "LOG",
@@ -211,6 +226,7 @@
  },
  {
   "id": "OCC016",
+  "name_vi": "Chuyên viên lập kế hoạch sản xuất",
   "name_en": "Production Planner",
   "name_de": "Produktionsplaner/in",
   "field": "LOG",
@@ -225,6 +241,7 @@
  },
  {
   "id": "OCC017",
+  "name_vi": "Kỹ sư môi trường",
   "name_en": "Environmental Engineer",
   "name_de": "Umweltingenieur/in",
   "field": "GREEN",
@@ -239,6 +256,7 @@
  },
  {
   "id": "OCC018",
+  "name_vi": "Kỹ sư năng lượng",
   "name_en": "Energy Engineer",
   "name_de": "Energieingenieur/in",
   "field": "GREEN",
@@ -253,6 +271,7 @@
  },
  {
   "id": "OCC019",
+  "name_vi": "Chuyên viên công nghệ sinh học",
   "name_en": "Biotechnologist",
   "name_de": "Biotechnologe/in",
   "field": "GREEN",
@@ -267,6 +286,7 @@
  },
  {
   "id": "OCC020",
+  "name_vi": "Nhà nghiên cứu môi trường",
   "name_en": "Environmental Researcher",
   "name_de": "Umweltforscher/in",
   "field": "GREEN",
@@ -281,6 +301,7 @@
  },
  {
   "id": "OCC021",
+  "name_vi": "Chuyên viên đào tạo và phát triển nhân sự",
   "name_en": "Learning and Development Specialist",
   "name_de": "Personalentwickler/in",
   "field": "SOC",
@@ -295,6 +316,7 @@
  },
  {
   "id": "OCC022",
+  "name_vi": "Chuyên viên chương trình giáo dục",
   "name_en": "Education Programme Officer",
   "name_de": "Bildungsreferent/in",
   "field": "SOC",
@@ -309,6 +331,7 @@
  },
  {
   "id": "OCC023",
+  "name_vi": "Nhà thiết kế truyền thông",
   "name_en": "Communication Designer",
   "name_de": "Kommunikationsdesigner/in",
   "field": "SOC",
@@ -323,6 +346,7 @@
  },
  {
   "id": "OCC024",
+  "name_vi": "Nhân viên công tác xã hội",
   "name_en": "Social Worker",
   "name_de": "Sozialarbeiter/in",
   "field": "SOC",
@@ -337,6 +361,7 @@
  },
  {
   "id": "OCC025",
+  "name_vi": "Kỹ sư robot",
   "name_en": "Robotics Engineer",
   "name_de": "Robotikingenieur",
   "field": null,
@@ -351,6 +376,7 @@
  },
  {
   "id": "OCC026",
+  "name_vi": "Kỹ sư cơ khí",
   "name_en": "Mechanical Engineer",
   "name_de": "Maschinenbauingenieur",
   "field": null,
@@ -365,6 +391,7 @@
  },
  {
   "id": "OCC027",
+  "name_vi": "Nhà thiết kế sản phẩm",
   "name_en": "Product Designer",
   "name_de": "Produktdesigner",
   "field": null,
@@ -379,6 +406,7 @@
  },
  {
   "id": "OCC028",
+  "name_vi": "Nhà thiết kế công nghiệp",
   "name_en": "Industrial Designer",
   "name_de": "Industriedesigner",
   "field": null,
@@ -393,6 +421,7 @@
  },
  {
   "id": "OCC029",
+  "name_vi": "Chuyên viên hoạt động trị liệu",
   "name_en": "Occupational Therapist",
   "name_de": "Ergotherapeut",
   "field": null,
@@ -407,6 +436,7 @@
  },
  {
   "id": "OCC030",
+  "name_vi": "Chuyên viên vật lý trị liệu",
   "name_en": "Physiotherapist",
   "name_de": "Physiotherapeut",
   "field": null,
@@ -421,6 +451,7 @@
  },
  {
   "id": "OCC031",
+  "name_vi": "Quản lý dự án kỹ thuật",
   "name_en": "Technical Project Manager",
   "name_de": "Technischer Projektmanager",
   "field": null,
@@ -435,6 +466,7 @@
  },
  {
   "id": "OCC032",
+  "name_vi": "Quản lý dự án xây dựng",
   "name_en": "Construction Manager",
   "name_de": "Bauprojektmanager",
   "field": null,
@@ -449,6 +481,7 @@
  },
  {
   "id": "OCC033",
+  "name_vi": "Kỹ sư sản xuất",
   "name_en": "Production Engineer",
   "name_de": "Produktionsingenieur",
   "field": null,
@@ -463,6 +496,7 @@
  },
  {
   "id": "OCC034",
+  "name_vi": "Chuyên viên phát triển thiết kế tương tác",
   "name_en": "Interaction Developer",
   "name_de": "Interaktionsentwickler",
   "field": null,
@@ -477,6 +511,7 @@
  },
  {
   "id": "OCC035",
+  "name_vi": "Nhà nghiên cứu khoa học nhận thức",
   "name_en": "Cognitive Science Researcher",
   "name_de": "Kognitionswissenschaftler",
   "field": null,
@@ -491,6 +526,7 @@
  },
  {
   "id": "OCC036",
+  "name_vi": "Nhà nghiên cứu tâm lý học",
   "name_en": "Psychology Researcher",
   "name_de": "Psychologieforscher",
   "field": null,
@@ -505,6 +541,7 @@
  },
  {
   "id": "OCC037",
+  "name_vi": "Nhà nghiên cứu sức khỏe",
   "name_en": "Health Researcher",
   "name_de": "Gesundheitsforscher",
   "field": null,
@@ -519,6 +556,7 @@
  },
  {
   "id": "OCC038",
+  "name_vi": "Chuyên viên phân tích nghiệp vụ",
   "name_en": "Business Analyst",
   "name_de": "Business-Analyst",
   "field": null,
@@ -533,6 +571,7 @@
  },
  {
   "id": "OCC039",
+  "name_vi": "Chuyên viên phân tích dữ liệu kinh doanh",
   "name_en": "Business Analytics Specialist",
   "name_de": "Business-Analytics-Spezialist",
   "field": null,
@@ -547,6 +586,7 @@
  },
  {
   "id": "OCC040",
+  "name_vi": "Chuyên viên phân tích định lượng",
   "name_en": "Quantitative Analyst",
   "name_de": "Quantitativer Analyst",
   "field": null,
@@ -561,6 +601,7 @@
  },
  {
   "id": "OCC041",
+  "name_vi": "Chuyên viên giáo dục truyền thông",
   "name_en": "Media Educator",
   "name_de": "Medienpädagoge",
   "field": null,
@@ -575,6 +616,7 @@
  },
  {
   "id": "OCC042",
+  "name_vi": "Giáo viên mỹ thuật",
   "name_en": "Art Educator",
   "name_de": "Kunstpädagoge",
   "field": null,
@@ -589,6 +631,7 @@
  },
  {
   "id": "OCC043",
+  "name_vi": "Quản lý truyền thông đa phương tiện",
   "name_en": "Media Manager",
   "name_de": "Medienmanager",
   "field": null,
@@ -603,6 +646,7 @@
  },
  {
   "id": "OCC044",
+  "name_vi": "Quản lý truyền thông doanh nghiệp",
   "name_en": "Communication Manager",
   "name_de": "Kommunikationsmanager",
   "field": null,
@@ -617,6 +661,7 @@
  },
  {
   "id": "OCC045",
+  "name_vi": "Biên tập viên tài liệu kỹ thuật",
   "name_en": "Technical Writer",
   "name_de": "Technischer Redakteur",
   "field": null,
@@ -631,6 +676,7 @@
  },
  {
   "id": "OCC046",
+  "name_vi": "Nhà thiết kế thông tin",
   "name_en": "Information Designer",
   "name_de": "Informationsdesigner",
   "field": null,
@@ -645,6 +691,7 @@
  },
  {
   "id": "OCC047",
+  "name_vi": "Chuyên viên nhân sự",
   "name_en": "HR Specialist",
   "name_de": "Personalreferent",
   "field": null,
@@ -659,6 +706,7 @@
  },
  {
   "id": "OCC048",
+  "name_vi": "Quản lý dịch vụ xã hội",
   "name_en": "Social Services Manager",
   "name_de": "Sozialmanager",
   "field": null,
@@ -673,6 +721,7 @@
  },
  {
   "id": "OCC049",
+  "name_vi": "Quản lý cơ sở y tế",
   "name_en": "Healthcare Administrator",
   "name_de": "Gesundheitsmanager",
   "field": null,
@@ -687,6 +736,7 @@
  },
  {
   "id": "OCC050",
+  "name_vi": "Điều phối viên giáo dục",
   "name_en": "Education Coordinator",
   "name_de": "Bildungskoordinator",
   "field": null,
@@ -701,6 +751,7 @@
  },
  {
   "id": "OCC051",
+  "name_vi": "Quản lý vận hành",
   "name_en": "Operations Manager",
   "name_de": "Betriebsmanager",
   "field": null,
