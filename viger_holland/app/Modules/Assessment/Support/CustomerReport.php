@@ -58,9 +58,10 @@ final class CustomerReport
             $override = CodeOverride::query()->where('code', $code)->first();
             $third = [
                 'heading' => $fill(setting('report_third_heading', 'Chữ thứ ba')).' – '.$name($letters[2]).' ('.$letters[2].')',
-                'text' => $override?->interpretation ?: strtr((string) setting('report_third_text', ''), [
+                // Ưu tiên: đoạn riêng của đúng mã 3 chữ (code_overrides) → đoạn "Chữ thứ ba" của nhóm → câu mẫu trong cài đặt.
+                'text' => $override?->interpretation ?: $letter?->description ?: strtr((string) setting('report_third_text', ''), [
                     '{nhom3}' => $name($letters[2]),
-                    '{chuyen_sau}' => (string) ($letter?->specialty_de ?? ''),
+                    '{chuyen_sau}' => (string) ($letter?->specialty_vi ?: $letter?->specialty_de),
                     '{ky_nang}' => (string) ($letter?->skills ?? ''),
                 ]),
             ];

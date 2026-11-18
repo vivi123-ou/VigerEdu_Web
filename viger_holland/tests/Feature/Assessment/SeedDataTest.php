@@ -93,6 +93,7 @@ class SeedDataTest extends TestCase
 
         $this->assertSame(6, RiasecType::query()->whereNotNull('description')->count());
         $this->assertSame(15, RiasecPair::query()->whereNotNull('description')->count());
+        $this->assertSame(6, DB::table('third_letters')->whereNotNull('description')->whereNotNull('specialty_vi')->count());
         $this->assertStringStartsWith('Bạn thích quan sát, đặt câu hỏi “vì sao”', RiasecType::where('code', 'I')->value('description'));
 
         // Database cũ chưa có đoạn giải thích: chạy seeder thì được điền; đoạn admin đã sửa thì giữ nguyên.

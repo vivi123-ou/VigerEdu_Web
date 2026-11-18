@@ -56,9 +56,12 @@ class CatalogSeeder extends Seeder
         }
 
         foreach ($this->json('third_letters') as $row) {
-            ThirdLetter::firstOrCreate(['code' => $row['code']], [
-                'specialty_de' => $row['specialty_de'] ?? null, 'specialty_en' => $row['specialty_en'] ?? null, 'skills' => $row['skills'] ?? null,
+            $letter = ThirdLetter::firstOrCreate(['code' => $row['code']], [
+                'specialty_vi' => $row['specialty_vi'] ?? null, 'specialty_de' => $row['specialty_de'] ?? null,
+                'specialty_en' => $row['specialty_en'] ?? null, 'skills' => $row['skills'] ?? null, 'description' => $row['description'] ?? null,
             ]);
+            $this->fillIfEmpty($letter, 'specialty_vi', $row['specialty_vi'] ?? null);
+            $this->fillIfEmpty($letter, 'description', $row['description'] ?? null);
         }
 
         $sort = 0;

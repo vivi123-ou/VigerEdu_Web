@@ -209,6 +209,29 @@ class ReportFlowTest extends TestCase
         $this->get(route('report.show'))->assertOk()->assertSee('Ngành học tại Đức phù hợp với bạn');
     }
 
+    public function test_third_letter_is_read_only_when_the_third_group_is_above_the_threshold(): void
+    {
+        // HS01: Sáng tạo 4,17 (chưa vượt 4,2) → khách thấy IS, không có đoạn "Chữ thứ ba".
+        $this->finished();
+        $this->post(route('report.submit'), self::FORM);
+        $this->post(route('report.verify'), ['code' => $this->sentCode('minhanh@gmail.com')]);
+        $this->get(route('report.show'))->assertSee('aria-label="Mã Holland IS"', false)->assertDontSee('Chữ thứ ba');
+
+        // Sáng tạo 4,5 (vượt 4,2) → khách thấy ISA và đọc đoạn "Chữ thứ ba" của nhóm Sáng tạo, đúng nguyên văn đã duyệt.
+        $session = $this->finished([
+            'I' => [5, 5, 5, 5, 5, 5], 'S' => [5, 5, 5, 5, 5, 4], 'A' => [5, 5, 5, 4, 4, 4],
+            'R' => [3, 3, 3, 3, 3, 3], 'C' => [3, 3, 3, 2, 2, 2], 'E' => [2, 2, 2, 2, 2, 2],
+        ]);
+        $this->assertTrue($session->result['third_detail']);
+        $this->post(route('report.submit'), self::FORM);
+        $this->post(route('report.verify'), ['code' => $this->sentCode('minhanh@gmail.com', 1)]);
+        $this->get(route('report.show'))
+            ->assertSee('aria-label="Mã Holland ISA"', false)
+            ->assertSeeInOrder(['Nhóm nổi bật nhất – Nghiên cứu (I)', 'Nhóm thứ hai – Xã hội (S)', 'Chữ thứ ba – Sáng tạo (A)', 'Khi hai nhóm kết hợp'])
+            ->assertSee('Nhóm Sáng tạo của bạn cũng ở mức cao, nên bạn thích thêm việc thử ý tưởng mới và làm ra sản phẩm có dấu ấn riêng.')
+            ->assertDontSee('Design und Innovation');
+    }
+
     public function test_code_locks_after_too_many_wrong_tries_even_with_a_new_attempt(): void
     {
         $this->finished();
@@ -342,16 +365,18 @@ class ReportFlowTest extends TestCase
     }
 
     /**
-     * Một lượt đã làm xong bài (hồ sơ HS01, khách thấy IS) của trình duyệt đang thử.
+     * Một lượt đã làm xong bài của trình duyệt đang thử (mặc định hồ sơ HS01, khách thấy IS).
+     *
+     * @param  array<string, list<int>>  $profile  điểm từng câu theo nhóm
      */
-    private function finished(): TestSession
+    private function finished(array $profile = self::HS01): TestSession
     {
         $service = app(AssessmentService::class);
         $session = $service->start(null, null);
         $answers = [];
-        $next = array_map(fn () => 0, self::HS01);
+        $next = array_map(fn () => 0, $profile);
         foreach ($session->sessionQuestions()->get() as $item) {
-            $answers[$item->question_id] = ['value' => self::HS01[$item->group][$next[$item->group]++], 'ms' => 4000];
+            $answers[$item->question_id] = ['value' => $profile[$item->group][$next[$item->group]++], 'ms' => 4000];
         }
         $session = $service->finish($session, $answers);
         $this->withSession(['holland.test' => $session->uuid]);
