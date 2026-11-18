@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Modules\Assessment\Models\TestSession;
 use App\Modules\Assessment\Support\CurrentTest;
 use App\Modules\Assessment\Support\CustomerReport;
+use App\Modules\CrmSync\Services\CrmSync;
 use App\Modules\Respondent\Models\OtpCode;
 use App\Modules\Respondent\Models\Respondent;
 use App\Modules\Respondent\Services\OtpService;
 use App\Modules\Respondent\Services\ReportAccessService;
 use App\Modules\Respondent\Services\ReportForm;
 use App\Modules\Respondent\Services\Turnstile;
+use App\Modules\Tracking\Services\Tracker;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -44,6 +46,8 @@ class ReportController extends Controller
         private readonly ReportForm $form,
         private readonly OtpService $otp,
         private readonly Turnstile $turnstile,
+        private readonly Tracker $tracker,
+        private readonly CrmSync $crm,
     ) {}
 
     public function form(Request $request): View|RedirectResponse
@@ -85,7 +89,10 @@ class ReportController extends Controller
         $this->form->save($session, $data);
         $request->session()->put(self::CONSENT_KEY, filled(setting('report_consent_text')) ? (string) setting('report_consent_text') : null);
 
-        return $this->sendCode($request, $session, $email, 'form');
+        $response = $this->sendCode($request, $session, $email, 'form');
+        $this->tracker->record($session, 'form_submitted');
+
+        return $response;
     }
 
     public function code(Request $request): View|RedirectResponse
@@ -134,6 +141,10 @@ class ReportController extends Controller
         }
 
         $access->complete($session, $request->session()->pull(self::CONSENT_KEY));
+        $session = $session->fresh('respondent');
+        $this->tracker->record($session, 'report_unlocked');
+        // Gửi khách sang CRM chạy nền: CRM lỗi hay chưa bật thì khách vẫn xem báo cáo bình thường.
+        $this->crm->queueLead($session);
         $request->session()->forget(self::DEV_CODE_KEY);
         $key = Str::random(48);
         $request->session()->put(self::REPORT_KEY, ['uuid' => $session->uuid, 'hash' => hash('sha256', $key)]);
@@ -175,8 +186,11 @@ class ReportController extends Controller
 
         $key = $request->session()->get(self::FRESH_KEY);
         $report = is_string($key) && $this->keyOpens($request, $session, $key) ? CustomerReport::make($session) : null;
-        if ($report !== null && $session->report_viewed_at === null) {
-            $session->update(['report_viewed_at' => now()]);
+        if ($report !== null) {
+            if ($session->report_viewed_at === null) {
+                $session->update(['report_viewed_at' => now()]);
+            }
+            $this->tracker->record($session, 'report_viewed');
         }
 
         return $this->private(response()->view('public.report', ['report' => $report, 'key' => $report ? $key : null]));
@@ -191,6 +205,7 @@ class ReportController extends Controller
         $key = $request->input('key');
 
         abort_unless($session !== null && $session->verified_at !== null && is_string($key) && $this->keyOpens($request, $session, $key), 404);
+        $this->tracker->record($session, 'report_viewed', ['reload' => true]);
 
         return $this->private(response()->view('public.partials.report-body', ['report' => CustomerReport::make($session)]));
     }

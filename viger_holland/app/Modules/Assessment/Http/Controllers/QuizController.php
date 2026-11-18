@@ -10,6 +10,7 @@ use App\Modules\Assessment\Models\SessionQuestion;
 use App\Modules\Assessment\Models\TestSession;
 use App\Modules\Assessment\Services\AssessmentService;
 use App\Modules\Assessment\Support\CurrentTest;
+use App\Modules\Tracking\Services\Tracker;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -30,7 +31,7 @@ class QuizController extends Controller
 {
     private const DEVICE_COOKIE = 'holland_device';
 
-    public function __construct(private readonly AssessmentService $assessment) {}
+    public function __construct(private readonly AssessmentService $assessment, private readonly Tracker $tracker) {}
 
     public function start(Request $request): RedirectResponse
     {
@@ -52,6 +53,7 @@ class QuizController extends Controller
 
         $session = $this->assessment->start(hash('sha256', $device), $utm ?: null);
         CurrentTest::remember($request, $session);
+        $this->tracker->record($session, 'quiz_started', array_filter(['source' => $utm['utm_source'] ?? null]));
 
         return redirect()->route('test.show');
     }
@@ -119,7 +121,11 @@ class QuizController extends Controller
             return redirect()->route('test.show', ['trang' => max(1, $index)]);
         }
 
-        if ($this->assessment->finishIfComplete($session) !== null) {
+        $this->tracker->record($session, 'quiz_page_completed', ['page' => $index + 1]);
+
+        if (($done = $this->assessment->finishIfComplete($session)) !== null) {
+            $this->tracker->record($done, 'quiz_finished', ['duration_s' => (int) $done->started_at?->diffInSeconds($done->answered_at)]);
+
             return redirect()->route('test.result');
         }
 

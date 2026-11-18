@@ -40,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
         'Assessment' => 'App\\Modules\\Assessment\\Filament',
         'Access' => 'App\\Modules\\Access\\Filament',
         'Respondent' => 'App\\Modules\\Respondent\\Filament',
+        'CrmSync' => 'App\\Modules\\CrmSync\\Filament',
     ];
 
     public function panel(Panel $panel): Panel

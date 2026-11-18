@@ -171,6 +171,13 @@ class SettingSeeder extends Seeder
                 'report_closed_text' => 'Để giữ riêng tư cho bạn, báo cáo chỉ xem được trên thẻ (tab) đã mở nó. Thẻ đã đóng thì báo cáo cũng đóng. Muốn xem lại, bạn làm bài lại với câu hỏi mới.',
                 'report_closed_button' => 'Làm bài lại',
             ],
+            'crm' => [
+                // Gửi khách sang CRM (H5); sửa ở "Gửi khách sang CRM". Token lưu mã hóa (crm_token), không có giá trị mặc định.
+                'crm_enabled' => '0',
+                'crm_url' => '',
+                'crm_retry_minutes' => '1,5,30,120,360',
+                'crm_customer_url' => '', // ví dụ https://crm.viger.edu.vn/khach/{ma}; để trống thì không hiện nút "Mở hồ sơ trong CRM"
+            ],
             'embed' => [
                 // Khối "Trắc nghiệm Holland" trên web chính (/embed, /api/v1/public/intro)
                 'embed_title' => 'Trắc nghiệm hướng nghiệp Holland',

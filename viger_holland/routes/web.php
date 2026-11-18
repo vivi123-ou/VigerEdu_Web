@@ -9,6 +9,7 @@ use App\Http\Controllers\EmbedController;
 use App\Http\Controllers\HomeController;
 use App\Modules\Assessment\Http\Controllers\QuizController;
 use App\Modules\Respondent\Http\Controllers\ReportController;
+use App\Modules\Tracking\Http\Controllers\TrackController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -29,6 +30,9 @@ Route::middleware('noindex')->group(function (): void {
     Route::get('bao-cao', [ReportController::class, 'show'])->name('report.show');
     Route::post('bao-cao/xem', [ReportController::class, 'view'])->middleware('throttle:report-view')->name('report.view');
 });
+
+// Hành vi từ trình duyệt (bấm Gọi / Zalo trên báo cáo), gửi kèm sang CRM (H5).
+Route::post('t', TrackController::class)->middleware('throttle:track')->name('tracking.event');
 
 // Khối nhúng cho web chính (iframe + script)
 Route::get('embed', [EmbedController::class, 'show'])->name('embed');

@@ -10,6 +10,8 @@ use App\Modules\Assessment\Models\TestSession;
 use App\Modules\Assessment\Services\AssessmentService;
 use App\Modules\Assessment\Support\CustomerReport;
 use App\Modules\Assessment\Support\Hexagon;
+use App\Modules\CrmSync\Models\CrmOutbox;
+use App\Modules\CrmSync\Services\CrmConfig;
 use App\Modules\Respondent\Models\FormField;
 use App\Modules\Respondent\Services\ReportForm;
 use Illuminate\Support\Carbon;
@@ -87,6 +89,7 @@ final class InternalReport
             'answers' => self::answers($session, array_values($settings['likert_labels'])),
             'timeline' => self::timeline($session),
             'aiJson' => self::aiJson($session),
+            'crmUrl' => app(CrmConfig::class)->customerUrl($session->respondent?->crm_customer_code),
         ];
     }
 
@@ -231,7 +234,16 @@ final class InternalReport
     {
         $source = $session->utm['utm_source'] ?? null;
 
+        $lead = CrmOutbox::query()->where('test_session_id', $session->id)->where('schema', 'lead/2')->latest('id')->first();
+        $crm = match ($lead?->status) {
+            CrmOutbox::SENT => [$lead->sent_at, 'Đã gửi sang CRM'.(filled($session->respondent?->crm_customer_code) ? ' (mã khách '.$session->respondent->crm_customer_code.')' : '')],
+            CrmOutbox::FAILED => [$lead->updated_at, 'Gửi sang CRM bị lỗi, quản trị viên xem ở "Gửi khách sang CRM"'],
+            CrmOutbox::PENDING, CrmOutbox::DISABLED => [$lead->created_at, 'Đang chờ gửi sang CRM'],
+            default => [null, ''],
+        };
+
         return collect([
+            $crm,
             [$session->report_viewed_at, 'Khách mở báo cáo đầy đủ'],
             [$session->verified_at, 'Khách điền thông tin và nhập đúng mã gửi qua email'],
             [$session->answered_at, 'Làm xong bài'.($source ? ' (đến từ '.$source.')' : '')],

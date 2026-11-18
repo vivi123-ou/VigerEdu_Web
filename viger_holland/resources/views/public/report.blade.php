@@ -11,7 +11,7 @@
 @section('noindex', true)
 
 @section('content')
-    <div class="ksec" data-report-page data-view-url="{{ route('report.view') }}" @if ($key) data-key="{{ $key }}" @endif>
+    <div class="ksec" data-report-page data-view-url="{{ route('report.view') }}" data-track-url="{{ route('tracking.event') }}" @if ($key) data-key="{{ $key }}" @endif>
         <div data-report-holder>
             @if ($report)
                 @include('public.partials.report-body', ['report' => $report])

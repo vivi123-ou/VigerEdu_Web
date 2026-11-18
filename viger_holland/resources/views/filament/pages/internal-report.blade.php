@@ -11,6 +11,11 @@
 <x-filament-panels::page>
     <link rel="stylesheet" href="{{ asset('css/admin-holland.css') }}">
     <div class="hz">
+        @if ($r['crmUrl'])
+            <div class="hz-row hz-noprint">
+                <x-filament::button tag="a" :href="$r['crmUrl']" target="_blank" rel="noopener" color="gray" icon="heroicon-o-arrow-top-right-on-square">Mở hồ sơ trong CRM</x-filament::button>
+            </div>
+        @endif
         @if ($isAdmin)
             <div class="hz-row hz-noprint" x-data="{ copied: false }">
                 <x-filament::button color="gray" icon="heroicon-o-printer" x-on:click="window.print()">In / PDF</x-filament::button>

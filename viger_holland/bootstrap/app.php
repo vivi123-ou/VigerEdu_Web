@@ -3,6 +3,8 @@
 use App\Http\Middleware\EnsureAdminAccess;
 use App\Http\Middleware\EnsureMenuAccess;
 use App\Http\Middleware\NoIndex;
+use App\Modules\CrmSync\Console\RetryCrm;
+use App\Modules\CrmSync\Console\ShowCrmPayload;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
@@ -19,6 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    // Lệnh của các module (app/Modules/*/Console)
+    ->withCommands([
+        RetryCrm::class,
+        ShowCrmPayload::class,
+    ])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => EnsureAdminAccess::class,

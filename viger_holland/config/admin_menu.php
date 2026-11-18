@@ -5,6 +5,7 @@ use App\Modules\Access\Filament\Resources\Roles\RoleResource;
 use App\Modules\Access\Filament\Resources\Users\UserResource;
 use App\Modules\Assessment\Filament\Pages\TestSettings;
 use App\Modules\Assessment\Filament\Resources\Questions\QuestionResource;
+use App\Modules\CrmSync\Filament\Pages\CrmConnection;
 use App\Modules\Respondent\Filament\Pages\ContactsToCall;
 use App\Modules\Respondent\Filament\Pages\LookupReports;
 
@@ -222,9 +223,18 @@ return [
         // ---- Quản lý hệ thống ----
         'crm' => [
             'group' => 'Quản lý hệ thống', 'label' => 'Gửi khách sang CRM', 'icon' => 'heroicon-o-link',
-            'permission' => 'crm.manage', 'stage' => 'H5',
+            'permission' => 'crm.manage',
+            'page' => CrmConnection::class,
             'summary' => 'Bật / tắt gửi khách sang CRM, kiểm tra kết nối, xem các lần gửi lỗi.',
-            'help' => ['intro' => 'Cài địa chỉ và mã kết nối CRM, bấm "Kiểm tra kết nối", gửi lại các khách bị lỗi.', 'steps' => []],
+            'help' => [
+                'intro' => 'Khách nhập đúng mã email là được gửi sang CRM để tư vấn viên chăm sóc. CRM lỗi hay đang tắt thì khách vẫn xem báo cáo bình thường, phần gửi nằm chờ ở hàng đợi.',
+                'steps' => [
+                    ['Kết nối lần đầu', 'dán địa chỉ CRM và token kênh holland (CRM cấp), bấm "Lưu", rồi bấm "Kiểm tra kết nối".'],
+                    ['Bật gửi', 'bật "Gửi khách sang CRM" và bấm "Lưu". Khách đang chờ sẽ tự được gửi.'],
+                    ['Thấy dòng "Lỗi"', 'đọc cột "Lỗi gần nhất", sửa nguyên nhân (thường là sai token) rồi bấm "Gửi lại" hoặc "Gửi lại tất cả bản lỗi".'],
+                ],
+                'note' => 'Bảng chỉ hiện số điện thoại đã che. Gửi lại vẫn giữ nguyên mã gói nên CRM không tạo khách trùng.',
+            ],
         ],
         'seo' => [
             'group' => 'Quản lý hệ thống', 'label' => 'Hiển thị trên Google', 'icon' => 'heroicon-o-magnifying-glass-circle',

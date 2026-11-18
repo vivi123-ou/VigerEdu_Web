@@ -173,3 +173,28 @@
         });
     }
 })();
+
+/*
+ * Báo cáo (H5): bấm nút Gọi / Zalo thì báo cho máy chủ (POST /t) để gửi kèm sang CRM. Dùng sendBeacon nên không làm chậm
+ * việc mở Zalo / gọi điện; trình duyệt không hỗ trợ thì bỏ qua.
+ */
+(function () {
+    'use strict';
+
+    var page = document.querySelector('[data-report-page]');
+    if (!page || !navigator.sendBeacon) {
+        return;
+    }
+    var url = page.getAttribute('data-track-url');
+    var token = document.querySelector('meta[name="csrf-token"]');
+    page.addEventListener('click', function (event) {
+        var link = event.target.closest('[data-track]');
+        if (!link || !url) {
+            return;
+        }
+        var data = new FormData();
+        data.append('type', link.getAttribute('data-track'));
+        data.append('_token', token ? token.content : '');
+        navigator.sendBeacon(url, data);
+    });
+})();

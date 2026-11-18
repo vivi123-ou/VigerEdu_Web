@@ -122,10 +122,10 @@
                 </div>
                 <div class="cta">
                     @if ($zaloUrl)
-                        <a class="kbtn kbtn--red" href="{{ $zaloUrl }}" target="_blank" rel="noopener">{{ setting('report_zalo_button', 'Nhắn Zalo để trao đổi thêm') }}</a>
+                        <a class="kbtn kbtn--red" href="{{ $zaloUrl }}" target="_blank" rel="noopener" data-track="cta_zalo_clicked">{{ setting('report_zalo_button', 'Nhắn Zalo để trao đổi thêm') }}</a>
                     @endif
                     @if (filled(setting('hotline')))
-                        <a class="kbtn" href="tel:{{ preg_replace('/[^\d+]/', '', (string) setting('hotline')) }}"><svg class="ic"><use href="#i-phone"/></svg>{{ setting('hotline') }}</a>
+                        <a class="kbtn" data-track="cta_call_clicked" href="tel:{{ preg_replace('/[^\d+]/', '', (string) setting('hotline')) }}"><svg class="ic"><use href="#i-phone"/></svg>{{ setting('hotline') }}</a>
                     @endif
                 </div>
             </div>

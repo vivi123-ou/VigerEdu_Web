@@ -41,4 +41,10 @@ return [
         'secret_key' => env('TURNSTILE_SECRET_KEY'),
     ],
 
+    // CRM (crm.viger.edu.vn): có ở đây thì được ưu tiên hơn ô nhập ở trang admin "Gửi khách sang CRM".
+    'crm' => [
+        'url' => env('CRM_URL'),
+        'token' => env('CRM_TOKEN'),
+    ],
+
 ];

@@ -29,9 +29,28 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | ✅ Xong (17/11) |
 | H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | ✅ Xong (18/11) |
 | H4. Form thông tin, OTP email, báo cáo đầy đủ | ✅ Xong (18/11): H4a phía khách, H4b admin |
-| H5. CrmSync + Tracking | Chưa làm (tiếp theo) |
-| H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm |
+| H5. CrmSync + Tracking | ✅ Xong (18/11) |
+| H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm (tiếp theo) |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+### Repo chung (18/11/2026)
+
+- Code nằm trong **repo chung `VigerEdu_Web` (riêng tư)**: `viger_web/` (Tuấn), `viger_holland/` (Holland, giữ đủ lịch sử 46 commit), `viger_crm/` (tài liệu CRM), `viger_chatbot/` (trống, team IT). Máy Vân: `D:\OU\VigerEdu_Web`. Nhánh `gom-4-thu-muc` đã đẩy lên GitHub, chờ Pull Request vào `main`.
+- Làm Holland trên nhánh `feature/holland-v3` của repo chung, chưa đẩy. Thư mục / repo cũ `VigerEdu_Holland` chỉ để lưu.
+- Web chính: nhánh `web/lien-ket-holland` thêm mục menu "Trắc nghiệm Holland" trỏ tới Holland (`?utm_source=viger.edu.vn`, địa chỉ ở `HOLLAND_URL`). Chưa chạy thử được vì `composer.lock` của web chính cần PHP 8.4 (máy đang PHP 8.3).
+
+### H5 đã làm (18/11/2026): gửi khách sang CRM, hành vi khách
+
+- **Gửi khách sang CRM** (`app/Modules/CrmSync`): nhập đúng mã email → gói `lead/2` vào hàng đợi (mã hóa) → gửi nền; CRM lỗi / chưa có / tắt thì khách vẫn xem báo cáo. Gửi lại 1, 5, 30 phút, 2 giờ, 6 giờ cùng `event_id`; 422 → lỗi, chỉ ghi tên trường; hết lượt → lỗi, admin bấm "Gửi lại". Lưu mã khách CRM, lần sau gửi kèm.
+- **Gói theo hợp đồng:** ô form theo `crm_key` (`config/crm.php`), ô admin thêm → `extra_fields`, chỉ ô có giá trị; SĐT `+84…`; SĐT phụ huynh → `guardian.phone`; **chỉ gửi năm sinh**; `holland_result/3`, 36 câu, hành vi, UTM, link báo cáo nội bộ.
+- **Câu đồng ý gửi đúng sự thật:** có câu đồng ý → `agreed: true` + phiên bản + đúng câu; không có (hiện tại) → `agreed: false`. **Hợp đồng đang bắt buộc `agreed = true` nên CRM làm đúng hợp đồng sẽ từ chối (422)** → cần chốt trước khi chạy thật (xem cuối mục).
+- **Hành vi khách** (`app/Modules/Tracking`): bắt đầu, xong trang, xong bài, gửi form, mở khóa, xem báo cáo (cả tải lại), bấm Gọi / Zalo. Sau khi CRM có mã khách thì gửi bằng `events/1`.
+- **Trang "Gửi khách sang CRM"** (quản trị viên): bật / tắt, địa chỉ, token (mã hóa, chỉ hiện 4 ký tự cuối, `.env` ưu tiên), lịch gửi lại, mẫu link hồ sơ CRM; "Kiểm tra kết nối" (`/ping`); bảng hàng đợi SĐT đã che, lọc trạng thái, "Gửi lại", "Gửi lại tất cả bản lỗi". Bật lại → khách đang chờ tự gửi.
+- Báo cáo nội bộ: diễn biến có dòng gửi CRM; nút "Mở hồ sơ trong CRM" khi có mẫu link.
+- Lệnh `crm:retry` (lịch 5 phút), `crm:payload {mã báo cáo}` (gói đã che cho người làm CRM).
+- **Kiểm thử: 142/142 đạt** (thêm `CrmSyncTest` 11 ca; log được kiểm tra không có họ tên, email, SĐT).
+
+**Cần Vân / Thầy chốt trước khi chạy thật:** (1) câu đồng ý: bật câu đồng ý, hay sửa hợp đồng để CRM nhận `agreed: false` kèm đánh dấu; (2) sửa `HOP_DONG_KET_NOI.md` mục 2.1 (guardian.phone, consent, ping) – cần Vân cho phép; (3) từ điển chung thêm `birth_date` nếu muốn gửi ngày sinh.
 
 ### H4b đã làm (18/11/2026): trang quản trị về khách
 
