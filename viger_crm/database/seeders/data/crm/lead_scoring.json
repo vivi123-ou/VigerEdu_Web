@@ -1,0 +1,158 @@
+{
+ "max_total": 10,
+ "criteria": [
+  {
+   "key": "gpa",
+   "label": "1. GPA (tối đa 2) – tra theo ngưỡng, sắp tăng dần",
+   "rule": "threshold_gte",
+   "options": [
+    {
+     "value": 0,
+     "points": 0.5
+    },
+    {
+     "value": 6.5,
+     "points": 1
+    },
+    {
+     "value": 7,
+     "points": 1.5
+    },
+    {
+     "value": 8,
+     "points": 2
+    }
+   ]
+  },
+  {
+   "key": "language",
+   "label": "2. Ngoại ngữ (tối đa 2) – lấy điểm cao hơn giữa tiếng Anh và tiếng Đức",
+   "rule": "max_of_english_german",
+   "options": [
+    {
+     "value": "Chưa có",
+     "points": 0.5
+    },
+    {
+     "value": "IELTS 5.0-5.5",
+     "points": 1
+    },
+    {
+     "value": "IELTS 6.0+",
+     "points": 2
+    },
+    {
+     "value": "Đức A1-A2",
+     "points": 1
+    },
+    {
+     "value": "Đức B1+",
+     "points": 2
+    }
+   ]
+  },
+  {
+   "key": "budget",
+   "label": "3. Ngân sách / năm (tối đa 2)",
+   "rule": "lookup",
+   "options": [
+    {
+     "value": "Chưa rõ",
+     "points": 0.5
+    },
+    {
+     "value": "< 300 triệu",
+     "points": 0.5
+    },
+    {
+     "value": "300-500 triệu",
+     "points": 1.5
+    },
+    {
+     "value": "> 500 triệu",
+     "points": 2
+    }
+   ]
+  },
+  {
+   "key": "timing",
+   "label": "4. Thời điểm dự định đi (tối đa 1.5)",
+   "rule": "lookup",
+   "options": [
+    {
+     "value": "Trong 12 tháng",
+     "points": 1.5
+    },
+    {
+     "value": "1-2 năm",
+     "points": 1
+    },
+    {
+     "value": "Trên 2 năm",
+     "points": 0.5
+    },
+    {
+     "value": "Chưa rõ",
+     "points": 0.5
+    }
+   ]
+  },
+  {
+   "key": "decider",
+   "label": "5. Người quyết định tham gia (tối đa 1)",
+   "rule": "lookup",
+   "options": [
+    {
+     "value": "PH",
+     "points": 1
+    },
+    {
+     "value": "HS",
+     "points": 0.5
+    }
+   ]
+  },
+  {
+   "key": "action",
+   "label": "6. Hành động (tối đa 1.5)",
+   "rule": "lookup",
+   "options": [
+    {
+     "value": "Đặt lịch",
+     "points": 1.5
+    },
+    {
+     "value": "Để lại SĐT",
+     "points": 1
+    },
+    {
+     "value": "Chỉ email",
+     "points": 0.5
+    }
+   ]
+  }
+ ],
+ "tiers": [
+  {
+   "level": 1,
+   "min_points": 7,
+   "label": "GREEN",
+   "meaning": "Đủ điều kiện đi du học",
+   "action": "Gọi trong 24 giờ, đề xuất trường cụ thể"
+  },
+  {
+   "level": 2,
+   "min_points": 5,
+   "label": "YELLOW",
+   "meaning": "Cần chuẩn bị thêm",
+   "action": "Hướng dẫn lộ trình: ngoại ngữ, hồ sơ, tài chính"
+  },
+  {
+   "level": 3,
+   "min_points": 0,
+   "label": "RED",
+   "meaning": "Chưa đủ điều kiện",
+   "action": "Gửi thông tin, mời hội thảo, chăm sóc định kỳ"
+  }
+ ]
+}
