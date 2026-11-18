@@ -152,6 +152,7 @@ class AdminActivity extends Model
             self::ACTION_SEARCH => 'Tra cứu',
             self::ACTION_VIEW => 'Xem',
             'export' => 'Tải dữ liệu',
+            'audit' => 'Kiểm tra bảo mật',
             default => $this->action,
         };
     }

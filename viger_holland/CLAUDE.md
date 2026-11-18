@@ -75,7 +75,7 @@
 - `docs/VIGER_Holland_QuestionBank_300_V1.xlsx` / `.csv`: 300 câu, 60 chủ đề, cấu hình rút đề.
 - `docs/VIGER_RIASEC_120_codes.xlsx`, `docs/VIGER_CareerMap_Layer4_Germany_V1.xlsx`, `docs/Sơ đồ kiến trúc ứng dụng VIGER EDU Career Map-chitiet.docx`: 120 mã, 15 cặp, nghề, môi trường, quy tắc.
 - `database/seeders/data/holland_v3/`: dữ liệu chuẩn hóa (6 nhóm, 15 cặp, 6 chữ thứ ba, 46 ngành, nghề, liên kết, môi trường) và `question_bank_300.csv`. Các file cũ `questions.json`, `settings.json`, `form_fields.json` đã xóa.
-- `docs/du_lieu_390_truong_DH_da_phien_dich.xlsx` (390 trường ĐH Đức, chưa có cột ngành) và `docs/du_lieu_16_bang_duc.xlsx` (16 bang): nạp thành danh mục Trường / Bang ở H6, thiết kế mở cho nhiều nước (Quốc gia, Vùng, Loại trường là dữ liệu; nhập Excel có bước ghép cột). Gợi ý "trường có ngành này" cần thêm file trường ↔ ngành do team điền.
+- `docs/du_lieu_390_truong_DH_da_phien_dich.xlsx` (390 trường ĐH Đức, chưa có cột ngành) và `docs/du_lieu_16_bang_duc.xlsx` (16 bang): nạp thành danh mục Trường / Bang ở H6, thiết kế mở cho nhiều nước (Quốc gia, Vùng, Loại trường là dữ liệu; nhập Excel có bước ghép cột). Trường ↔ ngành (18/11): bảng `school_programs`, nhập Excel có file mẫu, chỉ quản trị viên và tư vấn viên thấy; chờ team điền dữ liệu.
 - `database/seeders/data/shared/regions.json`: khu vực ở Đức (dữ liệu thật, Ý thu thập).
 - **Không dùng** các file bản cũ đã xóa (`Holland_de_xuat_nganh_v2*`, `DEMO_Holland_de_xuat_nganh.xlsx`, dữ liệu `database/seeders/data/holland/`).
 

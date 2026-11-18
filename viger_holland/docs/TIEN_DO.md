@@ -33,6 +33,16 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | H6. Admin (Filament): danh mục, trường & vùng, form, danh sách khách, số liệu, lịch sử, trang nội dung | ✅ Xong (18/11) |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | ✅ Xong (18/11), chờ nghiệm thu |
 
+### Ý Thầy 18/11: nhật ký, trường ↔ ngành, chống tấn công (Vân chốt: trường có ngành chỉ quản trị viên + tư vấn viên thấy; nơi lưu sao lưu ngoài máy chủ tính sau)
+
+- **Rà lỗi trên trình duyệt thật** (Edge, 3 vai trò, mọi trang): không lỗi máy chủ / JS; sửa nút "Chép" ở Ô giới thiệu. Trang không có quyền báo 404 đúng.
+- **Nhật ký tự dọn:** `holland:prune` 03:00 hằng đêm (lịch sử thao tác, hành vi khách > 12 tháng; gói CRM đã gửi > 90 ngày; mã hết hạn; IP hết hạn chặn; file log > 30 ngày; không đụng dữ liệu khách). Log lỗi mỗi ngày một file (`LOG_STACK=daily` trong `.env.example`; máy chị đang `single`, đổi khi tiện).
+- **Sao lưu:** giữ mọi bản 14 ngày + mỗi tuần 1 bản trong 8 tuần.
+- **Cài đặt hệ thống** (module `System`, quyền mới `system.manage`, 17 quyền).
+- **Trường ↔ ngành:** bảng `school_programs`; thẻ "Ngành của trường"; nhập Excel có file mẫu, báo dòng không khớp; khung nhập Excel dùng chung (`SpreadsheetImport`, `ImportActions`) cho trường, trường – ngành, ngành. **Ngành ↔ nghề** sửa trên admin (mã LNK tự đặt). Báo cáo nội bộ có cột "Trường có ngành". API `catalog/schools`, `catalog/programs`.
+- **Chống tấn công:** `GuardAgainstAbuse` (chặn IP, đường dò → 404, > 300 yêu cầu / phút → 429, đủ vi phạm → tự chặn 60 phút, IP văn phòng không chặn), trang **IP bị chặn**, `SecurityHeaders`, `TRUSTED_PROXIES`, `holland:security-audit` thứ Hai. Hướng dẫn cài máy chủ an toàn, sơ đồ tách dữ liệu: `docs/SO_TAY_SU_DUNG.md` mục 6.
+- 180 test đạt.
+
 ### Trang nội dung chuyển sang Filament (18/11/2026, Thầy đã duyệt)
 
 - Module mới `app/Modules/Content`: **Trang mở đầu** (thẻ Banner + thẻ Các khối nội dung: thêm, kéo thả thứ tự, bật / tắt, xóa, xem trước), **Chữ trên báo cáo & email**, **Ô giới thiệu trên viger.edu.vn** (quản trị viên thấy đoạn mã cho web chính, thu gọn), **Kho ảnh** (tải nhiều ảnh, lưới, chép link, thùng rác + khôi phục), **Logo, màu, hotline, chân trang** (bảng màu), **Hiển thị trên Google**.
@@ -53,7 +63,7 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 - Link khối giới thiệu cho web chính dùng `utm_source=viger.edu.vn` (thống nhất với menu web chính).
 - **Kiểm thử: 163/163 đạt.**
 
-**Còn lại / chờ:** xác thực 2 lớp cho quản trị viên; liên kết ngành – nghề sửa trên admin; "trường có ngành này" (chờ file trường ↔ ngành); các mục "Trước khi chạy thật" trong `docs/NGHIEM_THU.md`.
+**Còn lại / chờ:** dữ liệu trường – ngành (team điền file mẫu); nơi lưu sao lưu ngoài máy chủ; xác thực 2 lớp cho quản trị viên; các mục "Trước khi chạy thật" trong `docs/NGHIEM_THU.md`.
 
 ### Repo chung (18/11/2026)
 

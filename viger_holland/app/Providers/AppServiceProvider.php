@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
@@ -19,6 +20,11 @@ class AppServiceProvider extends ServiceProvider
     {
         // An toàn dữ liệu: chặn migrate:fresh / migrate:reset / db:wipe khi chạy thật.
         DB::prohibitDestructiveCommands($this->app->isProduction());
+
+        // Chạy sau Cloudflare / proxy của host: khai báo proxy tin cậy để lấy đúng IP thật của khách (chặn IP mới đúng người).
+        if (filled($proxies = config('security.trusted_proxies'))) {
+            TrustProxies::at($proxies === '*' ? '*' : array_map('trim', explode(',', $proxies)));
+        }
 
         // API: tối đa 60 lần / phút / địa chỉ IP.
         RateLimiter::for('api', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));

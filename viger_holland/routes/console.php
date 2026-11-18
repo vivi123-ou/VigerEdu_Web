@@ -16,3 +16,6 @@ Schedule::command('holland:backup')->dailyAt('02:00')->withoutOverlapping();
 
 // Dọn nhật ký cũ (lịch sử thao tác, hành vi, gói CRM đã gửi, mã hết hạn, file log) theo "Cài đặt hệ thống". Không đụng dữ liệu khách.
 Schedule::command('holland:prune')->dailyAt('03:00')->withoutOverlapping();
+
+// Kiểm tra lỗ hổng bảo mật của các package PHP (composer audit), sáng thứ Hai; có lỗ hổng thì ghi Lịch sử thao tác + log.
+Schedule::command('holland:security-audit')->weeklyOn(1, '04:00')->withoutOverlapping();

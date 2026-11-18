@@ -30,6 +30,7 @@ class PruneOldRecords extends Command
             'Gói CRM đã gửi' => DB::table('crm_outbox')->where('status', 'sent')
                 ->where('sent_at', '<', now()->subDays(max(7, (int) setting('crm_sent_keep_days', '90')))),
             'Mã email hết hạn' => DB::table('otp_codes')->where('expires_at', '<', now()->subDay()),
+            'IP hết hạn chặn' => DB::table('blocked_ips')->whereNotNull('blocked_until')->where('blocked_until', '<', now()->subDay()),
         ];
 
         $counts = [];

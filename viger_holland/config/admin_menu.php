@@ -22,6 +22,7 @@ use App\Modules\Respondent\Filament\Pages\CustomersList;
 use App\Modules\Respondent\Filament\Pages\FormFields;
 use App\Modules\Respondent\Filament\Pages\LookupReports;
 use App\Modules\Schools\Filament\Pages\SchoolsCatalog;
+use App\Modules\System\Filament\Pages\BlockedIps;
 use App\Modules\System\Filament\Pages\SystemSettings;
 
 /*
@@ -384,6 +385,21 @@ return [
                     ['Xem hệ thống đã dọn gì', 'mở "Lịch sử thao tác", tìm "Hệ thống tự dọn".'],
                 ],
                 'note' => 'Dữ liệu khách và kết quả làm bài không bao giờ tự xóa.',
+            ],
+        ],
+        'blocked-ips' => [
+            'group' => 'Quản lý hệ thống', 'label' => 'IP bị chặn', 'icon' => 'heroicon-o-no-symbol',
+            'permission' => 'system.manage',
+            'page' => BlockedIps::class,
+            'summary' => 'Địa chỉ IP bị chặn vì truy cập dồn dập hoặc dò lỗ hổng; bỏ chặn, chặn tay.',
+            'help' => [
+                'intro' => 'Phần mềm tự chặn tạm IP gửi quá nhiều yêu cầu hoặc dò các đường hacker hay dò (/wp-admin, /.env, phpmyadmin…). Tấn công từ hàng loạt IP cùng lúc phải chặn thêm ở Cloudflare / tường lửa của host.',
+                'steps' => [
+                    ['Khách báo không vào được web', 'hỏi IP của khách (gõ "my ip" trên Google), tìm trong bảng, bấm "Bỏ chặn".'],
+                    ['Chặn một IP lạ', 'bấm "Chặn IP", nhập IP, lý do, số phút (0 = chặn đến khi bỏ chặn).'],
+                    ['Văn phòng không bao giờ bị chặn', 'thêm IP văn phòng vào ô "IP không bao giờ bị chặn" ở "Cài đặt hệ thống".'],
+                    ['Đổi mức chặn', '"Cài đặt hệ thống" → "Chống truy cập bất thường".'],
+                ],
             ],
         ],
         'logs' => [

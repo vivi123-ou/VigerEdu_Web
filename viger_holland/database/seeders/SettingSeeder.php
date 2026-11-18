@@ -188,6 +188,9 @@ class SettingSeeder extends Seeder
                 'app_log_keep_days' => '30',
                 'backup_keep_days' => '14',
                 'backup_keep_weeks' => '8',
+                'security_requests_per_minute' => '300',
+                'security_block_minutes' => '60',
+                'security_allowlist' => '',
             ],
             'embed' => [
                 // Khối "Trắc nghiệm Holland" trên web chính (/embed, /api/v1/public/intro)

@@ -21,6 +21,7 @@ Bản 1 (18/11/2026). Mỗi trang quản trị có nút **"?"** vàng ở góc t
 | Đọc nhanh trước khi tư vấn | Phần "Đọc trước khi tư vấn": mã khách đang thấy, mã đầy đủ, mã thay thế, điểm cần hỏi thêm, độ tin cậy bài làm |
 | Khách làm bài nhiều lần | Mỗi lần một dòng; báo cáo có phần so sánh với lần trước |
 | Tra trường ở Đức | **Trường & vùng** → gõ tên trường / thành phố, lọc theo bang, loại hình |
+| Trường nào có ngành gợi ý cho khách | Báo cáo nội bộ, cột "Trường có ngành" → "Xem cả … trường"; hoặc **Trường & vùng** → thẻ "Ngành của trường" → lọc theo ngành |
 
 Ghi chú cuộc gọi, lịch hẹn: làm ở CRM.
 
@@ -49,7 +50,9 @@ Làm được mọi việc ở trên, thêm:
 | Sửa, tạm ngưng, thêm câu hỏi | **Câu hỏi trắc nghiệm** |
 | Đổi số câu, mức điểm, số ngành gợi ý, bật "Cho khách thấy chữ thứ 3" | **Cách bốc đề & chấm điểm** (có lịch sử, quay lại bản cũ) |
 | Sửa đoạn giải thích 6 nhóm, 15 cặp, chữ thứ ba | **Giải thích các mã Holland** |
-| Kiểm tra ngành có thật ở Đức (dán link Hochschulkompass / studienwahl.de, tick "Đã kiểm tra"), thêm ngành, sửa tên nghề | **Ngành học & nghề gợi ý** |
+| Kiểm tra ngành có thật ở Đức (dán link Hochschulkompass / studienwahl.de, tick "Đã kiểm tra"), thêm ngành, chọn nghề liên quan, sửa tên nghề | **Ngành học & nghề gợi ý** |
+| Nhập nhiều ngành một lần | **Ngành học & nghề gợi ý** → "Tải file mẫu" → điền → "Nhập từ Excel" |
+| Gắn ngành cho trường (trường – ngành) | **Trường & vùng** → thẻ "Ngành của trường" → "Thêm ngành cho trường", hoặc "Tải file mẫu" → điền mỗi dòng một trường + một ngành → "Nhập từ Excel" (dòng không khớp được báo lại) |
 | Thêm câu hỏi vào form khách điền (ví dụ "Học trường chuyên?") | **Form khách điền thông tin** → "Thêm ô" |
 | Nhập danh sách trường từ Excel (kể cả nước khác) | **Trường & vùng** → "Nhập từ Excel" → chọn file → kiểm tra bước "Ghép cột" → "Gửi" |
 | Bật gửi khách sang CRM, xem bản gửi lỗi | **Gửi khách sang CRM** → dán địa chỉ, token → "Lưu" → "Kiểm tra kết nối" → bật |
@@ -58,7 +61,9 @@ Làm được mọi việc ở trên, thêm:
 | Đổi logo, màu, hotline, chân trang | **Logo, màu, hotline, chân trang** |
 | Thêm tài khoản, khóa người nghỉ việc | **Tài khoản nhân sự** ("Khóa", đừng xóa) |
 | Đổi việc được làm của một vai trò, thêm vai trò | **Phân quyền** |
-| Kiểm tra ai đã xem / tải dữ liệu khách | **Lịch sử thao tác** → lọc "Tải dữ liệu" hoặc "Xem" |
+| Kiểm tra ai đã xem / tải dữ liệu khách | **Lịch sử thao tác** → lọc "Tải dữ liệu" hoặc "Xem" (ghi liên tục, tự xóa dòng cũ hơn 12 tháng) |
+| Đổi thời gian giữ nhật ký, sao lưu; mức chống truy cập bất thường; IP văn phòng | **Cài đặt hệ thống** |
+| Khách báo không vào được web (bị chặn nhầm) | **IP bị chặn** → tìm IP của khách → "Bỏ chặn" |
 
 ## 5. Phần kỹ thuật (cho người IT)
 
@@ -75,13 +80,42 @@ php artisan storage:link && php artisan filament:assets
 
 **Chạy nền:**
 - Hàng đợi (gửi CRM): `php artisan queue:work --tries=1` (supervisor / service).
-- Lịch: cron `* * * * * php artisan schedule:run` → `crm:retry` mỗi 5 phút, `holland:backup` 02:00 hằng đêm.
+- Lịch: cron `* * * * * php artisan schedule:run` → `crm:retry` mỗi 5 phút, `holland:backup` 02:00 hằng đêm, `holland:prune` (dọn nhật ký cũ) 03:00 hằng đêm, `holland:security-audit` (lỗ hổng package) sáng thứ Hai.
 
 **Sao lưu / khôi phục:**
-- Bản sao ở `storage/app/backups/holland-YYYYmmdd-HHiiss.sql.gz`, giữ 14 ngày (cài đặt `backup_keep_days`). Nên đặt `BACKUP_DISK` (ổ S3 / FTP khai báo trong `config/filesystems.php`) để có bản ngoài máy chủ.
+- Bản sao ở `storage/app/backups/holland-YYYYmmdd-HHiiss.sql.gz`, giữ mọi bản 14 ngày và thêm mỗi tuần một bản trong 8 tuần (đổi ở "Cài đặt hệ thống"). Nên đặt `BACKUP_DISK` (ổ S3 / FTP khai báo trong `config/filesystems.php`) để có bản ngoài máy chủ.
 - Khôi phục: `gunzip -c holland-….sql.gz | mysql -u … -p holland`, dùng **đúng `APP_KEY` cũ**.
 - Thử khôi phục mỗi tháng trên máy khác.
 
 **Kiểm tra:** `php artisan test`; in gói CRM mẫu đã che: `php artisan crm:payload <mã báo cáo>`.
 
 **Quy tắc dữ liệu:** từ khi chạy thật, migration chỉ thêm bảng / cột cho phép rỗng. Họ tên, email, số điện thoại, ngày sinh, giá trị form lưu mã hóa; log không có dữ liệu cá nhân.
+
+## 6. Bảo mật khi cài máy chủ thật (ý Thầy 18/11)
+
+**Tách dữ liệu, mỗi phần một việc:**
+
+```
+ Khách / nhân viên ──► Cloudflare (chặn tấn công hàng loạt IP) ──► tường lửa host (chỉ mở 80, 443, SSH)
+                                                                        │
+            ┌───────────────────────────┬───────────────────────────────┼──────────────────────┐
+            ▼                           ▼                               ▼                      ▼
+   holland.viger.edu.vn          crm.viger.edu.vn                viger.edu.vn          chatbot (Python)
+   database "holland" riêng      database "crm" riêng            database riêng        KHÔNG có database chung
+            │   gửi khách sang CRM qua API (token)  ▲                                          │
+            └───────────────────────────────────────┘◄──── chatbot chỉ đọc qua API Holland ────┘
+                                                        (token, phạm vi results:read)
+```
+
+- Mỗi web một database và **một tài khoản MySQL riêng**, chỉ có quyền trên database của mình (không dùng `root`). Web này hỏng hoặc bị lộ thì web kia không bị kéo theo, sao lưu / khôi phục từng phần riêng.
+- **MySQL chỉ nghe trong máy chủ** (`bind-address = 127.0.0.1`), không mở cổng 3306 ra Internet. Không cài phpMyAdmin công khai.
+- Chatbot, CRM, web chính **không đọc thẳng database của Holland**, chỉ gọi API có token (`docs/API_HOLLAND.md`).
+- Thư mục web trỏ vào `public/`; `.env`, `storage/`, `vendor/` không truy cập được từ trình duyệt.
+
+**Chống tấn công:**
+- **Cloudflare** (gói miễn phí): trỏ tên miền qua Cloudflare, bật "Bot Fight Mode", "Under Attack Mode" khi bị tấn công dồn dập. Đặt `TRUSTED_PROXIES=*` (hoặc dải IP Cloudflare) trong `.env` để phần mềm thấy đúng IP thật.
+- Trong phần mềm (đã có): tự chặn IP dò lỗ hổng hoặc gửi quá nhiều yêu cầu (**IP bị chặn**), giới hạn số lần ở form, mã email, đăng nhập (sai 5 lần thì khóa), chống bot Turnstile, header bảo mật, mã hóa dữ liệu khách, `/admin` bắt buộc đăng nhập.
+- **Cập nhật đều:** PHP và MySQL theo bản vá của host; mỗi tháng `composer update` các gói có lỗ hổng (lệnh `holland:security-audit` tự kiểm tra mỗi thứ Hai, báo trong **Lịch sử thao tác**), chạy `php artisan test` trước khi đưa lên.
+- Bật xác thực 2 lớp cho quản trị viên (chưa làm, xem `docs/NGHIEM_THU.md`).
+
+**Không tràn dữ liệu:** log lỗi mỗi ngày một file (`LOG_STACK=daily`), tự xóa sau 30 ngày; lịch sử thao tác, hành vi khách tự xóa sau 12 tháng; sao lưu tự xóa bản cũ. Đổi ở **Cài đặt hệ thống**.

@@ -2,11 +2,14 @@
 
 use App\Http\Middleware\EnsureAdminAccess;
 use App\Http\Middleware\EnsureMenuAccess;
+use App\Http\Middleware\GuardAgainstAbuse;
 use App\Http\Middleware\NoIndex;
+use App\Http\Middleware\SecurityHeaders;
 use App\Modules\Api\Http\Middleware\AuthenticateApiClient;
 use App\Modules\CrmSync\Console\RetryCrm;
 use App\Modules\CrmSync\Console\ShowCrmPayload;
 use App\Modules\System\Console\PruneOldRecords;
+use App\Modules\System\Console\SecurityAudit;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
@@ -28,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
         RetryCrm::class,
         ShowCrmPayload::class,
         PruneOldRecords::class,
+        SecurityAudit::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
@@ -36,6 +40,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'noindex' => NoIndex::class,
             'api.token' => AuthenticateApiClient::class,
         ]);
+
+        // Chống truy cập bất thường (chặn IP, đường dò, quá nhiều yêu cầu) và header bảo mật cho mọi trang.
+        // Đặt sau TrustProxies để lấy đúng IP thật khi chạy sau Cloudflare (khai báo proxy tin cậy qua TRUSTED_PROXIES).
+        $middleware->append([GuardAgainstAbuse::class, SecurityHeaders::class]);
 
         // Tài khoản bị khóa giữa phiên: đăng xuất và đưa về trang đăng nhập trước khi Filament kiểm tra quyền (nếu không sẽ hiện 403).
         $middleware->prependToPriorityList(before: AuthenticatesRequests::class, prepend: EnsureAdminAccess::class);

@@ -179,6 +179,11 @@ return [
                 ['key' => 'backup_keep_days', 'label' => 'Giữ bản sao lưu hằng ngày', 'type' => 'number', 'unit' => 'ngày', 'min' => 1, 'max' => 365, 'required' => true],
                 ['key' => 'backup_keep_weeks', 'label' => 'Giữ thêm mỗi tuần một bản trong', 'type' => 'number', 'unit' => 'tuần', 'min' => 0, 'max' => 260, 'required' => true, 'hint' => 'Bản cuối cùng của mỗi tuần được giữ lâu hơn để quay lại khi web bị phá mà phát hiện muộn. 0 = không giữ.'],
             ],
+            'Chống truy cập bất thường' => [
+                ['key' => 'security_requests_per_minute', 'label' => 'Mỗi địa chỉ IP được gửi tối đa', 'type' => 'number', 'unit' => 'yêu cầu / phút', 'min' => 30, 'max' => 10000, 'required' => true, 'hint' => 'Người dùng bình thường dưới 100. Vượt nhiều lần trong 10 phút thì IP tự bị chặn; xem ở "IP bị chặn".'],
+                ['key' => 'security_block_minutes', 'label' => 'Tự chặn trong', 'type' => 'number', 'unit' => 'phút', 'min' => 1, 'max' => 10080, 'required' => true],
+                ['key' => 'security_allowlist', 'label' => 'IP không bao giờ bị chặn (văn phòng)', 'type' => 'textarea', 'hint' => 'Mỗi dòng một IP hoặc dải IP, ví dụ 113.161.10.20 hoặc 113.161.10.0/24.'],
+            ],
             'Khách cần liên lạc' => [
                 ['key' => 'contacts_days', 'label' => 'Nhân viên thấy khách của', 'type' => 'number', 'unit' => 'ngày gần nhất', 'min' => 1, 'max' => 365, 'required' => true, 'hint' => 'Không ghi ra trên trang của nhân viên.'],
             ],

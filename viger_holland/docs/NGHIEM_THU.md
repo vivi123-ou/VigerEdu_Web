@@ -35,13 +35,19 @@ Trạng thái: **Sẵn sàng thử** = đã làm và có test tự động; **Ch
 | Gửi khách sang CRM (hàng đợi, gửi lại, đúng hợp đồng 3.1) | Sẵn sàng thử với CRM giả; chờ CRM thật |
 | Danh mục 390 trường, 16 bang, nhập Excel nước khác | Sẵn sàng thử; "trường có ngành này" chờ file trường ↔ ngành |
 | API cho chatbot | Sẵn sàng thử (docs/API_HOLLAND.md) |
-| Sao lưu hằng đêm | Sẵn sàng thử (`php artisan holland:backup`); cần chọn nơi lưu ngoài máy chủ |
+| Sao lưu hằng đêm, giữ 14 ngày + mỗi tuần 1 bản trong 8 tuần | Sẵn sàng thử (`php artisan holland:backup`); nơi lưu ngoài máy chủ: tính sau |
+| Nhật ký ghi liên tục, tự dọn sau 12 tháng (đổi ở Cài đặt hệ thống); dữ liệu khách không tự xóa | Sẵn sàng thử (`php artisan holland:prune --dry-run`) |
+| Trường ↔ ngành: thêm / nhập Excel (file mẫu), lọc theo ngành; báo cáo nội bộ hiện trường có ngành gợi ý (chỉ quản trị viên, tư vấn viên) | Sẵn sàng thử; chờ team điền file trường – ngành |
+| Ngành ↔ nghề sửa trên admin; nhập ngành từ Excel | Sẵn sàng thử |
+| Chống tấn công: tự chặn IP dò lỗ hổng / truy cập dồn dập, trang IP bị chặn, header bảo mật, kiểm tra lỗ hổng package hằng tuần | Sẵn sàng thử (thử: mở `/wp-admin` 2 lần từ một máy → máy đó bị chặn → bỏ chặn ở trang IP bị chặn) |
 
 ## 3. Trước khi chạy thật
 
 - [ ] SMTP gửi mã (hộp thư gửi), Turnstile, `APP_ENV=production`, `APP_DEBUG=false`, HTTPS.
 - [ ] Cất riêng `APP_KEY` (mất là không đọc được dữ liệu khách).
 - [ ] Hàng đợi và cron chạy trên máy chủ; thử `holland:backup` và khôi phục một lần.
+- [ ] Cloudflare, tường lửa host, MySQL riêng từng web và chỉ nghe nội bộ, `TRUSTED_PROXIES`, `LOG_STACK=daily` (`docs/SO_TAY_SU_DUNG.md` mục 6).
+- [ ] Thêm IP văn phòng vào "IP không bao giờ bị chặn" (Cài đặt hệ thống).
 - [ ] Link chính sách bảo mật thật (Chữ trên báo cáo & email).
 - [ ] Thầy duyệt nội dung báo cáo (6 nhóm, 15 cặp, chữ thứ ba, tên nghề).
 - [ ] Team kiểm tra ngành theo nguồn chính thức, rồi cân nhắc bật "Chỉ gợi ý ngành đã kiểm tra".
