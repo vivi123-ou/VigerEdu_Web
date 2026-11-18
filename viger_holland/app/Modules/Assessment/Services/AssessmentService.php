@@ -92,7 +92,8 @@ final class AssessmentService
         $matcher = new MajorMatcher($settings);
         $result['majors'] = $matcher->recommend($result['code3'], $result['groups']);
         $result['customer'] = [
-            'code' => $result['third_detail'] ? $result['code3'] : $result['code2'],
+            // Khách thấy chữ thứ 3 chỉ khi admin bật "Cho khách thấy chữ thứ 3" (mặc định tắt, Vân chốt 18/11) và nhóm 3 đủ điểm.
+            'code' => $result['third_detail'] && ! empty($settings['show_third_letter']) ? $result['code3'] : $result['code2'],
             'majors' => $matcher->forCustomer($result['majors']),
         ];
 

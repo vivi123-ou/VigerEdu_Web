@@ -63,7 +63,7 @@
 **Chấm và phân tích** (`docs/holland_v3/HollandEngine.php` là bản tham chiếu; 8 ca trong `docs/holland_v3/cases.json`):
 1. Điểm nhóm = **trung bình cộng** các câu của nhóm (1–5). Không có "Chưa biết".
 2. Xếp hạng: điểm giảm dần; bằng nhau theo thứ tự R, I, A, S, E, C.
-3. Mã 2 chữ luôn có. Chữ thứ 3 chỉ đọc chi tiết cho khách khi điểm nhóm 3 **> 4,2** và đủ số câu (tương đương ≥ 26/30). Nội bộ luôn thấy đủ.
+3. Mã 2 chữ luôn có. **Vân chốt 18/11: khách luôn chỉ thấy mã 2 chữ**; công tắc "Cho khách thấy chữ thứ 3" (mặc định tắt) bật lại quy tắc cũ: chữ thứ 3 hiện cho khách khi điểm nhóm 3 **> 4,2** và đủ số câu (tương đương ≥ 26/30). Nội bộ luôn thấy đủ.
 4. Mã thay thế khi các vị trí 1–2, 2–3, 3–4 cách nhau ≤ 0,25, hoặc nhóm 3 gần ngưỡng.
 5. Quan hệ lục giác: liền kề / cách một / đối kháng; độ nhất quán Cao / Trung bình / Thấp.
 6. **Ngành gợi ý cho khách phải là ngành có thật ở Đức, kiểm tra theo nguồn chính thức** (Vân chốt 17/11): mỗi ngành có link nguồn và đánh dấu "Đã kiểm tra"; bật "Chỉ gợi ý ngành đã kiểm tra nguồn chính thức" thì khách chỉ thấy ngành đã kiểm tra. Hiện 46 ngành đều "Đề xuất – chưa kiểm định".

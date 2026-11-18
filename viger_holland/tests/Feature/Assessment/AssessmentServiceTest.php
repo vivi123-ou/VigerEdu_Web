@@ -104,16 +104,16 @@ class AssessmentServiceTest extends TestCase
         $session = $this->service->start();
         $firstItem = $session->sessionQuestions()->first();
 
-        TestConfig::save(['third_letter_threshold' => 4.1] + TestConfig::current(), null, 'Hạ ngưỡng chữ thứ 3');
+        TestConfig::save(['show_third_letter' => true, 'third_letter_threshold' => 4.1] + TestConfig::current(), null, 'Cho khách thấy chữ thứ 3, hạ ngưỡng');
         Question::whereKey($firstItem->question_id)->update(['text' => 'Câu đã sửa sau khi phát đề']);
 
         $done = $this->service->finish($session, $this->answersFor($session, self::HS01));
 
-        $this->assertSame('IS', $done->result['customer']['code'], 'Vẫn dùng ngưỡng 4,2 của lúc bắt đầu');
+        $this->assertSame('IS', $done->result['customer']['code'], 'Vẫn dùng cài đặt của lúc bắt đầu');
         $this->assertNotSame('Câu đã sửa sau khi phát đề', $firstItem->fresh()->text_snapshot);
 
         $later = $this->service->finish($this->service->start(), $this->answersFor(TestSession::latest('id')->first(), self::HS01));
-        $this->assertSame('ISA', $later->result['customer']['code'], 'Lượt mới dùng ngưỡng mới 4,1');
+        $this->assertSame('ISA', $later->result['customer']['code'], 'Lượt mới dùng cài đặt mới');
     }
 
     public function test_only_verified_majors_switch_controls_what_the_customer_sees(): void

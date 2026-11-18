@@ -5,6 +5,7 @@ namespace Tests\Feature\Respondent;
 use App\Models\Setting;
 use App\Modules\Assessment\Models\TestSession;
 use App\Modules\Assessment\Services\AssessmentService;
+use App\Modules\Assessment\Support\TestConfig;
 use App\Modules\Respondent\Mail\OtpCodeMail;
 use App\Modules\Respondent\Models\Consent;
 use App\Modules\Respondent\Models\Respondent;
@@ -209,20 +210,25 @@ class ReportFlowTest extends TestCase
         $this->get(route('report.show'))->assertOk()->assertSee('Ngành học tại Đức phù hợp với bạn');
     }
 
-    public function test_third_letter_is_read_only_when_the_third_group_is_above_the_threshold(): void
+    public function test_customer_sees_two_letters_unless_admin_turns_on_the_third_letter(): void
     {
-        // HS01: Sáng tạo 4,17 (chưa vượt 4,2) → khách thấy IS, không có đoạn "Chữ thứ ba".
-        $this->finished();
-        $this->post(route('report.submit'), self::FORM);
-        $this->post(route('report.verify'), ['code' => $this->sentCode('minhanh@gmail.com')]);
-        $this->get(route('report.show'))->assertSee('aria-label="Mã Holland IS"', false)->assertDontSee('Chữ thứ ba');
-
-        // Sáng tạo 4,5 (vượt 4,2) → khách thấy ISA và đọc đoạn "Chữ thứ ba" của nhóm Sáng tạo, đúng nguyên văn đã duyệt.
-        $session = $this->finished([
+        $profile = [
             'I' => [5, 5, 5, 5, 5, 5], 'S' => [5, 5, 5, 5, 5, 4], 'A' => [5, 5, 5, 4, 4, 4],
             'R' => [3, 3, 3, 3, 3, 3], 'C' => [3, 3, 3, 2, 2, 2], 'E' => [2, 2, 2, 2, 2, 2],
-        ]);
+        ];
+
+        // Mặc định (Vân chốt 18/11): Sáng tạo 4,5 vượt 4,2 nhưng khách vẫn chỉ thấy IS; nội bộ vẫn có đủ ISA.
+        $session = $this->finished($profile);
+        $this->assertSame('ISA', $session->code3);
         $this->assertTrue($session->result['third_detail']);
+        $this->assertSame('IS', $session->result['customer']['code']);
+        $this->post(route('report.submit'), self::FORM);
+        $this->post(route('report.verify'), ['code' => $this->sentCode('minhanh@gmail.com')]);
+        $this->get(route('report.show'))->assertSee('aria-label="Mã Holland IS"', false)->assertDontSee('ISA')->assertDontSee('Chữ thứ ba');
+
+        // Admin bật "Cho khách thấy chữ thứ 3": khách thấy ISA và đọc đoạn "Chữ thứ ba" đúng nguyên văn đã duyệt.
+        TestConfig::save(['show_third_letter' => true] + TestConfig::current(), null, 'Cho khách thấy chữ thứ 3');
+        $this->finished($profile);
         $this->post(route('report.submit'), self::FORM);
         $this->post(route('report.verify'), ['code' => $this->sentCode('minhanh@gmail.com', 1)]);
         $this->get(route('report.show'))

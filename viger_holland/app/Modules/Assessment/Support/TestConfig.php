@@ -34,6 +34,7 @@ final class TestConfig
         'likert_labels' => ['Hoàn toàn không giống tôi', 'Không giống lắm', 'Phân vân', 'Khá giống tôi', 'Hoàn toàn giống tôi'],
         // Chấm điểm và đọc mã
         'interest_midpoint' => 3.0,
+        'show_third_letter' => false,
         'third_letter_threshold' => 4.2,
         'near_tie_gap' => 0.25,
         'bands' => [
@@ -82,7 +83,8 @@ final class TestConfig
             'likert_labels' => ['Chữ hiện cạnh số sao', 'Chữ khách thấy khi chọn số sao, từ 1 sao đến 5 sao. 3 sao là "phân vân".', 'labels5'],
         ],
         'Đọc kết quả' => [
-            'third_letter_threshold' => ['Khi nào khách thấy mã 3 chữ', 'Nhóm đứng thứ 3 phải có điểm trên mức này (4,2 ≈ từ 26/30 điểm). Dưới mức này khách chỉ thấy mã 2 chữ. Tư vấn viên luôn thấy đủ 3 chữ.', 'decimal', 'điểm'],
+            'show_third_letter' => ['Cho khách thấy chữ thứ 3', 'Tắt: khách luôn thấy mã 2 chữ (ví dụ IS). Bật: khi nhóm đứng thứ 3 có điểm trên mức ở ô dưới, khách thấy mã 3 chữ (ví dụ ISA) và đọc thêm đoạn "Chữ thứ ba". Tư vấn viên và quản trị viên luôn thấy đủ 3 chữ.', 'bool'],
+            'third_letter_threshold' => ['Mức điểm để khách thấy chữ thứ 3', 'Chỉ dùng khi bật ô "Cho khách thấy chữ thứ 3". Nhóm đứng thứ 3 phải có điểm trên mức này (4,2 ≈ từ 26/30 điểm).', 'decimal', 'điểm'],
             'max_majors_public' => ['Gợi ý tối đa mấy ngành cho khách', 'Tư vấn viên xem được toàn bộ danh sách ngành.', 'int', 'ngành'],
             'preview_majors' => ['Kết quả sơ lược hiện rõ mấy ngành', 'Trang kết quả sơ lược (trước khi khách điền thông tin) hiện rõ bấy nhiêu ngành đầu; các ngành sau làm mờ, xem đủ trong báo cáo đầy đủ.', 'int', 'ngành'],
             'pair_majors_first' => ['Ưu tiên ngành nền của cặp mã', 'Bật: các ngành nền của cặp 2 chữ đầu (ví dụ cặp IS) luôn đứng đầu danh sách, kể cả khi mức khớp thấp. Tắt: mọi ngành xếp chung theo mức khớp.', 'bool'],
@@ -178,6 +180,7 @@ final class TestConfig
             'likert_labels' => ['required', 'array', 'size:5'],
             'likert_labels.*' => ['required', 'string', 'max:60'],
             'interest_midpoint' => ['required', 'numeric', 'min:1', 'max:5'],
+            'show_third_letter' => ['boolean'],
             'third_letter_threshold' => ['required', 'numeric', 'min:1', 'max:5'],
             'near_tie_gap' => ['required', 'numeric', 'min:0', 'max:2'],
             'bands' => ['required', 'array', 'min:2', 'max:7'],

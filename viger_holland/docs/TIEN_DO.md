@@ -40,6 +40,8 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 - **Bỏ câu đồng ý** (web khác không có). Câu đồng ý thành ô cài đặt `report_consent_text`, để trống; gõ vào thì câu hiện dưới nút và được lưu lại.
 - Câu chưa chọn ghi "Chưa chọn câu trả lời".
 
+- **Khách luôn chỉ thấy mã 2 chữ** (kể cả khi nhóm thứ 3 trên 4,2); admin / tư vấn viên thấy đủ 3 chữ. Khác quy tắc Thầy chốt 11/11 nên làm thành công tắc "Cho khách thấy chữ thứ 3" trong "Cách bốc đề & chấm điểm", mặc định tắt; Thầy muốn quy tắc cũ thì bật. Cần báo Thầy.
+
 ### H4a đã làm (18/11/2026): phía khách
 
 - **Form** `/nhan-bao-cao`: 8 ô dựng từ `form_fields`, 2 cột (điện thoại 1 cột). Ô có điều kiện ẩn / đổi chữ ngay khi chọn (cột mới `form_fields.conditions`), máy chủ kiểm tra lại theo cùng điều kiện. Báo lỗi tiếng Việt dưới từng ô ("Vui lòng nhập điện thoại / Zalo của phụ huynh.", "… chưa đúng. Ví dụ: 0912 345 678."). SĐT `+84 912.345.678` tự chuẩn hóa thành `0912345678`. Turnstile chạy ẩn khi có khóa trong `.env`.
