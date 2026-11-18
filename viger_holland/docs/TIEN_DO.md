@@ -8,7 +8,7 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 - **Làm bài trước, điền thông tin sau** để xem báo cáo đầy đủ.
 - **OTP qua email.**
 - Làm bài **6 câu / trang, chấm ngôi sao**.
-- **Vai trò:** Quản trị viên > Tư vấn viên > Nhân viên. Chỉ quản trị viên xem toàn bộ và xuất dữ liệu.
+- **Vai trò:** Quản trị viên > Nhân viên > Tư vấn viên (Thầy chốt lại 18/11). Chỉ quản trị viên xem toàn bộ và xuất dữ liệu.
 - **CRM nội bộ riêng, đa kênh.**
 - Giao diện theo logo, màu viger.edu.vn (`docs/mau_giao_dien_v3/`).
 - Code chia module, có chú thích.

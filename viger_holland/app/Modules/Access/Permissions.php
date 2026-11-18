@@ -56,7 +56,7 @@ final class Permissions
 
     /**
      * Vai trò có sẵn: mã => [tên, mô tả, quyền ('*' = tất cả), vai trò lõi?].
-     * Thiết kế tổng thể 14/11: Quản trị viên > Tư vấn viên > Nhân viên; chăm sóc khách làm ở CRM.
+     * Thứ bậc (Thầy chốt 18/11): Quản trị viên > Nhân viên > Tư vấn viên; chăm sóc khách làm ở CRM.
      * Vân chốt 17/11: không có vai trò Marketing riêng (marketing là Nhân viên); tư vấn viên chỉ tra cứu từng khách;
      * nhân viên chỉ xem thông tin liên lạc, không xem kết quả hay số liệu.
      *
@@ -64,8 +64,8 @@ final class Permissions
      */
     public const DEFAULT_ROLES = [
         'ADMIN' => ['Quản trị viên', 'Toàn quyền; người duy nhất được xem toàn bộ khách và tải dữ liệu.', ['*'], true],
-        'COUNSELOR' => ['Tư vấn viên', 'Tra cứu từng khách và đọc báo cáo nội bộ để tư vấn.', ['reports.lookup'], true],
         'STAFF' => ['Nhân viên', 'Liên lạc với khách mới; sửa chữ, ảnh trên trang khách (gồm việc marketing).', ['contacts.view', 'content.manage'], true],
+        'COUNSELOR' => ['Tư vấn viên', 'Tra cứu từng khách và đọc báo cáo nội bộ để tư vấn.', ['reports.lookup'], true],
     ];
 
     /**

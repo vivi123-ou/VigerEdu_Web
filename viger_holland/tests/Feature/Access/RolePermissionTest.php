@@ -31,7 +31,7 @@ class RolePermissionTest extends TestCase
     {
         $permissions = fn (string $code) => Role::where('code', $code)->first()->permissions->pluck('code')->sort()->values()->all();
 
-        $this->assertSame(['ADMIN', 'COUNSELOR', 'STAFF'], Role::orderBy('sort_order')->pluck('code')->all());
+        $this->assertSame(['ADMIN', 'STAFF', 'COUNSELOR'], Role::orderBy('sort_order')->pluck('code')->all(), 'Thứ bậc: Quản trị viên > Nhân viên > Tư vấn viên');
         $this->assertCount(count(Permissions::ALL), $permissions('ADMIN'));
         $this->assertSame(['reports.lookup'], $permissions('COUNSELOR'), 'Tư vấn viên chỉ tra cứu từng khách');
         $this->assertSame(['contacts.view', 'content.manage'], $permissions('STAFF'), 'Nhân viên: liên lạc khách mới, sửa trang khách xem');

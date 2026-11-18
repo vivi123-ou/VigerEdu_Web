@@ -77,6 +77,10 @@ class PublicHomeTest extends TestCase
         $this->get(route('test.show'))->assertOk()
             ->assertSee('Bố cục luồng khách')
             ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
-            ->assertDontSee('../../public/', false);
+            ->assertDontSee('../../public/', false)
+            ->assertSee(route('test.show', ['mau' => 'trang-gioi-thieu']), false);
+
+        $this->get(route('test.show', ['mau' => 'trang-gioi-thieu']))->assertOk()->assertDontSee('404');
+        $this->get(route('test.show', ['mau' => '../../.env']))->assertOk()->assertDontSee('APP_KEY');
     }
 }

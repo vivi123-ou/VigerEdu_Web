@@ -28,7 +28,7 @@
   - *Internal (tư vấn viên / quản trị, phải đăng nhập)*: đủ 6 điểm, mã 3 chữ, mã thay thế, quan hệ lục giác, độ tin cậy, 36 câu đã làm, thông tin khách, JSON cho AI.
 - **Admin** (`/admin`): thư viện câu hỏi, cài đặt bài test, danh mục (6 nhóm, 15 cặp, 120 mã, ngành, nghề, môi trường), trường thông tin khách, lượt làm bài, nội dung trang, kết nối CRM, tài khoản, nhật ký.
 - **Phân quyền theo việc thật (chốt 17/11):** tư vấn viên chỉ **tra cứu từng khách** và đọc báo cáo nội bộ (không danh sách, không số liệu); nhân viên chỉ **xem thông tin liên lạc** khách mới và sửa trang khách xem (không kết quả, không số liệu); **số liệu, danh sách toàn bộ khách, tải dữ liệu: quản trị viên**. Trang của vai trò bị giới hạn **không ghi ra giới hạn**; trang không có quyền báo 404. Danh sách trường: chỉ tư vấn viên và quản trị viên thấy.
-- **Vai trò (chốt 14/11): Quản trị viên > Tư vấn viên > Nhân viên**, lưu trong bảng `roles/permissions` (quản trị viên thêm được vai trò mới và tick quyền ở trang "Vai trò & quyền"). **Chỉ quản trị viên xem toàn bộ và xuất dữ liệu.** Công việc chăm sóc khách nằm ở CRM, không làm trong Holland.
+- **Thứ bậc vai trò (Thầy chốt 18/11): Quản trị viên > Nhân viên > Tư vấn viên** (tư vấn viên thấp nhất), lưu trong bảng `roles/permissions` (quản trị viên thêm được vai trò mới và tick quyền ở trang "Phân quyền"). **Chỉ quản trị viên xem toàn bộ và xuất dữ liệu.** Công việc chăm sóc khách nằm ở CRM, không làm trong Holland.
 - **Code chia module** (`app/Modules/...`), mỗi class có chú thích tiếng Việt *Làm gì / Ai gọi / Dữ liệu* (xem THIET_KE mục 3).
 
 ## 3. Công nghệ và quy tắc
