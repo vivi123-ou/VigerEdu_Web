@@ -11,11 +11,15 @@
     var messages = document.getElementById('chatbot-messages');
     var suggestions = document.getElementById('chatbot-suggestions');
 
+    // Chữ giao diện + câu trả lời theo ngôn ngữ đang chọn (từ resources/lang/*/chatbot.php)
+    var t = {};
+    try { t = JSON.parse(root.dataset.i18n || '{}'); } catch (e) {}
+
     function openChat() {
         chatWindow.hidden = false;
         root.classList.add('is-open');
         toggle.setAttribute('aria-expanded', 'true');
-        toggle.setAttribute('aria-label', 'Đóng Chatbot AI');
+        toggle.setAttribute('aria-label', t.close_bot);
         input.focus();
     }
 
@@ -23,7 +27,7 @@
         chatWindow.hidden = true;
         root.classList.remove('is-open');
         toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Mở Chatbot AI');
+        toggle.setAttribute('aria-label', t.open);
         toggle.focus();
     }
 
@@ -55,25 +59,14 @@
      */
     function getBotReply(text) {
         var q = text.toLowerCase();
-        if (/chi phí|học phí|tiền|giá/.test(q)) {
-            return 'Các trường công lập tại Đức hầu như miễn học phí, bạn chỉ cần đóng phí học kỳ và lo chi phí sinh hoạt. Xem thêm tại <a href="/giao-duc-tai-duc/chi-phi-va-co-hoi">Chi phí và cơ hội</a>.';
-        }
-        if (/điều kiện|yêu cầu|hồ sơ|tiếng đức|ielts/.test(q)) {
-            return 'Điều kiện thường gồm: bằng tốt nghiệp THPT/ĐH, chứng chỉ ngoại ngữ (tiếng Đức hoặc tiếng Anh) và chứng minh tài chính. Bạn có thể tham khảo <a href="/tu-van">trang Tư vấn</a> để biết chi tiết.';
-        }
-        if (/quy trình|các bước|tư vấn/.test(q)) {
-            return 'Quy trình tư vấn của VIGER gồm nhiều bước từ đánh giá hồ sơ đến khi bạn sang Đức. Xem chi tiết tại <a href="/tu-van/quy-trinh-tu-van">Quy trình tư vấn</a>.';
-        }
-        if (/liên hệ|hotline|email|gặp|tư vấn viên/.test(q)) {
-            return 'Bạn có thể để lại thông tin tại <a href="/lien-he">trang Liên hệ</a>, đội ngũ VIGER sẽ phản hồi sớm nhất.';
-        }
-        if (/chương trình|ngành|khoá học|khóa học/.test(q)) {
-            return 'Bạn có thể tham khảo các chương trình tại <a href="/chuong-trinh-hoc">Chương trình học</a>.';
-        }
-        if (/^(xin )?chào|^hi|^hello/.test(q)) {
-            return 'Chào bạn! Bạn muốn tìm hiểu về chi phí, điều kiện hay quy trình du học Đức?';
-        }
-        return 'Cảm ơn câu hỏi của bạn! Để được tư vấn chi tiết, bạn vui lòng để lại thông tin tại <a href="/lien-he">trang Liên hệ</a> nhé.';
+        var r = t.replies || {};
+        if (/chi phí|học phí|tiền|giá|cost|fee|tuition|price|money/.test(q)) return r.cost;
+        if (/điều kiện|yêu cầu|hồ sơ|tiếng đức|ielts|requirement|admission|condition|document|german/.test(q)) return r.requirements;
+        if (/quy trình|các bước|tư vấn|process|step|consult/.test(q)) return r.process;
+        if (/liên hệ|hotline|email|gặp|tư vấn viên|contact|phone|call/.test(q)) return r.contact;
+        if (/chương trình|ngành|khoá học|khóa học|program|course|major/.test(q)) return r.programs;
+        if (/^(xin )?chào|^hi|^hello|^hey/.test(q)) return r.greeting;
+        return r.fallback;
     }
 
     function send(text) {

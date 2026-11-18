@@ -1,0 +1,38 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class ChatbotLocalizationTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_chatbot_is_vietnamese_by_default(): void
+    {
+        $this->get('/lien-he')
+            ->assertOk()
+            ->assertSee('Trợ lý VIGER AI')
+            ->assertSee('Chi phí du học Đức')
+            ->assertSee('placeholder="Nhập câu hỏi của bạn..."', false)
+            ->assertDontSee('VIGER AI Assistant');
+    }
+
+    public function test_chatbot_is_english_in_english_mode(): void
+    {
+        $response = $this->withSession(['locale' => 'en'])->get('/lien-he')
+            ->assertOk()
+            ->assertSee('VIGER AI Assistant')
+            ->assertSee('Online')
+            ->assertSee('Cost of studying in Germany')
+            ->assertSee('placeholder="Type your question..."', false)
+            ->assertDontSee('Trợ lý VIGER AI')
+            ->assertDontSee('Chi phí du học Đức');
+
+        // Câu trả lời tự động (truyền sang JS) cũng là tiếng Anh
+        preg_match("/data-i18n='([^']*)'/", $response->getContent(), $m);
+        $i18n = json_decode(html_entity_decode($m[1]), true);
+        $this->assertStringContainsString('no tuition fees', $i18n['replies']['cost']);
+    }
+}
