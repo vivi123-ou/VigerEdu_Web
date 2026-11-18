@@ -64,6 +64,7 @@ class ContentController extends Controller
     public function preview(Request $request, string $page, PagePreview $preview): Response
     {
         $config = $this->page($page);
+        abort_unless(filled($config['preview'] ?? null), 404);
         $values = ContentPages::validate($config, $request->all());
 
         return response($preview->render($config['preview'], $values))

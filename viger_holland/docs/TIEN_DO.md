@@ -28,10 +28,24 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | F2. Admin theo mẫu `admin-filament.html`: tên theo việc làm, quyền "Được…", nút "?", lối tắt, "Sắp có", 404 | ✅ Xong (17/11) |
 | H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | ✅ Xong (17/11) |
 | H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | ✅ Xong (18/11) |
-| H4. Form thông tin, OTP email, báo cáo đầy đủ | H4a (phía khách) ✅ 18/11 · H4b (admin) tiếp theo |
-| H5. CrmSync + Tracking | Chưa làm |
+| H4. Form thông tin, OTP email, báo cáo đầy đủ | ✅ Xong (18/11): H4a phía khách, H4b admin |
+| H5. CrmSync + Tracking | Chưa làm (tiếp theo) |
 | H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+### H4b đã làm (18/11/2026): trang quản trị về khách
+
+Theo mẫu `admin-filament.html` màn hình 2–4, trang Filament trong `app/Modules/Respondent/Filament/Pages`.
+- **Tra cứu báo cáo khách** (tư vấn viên, quản trị viên): gõ đúng số điện thoại (học sinh hoặc phụ huynh, gõ kiểu nào cũng được: `+84 912…`, `0912.345.678`), email hoặc **mã báo cáo 8 ký tự** → các lần làm bài của khách, mới nhất ở trên. Gõ thiếu, gõ tên → "Không tìm thấy khách", không gợi ý. Quá 30 lần / giờ báo chung chung. Mỗi lần tra cứu ghi nhật ký (không ghi chữ đã gõ).
+- **Báo cáo nội bộ**: thông tin khách (đối tượng, ngày sinh, trường, tỉnh, 2 số điện thoại bấm để gọi, email), lần làm thứ mấy, thời gian làm; **Đọc trước khi tư vấn** (mã khách đang thấy, mã đầy đủ, mã thay thế, độ tin cậy, các ý tự viết: nổi bật, vì sao khách chỉ thấy 2 chữ, nên hỏi thêm, kết hợp 2 nhóm, bài làm); điểm 6 nhóm; lục giác 3 chấm đỏ + đường lần làm trước; 3 cặp trong mã và độ nhất quán; bảng ngành đủ (mã ngành, mức khớp 0–18, khách thấy hay không, hệ đào tạo, nghề, dấu chưa kiểm tra nguồn); so sánh với lần trước; diễn biến; 36 câu (chủ đề, nội dung lúc phát đề, mức chọn, số giây). **Quản trị viên** thấy thêm "In / PDF" và "Sao chép cho AI" (JSON không có họ tên, liên lạc). Mỗi lần mở ghi nhật ký.
+- **Khách cần liên lạc** (nhân viên, quản trị viên): khách mới, mới nhất trên; họ tên, 2 số điện thoại (bấm gọi), nút Zalo, email, đối tượng, năm sinh, tỉnh, lúc để lại. Thẻ Hôm nay / Hôm qua / Tất cả, tìm theo tên (không cần dấu) hoặc một phần số, lọc đối tượng, tỉnh. Không có kết quả bài làm, không có nút tải; chỉ khách trong `contacts_days` (7) ngày, **trang không ghi ra giới hạn**. Mở trang ghi nhật ký.
+- **Chữ trên báo cáo & email** (`content.manage`): mọi câu chữ từ trang làm bài, kết quả, form, mã xác nhận, email, báo cáo đến "Báo cáo đã đóng"; có lịch sử và "Quay lại bản này" (dùng khung trang nội dung cũ, chuyển sang Filament ở H6). Các con số của mã xác nhận (5 phút, 5 lần, 30 phút…) và `contacts_days` chưa có ô sửa: để H6 ("Cài đặt hệ thống").
+- **Mã báo cáo** hiện cuối báo cáo khách ("Mã báo cáo của bạn: B61B8A81. Đọc mã này khi trao đổi với chuyên viên.") để tư vấn viên tra cứu nhanh.
+- Phân quyền: nhân viên mở tra cứu / báo cáo nội bộ → 404; tư vấn viên mở khách cần liên lạc / chữ báo cáo → 404.
+- Lục giác dùng chung (`Assessment/Support/Hexagon.php`) cho báo cáo khách và nội bộ.
+- **Kiểm thử: 131/131 đạt** (thêm `AdminCustomerPagesTest` 7 ca).
+
+**Chưa làm (để giai đoạn sau):** nút "Mở hồ sơ trong CRM" (H5, khi có CRM); "Đã gửi sang CRM" trong diễn biến (H5); ô tra cứu ngay trên trang chủ của tư vấn viên (đang là ô lối tắt).
 
 ### Vân chốt 18/11 (H4)
 

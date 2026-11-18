@@ -34,10 +34,16 @@ Mỗi việc một bộ đếm riêng (`AppServiceProvider`). Viết `throttle:5
 - `Services/Turnstile.php`: Cloudflare Turnstile chạy ẩn; khóa ở `.env` (`TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`), để trống thì bỏ qua;
 - `Mail/OtpCodeMail.php` + `resources/views/emails/otp-code.blade.php`: email chỉ có mã.
 
-**Chữ trên trang:** cài đặt nhóm `report` (`report_*`, `otp_*`); trang admin để sửa làm ở H4b ("Chữ trên báo cáo & email").
+**Trang quản trị (H4b, `Filament/Pages`, nhật ký mỗi lần tra cứu / mở):**
+- `LookupReports` (`/admin/tra-cuu-bao-cao`, quyền `reports.lookup`): tìm đúng SĐT (học sinh / phụ huynh), email, mã báo cáo 8 ký tự (`Services/ReportLookup.php`, so bằng cột băm, không gợi ý); 30 lần / giờ / người.
+- `InternalReportPage` (`/admin/bao-cao-noi-bo?ma=…`, quyền `reports.lookup`): báo cáo nội bộ dựng bởi `Support/InternalReport.php`; quản trị viên thêm "In / PDF", "Sao chép cho AI" (JSON không có dữ liệu cá nhân).
+- `ContactsToCall` (`/admin/khach-can-lien-lac`, quyền `contacts.view`): khách nhập đúng mã trong `contacts_days` ngày; không kết quả, không tải; tìm kiếm sau khi giải mã.
+- CSS riêng: `public/css/admin-holland.css` (lớp `hz-`, có bản tối và bản in).
+
+**Chữ trên trang:** cài đặt nhóm `report` (`report_*`, `otp_*`); sửa ở trang "Chữ trên báo cáo & email" (`config/admin_content.php`, trang `report`).
 
 **Máy chạy thử:** `APP_ENV=local` và `APP_DEBUG=true` thì trang nhập mã hiện luôn mã. Email gửi qua SMTP trong `.env` (máy Vân: hộp thư thử ở cổng 1025).
 
 **Bảo mật:** không ghi họ tên, email, SĐT, mã vào log. Gửi email lỗi thì chỉ ghi tên loại lỗi.
 
-**Dữ liệu ban đầu:** `FormFieldSeeder`, `SettingSeeder` (nhóm `report`). **Test:** `tests/Feature/Respondent/ReportFlowTest.php` (14 ca).
+**Dữ liệu ban đầu:** `FormFieldSeeder`, `SettingSeeder` (nhóm `report`). **Test:** `tests/Feature/Respondent/ReportFlowTest.php`, `AdminCustomerPagesTest.php`.

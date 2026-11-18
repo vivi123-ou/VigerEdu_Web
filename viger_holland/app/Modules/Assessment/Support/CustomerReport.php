@@ -21,10 +21,6 @@ use App\Modules\Assessment\Services\ScoringEngine;
  */
 final class CustomerReport
 {
-    private const CENTER = 150;
-
-    private const RADIUS = 110;
-
     /**
      * @return array<string, mixed>
      */
@@ -79,12 +75,13 @@ final class CustomerReport
 
         return [
             'code' => $code,
+            'reportCode' => strtoupper(substr(str_replace('-', '', $session->uuid), 0, 8)),
             'names' => array_map($name, array_slice($letters, 0, 2)),
             'opening' => $fill(setting('report_opening')),
             'explain' => $explain,
             'third' => $third,
             'combine' => $combine,
-            'hexagon' => self::hexagon($groups, $letters, $name),
+            'hexagon' => Hexagon::make($groups, array_slice($letters, 0, 2), $name),
             'scale' => $scale,
             'ticks' => array_column(TestConfig::get('bands') ?? [], 'label'),
             'majors' => self::majors($result['customer']['majors'] ?? [], implode(' – ', array_map($name, array_slice($letters, 0, 2))), $fill),
@@ -126,44 +123,12 @@ final class CustomerReport
      * Tên nghề cho khách: "Tiếng Việt (Tiếng Đức)", ví dụ "Nhà nghiên cứu tâm lý học (Psychologieforscher)" (Vân chốt 18/11).
      * Chưa có tên tiếng Việt thì dùng tên tiếng Đức / tiếng Anh.
      */
-    private static function occupationName(Occupation $occupation): string
+    public static function occupationName(Occupation $occupation): string
     {
         if (filled($occupation->name_vi)) {
             return $occupation->name_vi.(filled($occupation->name_de) ? ' ('.$occupation->name_de.')' : '');
         }
 
         return (string) ($occupation->name_de ?: $occupation->name_en);
-    }
-
-    /**
-     * Hình lục giác: khung, lưới giữa, đa giác điểm 6 nhóm, chấm đỏ ở 2 nhóm đầu, nhãn "R Thực hành".
-     *
-     * @param  array<string, array{mean: float}>  $groups
-     * @param  list<string>  $letters
-     * @return array{outline: string, mid: string, axes: list<array{0: float, 1: float}>, polygon: string, dots: list<array{0: float, 1: float}>, labels: list<array{0: string, 1: float, 2: float, 3: string}>}
-     */
-    private static function hexagon(array $groups, array $letters, callable $name): array
-    {
-        $point = fn (int $i, float $ratio): array => [
-            round(self::CENTER + self::RADIUS * $ratio * cos(deg2rad(-90 + 60 * $i)), 1),
-            round(self::CENTER + self::RADIUS * $ratio * sin(deg2rad(-90 + 60 * $i)), 1),
-        ];
-        $join = fn (array $points): string => implode(' ', array_map(fn ($p) => $p[0].','.$p[1], $points));
-
-        $outline = $mid = $axes = $shape = $dots = $labels = [];
-        foreach (str_split(ScoringEngine::ORDER) as $i => $g) {
-            $outline[] = $point($i, 1);
-            $mid[] = $point($i, 0.5);
-            $axes[] = $point($i, 1);
-            $shape[] = $p = $point($i, max(0.04, min(1, ($groups[$g]['mean'] ?? 0) / 5)));
-            if (in_array($g, array_slice($letters, 0, 2), true)) {
-                $dots[] = $p;
-            }
-            $cos = cos(deg2rad(-90 + 60 * $i));
-            [$x, $y] = $point($i, 1.12);
-            $labels[] = [$g.' '.$name($g), $x, $y + ($i === 0 ? -4 : ($i === 3 ? 14 : 5)), $cos > 0.2 ? 'start' : ($cos < -0.2 ? 'end' : 'middle')];
-        }
-
-        return ['outline' => $join($outline), 'mid' => $join($mid), 'axes' => $axes, 'polygon' => $join($shape), 'dots' => $dots, 'labels' => $labels];
     }
 }

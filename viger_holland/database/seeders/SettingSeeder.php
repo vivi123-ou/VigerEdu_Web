@@ -164,6 +164,8 @@ class SettingSeeder extends Seeder
                 'report_retake' => 'Làm lại với câu hỏi mới',
                 'report_once_note' => 'Báo cáo chỉ xem được trên thẻ (tab) này. Đóng thẻ là báo cáo đóng.',
                 'report_loading' => 'Đang mở báo cáo…',
+                'report_code_label' => 'Mã báo cáo của bạn: {ma}. Đọc mã này khi trao đổi với chuyên viên.',
+                'contacts_days' => '7', // "Khách cần liên lạc" hiện khách của bấy nhiêu ngày gần nhất (không ghi ra trên trang của nhân viên)
                 'report_note' => 'Lưu ý: Kết quả mang tính tham khảo. Holland đo sở thích, không đo năng lực và không bảo đảm khả năng trúng tuyển.',
                 'report_tip' => 'Lời khuyên: tra tên ngành tiếng Đức trên Hochschulkompass để xem các trường đang đào tạo.',
                 'report_closed_title' => 'Báo cáo đã đóng',

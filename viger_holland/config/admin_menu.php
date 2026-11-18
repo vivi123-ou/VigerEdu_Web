@@ -5,6 +5,8 @@ use App\Modules\Access\Filament\Resources\Roles\RoleResource;
 use App\Modules\Access\Filament\Resources\Users\UserResource;
 use App\Modules\Assessment\Filament\Pages\TestSettings;
 use App\Modules\Assessment\Filament\Resources\Questions\QuestionResource;
+use App\Modules\Respondent\Filament\Pages\ContactsToCall;
+use App\Modules\Respondent\Filament\Pages\LookupReports;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,20 +50,23 @@ return [
         // ---- Khách hàng ----
         'lookup' => [
             'group' => 'Khách hàng', 'label' => 'Tra cứu báo cáo khách', 'icon' => 'heroicon-o-magnifying-glass',
-            'permission' => 'reports.lookup', 'stage' => 'H4', 'shortcut' => true,
+            'permission' => 'reports.lookup', 'shortcut' => true,
+            'page' => LookupReports::class,
             'summary' => 'Gõ số điện thoại, email hoặc mã báo cáo để đọc kết quả của một khách.',
             'help' => [
                 'intro' => 'Dùng trước khi tư vấn: tìm đúng khách rồi đọc báo cáo đầy đủ (6 điểm, mã 3 chữ, ngành gợi ý, các câu khách đã trả lời).',
                 'steps' => [
-                    ['Tìm khách', 'gõ số điện thoại, email hoặc mã báo cáo của khách rồi bấm "Tìm".'],
+                    ['Tìm khách', 'gõ đúng số điện thoại (của học sinh hoặc phụ huynh), email hoặc mã báo cáo 8 ký tự mà khách đọc cho bạn, rồi bấm "Tìm".'],
                     ['Đọc báo cáo', 'bấm "Đọc báo cáo đầy đủ" ở dòng của khách.'],
-                    ['Khách làm bài nhiều lần', 'mỗi lần là một dòng, lần mới nhất ở trên.'],
+                    ['Khách làm bài nhiều lần', 'mỗi lần là một dòng, lần mới nhất ở trên. Báo cáo có phần so sánh với lần trước.'],
+                    ['Đọc nhanh', 'phần "Đọc trước khi tư vấn" tóm tắt điều cần biết: mã khách đang thấy, mã đầy đủ, điểm cần hỏi thêm.'],
                 ],
             ],
         ],
         'contacts' => [
             'group' => 'Khách hàng', 'label' => 'Khách cần liên lạc', 'icon' => 'heroicon-o-identification',
-            'permission' => 'contacts.view', 'stage' => 'H4', 'shortcut' => true,
+            'permission' => 'contacts.view', 'shortcut' => true,
+            'page' => ContactsToCall::class,
             'summary' => 'Khách mới để lại thông tin, mới nhất ở trên.',
             'help' => [
                 'intro' => 'Danh sách khách mới để lại thông tin để bạn liên lạc mời tư vấn.',
@@ -164,9 +169,17 @@ return [
         ],
         'report-pages' => [
             'group' => 'Trang khách xem', 'label' => 'Chữ trên báo cáo & email', 'icon' => 'heroicon-o-envelope',
-            'permission' => 'content.manage', 'stage' => 'H4',
-            'summary' => 'Chữ trên trang báo cáo khách đọc và email gửi mã xác nhận.',
-            'help' => ['intro' => 'Sửa lời chào, lời dẫn trên báo cáo khách đọc và nội dung email gửi mã xác nhận.', 'steps' => []],
+            'permission' => 'content.manage', 'route' => 'admin.content.edit', 'params' => ['page' => 'report'],
+            'summary' => 'Chữ trên trang làm bài, kết quả, form thông tin, mã xác nhận, báo cáo và email.',
+            'help' => [
+                'intro' => 'Mọi câu chữ khách đọc từ lúc làm bài đến lúc xem báo cáo đầy đủ, và email gửi mã xác nhận.',
+                'steps' => [
+                    ['Sửa một câu', 'tìm câu ở đúng phần (Trang làm bài, Kết quả sơ lược, Báo cáo đầy đủ…), sửa rồi bấm "Lưu".'],
+                    ['Lưu nhầm', 'kéo xuống phần lịch sử, bấm "Quay lại bản cũ".'],
+                    ['Chữ trong ngoặc nhọn như {email}, {phut}', 'giữ nguyên, phần mềm tự thay bằng email, số phút thật.'],
+                ],
+                'note' => 'Lời giải thích 6 nhóm, 15 cặp mã sửa ở "Giải thích các mã Holland".',
+            ],
         ],
         'embed' => [
             'group' => 'Trang khách xem', 'label' => 'Ô giới thiệu trên viger.edu.vn', 'icon' => 'heroicon-o-globe-alt',

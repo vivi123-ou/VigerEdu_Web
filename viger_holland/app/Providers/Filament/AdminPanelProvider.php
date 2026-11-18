@@ -39,6 +39,7 @@ class AdminPanelProvider extends PanelProvider
     private const MODULES = [
         'Assessment' => 'App\\Modules\\Assessment\\Filament',
         'Access' => 'App\\Modules\\Access\\Filament',
+        'Respondent' => 'App\\Modules\\Respondent\\Filament',
     ];
 
     public function panel(Panel $panel): Panel

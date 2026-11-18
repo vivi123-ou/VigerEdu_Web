@@ -70,7 +70,8 @@ class RolePermissionTest extends TestCase
             ->assertDontSee('Phân quyền')
             ->assertDontSee(route('admin.media.index'), false);
 
-        $this->get(route('filament.admin.pages.sap-co', ['muc' => 'lookup']))->assertOk();
+        $this->get(route('filament.admin.pages.tra-cuu-bao-cao'))->assertOk();
+        $this->get(route('filament.admin.pages.khach-can-lien-lac'))->assertNotFound();
         $this->get(route('filament.admin.pages.sap-co', ['muc' => 'stats']))->assertNotFound();
         $this->get(route('filament.admin.pages.test-settings'))->assertNotFound();
         $this->get(route('filament.admin.resources.questions.index'))->assertNotFound();
@@ -93,8 +94,8 @@ class RolePermissionTest extends TestCase
             ->assertDontSee('Logo, màu, hotline');
 
         $this->get(route('admin.media.index'))->assertOk();
-        $this->get(route('filament.admin.pages.sap-co', ['muc' => 'contacts']))->assertOk();
-        $this->get(route('filament.admin.pages.sap-co', ['muc' => 'lookup']))->assertNotFound();
+        $this->get(route('filament.admin.pages.khach-can-lien-lac'))->assertOk();
+        $this->get(route('filament.admin.pages.tra-cuu-bao-cao'))->assertNotFound();
         $this->get(route('filament.admin.pages.test-settings'))->assertNotFound();
         $this->get(route('filament.admin.resources.users.index'))->assertNotFound();
         $this->get(route('filament.admin.resources.roles.index'))->assertNotFound();

@@ -56,10 +56,10 @@ class AdminLayoutTest extends TestCase
         $shortcuts = AdminMenu::shortcutsFor($admin);
 
         $this->assertCount(6, $shortcuts);
-        $this->assertSame(['questions', 'settings', 'intro', 'media', 'appearance', 'users'], $shortcuts->pluck('key')->all(), 'Việc dùng được ngay đứng trước mục Sắp có');
+        $this->assertSame(['lookup', 'contacts', 'questions', 'settings', 'intro', 'media'], $shortcuts->pluck('key')->all(), 'Việc dùng được ngay đứng trước mục Sắp có');
 
         $this->assertSame(['lookup'], AdminMenu::shortcutsFor(User::factory()->create(['role' => User::ROLE_COUNSELOR]))->pluck('key')->all());
-        $this->assertSame(['intro', 'media', 'contacts'], AdminMenu::shortcutsFor(User::factory()->create(['role' => User::ROLE_STAFF]))->pluck('key')->all());
+        $this->assertSame(['contacts', 'intro', 'media'], AdminMenu::shortcutsFor(User::factory()->create(['role' => User::ROLE_STAFF]))->pluck('key')->all());
     }
 
     public function test_every_menu_item_opens_for_admin(): void

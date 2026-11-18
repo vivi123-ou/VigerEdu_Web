@@ -50,7 +50,8 @@ class ContentPagesTest extends TestCase
     public function test_every_content_page_renders(): void
     {
         foreach (array_keys(config('admin_content')) as $page) {
-            $this->get(route('admin.content.edit', $page))->assertOk()->assertSee('Xem trước')->assertSee('Lịch sử thay đổi');
+            $response = $this->get(route('admin.content.edit', $page))->assertOk()->assertSee('Lịch sử thay đổi');
+            filled(config("admin_content.{$page}.preview")) ? $response->assertSee('Xem trước') : $response->assertDontSee('Xem trước');
         }
 
         $this->get(route('admin.content.edit', 'embed'))->assertSee(route('embed.script'));

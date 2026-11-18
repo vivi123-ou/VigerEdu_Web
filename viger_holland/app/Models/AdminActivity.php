@@ -27,6 +27,11 @@ class AdminActivity extends Model
 
     public const ACTION_REVERT = 'revert';
 
+    /** Tra cứu / xem dữ liệu khách (H4b): ghi lại để quản trị viên kiểm tra, không chứa SĐT, email đã gõ. */
+    public const ACTION_SEARCH = 'search';
+
+    public const ACTION_VIEW = 'view';
+
     public const SUBJECT_SETTINGS = 'settings';
 
     /** Nhật ký cài đặt của trang "Mô tả 6 nhóm". */
@@ -144,6 +149,8 @@ class AdminActivity extends Model
             self::ACTION_RESTORE => 'Khôi phục',
             self::ACTION_IMPORT => 'Nhập Excel',
             self::ACTION_REVERT => 'Quay lại bản cũ',
+            self::ACTION_SEARCH => 'Tra cứu',
+            self::ACTION_VIEW => 'Xem',
             default => $this->action,
         };
     }
