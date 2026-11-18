@@ -51,7 +51,7 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 - **Kiểm thử: 121/121 đạt** (thêm `ReportFlowTest` 14 ca: form bắt buộc / định dạng, phụ huynh điền, trọn luồng, chỉ hiện một lần, khóa sau 5 lần sai, hết hạn và gửi lại, sửa email, giới hạn mã / giờ, gộp hồ sơ, câu đồng ý, Turnstile, lỗi gửi email không ghi email vào log, trọn hành trình qua HTTP không bị chặn).
 
 **Cần Vân / Thầy / team:**
-1. **Đoạn giải thích 6 nhóm và 15 cặp:** đã nạp ngày 18/11 (Vân soạn với Claude chat), cần Thầy duyệt. **Đoạn RA đang sai**: tả "nghiên cứu + sáng tạo" (là cặp IA) thay vì "thực hành + sáng tạo", chờ Vân gửi đoạn sửa. Chưa có 6 đoạn "chữ thứ ba" (đang dùng câu mẫu, tên hướng chuyên sâu còn tiếng Đức).
+1. **Đoạn giải thích 6 nhóm và 15 cặp:** đã nạp ngày 18/11 (Vân soạn với Claude chat), cần Thầy duyệt. Đoạn RA đã sửa lại (bản đầu tả nhầm thành nghiên cứu + sáng tạo). Chưa có 6 đoạn "chữ thứ ba" (đang dùng câu mẫu, tên hướng chuyên sâu còn tiếng Đức).
 2. **Nghề tham khảo** đang hiện tên tiếng Đức (danh mục chưa có tên tiếng Việt).
 3. **Câu đồng ý và CRM:** hợp đồng kết nối (`HOP_DONG_KET_NOI.md` mục 2.1) bắt buộc gửi `consent.agreed = true`; Nghị định 13/2023: im lặng không được coi là đồng ý. Cần chốt ở H5 gửi gì cho CRM (hỏi Thầy).
 4. **Hộp thư gửi mã** khi lên máy chủ thật (điền SMTP vào `.env`).
