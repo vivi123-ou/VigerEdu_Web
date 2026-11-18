@@ -3,6 +3,8 @@
 use App\Filament\Pages\Dashboard;
 use App\Modules\Access\Filament\Resources\Roles\RoleResource;
 use App\Modules\Access\Filament\Resources\Users\UserResource;
+use App\Modules\Assessment\Filament\Pages\HollandCodes;
+use App\Modules\Assessment\Filament\Pages\MajorsCatalog;
 use App\Modules\Assessment\Filament\Pages\TestSettings;
 use App\Modules\Assessment\Filament\Resources\Questions\QuestionResource;
 use App\Modules\CrmSync\Filament\Pages\CrmConnection;
@@ -136,15 +138,33 @@ return [
         ],
         'codes' => [
             'group' => 'Bài trắc nghiệm', 'label' => 'Giải thích các mã Holland', 'icon' => 'heroicon-o-cube-transparent',
-            'permission' => 'catalog.manage', 'stage' => 'H6',
-            'summary' => 'Tên và lời giải thích của 6 nhóm, 15 cặp, 120 mã mà khách đọc trong báo cáo.',
-            'help' => ['intro' => 'Sửa lời giải thích từng nhóm, từng cặp mã và các mã 3 chữ hiện trong báo cáo.', 'steps' => []],
+            'permission' => 'catalog.manage',
+            'page' => HollandCodes::class,
+            'summary' => 'Tên và lời giải thích của 6 nhóm, 15 cặp, chữ thứ ba mà khách đọc trong báo cáo.',
+            'help' => [
+                'intro' => 'Các đoạn khách đọc ở phần "Nhóm sở thích của bạn" trong báo cáo đầy đủ.',
+                'steps' => [
+                    ['Sửa đoạn của một nhóm / một cặp', 'chọn thẻ "6 nhóm" hoặc "15 cặp", bấm "Sửa" ở dòng cần sửa, sửa rồi bấm "Lưu".'],
+                    ['Đổi ngành nền của một cặp', 'thẻ "15 cặp", bấm "Sửa", chọn ngành ở ô "Ngành nền của cặp".'],
+                    ['Viết đoạn riêng cho một mã 3 chữ', 'thẻ "Mã 3 chữ riêng", bấm "Thêm mã".'],
+                ],
+                'note' => 'Đoạn nhóm không nhắc "nhóm nổi bật nhất" hay "nhóm thứ hai"; đoạn cặp không ngụ ý nhóm nào mạnh hơn.',
+            ],
         ],
         'majors' => [
             'group' => 'Bài trắc nghiệm', 'label' => 'Ngành học & nghề gợi ý', 'icon' => 'heroicon-o-academic-cap',
-            'permission' => 'catalog.manage', 'stage' => 'H6',
-            'summary' => 'Danh mục ngành, nghề, trường dùng để gợi ý trong báo cáo; nhập nhanh từ Excel.',
-            'help' => ['intro' => 'Thêm, sửa ngành học, nghề nghiệp, trường; nhập số lượng lớn bằng file Excel theo mẫu.', 'steps' => []],
+            'permission' => 'catalog.manage',
+            'page' => MajorsCatalog::class,
+            'summary' => 'Danh mục ngành học tại Đức và nghề tham khảo dùng để gợi ý trong báo cáo.',
+            'help' => [
+                'intro' => 'Ngành gợi ý cho khách phải là ngành có thật ở Đức, kiểm tra theo nguồn chính thức.',
+                'steps' => [
+                    ['Kiểm tra một ngành', 'bấm "Sửa", dán link Hochschulkompass hoặc studienwahl.de vào "Link nguồn chính thức", tick "Đã kiểm tra", bấm "Lưu".'],
+                    ['Thêm ngành', 'bấm "Thêm ngành", nhập tên và mã Holland của ngành (ví dụ ISC).'],
+                    ['Không muốn gợi ý một ngành nữa', 'bấm "Sửa", tắt "Đang dùng". Ngành không bị xóa, lượt làm bài cũ vẫn đọc được.'],
+                    ['Sửa tên nghề', 'chọn thẻ "Nghề", bấm "Sửa".'],
+                ],
+            ],
         ],
         'form-fields' => [
             'group' => 'Bài trắc nghiệm', 'label' => 'Form khách điền thông tin', 'icon' => 'heroicon-o-clipboard-document-list',
