@@ -88,7 +88,7 @@ class CustomerFlowTest extends TestCase
             ->assertSessionHasErrors('answers');
 
         $this->assertSame(4, $session->responses()->count(), 'Câu đã chọn được lưu, không bắt làm lại');
-        $this->get(route('test.show'))->assertSee('Chưa chọn – câu này còn thiếu');
+        $this->get(route('test.show'))->assertSee('Chưa chọn câu trả lời');
 
         $this->post(route('test.submit'), ['page' => 1, 'direction' => 'next', 'answers' => $this->answersFor($items)])
             ->assertRedirect(route('test.show', ['trang' => 2]));

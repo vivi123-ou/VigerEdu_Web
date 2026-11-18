@@ -90,7 +90,7 @@ class SettingSeeder extends Seeder
             'result' => [
                 // Chữ trang làm bài và kết quả sơ lược (mẫu luong-khach.html); sửa ở "Chữ trên báo cáo & email" (H4)
                 'quiz_legend_title' => 'Chú thích',
-                'quiz_missing_text' => 'Chưa chọn – câu này còn thiếu',
+                'quiz_missing_text' => 'Chưa chọn câu trả lời',
                 'quiz_missing_alert' => 'Bạn còn câu chưa chọn. Chọn số sao cho các câu viền đỏ rồi bấm tiếp.',
                 'quiz_prev_text' => 'Phần trước',
                 'quiz_next_text' => 'Tiếp tục',

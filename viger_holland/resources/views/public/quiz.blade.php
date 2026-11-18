@@ -41,7 +41,7 @@
             </div>
 
             <form method="post" action="{{ route('test.submit') }}" class="quiz" data-quiz data-labels='@json($labels)' data-page-share="{{ round($items->count() / max(1, $total) * 100, 3) }}"
-                  data-missing="{{ setting('quiz_missing_text', 'Chưa chọn – câu này còn thiếu') }}" novalidate>
+                  data-missing="{{ setting('quiz_missing_text', 'Chưa chọn câu trả lời') }}" novalidate>
                 @csrf
                 <input type="hidden" name="page" value="{{ $page }}">
 
