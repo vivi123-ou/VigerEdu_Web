@@ -89,14 +89,14 @@ final class IntroBlocks
     }
 
     /**
-     * Nội dung mẫu khi cài mới.
+     * Nội dung mẫu khi cài mới. Mặc định tắt cả 3 khối: trang bắt đầu đã chốt (H3) chỉ có phần mở đầu; admin bật lại được.
      *
      * @return list<array{id: string, type: string, enabled: bool, data: array<string, mixed>}>
      */
     public static function defaults(): array
     {
         return [
-            ['id' => 'steps01', 'type' => 'steps', 'enabled' => true, 'data' => [
+            ['id' => 'steps01', 'type' => 'steps', 'enabled' => false, 'data' => [
                 'title' => 'Cách làm bài',
                 'in_hero' => true,
                 'items' => [
@@ -106,11 +106,11 @@ final class IntroBlocks
                 ],
                 'note' => 'Phụ huynh có thể làm cùng con hoặc tự làm để hiểu thêm về con.',
             ]],
-            ['id' => 'groups01', 'type' => 'groups', 'enabled' => true, 'data' => [
+            ['id' => 'groups01', 'type' => 'groups', 'enabled' => false, 'data' => [
                 'title' => 'Phương pháp Holland là gì?',
                 'intro' => 'Phương pháp do nhà tâm lý học John Holland (Mỹ) xây dựng, được dùng phổ biến trong hướng nghiệp. Sở thích nghề nghiệp được chia thành 6 nhóm. Mỗi người thường có điểm ở nhiều nhóm; ba nhóm cao nhất tạo thành mã Holland, ví dụ AIS. Người làm công việc phù hợp với mã Holland của mình thường hứng thú và gắn bó với nghề lâu hơn.',
             ]],
-            ['id' => 'faq01', 'type' => 'faq', 'enabled' => true, 'data' => [
+            ['id' => 'faq01', 'type' => 'faq', 'enabled' => false, 'data' => [
                 'title' => 'Câu hỏi thường gặp',
                 'items' => [
                     ['question' => 'Làm bài trắc nghiệm có mất phí không?', 'answer' => '<p>Không. Bài trắc nghiệm và kết quả hoàn toàn miễn phí.</p>'],

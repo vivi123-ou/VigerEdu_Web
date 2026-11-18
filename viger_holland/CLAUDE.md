@@ -92,8 +92,8 @@
 - [x] F. Nền trang quản trị Filament: đăng nhập, bảng điều khiển, Thư viện câu hỏi, Cài đặt bài test, Tài khoản, Vai trò & quyền; bỏ vai trò Marketing
 - [x] F2. Admin theo mẫu `docs/mau_giao_dien/admin-filament.html`: menu đặt tên theo việc làm (một chỗ: `config/admin_menu.php`), quyền viết thành câu "Được…", nút "?" hướng dẫn từng bước, ô lối tắt theo vai trò, trang "Sắp có", báo 404 thay 403
 - [x] H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + test 8 ca
-- [ ] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
-- [ ] H4. Module Respondent: form thông tin, OTP email, đồng ý, báo cáo đầy đủ, email link
+- [x] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
+- [ ] H4. Module Respondent: form thông tin, OTP email, đồng ý, báo cáo đầy đủ (chỉ xem trong tab, không email link)
 - [ ] H5. Module CrmSync + Tracking: outbox, job, thử lại, trang Kết nối CRM (`docs/PROMPT_4_THU_THAP_THONG_TIN_CRM.md`)
 - [ ] H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt các trang nội dung cũ sang Filament
 - [ ] H7. API cho chatbot, sao lưu, tài liệu, nghiệm thu

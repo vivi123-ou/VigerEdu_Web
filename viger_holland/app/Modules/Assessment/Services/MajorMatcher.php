@@ -80,7 +80,7 @@ final class MajorMatcher
         return collect($all)
             ->when($this->settings['only_verified_majors'], fn (Collection $rows) => $rows->where('verified', true))
             ->take((int) $this->settings['max_majors_public'])
-            ->map(fn (array $row) => array_intersect_key($row, array_flip(['id', 'name_vi', 'name_de', 'label', 'routes'])))
+            ->map(fn (array $row) => array_intersect_key($row, array_flip(['id', 'name_vi', 'name_de', 'label', 'routes', 'source'])))
             ->values()
             ->all();
     }

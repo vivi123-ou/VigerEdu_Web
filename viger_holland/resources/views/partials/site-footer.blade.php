@@ -1,62 +1,36 @@
+{{-- Chân trang khách gọn (chốt 14/11): logo, hotline, email, địa chỉ, bản quyền, link về web chính. Chữ sửa được ở "Trang mở đầu". --}}
 @php
-    $socials = \App\Support\ContentPages::links(setting('footer_links'));
+    $editing = \App\Support\PageEditor::active() && \App\Support\PageEditor::canEdit('hotline');
     $hotline = setting('hotline');
-    $zalo = setting('zalo');
 @endphp
-<footer class="site-footer">
-    <div class="container">
-        <div class="site-footer__inner">
-            <div>
-                <p class="site-footer__name">{{ ed('company_name', setting('site_name'), 'Tên công ty') }}</p>
-                @if (filled(setting('footer_description')))
-                    <p class="site-footer__desc">{{ ed('footer_description', null, 'Giới thiệu ngắn') }}</p>
+<footer class="kfoot">
+    <div class="wrap">
+        <div class="kfoot__row">
+            <a class="kbrand" href="{{ setting('main_site_url') ?: route('home') }}">
+                <img src="{{ media_url(setting('logo_path', 'img/logo.png')) }}" alt="{{ setting('site_name') }}" width="40" height="40">
+                <span><b>{{ setting('brand_title', setting('site_name')) }}</b><small>{{ setting('site_tagline') }}</small></span>
+            </a>
+            <ul class="kfoot__ct">
+                @if ($editing || filled($hotline))
+                    <li><svg class="ic"><use href="#i-phone"/></svg>
+                        @if ($editing){{ ed('hotline', null, 'Số hotline') }}@else<a href="tel:{{ preg_replace('/[^0-9+]/', '', $hotline) }}">{{ $hotline }}</a>@endif
+                    </li>
                 @endif
-            </div>
-
-            <div>
-                <p class="site-footer__heading">{{ setting('footer_contact_heading', 'Liên hệ') }}</p>
-                @if (\App\Support\PageEditor::active() && \App\Support\PageEditor::canEdit('hotline'))
-                    {{-- Chế độ sửa: hiện mọi dòng, kể cả dòng trống (để trống thì khách không thấy) --}}
-                    <ul>
-                        <li>Hotline: {{ ed('hotline', null, 'Số hotline') }}</li>
-                        <li>Zalo: {{ ed('zalo', null, 'Số Zalo') }}</li>
-                        <li>Email: {{ ed('email', null, 'Email liên hệ') }}</li>
-                        <li class="site-footer__address">{{ ed('address', null, 'Địa chỉ') }}</li>
-                        <li>{{ ed('working_hours', null, 'Giờ làm việc') }}</li>
-                    </ul>
-                @else
-                    <ul>
-                        @if (filled($hotline))
-                            <li>Hotline: <a href="tel:{{ preg_replace('/[^0-9+]/', '', $hotline) }}">{{ $hotline }}</a></li>
-                        @endif
-                        @if (filled($zalo))
-                            <li>Zalo: <a href="https://zalo.me/{{ preg_replace('/[^0-9]/', '', $zalo) }}" rel="noopener">{{ $zalo }}</a></li>
-                        @endif
-                        @if (filled(setting('email')))
-                            <li><a href="mailto:{{ setting('email') }}">{{ setting('email') }}</a></li>
-                        @endif
-                        @if (filled(setting('address')))
-                            <li class="site-footer__address">{{ setting('address') }}</li>
-                        @endif
-                        @if (filled(setting('working_hours')))
-                            <li>{{ setting('working_hours') }}</li>
-                        @endif
-                    </ul>
+                @if ($editing || filled(setting('email')))
+                    <li><svg class="ic"><use href="#i-mail"/></svg>
+                        @if ($editing){{ ed('email', null, 'Email liên hệ') }}@else<a href="mailto:{{ setting('email') }}">{{ setting('email') }}</a>@endif
+                    </li>
                 @endif
-            </div>
-
-            @if ($socials)
-                <div>
-                    <p class="site-footer__heading">{{ setting('footer_social_heading', 'Theo dõi') }}</p>
-                    <ul>
-                        @foreach ($socials as $link)
-                            <li><a href="{{ $link['url'] }}" @if ($link['new_tab']) target="_blank" rel="noopener" @endif>{{ $link['label'] }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
+                @if ($editing || filled(setting('address')))
+                    <li><svg class="ic"><use href="#i-pin"/></svg>{{ ed('address', null, 'Địa chỉ') }}</li>
+                @endif
+            </ul>
+        </div>
+        <div class="kfoot__copy">
+            <span>Copyright © {{ now()->year }} {{ ed('copyright', null, 'Tên ghi bản quyền') }}</span>
+            @if (filled(setting('main_site_url')))
+                <a href="{{ setting('main_site_url') }}">{{ setting('main_site_link_text', 'Về trang chủ') }} »</a>
             @endif
         </div>
-
-        <p class="site-footer__copy">© {{ now()->year }} {{ ed('copyright', setting('site_name'), 'Dòng bản quyền') }}</p>
     </div>
 </footer>

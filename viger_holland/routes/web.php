@@ -7,13 +7,17 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PageEditorController;
 use App\Http\Controllers\EmbedController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TestController;
+use App\Modules\Assessment\Http\Controllers\QuizController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-// Luồng làm bài (H3–H4 làm lại theo mẫu: Bắt đầu → Làm bài → Kết quả sơ lược → Thông tin → Báo cáo)
-Route::get('lam-bai', [TestController::class, 'show'])->name('test.show');
+// Luồng khách (H3): Bắt đầu → Làm bài từng trang → Kết quả sơ lược. Thông tin, mã email, báo cáo đầy đủ: H4.
+Route::post('lam-bai/bat-dau', [QuizController::class, 'start'])->middleware('throttle:10,1')->name('test.start');
+Route::get('lam-bai', [QuizController::class, 'show'])->name('test.show');
+Route::post('lam-bai', [QuizController::class, 'submit'])->middleware('throttle:30,1')->name('test.submit');
+Route::get('ket-qua', [QuizController::class, 'result'])->name('test.result');
+Route::view('nhan-bao-cao', 'public.updating')->name('report.request'); // H4: form thông tin + mã email
 
 // Khối nhúng cho web chính (iframe + script)
 Route::get('embed', [EmbedController::class, 'show'])->name('embed');

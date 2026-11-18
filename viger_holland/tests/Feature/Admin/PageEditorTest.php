@@ -63,11 +63,13 @@ class PageEditorTest extends TestCase
         $this->assertSame('Có mất phí không?', $faq['data']['items'][0]['question']);
         $this->assertSame('<p>Không </p>', $faq['data']['items'][0]['answer']);
 
-        $this->get(route('home'))->assertSee('Chọn ngành đúng')->assertSee('0909 123 456')->assertSee('Có mất phí không?');
+        $this->get(route('home'))->assertSee('Chọn ngành đúng')->assertSee('0909 123 456')->assertDontSee('Có mất phí không?', 'Khối câu hỏi thường gặp đang tắt');
+        $this->patch(route('admin.intro-blocks.toggle', 'faq01'));
+        $this->get(route('home'))->assertSee('Có mất phí không?');
 
         $intro = AdminActivity::where('subject_type', 'settings.intro')->sole();
         $this->post(route('admin.history.revert', $intro));
-        $this->assertSame('Bạn phù hợp với ngành học nào?', setting('intro_title'));
+        $this->assertSame('Bạn hợp với hướng ngành nào khi', setting('intro_title'));
     }
 
     public function test_save_rejects_unknown_keys_empty_required_and_bad_images(): void

@@ -64,42 +64,30 @@ class ContentPagesTest extends TestCase
         $this->get(route('home'))->assertSee('Chọn ngành đúng ngay từ đầu');
 
         $activity = AdminActivity::where('subject_type', 'settings.intro')->sole();
-        $this->assertSame(['intro_title' => 'Bạn phù hợp với ngành học nào?'], $activity->before);
+        $this->assertSame(['intro_title' => 'Bạn hợp với hướng ngành nào khi'], $activity->before);
 
         $this->post(route('admin.history.revert', $activity));
-        $this->get(route('home'))->assertSee('Bạn phù hợp với ngành học nào?');
+        $this->get(route('home'))->assertSee('Bạn hợp với hướng ngành nào khi');
     }
 
     public function test_preview_shows_unsaved_text_without_saving(): void
     {
         $this->post(route('admin.content.preview', 'intro'), $this->form('intro', ['intro_title' => 'Tiêu đề thử']))
             ->assertOk()->assertSee('Tiêu đề thử');
-        $this->assertSame('Bạn phù hợp với ngành học nào?', setting('intro_title'));
+        $this->assertSame('Bạn hợp với hướng ngành nào khi', setting('intro_title'));
 
         $this->post(route('admin.content.preview', 'embed'), $this->form('embed', ['embed_title' => 'Khối nhúng thử']))
             ->assertOk()->assertSee('Khối nhúng thử');
         $this->assertNotSame('Khối nhúng thử', setting('embed_title'));
     }
 
-    public function test_links_are_saved_as_list(): void
-    {
-        $this->put(route('admin.content.update', 'appearance'), $this->form('appearance', [
-            'header_menu' => [['label' => 'Du học Đức', 'url' => 'viger.edu.vn/du-hoc-duc', 'new_tab' => '1'], ['label' => '', 'url' => '']],
-            'hotline' => '0909 123 456',
-        ]))->assertSessionHasNoErrors();
-
-        $this->assertSame([['label' => 'Du học Đức', 'url' => 'https://viger.edu.vn/du-hoc-duc', 'new_tab' => true]], ContentPages::links(setting('header_menu')));
-        $this->get(route('home'))->assertSee('Du học Đức')->assertSee('0909 123 456')->assertSee('Facebook');
-    }
-
     public function test_validation_messages_are_vietnamese(): void
     {
         $this->put(route('admin.content.update', 'appearance'), $this->form('appearance', [
-            'primary_color' => 'đỏ', 'header_menu' => [['label' => 'Sai', 'url' => 'viger']], 'site_name' => '',
+            'primary_color' => 'đỏ', 'site_name' => '',
         ]))->assertSessionHasErrors([
             'primary_color' => 'Ô "Màu chủ đạo" chưa đúng dạng.',
-            'header_menu.0.url' => 'Địa chỉ link chưa đúng. Ví dụ: viger.edu.vn hoặc viger.edu.vn/du-hoc-duc',
-            'site_name' => 'Vui lòng điền ô "Tên đơn vị (đầu trang)".',
+            'site_name' => 'Vui lòng điền ô "Tên đơn vị".',
         ]);
     }
 
@@ -134,7 +122,8 @@ class ContentPagesTest extends TestCase
 
     public function test_intro_blocks_add_edit_toggle_reorder_delete_and_revert(): void
     {
-        $this->get(route('home'))->assertSee('Cách làm bài')->assertSee('Câu hỏi thường gặp')->assertSee('Làm bài trắc nghiệm có mất phí không?');
+        // Trang bắt đầu đã chốt không có các khối cũ: mặc định tắt, admin bật lại được.
+        $this->get(route('home'))->assertDontSee('Câu hỏi thường gặp')->assertDontSee('Làm bài trắc nghiệm có mất phí không?');
         $this->get(route('admin.intro-blocks.index'))->assertOk()->assertSee('6 nhóm Holland');
 
         $this->post(route('admin.intro-blocks.store'), ['type' => 'testimonials']);

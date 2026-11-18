@@ -27,11 +27,33 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | F. Nền trang quản trị Filament, bỏ vai trò Marketing | ✅ Xong (17/11) |
 | F2. Admin theo mẫu `admin-filament.html`: tên theo việc làm, quyền "Được…", nút "?", lối tắt, "Sắp có", 404 | ✅ Xong (17/11) |
 | H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | ✅ Xong (17/11) |
-| H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | Chưa làm (tiếp theo) |
-| H4. Form thông tin, OTP email, báo cáo đầy đủ | Chưa làm |
+| H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | ✅ Xong (18/11) |
+| H4. Form thông tin, OTP email, báo cáo đầy đủ | Chưa làm (tiếp theo) |
 | H5. CrmSync + Tracking | Chưa làm |
 | H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+### H3 đã làm (18/11/2026)
+
+Trang khách làm theo 2 mẫu đã chốt (`docs/mau_giao_dien/trang-gioi-thieu.html`, `luong-khach.html`), Blade thuần, ưu tiên điện thoại.
+- **Đầu trang chỉ có logo** (tên + khẩu hiệu sửa ở "Giao diện"), **chân trang gọn**: hotline, email, địa chỉ, bản quyền, "Về trang chủ". Bỏ menu đầu trang và các ô chân trang cũ (tên công ty, mô tả, giờ làm việc, link).
+- **Trang bắt đầu** (`/`):
+  - tiêu đề có phần cuối chữ nghiêng đỏ, 3 lợi ích, nút "Bắt đầu làm bài" (giữ nguồn UTM);
+  - bên phải là **"Báo cáo mẫu"**: mã ví dụ (mặc định IS) chọn trong cài đặt, tên nhóm và 2 ngành lấy từ danh mục; admin chọn ảnh banner thì ảnh thay khung này;
+  - chữ có `{so_cau}` tự hiện số câu của đề (đang là 36); admin đổi số câu thì chữ tự đổi, không phải sửa tay;
+  - 3 khối cũ (Cách làm bài, 6 nhóm, Câu hỏi thường gặp) **mặc định tắt**, admin bật lại được ở "Trang mở đầu".
+- **Trang làm bài** (`/lam-bai`):
+  - 6 câu / trang (theo cài đặt), chấm 1–5 sao, hiện nhãn khi chọn ("Khá giống tôi"…), thanh tiến độ một dải liền;
+  - câu nào cũng bắt buộc: thiếu thì tô đỏ câu thiếu và báo, câu đã chọn vẫn giữ; bấm "Quay lại" không mất câu trả lời; không nhảy qua trang chưa làm;
+  - lưu sau mỗi trang, lỡ đóng tab thì bấm "Bắt đầu" lại sẽ làm tiếp đúng chỗ;
+  - lượt làm bài giữ trong phiên của trình duyệt, không có mã trên đường link; ghi thời gian chọn mỗi câu (dùng cho cờ "làm quá nhanh").
+- **Kết quả sơ lược** (`/ket-qua`): mã 2 chữ, tên 2 nhóm, câu giải thích của cặp, **2 ngành hiện rõ** (ô mới "Kết quả sơ lược hiện rõ mấy ngành" trong "Cách bốc đề & chấm điểm"), các ngành còn lại làm mờ và **không gửi tên thật ra trình duyệt**, nút "Xem báo cáo đầy đủ".
+- **Nút "Xem báo cáo đầy đủ"** hiện mở trang "Phần này đang được hoàn thiện"; H4 làm form, OTP, báo cáo.
+- Trang làm bài, kết quả: `noindex`. Giới hạn bấm: bắt đầu 10 lần / phút, gửi trang 30 lần / phút.
+- Chữ trên trang làm bài và kết quả nằm trong cài đặt (nhóm `result`); trang admin để sửa các chữ này làm cùng "Chữ trên báo cáo & email" ở H4.
+- Nút "Xem trang làm bài như khách" trên admin giờ mở trang bắt đầu thật. Bỏ bản mẫu ở `/lam-bai?mau=`.
+- Database chạy thử của Vân đã cập nhật chữ mặc định mới (chỉ đổi ô còn đúng chữ mặc định cũ, chữ Vân đã sửa giữ nguyên).
+- **Kiểm thử: 107/107 đạt** (thêm `CustomerFlowTest` 7 ca: bắt đầu, bắt buộc từng câu, không nhảy trang, quay lại giữ câu trả lời, kết quả không lộ ngành ẩn, làm tiếp / làm lượt mới ra đề mới).
 
 ### Vân chốt 17/11 (chiều)
 

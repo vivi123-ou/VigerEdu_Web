@@ -46,6 +46,7 @@ return [
     // Danh sách font admin được chọn (Google Fonts, đều hỗ trợ tiếng Việt).
     // Tên font => [kiểu dự phòng, các độ đậm cần tải]
     'fonts' => [
+        'Inter' => ['sans-serif', '400;500;600;700'],
         'Work Sans' => ['sans-serif', '400;500;600;700'],
         'Playfair Display' => ['serif', '400;600;700'],
         'Be Vietnam Pro' => ['sans-serif', '400;500;600;700'],

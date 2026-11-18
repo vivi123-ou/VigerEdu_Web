@@ -79,9 +79,7 @@ final class AssessmentService
             }
         }
 
-        $settings = $session->configVersion?->settings
-            ? array_replace(TestConfig::DEFAULTS, $session->configVersion->settings)
-            : TestConfig::current();
+        $settings = $this->settingsFor($session);
 
         $ordered = $items->map(fn (SessionQuestion $item) => [
             'code' => $item->question?->code ?? (string) $item->question_id,
@@ -117,6 +115,61 @@ final class AssessmentService
 
             return $session->refresh();
         });
+    }
+
+    /**
+     * Cài đặt của lượt làm bài: bản đang dùng lúc phát đề (admin sửa sau đó không làm đổi lượt đang làm).
+     *
+     * @return array<string, mixed>
+     */
+    public function settingsFor(TestSession $session): array
+    {
+        return $session->configVersion?->settings
+            ? array_replace(TestConfig::DEFAULTS, $session->configVersion->settings)
+            : TestConfig::current();
+    }
+
+    /**
+     * Lưu câu trả lời của một trang (lưu dần để khách tải lại trang không mất bài). Chỉ nhận câu thuộc đề của lượt này, giá trị 1–5.
+     *
+     * @param  array<int, array{value: int, ms?: int|null}>  $answers  question_id => câu trả lời
+     *
+     * @throws InvalidArgumentException
+     */
+    public function saveAnswers(TestSession $session, array $answers): void
+    {
+        $allowed = $session->sessionQuestions()->pluck('question_id')->all();
+
+        foreach ($answers as $questionId => $answer) {
+            if (! in_array((int) $questionId, $allowed, true) || ! is_int($answer['value'] ?? null) || $answer['value'] < 1 || $answer['value'] > 5) {
+                throw new InvalidArgumentException('Câu trả lời không hợp lệ.');
+            }
+        }
+
+        DB::transaction(function () use ($session, $answers): void {
+            foreach ($answers as $questionId => $answer) {
+                $existing = $session->responses()->where('question_id', $questionId)->first();
+                // Giữ thời gian của lần chọn đầu tiên: khách sửa lại câu không làm "nhanh" hơn thực tế.
+                $session->responses()->updateOrCreate(['question_id' => $questionId], [
+                    'value' => $answer['value'],
+                    'ms' => $existing?->ms ?? ($answer['ms'] ?? null),
+                ]);
+            }
+        });
+    }
+
+    /**
+     * Đã trả lời đủ mọi câu thì chấm từ các câu đã lưu.
+     */
+    public function finishIfComplete(TestSession $session): ?TestSession
+    {
+        $responses = $session->responses()->get()->keyBy('question_id');
+
+        if ($responses->count() < $session->sessionQuestions()->count()) {
+            return null;
+        }
+
+        return $this->finish($session, $responses->map(fn ($r) => ['value' => (int) $r->value, 'ms' => $r->ms])->all());
     }
 
     /**

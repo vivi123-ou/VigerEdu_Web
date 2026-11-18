@@ -1,12 +1,15 @@
-{{-- Trang tạm khi luồng làm bài mới (Career Map) chưa xong. GĐ3 thay bằng: Thông tin → Làm bài → Báo cáo. --}}
+{{-- Trang tạm cho phần chưa làm xong (ví dụ "Xem báo cáo đầy đủ" trước khi có H4). --}}
 @extends('layouts.public')
 
 @section('title', setting('test_name'))
+@section('noindex', true)
 
 @section('content')
-    <section class="container" style="padding:4rem 1rem;text-align:center">
-        <h1>{{ setting('test_name') }}</h1>
-        <p>Bài trắc nghiệm đang được cập nhật. Vui lòng quay lại sau.</p>
-        <p><a class="btn" href="{{ route('home') }}">Về trang chủ</a></p>
-    </section>
+    <div class="ksec">
+        <div class="narrow" style="padding:40px 20px;text-align:center">
+            <h1 class="serif" style="font-size:30px;margin:0 0 10px">Phần này đang được hoàn thiện</h1>
+            <p style="color:var(--ink2);margin:0 0 24px">Bạn vui lòng quay lại sau ít ngày. Cảm ơn bạn đã làm bài trắc nghiệm.</p>
+            <a class="kbtn" href="{{ route('home') }}">Về trang đầu</a>
+        </div>
+    </div>
 @endsection

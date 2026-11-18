@@ -26,6 +26,17 @@
 - `MajorMatcher`: gợi ý ngành theo chỉ số C. Có 2 công tắc trong cài đặt: "Ưu tiên ngành nền của cặp mã" và "Chỉ gợi ý ngành đã kiểm tra nguồn chính thức" (cột `majors.is_verified`, `source_url`).
 - `AssessmentService`: `start()` phát đề (lưu nội dung, phiên bản câu, phiên bản cài đặt); `finish()` kiểm tra câu trả lời, chấm, lưu kết quả bản nội bộ và phần khách được thấy. Kết quả cũ không đổi khi admin sửa sau.
 
+**Trang khách (H3, `Http/`):** Blade thuần, CSS `public/css/khach.css`, JS `public/js/khach.js`.
+- `Http/Controllers/QuizController.php`:
+  - `start` (POST `/lam-bai/bat-dau`, giới hạn 10 lần / phút): phát đề, ghi nguồn UTM, đặt cookie máy `holland_device` (chỉ lưu dạng băm) để hạn chế lặp câu; đang làm dở thì làm tiếp, không phát đề mới;
+  - `show` (GET `/lam-bai`): mỗi trang `items_per_page` câu, chấm sao 1–5; không cho nhảy qua trang chưa làm;
+  - `submit` (POST `/lam-bai`, 30 lần / phút): lưu câu trả lời từng trang; thiếu câu thì quay lại đúng trang và tô đỏ câu thiếu; đủ 36 câu thì chấm và sang kết quả;
+  - `result` (GET `/ket-qua`): mã 2 chữ, tên 2 nhóm, lời giải thích của cặp, `preview_majors` ngành hiện rõ, các ngành còn lại làm mờ (không gửi tên ngành thật ra trình duyệt).
+- Lượt làm bài giữ trong phiên đăng nhập của trình duyệt (`holland.test`), không đưa mã vào đường link.
+- `Http/Requests/SubmitAnswersRequest.php`: kiểm tra dữ liệu gửi lên; `AssessmentService::saveAnswers()` kiểm tra lại câu có thuộc đề này không.
+- `Support/SampleReport.php`: khung "Báo cáo mẫu" ở trang bắt đầu (mã ví dụ lấy từ cài đặt `intro_sample_code`).
+- Chữ trên trang làm bài và trang kết quả: cài đặt nhóm `result` (`quiz_*`, `result_*`). Chữ có `{so_cau}` tự hiện số câu theo cài đặt.
+
 **Dữ liệu ban đầu:** `CatalogSeeder`, `QuestionBankSeeder` (từ `question_bank_300.csv`, nạp ở trạng thái đã duyệt, đổi "Em" thành "Tôi"), `TestConfigSeeder`. Chạy lại không trùng, không ghi đè chỗ admin đã sửa.
 
-**Test:** `tests/Feature/Assessment/`: `ReferenceCasesTest` (8 ca của Thầy), `QuestionPickerTest`, `AssessmentServiceTest`, `SeedDataTest`, `TestSettingsTest`, `QuestionLibraryTest`.
+**Test:** `tests/Feature/Assessment/`: `ReferenceCasesTest` (8 ca của Thầy), `QuestionPickerTest`, `AssessmentServiceTest`, `CustomerFlowTest` (luồng khách H3), `SeedDataTest`, `TestSettingsTest`, `QuestionLibraryTest`.

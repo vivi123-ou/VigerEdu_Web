@@ -1,3 +1,7 @@
+{{--
+    Layout trang khách (H3, theo mẫu docs/mau_giao_dien): đầu trang chỉ có logo, chân trang gọn.
+    Màu, font, chữ lấy từ Cài đặt. Trang có dữ liệu riêng của khách (làm bài, kết quả) khai báo @section('noindex').
+--}}
 <!doctype html>
 <html lang="vi">
 <head>
@@ -15,19 +19,27 @@
     <link rel="icon" href="{{ media_url(setting('favicon_path', 'img/favicon.png')) }}">
     @include('partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/khach.css') }}">
     <style>:root { --brand: {{ setting('primary_color', '#c1121f') }}; --ink: {{ setting('text_color', '#12263f') }}; }</style>
     @stack('styles')
 </head>
-<body class="site">
+<body class="k">
+    @include('partials.khach-icons')
     <a class="skip-link" href="#noi-dung">Bỏ qua, tới nội dung</a>
 
-    @include('partials.site-header')
+    <div class="kpage">
+        @hasSection('header')
+            @yield('header')
+        @else
+            @include('partials.site-header')
+        @endif
 
-    <main id="noi-dung" class="site-main">
-        @yield('content')
-    </main>
+        <main id="noi-dung" class="kmain">
+            @yield('content')
+        </main>
 
-    @include('partials.site-footer')
+        @include('partials.site-footer')
+    </div>
 
     {{-- Chỗ gắn chatbot (độc lập). Mã nhúng do quản trị viên dán trong Cài đặt; để trống là không có chatbot. --}}
     <div id="viger-chatbot"></div>

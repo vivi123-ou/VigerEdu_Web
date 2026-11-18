@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Setting;
+use App\Modules\Assessment\Support\TestConfig;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -24,8 +25,9 @@ class PublicHomeTest extends TestCase
             ->assertOk()
             ->assertSee('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">', false)
             ->assertSee('<html lang="vi">', false)
-            ->assertSee('Bạn phù hợp với ngành học nào?')
-            ->assertSee('Miễn phí')
+            ->assertSee('Bạn hợp với hướng ngành nào khi')
+            ->assertSee('du học Đức?')
+            ->assertSee('36 câu hỏi ngắn')
             ->assertSee('Về trang chủ')
             ->assertSee('https://viger.edu.vn', false)
             ->assertSee('<div id="viger-chatbot"></div>', false);
@@ -42,15 +44,18 @@ class PublicHomeTest extends TestCase
             ->assertSee('Trung tâm Thử Nghiệm')
             ->assertSee('Tiêu đề do Thầy sửa')
             ->assertSee('https://vi-du.test', false)
-            ->assertDontSee('Bạn phù hợp với ngành học nào?');
+            ->assertDontSee('Bạn hợp với hướng ngành nào khi');
     }
 
-    public function test_home_page_does_not_show_question_count_or_time_limit(): void
+    public function test_question_count_on_the_start_page_follows_the_test_settings(): void
     {
+        TestConfig::save(['items_per_group' => 5] + TestConfig::current(), null, 'Đổi số câu');
+
         $this->get('/')
             ->assertOk()
-            ->assertDontSee('54')
-            ->assertDontSee('phút');
+            ->assertSee('30 câu hỏi ngắn')
+            ->assertDontSee('{so_cau}')
+            ->assertDontSee('giới hạn thời gian');
     }
 
     public function test_chatbot_embed_code_is_inserted_only_when_configured(): void
@@ -67,20 +72,5 @@ class PublicHomeTest extends TestCase
         $this->get('/')
             ->assertHeaderMissing('X-Robots-Tag')
             ->assertDontSee('noindex', false);
-    }
-
-    public function test_quiz_page_shows_approved_mockup_only_on_local_machine(): void
-    {
-        $this->get(route('test.show'))->assertOk()->assertDontSee('Bố cục luồng khách');
-
-        $this->app['env'] = 'local';
-        $this->get(route('test.show'))->assertOk()
-            ->assertSee('Bố cục luồng khách')
-            ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
-            ->assertDontSee('../../public/', false)
-            ->assertSee(route('test.show', ['mau' => 'trang-gioi-thieu']), false);
-
-        $this->get(route('test.show', ['mau' => 'trang-gioi-thieu']))->assertOk()->assertDontSee('404');
-        $this->get(route('test.show', ['mau' => '../../.env']))->assertOk()->assertDontSee('APP_KEY');
     }
 }
