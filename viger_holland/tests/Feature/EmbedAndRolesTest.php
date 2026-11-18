@@ -5,8 +5,16 @@ namespace Tests\Feature;
 use App\Models\AdminActivity;
 use App\Models\Setting;
 use App\Models\User;
+use App\Modules\Content\Filament\Pages\Appearance;
+use App\Modules\Content\Filament\Pages\EmbedBox;
+use App\Modules\Content\Filament\Pages\IntroPage;
+use App\Modules\Content\Filament\Pages\MediaLibrary;
+use App\Modules\Content\Filament\Pages\ReportTexts;
+use App\Modules\Content\Filament\Pages\SeoSettings;
+use App\Support\HistoryReverter;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -63,16 +71,17 @@ class EmbedAndRolesTest extends TestCase
             ->assertDontSee(route('filament.admin.resources.users.index'), false)
             ->assertDontSee(route('filament.admin.resources.roles.index'), false);
 
-        $this->get(route('admin.content.edit', 'intro'))->assertOk();
-        $this->get(route('admin.content.edit', 'embed'))->assertOk();
-        $this->get(route('admin.intro-blocks.index'))->assertOk();
-        $this->get(route('admin.media.index'))->assertOk();
+        $this->get(IntroPage::getUrl())->assertOk();
+        $this->get(EmbedBox::getUrl())->assertOk();
+        $this->get(ReportTexts::getUrl())->assertOk();
+        $this->get(MediaLibrary::getUrl())->assertOk();
 
         // Câu hỏi, cách bốc đề, tài khoản, giao diện chung: không có quyền → báo "không tìm thấy".
         $this->get(route('filament.admin.resources.questions.index'))->assertNotFound();
         $this->get(route('filament.admin.pages.test-settings'))->assertNotFound();
         $this->get(route('filament.admin.resources.users.index'))->assertNotFound();
-        $this->get(route('admin.content.edit', 'appearance'))->assertNotFound();
+        $this->get(Appearance::getUrl())->assertNotFound();
+        $this->get(SeoSettings::getUrl())->assertNotFound();
     }
 
     public function test_staff_cannot_revert_admin_only_changes(): void
@@ -80,10 +89,11 @@ class EmbedAndRolesTest extends TestCase
         $scoring = AdminActivity::record(AdminActivity::ACTION_UPDATE, 'settings.appearance', null, 'x', ['hotline' => null], ['hotline' => '0909']);
         $intro = AdminActivity::record(AdminActivity::ACTION_UPDATE, 'settings.intro', null, 'y', ['intro_title' => 'Cũ'], ['intro_title' => 'Mới']);
 
-        $this->actingAs(User::factory()->create(['role' => User::ROLE_STAFF]));
+        $this->actingAs($staff = User::factory()->create(['role' => User::ROLE_STAFF]));
 
-        $this->post(route('admin.history.revert', $scoring))->assertNotFound();
-        $this->post(route('admin.history.revert', $intro))->assertRedirect();
+        $this->assertFalse(HistoryReverter::allows($staff, $scoring));
+        $this->get(Appearance::getUrl())->assertNotFound();
+        Livewire::test(IntroPage::class)->callTableAction('revert', $intro);
         $this->assertSame('Cũ', Setting::where('key', 'intro_title')->value('value'));
     }
 }

@@ -4,9 +4,11 @@ namespace Tests\Feature\Admin;
 
 use App\Models\AdminActivity;
 use App\Models\User;
+use App\Modules\Content\Filament\Pages\IntroPage;
 use App\Support\IntroBlocks;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -68,7 +70,7 @@ class PageEditorTest extends TestCase
         $this->get(route('home'))->assertSee('Có mất phí không?');
 
         $intro = AdminActivity::where('subject_type', 'settings.intro')->sole();
-        $this->post(route('admin.history.revert', $intro));
+        Livewire::test(IntroPage::class)->callTableAction('revert', $intro);
         $this->assertSame('Bạn hợp với hướng ngành nào khi', setting('intro_title'));
     }
 

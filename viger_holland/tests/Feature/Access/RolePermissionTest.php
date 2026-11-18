@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Modules\Access\Models\Permission;
 use App\Modules\Access\Models\Role;
 use App\Modules\Access\Permissions;
+use App\Modules\Content\Filament\Pages\MediaLibrary;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\SettingSeeder;
 use Database\Seeders\TestConfigSeeder;
@@ -68,14 +69,14 @@ class RolePermissionTest extends TestCase
             ->assertDontSee('Câu hỏi trắc nghiệm')
             ->assertDontSee('Tài khoản nhân sự')
             ->assertDontSee('Phân quyền')
-            ->assertDontSee(route('admin.media.index'), false);
+            ->assertDontSee(MediaLibrary::getUrl(), false);
 
         $this->get(route('filament.admin.pages.tra-cuu-bao-cao'))->assertOk();
         $this->get(route('filament.admin.pages.khach-can-lien-lac'))->assertNotFound();
         $this->get(route('filament.admin.pages.sap-co', ['muc' => 'stats']))->assertNotFound();
         $this->get(route('filament.admin.pages.test-settings'))->assertNotFound();
         $this->get(route('filament.admin.resources.questions.index'))->assertNotFound();
-        $this->get(route('admin.media.index'))->assertNotFound();
+        $this->get(MediaLibrary::getUrl())->assertNotFound();
     }
 
     public function test_staff_reaches_contacts_and_customer_facing_pages_only(): void
@@ -84,7 +85,7 @@ class RolePermissionTest extends TestCase
 
         $this->get(route('filament.admin.pages.dashboard'))->assertOk()
             ->assertSee('Khách cần liên lạc')
-            ->assertSee(route('admin.media.index'), false)
+            ->assertSee(MediaLibrary::getUrl(), false)
             ->assertDontSee('Tra cứu báo cáo khách')
             ->assertDontSee('Số liệu làm bài')
             ->assertDontSee('Câu hỏi đang dùng')
@@ -93,7 +94,7 @@ class RolePermissionTest extends TestCase
             ->assertDontSee('Phân quyền')
             ->assertDontSee('Logo, màu, hotline');
 
-        $this->get(route('admin.media.index'))->assertOk();
+        $this->get(MediaLibrary::getUrl())->assertOk();
         $this->get(route('filament.admin.pages.khach-can-lien-lac'))->assertOk();
         $this->get(route('filament.admin.pages.tra-cuu-bao-cao'))->assertNotFound();
         $this->get(route('filament.admin.pages.test-settings'))->assertNotFound();

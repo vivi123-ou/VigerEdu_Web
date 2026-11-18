@@ -7,6 +7,7 @@ use App\Modules\Api\Filament\Pages\ApiClients;
 use App\Modules\Api\Models\ApiClient;
 use App\Modules\Assessment\Models\TestSession;
 use App\Modules\Assessment\Services\AssessmentService;
+use App\Modules\Content\Filament\Pages\SeoSettings;
 use App\Modules\Respondent\Services\ReportAccessService;
 use App\Modules\Respondent\Services\ReportForm;
 use Database\Seeders\DatabaseSeeder;
@@ -135,13 +136,13 @@ class HollandApiTest extends TestCase
     public function test_seo_page_saves_title_and_share_image(): void
     {
         $this->actingAs(User::factory()->create(['role' => User::ROLE_ADMIN]));
-        $this->get(route('admin.content.edit', 'seo'))->assertOk()->assertSee('Tiêu đề trên Google');
+        $this->get(SeoSettings::getUrl())->assertOk()->assertSee('Tiêu đề trên Google');
 
-        $this->put(route('admin.content.update', 'seo'), [
+        Livewire::test(SeoSettings::class)->fillForm([
             'seo_home_title' => 'Trắc nghiệm Holland miễn phí – VIGER EDU',
             'seo_home_description' => 'Mô tả mới.',
             'seo_share_image' => 'img/logo.png',
-        ])->assertSessionHasNoErrors();
+        ])->call('save')->assertHasNoFormErrors();
 
         $this->get('/')->assertSee('<title>Trắc nghiệm Holland miễn phí – VIGER EDU</title>', false)
             ->assertSee('<meta property="og:image"', false);

@@ -5,6 +5,6 @@
         <button type="button" data-ed-move="up" @disabled($first) title="Đưa khối lên trên">↑ Lên</button>
         <button type="button" data-ed-move="down" @disabled($last) title="Đưa khối xuống dưới">↓ Xuống</button>
         <button type="button" data-ed-toggle="{{ route('admin.intro-blocks.toggle', $block['id']) }}">{{ $block['enabled'] ? 'Ẩn khối' : 'Hiện khối' }}</button>
-        <a href="{{ route('admin.intro-blocks.edit', $block['id']) }}">Thêm / bớt dòng…</a>
+        <a href="{{ \App\Modules\Content\Filament\Pages\IntroPage::getUrl(['the' => 'khoi']) }}">Thêm / bớt dòng…</a>
     </span>
 </div>

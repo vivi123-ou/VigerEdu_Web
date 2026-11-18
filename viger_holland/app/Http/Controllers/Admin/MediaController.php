@@ -6,35 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Models\Media;
 use App\Services\ImageUploader;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use RuntimeException;
 
 /**
- * Thư viện ảnh: tải lên (tự thu nhỏ, nén), chọn lại ảnh cũ, xóa vào thùng rác.
- * Trả JSON khi được gọi từ hộp "Chọn ảnh" trong các form nội dung.
+ * Làm gì:   Hộp "Chọn ảnh" của chế độ "Sửa trực tiếp trên trang": danh sách ảnh trong kho, tải ảnh mới (tự thu nhỏ, nén). Trả JSON.
+ *           Trang quản lý Kho ảnh (xem lưới, xóa, khôi phục) là trang Filament App\Modules\Content\Filament\Pages\MediaLibrary.
+ * Ai gọi:   public/js/page-editor.js (resources/views/admin/media/picker.blade.php).
+ * Dữ liệu:  bảng media, App\Services\ImageUploader.
  */
 class MediaController extends Controller
 {
-    public function index(Request $request): View|JsonResponse
+    public function index(): JsonResponse
     {
         $media = Media::query()->latest('id')->paginate(48);
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'items' => $media->getCollection()->map(fn (Media $item) => $this->toJson($item))->values(),
-                'next' => $media->nextPageUrl(),
-            ]);
-        }
-
-        return view('admin.media.index', [
-            'media' => $media,
-            'trashed' => Media::onlyTrashed()->latest('deleted_at')->limit(24)->get(),
+        return response()->json([
+            'items' => $media->getCollection()->map(fn (Media $item) => $this->toJson($item))->values(),
+            'next' => $media->nextPageUrl(),
         ]);
     }
 
-    public function store(Request $request, ImageUploader $uploader): RedirectResponse|JsonResponse
+    public function store(Request $request, ImageUploader $uploader): JsonResponse
     {
         $request->validate([
             'files' => ['required', 'array', 'max:20'],
@@ -50,31 +43,11 @@ class MediaController extends Controller
             try {
                 $saved[] = $uploader->store($file);
             } catch (RuntimeException $exception) {
-                return $request->wantsJson()
-                    ? response()->json(['message' => $exception->getMessage()], 422)
-                    : back()->withErrors(['file' => $exception->getMessage()]);
+                return response()->json(['message' => $exception->getMessage()], 422);
             }
         }
 
-        if ($request->wantsJson()) {
-            return response()->json(['items' => array_map(fn (Media $item) => $this->toJson($item), $saved)]);
-        }
-
-        return back()->with('status', 'Đã tải lên '.count($saved).' ảnh.');
-    }
-
-    public function destroy(Media $media): RedirectResponse
-    {
-        $media->delete();
-
-        return back()->with('status', 'Đã đưa ảnh vào thùng rác. Trang nào đang dùng ảnh này vẫn hiện bình thường.');
-    }
-
-    public function restore(int $id): RedirectResponse
-    {
-        Media::onlyTrashed()->findOrFail($id)->restore();
-
-        return back()->with('status', 'Đã khôi phục ảnh.');
+        return response()->json(['items' => array_map(fn (Media $item) => $this->toJson($item), $saved)]);
     }
 
     /**

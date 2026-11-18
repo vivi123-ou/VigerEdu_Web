@@ -10,6 +10,12 @@ use App\Modules\Assessment\Filament\Pages\MajorsCatalog;
 use App\Modules\Assessment\Filament\Pages\TestSettings;
 use App\Modules\Assessment\Filament\Pages\TestStats;
 use App\Modules\Assessment\Filament\Resources\Questions\QuestionResource;
+use App\Modules\Content\Filament\Pages\Appearance;
+use App\Modules\Content\Filament\Pages\EmbedBox;
+use App\Modules\Content\Filament\Pages\IntroPage;
+use App\Modules\Content\Filament\Pages\MediaLibrary;
+use App\Modules\Content\Filament\Pages\ReportTexts;
+use App\Modules\Content\Filament\Pages\SeoSettings;
 use App\Modules\CrmSync\Filament\Pages\CrmConnection;
 use App\Modules\Respondent\Filament\Pages\ContactsToCall;
 use App\Modules\Respondent\Filament\Pages\CustomersList;
@@ -32,7 +38,7 @@ use App\Modules\Schools\Filament\Pages\SchoolsCatalog;
 |   'help'       nội dung nút "?": 'intro' + các bước [việc muốn làm, cách làm] + 'note';
 |   'stage'      giai đoạn sẽ làm → hiện nhãn "Sắp có", bấm vào mở trang "Đang làm";
 |   'page'       trang Filament của mục (resource / page);
-|   'route' / 'params'  trang làm từ trước (chưa chuyển sang Filament, sẽ chuyển ở H6);
+|   'route' / 'params'  (dự phòng) trang không phải Filament;
 |   'shortcut'   true = hiện thành ô lối tắt ở Trang chủ quản trị (nếu người đó có quyền).
 | Trang của tư vấn viên, nhân viên không ghi ra họ bị giới hạn gì (Vân chốt 17/11).
 |
@@ -210,30 +216,33 @@ return [
             ],
         ],
 
-        // ---- Trang khách xem (trang làm từ trước, sẽ chuyển sang Filament ở H6) ----
+        // ---- Trang khách xem ----
         'intro' => [
             'group' => 'Trang khách xem', 'label' => 'Trang mở đầu', 'icon' => 'heroicon-o-pencil-square',
-            'permission' => 'content.manage', 'route' => 'admin.page-editor.show', 'params' => ['page' => 'trang-gioi-thieu'], 'shortcut' => true,
-            'summary' => 'Sửa chữ, ảnh trang khách thấy đầu tiên, như soạn văn bản.',
+            'permission' => 'content.manage', 'shortcut' => true,
+            'page' => IntroPage::class,
+            'summary' => 'Sửa chữ, ảnh trang khách thấy đầu tiên: dạng biểu mẫu hoặc sửa thẳng trên trang.',
             'help' => [
-                'intro' => 'Trang mở ra đúng như khách thấy, bạn sửa ngay trên đó.',
+                'intro' => 'Trang khách thấy đầu tiên gồm phần banner và các khối nội dung bên dưới. Có hai cách sửa: điền biểu mẫu ở đây, hoặc bấm "Sửa trực tiếp trên trang" để sửa ngay trên trang như khách thấy.',
                 'steps' => [
-                    ['Sửa chữ', 'bấm vào chữ có viền chấm rồi gõ.'],
-                    ['Đổi ảnh', 'bấm vào ảnh, chọn ảnh từ kho ảnh.'],
-                    ['Đổi thứ tự, ẩn một khối', 'dùng nút Lên / Xuống / Ẩn trên khối đó.'],
-                    ['Lưu', 'bấm "Lưu thay đổi" trên thanh đen ở đầu trang.'],
+                    ['Sửa tiêu đề, giới thiệu, nút, ảnh banner', 'thẻ "Banner": sửa ô cần sửa, bấm "Xem trước" để xem ở thẻ mới, vừa ý thì bấm "Lưu".'],
+                    ['Thêm, xóa, đổi thứ tự khối', 'thẻ "Các khối nội dung": bấm "Thêm khối", kéo biểu tượng ⋮⋮ để đổi thứ tự, bấm thùng rác để xóa, rồi bấm "Lưu các khối".'],
+                    ['Ẩn / hiện một khối', 'mở khối, bật hoặc tắt "Hiện khối này trên trang mở đầu", bấm "Lưu các khối".'],
+                    ['Sửa ngay trên trang', 'bấm "Sửa trực tiếp trên trang", bấm vào chữ có viền chấm rồi gõ, xong bấm "Lưu thay đổi" trên thanh đen.'],
+                    ['Lưu nhầm', 'kéo xuống "Lịch sử thay đổi", bấm "Quay lại bản này".'],
                 ],
             ],
         ],
         'report-pages' => [
             'group' => 'Trang khách xem', 'label' => 'Chữ trên báo cáo & email', 'icon' => 'heroicon-o-envelope',
-            'permission' => 'content.manage', 'route' => 'admin.content.edit', 'params' => ['page' => 'report'],
+            'permission' => 'content.manage',
+            'page' => ReportTexts::class,
             'summary' => 'Chữ trên trang làm bài, kết quả, form thông tin, mã xác nhận, báo cáo và email.',
             'help' => [
                 'intro' => 'Mọi câu chữ khách đọc từ lúc làm bài đến lúc xem báo cáo đầy đủ, và email gửi mã xác nhận.',
                 'steps' => [
                     ['Sửa một câu', 'tìm câu ở đúng phần (Trang làm bài, Kết quả sơ lược, Báo cáo đầy đủ…), sửa rồi bấm "Lưu".'],
-                    ['Lưu nhầm', 'kéo xuống phần lịch sử, bấm "Quay lại bản cũ".'],
+                    ['Lưu nhầm', 'kéo xuống "Lịch sử thay đổi", bấm "Quay lại bản này".'],
                     ['Chữ trong ngoặc nhọn như {email}, {phut}', 'giữ nguyên, phần mềm tự thay bằng email, số phút thật.'],
                 ],
                 'note' => 'Lời giải thích 6 nhóm, 15 cặp mã sửa ở "Giải thích các mã Holland".',
@@ -241,38 +250,45 @@ return [
         ],
         'embed' => [
             'group' => 'Trang khách xem', 'label' => 'Ô giới thiệu trên viger.edu.vn', 'icon' => 'heroicon-o-globe-alt',
-            'permission' => 'content.manage', 'route' => 'admin.content.edit', 'params' => ['page' => 'embed'],
+            'permission' => 'content.manage',
+            'page' => EmbedBox::class,
             'summary' => 'Ô mời khách làm bài trắc nghiệm hiện trên web chính viger.edu.vn.',
             'help' => [
                 'intro' => 'Trên web chính viger.edu.vn có một ô mời khách làm bài trắc nghiệm. Sửa chữ, ảnh ở đây rồi bấm "Lưu" là ô trên web chính đổi theo, không cần nhờ người làm web chính.',
                 'steps' => [
                     ['Đổi tiêu đề, mô tả, chữ trên nút', 'sửa các ô ở phần "Nội dung khối".'],
-                    ['Đổi ảnh', 'bấm "Chọn ảnh" để lấy ảnh từ kho ảnh.'],
-                    ['Xem trước', 'bấm "Xem trước" để xem ô sẽ hiện thế nào.'],
+                    ['Đổi ảnh', 'bấm vào ô "Ảnh" để chọn ảnh trong kho, hoặc bấm nút tải lên bên cạnh để tải ảnh mới.'],
+                    ['Xem trước', 'bấm "Xem trước" để mở ô ở thẻ mới (chưa lưu).'],
                 ],
             ],
         ],
         'media' => [
             'group' => 'Trang khách xem', 'label' => 'Kho ảnh', 'icon' => 'heroicon-o-photo',
-            'permission' => 'content.manage', 'route' => 'admin.media.index', 'shortcut' => true,
+            'permission' => 'content.manage', 'shortcut' => true,
+            'page' => MediaLibrary::class,
             'summary' => 'Tải ảnh banner, ảnh minh họa lên để dùng ở các trang.',
             'help' => [
                 'intro' => 'Nơi chứa ảnh dùng trên các trang khách xem.',
                 'steps' => [
-                    ['Tải ảnh lên', 'bấm "Chọn ảnh", chọn ảnh trong máy. Ảnh lớn sẽ tự được thu nhỏ.'],
-                    ['Dùng ảnh ở một trang', 'ở trang cần sửa, bấm "Chọn ảnh" rồi chọn ảnh trong kho.'],
+                    ['Tải ảnh lên', 'bấm "Chọn ảnh" ở góc trên, chọn một hoặc nhiều ảnh trong máy, bấm "Tải lên". Ảnh lớn sẽ tự được thu nhỏ.'],
+                    ['Dùng ảnh ở một trang', 'ở trang cần sửa, bấm vào ô ảnh rồi chọn ảnh trong danh sách (gõ tên ảnh để tìm).'],
+                    ['Xóa ảnh', 'bấm "Xóa" dưới ảnh. Ảnh vào thùng rác; trang nào đang dùng ảnh đó vẫn hiện bình thường.'],
+                    ['Lấy lại ảnh đã xóa', 'chọn bộ lọc "Thùng rác" → "Chỉ ảnh trong thùng rác", bấm "Khôi phục".'],
                 ],
             ],
         ],
         'appearance' => [
             'group' => 'Trang khách xem', 'label' => 'Logo, màu, hotline, chân trang', 'icon' => 'heroicon-o-swatch',
-            'permission' => 'appearance.manage', 'route' => 'admin.content.edit', 'params' => ['page' => 'appearance'], 'shortcut' => true,
+            'permission' => 'appearance.manage', 'shortcut' => true,
+            'page' => Appearance::class,
             'summary' => 'Số hotline, địa chỉ, logo, màu hiện trên mọi trang khách xem.',
             'help' => [
                 'intro' => 'Thông tin hiện ở đầu và chân mọi trang khách xem.',
                 'steps' => [
-                    ['Đổi hotline, địa chỉ, email', 'sửa ở phần chân trang rồi bấm "Lưu".'],
-                    ['Đổi logo', 'bấm "Chọn ảnh" ở ô logo.'],
+                    ['Đổi hotline, địa chỉ, email', 'sửa ở phần "Chân trang", bấm "Xem trước" để xem, rồi bấm "Lưu".'],
+                    ['Đổi logo', 'bấm vào ô "Logo" để chọn ảnh trong kho, hoặc bấm nút tải lên bên cạnh để tải logo mới.'],
+                    ['Đổi màu', 'bấm vào ô màu để chọn trên bảng màu, hoặc gõ mã màu như #c1121f.'],
+                    ['Lưu nhầm', 'kéo xuống "Lịch sử thay đổi", bấm "Quay lại bản này".'],
                 ],
             ],
         ],
@@ -309,13 +325,14 @@ return [
         ],
         'seo' => [
             'group' => 'Quản lý hệ thống', 'label' => 'Hiển thị trên Google', 'icon' => 'heroicon-o-magnifying-glass-circle',
-            'permission' => 'appearance.manage', 'route' => 'admin.content.edit', 'params' => ['page' => 'seo'],
+            'permission' => 'appearance.manage',
+            'page' => SeoSettings::class,
             'summary' => 'Tiêu đề, mô tả trang khi hiện trên Google và khi chia sẻ link.',
             'help' => [
                 'intro' => 'Chữ hiện trên Google và khi dán link trang làm bài lên Facebook, Zalo. Chỉ trang bắt đầu hiện trên Google; trang làm bài, báo cáo, quản trị luôn bị ẩn.',
                 'steps' => [
                     ['Đổi tiêu đề, mô tả', 'sửa 2 ô rồi bấm "Lưu". Google cập nhật sau vài ngày.'],
-                    ['Đổi ảnh khi chia sẻ link', 'bấm "Chọn ảnh" ở ô "Ảnh khi chia sẻ link".'],
+                    ['Đổi ảnh khi chia sẻ link', 'bấm vào ô "Ảnh khi chia sẻ link" để chọn ảnh trong kho, hoặc bấm nút tải lên bên cạnh.'],
                 ],
             ],
         ],

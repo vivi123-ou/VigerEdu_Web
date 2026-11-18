@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Modules\Access\Filament\Resources\Users\Pages\ListUsers;
 use App\Modules\Assessment\Filament\Pages\TestSettings;
 use App\Modules\Assessment\Filament\Resources\Questions\Pages\ListQuestions;
+use App\Modules\Content\Filament\Pages\IntroPage;
+use App\Modules\Content\Filament\Pages\MediaLibrary;
 use App\Support\AdminMenu;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\SettingSeeder;
@@ -17,7 +19,7 @@ use Tests\TestCase;
 
 /**
  * Khung khu quản trị (F2): menu đặt tên theo việc làm, nhóm đúng thứ tự, nhãn "Sắp có", ô lối tắt, nút "?" hướng dẫn
- * trên mọi trang, thanh trên có tên và vai trò; các trang cũ vẫn mở được và có đường về trang quản trị.
+ * trên mọi trang, thanh trên có tên và vai trò; mọi mục menu là trang Filament (không còn giao diện cũ).
  */
 class AdminLayoutTest extends TestCase
 {
@@ -88,24 +90,17 @@ class AdminLayoutTest extends TestCase
         Livewire::test(ListUsers::class)->assertActionExists('help')->mountAction('help')->assertMountedActionModalSee('Người nghỉ việc');
     }
 
-    public function test_old_content_pages_still_open_with_link_back_and_plain_names(): void
+    public function test_content_pages_are_filament_pages_with_help_and_no_old_layout_left(): void
     {
-        $this->get(route('admin.media.index'))
-            ->assertOk()
-            ->assertSee('Kho ảnh')
-            ->assertSee('Về trang quản trị')
+        Livewire::test(IntroPage::class)->assertActionExists('help')->mountAction('help')->assertMountedActionModalSee('Sửa ngay trên trang');
+        Livewire::test(MediaLibrary::class)->assertActionExists('help')->mountAction('help')->assertMountedActionModalSee('Lấy lại ảnh đã xóa');
+
+        $this->get(MediaLibrary::getUrl())->assertOk()->assertSee('Kho ảnh')
             ->assertSee(route('filament.admin.pages.dashboard'), false)
-            ->assertSee(route('filament.admin.auth.logout'), false);
-    }
+            ->assertDontSee('css/admin.css', false);
 
-    public function test_embed_code_is_tucked_away_for_admin_and_hidden_for_staff(): void
-    {
-        $this->get(route('admin.content.edit', 'embed'))->assertOk()
-            ->assertSee('Dành cho người làm web chính')->assertSee('embed.js', false);
-
-        $this->actingAs(User::factory()->create(['role' => User::ROLE_STAFF]));
-        $this->get(route('admin.content.edit', 'embed'))->assertOk()
-            ->assertDontSee('Dành cho người làm web chính')->assertDontSee('embed.js', false);
+        $this->assertFalse(view()->exists('layouts.admin'), 'Không còn giao diện quản trị cũ');
+        AdminMenu::items()->each(fn (array $item) => $this->assertArrayHasKey('page', $item, "Mục {$item['key']} là trang Filament"));
     }
 
     public function test_unknown_admin_page_returns_404(): void

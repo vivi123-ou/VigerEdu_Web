@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Filament\Pages\IntroPage;
 use App\Support\PageEditor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,17 +16,16 @@ use Illuminate\Http\Response;
  */
 class PageEditorController extends Controller
 {
-    /** Trang sửa được => [tên, mục menu (quyền), trang biểu mẫu tương ứng]. */
+    /** Trang sửa được => [tên, mục menu (quyền), trang Filament dạng biểu mẫu tương ứng]. */
     public const PAGES = [
-        'trang-gioi-thieu' => ['Trang mở đầu', 'intro', 'admin.content.edit:intro'],
+        'trang-gioi-thieu' => ['Trang mở đầu', 'intro', IntroPage::class],
     ];
 
     public function show(Request $request, string $page): Response
     {
-        [$title, $menuKey, $formRoute] = self::PAGES[$page] ?? abort(404);
+        [$title, $menuKey, $formPage] = self::PAGES[$page] ?? abort(404);
         abort_unless($request->user()->canAccessMenu($menuKey), 403, 'Tài khoản của bạn không có quyền vào mục này.');
 
-        [$formName, $formPage] = explode(':', $formRoute);
         PageEditor::start();
 
         try {
@@ -34,7 +34,7 @@ class PageEditorController extends Controller
             $toolbar = view('admin.page-editor.toolbar', [
                 'pageKey' => $page,
                 'title' => $title,
-                'formUrl' => route($formName, $formPage),
+                'formUrl' => $formPage::getUrl(),
                 'viewUrl' => route('home'),
                 'isEmail' => false,
             ])->render();

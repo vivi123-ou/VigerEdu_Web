@@ -35,7 +35,7 @@
 
 - **Laravel 13, PHP ≥ 8.3**, MySQL (production) / SQLite (test).
   - **Trang khách:** Blade + CSS/JS thuần (không Tailwind, không SPA), theo `docs/mau_giao_dien/`.
-  - **Trang quản trị `/admin`:** **Filament v5** (có Livewire, Tailwind riêng của Filament). Panel ở `app/Providers/Filament/AdminPanelProvider.php`. Trang của từng module nằm ở `app/Modules/<Module>/Filament/`. Quyền kiểm tra bằng Policy (`app/Modules/*/Policies`). Các trang nội dung cũ (sửa trang giới thiệu, nhúng, giao diện, thư viện ảnh) chuyển dần sang Filament ở H6.
+  - **Trang quản trị `/admin`:** **Filament v5** (có Livewire, Tailwind riêng của Filament). Panel ở `app/Providers/Filament/AdminPanelProvider.php`. Trang của từng module nằm ở `app/Modules/<Module>/Filament/`. Quyền kiểm tra bằng Policy (`app/Modules/*/Policies`). Các trang nội dung (Trang mở đầu, Chữ trên báo cáo, Ô giới thiệu, Kho ảnh, Logo…, Google) đã chuyển sang Filament (module `Content`, 18/11); chỉ "Sửa trực tiếp trên trang" vẫn là trang khách ở chế độ sửa.
 - Package ngoài Laravel: **`filament/filament` v5 và `openspout/openspout` v4** (Filament cần bản 4). Plugin Filament hoặc package khác: **hỏi tôi trước**. Chỉ chọn plugin có tác giả uy tín, còn cập nhật, hỗ trợ đúng bản Filament. Chạy `composer audit` định kỳ.
 - Thông báo kiểm tra dữ liệu tiếng Việt ở `lang/vi/validation.php`. Không để lộ mã `validation.*` cho người dùng.
 - Git (từ 18/11): **repo chung `VigerEdu_Web` (riêng tư)** gồm 4 thư mục `viger_web/` (Tuấn), `viger_holland/` (repo này), `viger_crm/`, `viger_chatbot/`; máy Vân: `D:\OU\VigerEdu_Web`. Làm Holland trên nhánh `feature/holland-v3` (tách từ `gom-4-thu-muc`), chỉ sửa trong `viger_holland/` (sửa thư mục khác phải hỏi), commit theo giai đoạn, message tiếng Việt, **không ghi Claude cùng đóng góp**. **Không push, không merge** khi Vân chưa bảo. Không commit `.env`. Repo cũ `VigerEdu_Holland` chỉ để lưu.
@@ -95,7 +95,7 @@
 - [x] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
 - [x] H4. Module Respondent: form thông tin, OTP email, báo cáo đầy đủ (xem trong thẻ, không email link); admin: tra cứu báo cáo khách + báo cáo nội bộ, khách cần liên lạc, chữ trên báo cáo & email
 - [x] H5. Module CrmSync + Tracking: outbox, job, thử lại, trang "Gửi khách sang CRM", hành vi khách
-- [x] H6. Admin (Filament): danh mục (giải thích mã, ngành, nghề, trường & vùng), form khách điền, danh sách khách + Excel, số liệu, lịch sử thao tác. Các trang nội dung cũ (Trang mở đầu, Ô giới thiệu, Kho ảnh, Logo…, Chữ trên báo cáo, Hiển thị trên Google) vẫn dùng khung cũ, chạy tốt, chuyển sang Filament khi cần
+- [x] H6. Admin (Filament): danh mục (giải thích mã, ngành, nghề, trường & vùng), form khách điền, danh sách khách + Excel, số liệu, lịch sử thao tác. Các trang nội dung (Trang mở đầu, Ô giới thiệu, Kho ảnh, Logo…, Chữ trên báo cáo, Hiển thị trên Google) đã chuyển sang Filament (18/11), bỏ khung quản trị cũ
 - [x] H7. API cho chatbot (`docs/API_HOLLAND.md`), sao lưu hằng đêm, Hiển thị trên Google, tài liệu (`SO_TAY_SU_DUNG.md`, `NGHIEM_THU.md`)
 
 **Chỉ làm một giai đoạn mỗi lần.** Không sửa file ngoài phạm vi giai đoạn; cần sửa thì hỏi trước.

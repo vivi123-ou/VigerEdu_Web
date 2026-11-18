@@ -4,7 +4,10 @@ namespace App\Support;
 
 use App\Models\AdminActivity;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Các khối nội dung của trang giới thiệu, lưu trong settings.intro_blocks (JSON):
@@ -67,6 +70,56 @@ final class IntroBlocks
     public static function typeLabel(string $type): string
     {
         return self::TYPES[$type][0] ?? $type;
+    }
+
+    /**
+     * Kiểm tra + chuẩn hóa nội dung một khối theo loại (bỏ dòng trống, lọc HTML, tự thêm https:// cho link nút).
+     *
+     * @param  array<string, mixed>  $input
+     * @return array<string, mixed>
+     *
+     * @throws ValidationException
+     */
+    public static function normalize(string $type, array $input): array
+    {
+        $input['items'] = array_values((array) ($input['items'] ?? []));
+        $input['button_url'] = LinkNormalizer::normalize($input['button_url'] ?? null);
+        $title = 'Khối "'.(trim((string) ($input['title'] ?? '')) ?: self::typeLabel($type)).'"';
+
+        $rules = ['title' => ['nullable', 'string', 'max:150']] + match ($type) {
+            'steps' => ['items' => ['array', 'max:8'], 'items.*.title' => ['nullable', 'string', 'max:150'], 'items.*.text' => ['nullable', 'string', 'max:500'], 'note' => ['nullable', 'string', 'max:300'], 'in_hero' => ['nullable', 'boolean']],
+            'groups' => ['intro' => ['nullable', 'string', 'max:1500']],
+            'text_image' => ['body' => ['nullable', 'string', 'max:20000'], 'image' => ['nullable', 'string', 'max:255', 'regex:#^((img|storage)/[A-Za-z0-9_\-./]+|https://\S+)$#'],
+                'image_alt' => ['nullable', 'string', 'max:150'], 'image_side' => ['nullable', Rule::in(['left', 'right'])],
+                'button_text' => ['nullable', 'string', 'max:60'], 'button_url' => ['nullable', 'required_with:button_text', 'url:http,https', 'max:255']],
+            'faq' => ['items' => ['array', 'max:30'], 'items.*.question' => ['nullable', 'string', 'max:300'], 'items.*.answer' => ['nullable', 'string', 'max:5000']],
+            'testimonials' => ['items' => ['array', 'max:20'], 'items.*.quote' => ['nullable', 'string', 'max:800'], 'items.*.name' => ['nullable', 'string', 'max:100'], 'items.*.role' => ['nullable', 'string', 'max:100']],
+            default => [],
+        };
+
+        $data = Validator::make($input, $rules, [
+            'button_url.url' => $title.': địa chỉ nút chưa đúng. Ví dụ: viger.edu.vn/du-hoc-duc',
+            'button_url.required_with' => $title.': có chữ trên nút thì cần nhập địa chỉ nút.',
+            'image.regex' => $title.': ảnh chưa đúng, vui lòng chọn lại.',
+            'max' => $title.': nội dung quá dài.',
+        ])->validate();
+
+        $data['title'] = trim((string) ($data['title'] ?? ''));
+        $rows = fn (string $first) => collect($data['items'] ?? [])->filter(fn ($row) => filled($row[$first] ?? null))->values();
+
+        return match ($type) {
+            'steps' => ['title' => $data['title'], 'in_hero' => (bool) ($data['in_hero'] ?? false), 'note' => trim((string) ($data['note'] ?? '')),
+                'items' => $rows('title')->map(fn ($row) => ['title' => trim($row['title']), 'text' => trim((string) ($row['text'] ?? ''))])->all()],
+            'groups' => ['title' => $data['title'], 'intro' => trim((string) ($data['intro'] ?? ''))],
+            'text_image' => ['title' => $data['title'], 'body' => HtmlSanitizer::clean($data['body'] ?? ''), 'image' => $data['image'] ?? '',
+                'image_alt' => trim((string) ($data['image_alt'] ?? '')), 'image_side' => $data['image_side'] ?? 'right',
+                'button_text' => trim((string) ($data['button_text'] ?? '')), 'button_url' => trim((string) ($data['button_url'] ?? ''))],
+            'faq' => ['title' => $data['title'],
+                'items' => $rows('question')->map(fn ($row) => ['question' => trim($row['question']), 'answer' => HtmlSanitizer::clean($row['answer'] ?? '')])->all()],
+            'testimonials' => ['title' => $data['title'],
+                'items' => $rows('quote')->map(fn ($row) => ['quote' => trim($row['quote']), 'name' => trim((string) ($row['name'] ?? '')), 'role' => trim((string) ($row['role'] ?? ''))])->all()],
+            default => ['title' => $data['title']],
+        };
     }
 
     /**

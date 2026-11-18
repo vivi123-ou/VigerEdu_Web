@@ -30,8 +30,15 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | ✅ Xong (18/11) |
 | H4. Form thông tin, OTP email, báo cáo đầy đủ | ✅ Xong (18/11): H4a phía khách, H4b admin |
 | H5. CrmSync + Tracking | ✅ Xong (18/11) |
-| H6. Admin (Filament): danh mục, trường & vùng, form, danh sách khách, số liệu, lịch sử | ✅ Xong (18/11) |
+| H6. Admin (Filament): danh mục, trường & vùng, form, danh sách khách, số liệu, lịch sử, trang nội dung | ✅ Xong (18/11) |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | ✅ Xong (18/11), chờ nghiệm thu |
+
+### Trang nội dung chuyển sang Filament (18/11/2026, Thầy đã duyệt)
+
+- Module mới `app/Modules/Content`: **Trang mở đầu** (thẻ Banner + thẻ Các khối nội dung: thêm, kéo thả thứ tự, bật / tắt, xóa, xem trước), **Chữ trên báo cáo & email**, **Ô giới thiệu trên viger.edu.vn** (quản trị viên thấy đoạn mã cho web chính, thu gọn), **Kho ảnh** (tải nhiều ảnh, lưới, chép link, thùng rác + khôi phục), **Logo, màu, hotline, chân trang** (bảng màu), **Hiển thị trên Google**.
+- Nền chung `ContentSettingsPage`: ô lấy từ `config/admin_content.php` như cũ (thêm ô = thêm một dòng), "Lưu", "Xem trước" mở thẻ mới (chưa lưu, chỉ người bấm mở được), bảng "Lịch sử thay đổi" + "Quay lại bản này" (nhân viên chỉ quay lại trang mình được vào). Ô ảnh: chọn trong kho có hình nhỏ, hoặc tải ảnh mới ngay cạnh ô.
+- Giữ "Sửa trực tiếp trên trang" (trang khách ở chế độ sửa), nút của nó trỏ về trang Filament. Bỏ khung quản trị cũ (`layouts/admin`, `admin.css`, `admin.js`, `ContentController`, `HistoryController`, view cũ). Mọi mục menu giờ là trang Filament.
+- Không thêm package. 164 test đạt.
 
 ### H6 + H7 đã làm (18/11/2026)
 
@@ -46,7 +53,7 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 - Link khối giới thiệu cho web chính dùng `utm_source=viger.edu.vn` (thống nhất với menu web chính).
 - **Kiểm thử: 163/163 đạt.**
 
-**Còn lại / chờ:** chuyển các trang nội dung cũ sang Filament (đang chạy tốt, chỉ khác giao diện); xác thực 2 lớp cho quản trị viên; liên kết ngành – nghề sửa trên admin; "trường có ngành này" (chờ file trường ↔ ngành); các mục "Trước khi chạy thật" trong `docs/NGHIEM_THU.md`.
+**Còn lại / chờ:** xác thực 2 lớp cho quản trị viên; liên kết ngành – nghề sửa trên admin; "trường có ngành này" (chờ file trường ↔ ngành); các mục "Trước khi chạy thật" trong `docs/NGHIEM_THU.md`.
 
 ### Repo chung (18/11/2026)
 

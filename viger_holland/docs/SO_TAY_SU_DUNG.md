@@ -30,11 +30,13 @@ Ghi chú cuộc gọi, lịch hẹn: làm ở CRM.
 |---|---|
 | Gọi khách mới | **Khách cần liên lạc** → bấm số điện thoại để gọi, hoặc nút "Zalo"; thẻ Hôm nay / Hôm qua / Tất cả; tìm theo tên (không cần dấu) hoặc số |
 | Chuyển khách cho tư vấn viên | Đọc "Mã báo cáo" ở cột thứ hai cho tư vấn viên tra cứu |
-| Sửa chữ, ảnh trang bắt đầu | **Trang mở đầu** → bấm vào chữ có viền chấm để sửa → "Lưu thay đổi" |
+| Sửa chữ, ảnh trang bắt đầu | **Trang mở đầu** → thẻ "Banner" sửa ô cần sửa → "Xem trước" → "Lưu". Hoặc bấm "Sửa trực tiếp trên trang" → bấm vào chữ có viền chấm để gõ → "Lưu thay đổi" |
+| Thêm, ẩn, đổi thứ tự khối dưới banner (câu hỏi thường gặp, cảm nhận…) | **Trang mở đầu** → thẻ "Các khối nội dung" → "Thêm khối" / kéo ⋮⋮ / bật tắt "Hiện khối này" → "Lưu các khối" |
 | Sửa chữ trang làm bài, báo cáo, email gửi mã | **Chữ trên báo cáo & email** → sửa ô cần sửa → "Lưu". Giữ nguyên chữ trong ngoặc nhọn như `{email}`, `{phut}` |
 | Đổi ô giới thiệu trên viger.edu.vn | **Ô giới thiệu trên viger.edu.vn** → sửa → "Xem trước" → "Lưu" |
-| Tải ảnh | **Kho ảnh** → "Chọn ảnh" |
-| Lưu nhầm | Cuối trang có "Lịch sử thay đổi" → "Quay lại bản này" |
+| Tải ảnh | **Kho ảnh** → "Chọn ảnh" (chọn nhiều ảnh một lần). Ở các trang khác: bấm vào ô ảnh để chọn, hoặc nút tải lên bên cạnh ô |
+| Lấy lại ảnh đã xóa | **Kho ảnh** → bộ lọc "Thùng rác" → "Khôi phục" |
+| Lưu nhầm | Cuối trang có "Lịch sử thay đổi" → "Quay lại bản này" (nhân viên chỉ quay lại được trang mình được sửa) |
 
 ## 4. Quản trị viên
 

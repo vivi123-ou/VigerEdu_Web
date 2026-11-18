@@ -6,13 +6,13 @@ use App\Models\AdminActivity;
 use App\Models\User;
 use App\Modules\Assessment\Models\TestSession;
 use App\Modules\Assessment\Services\AssessmentService;
+use App\Modules\Content\Filament\Pages\ReportTexts;
 use App\Modules\Respondent\Filament\Pages\ContactsToCall;
 use App\Modules\Respondent\Filament\Pages\InternalReportPage;
 use App\Modules\Respondent\Filament\Pages\LookupReports;
 use App\Modules\Respondent\Services\ReportAccessService;
 use App\Modules\Respondent\Services\ReportForm;
 use App\Modules\Respondent\Support\InternalReport;
-use App\Support\ContentPages;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -148,11 +148,11 @@ class AdminCustomerPagesTest extends TestCase
         $this->actingAs($this->user(User::ROLE_STAFF));
         $this->get(LookupReports::getUrl())->assertNotFound();
         $this->get(InternalReportPage::getUrl(['ma' => $session->uuid]))->assertNotFound();
-        $this->get(route('admin.content.edit', 'report'))->assertOk();
+        $this->get(ReportTexts::getUrl())->assertOk();
 
         $this->actingAs($this->user(User::ROLE_COUNSELOR));
         $this->get(ContactsToCall::getUrl())->assertNotFound();
-        $this->get(route('admin.content.edit', 'report'))->assertNotFound();
+        $this->get(ReportTexts::getUrl())->assertNotFound();
         $this->get(LookupReports::getUrl())->assertOk()->assertDontSee('30 lần')->assertDontSee('ghi lại');
     }
 
@@ -160,18 +160,17 @@ class AdminCustomerPagesTest extends TestCase
     {
         $this->actingAs($this->user(User::ROLE_STAFF));
 
-        $this->get(route('admin.content.edit', 'report'))->assertOk()
+        $this->get(ReportTexts::getUrl())->assertOk()
             ->assertSeeInOrder(['Trang làm bài', 'Kết quả sơ lược', 'Form thông tin', 'Mã xác nhận', 'Email gửi mã', 'Báo cáo đầy đủ', 'Báo cáo đã đóng'])
             ->assertDontSee('Xem trước');
 
-        $values = collect(ContentPages::fields(config('admin_content.report')))
-            ->mapWithKeys(fn (array $field) => [$field['key'] => (string) setting($field['key'])])->all();
-        $this->put(route('admin.content.update', 'report'), ['report_kicker' => 'Bản đồ sở thích của bạn', 'quiz_next_text' => 'Trang sau'] + $values)
-            ->assertSessionHasNoErrors();
+        Livewire::test(ReportTexts::class)
+            ->fillForm(['report_kicker' => 'Bản đồ sở thích của bạn', 'quiz_next_text' => 'Trang sau'])
+            ->call('save')
+            ->assertHasNoFormErrors();
 
         $this->assertSame('Bản đồ sở thích của bạn', setting('report_kicker'));
         $this->assertSame('Trang sau', setting('quiz_next_text'));
-        $this->post(route('admin.content.preview', 'report'))->assertNotFound();
     }
 
     /**
