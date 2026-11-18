@@ -63,7 +63,7 @@ class ReportFlowTest extends TestCase
         $this->withSession(['holland.test' => $session->uuid])->get(route('report.request'))->assertRedirect(route('test.show'));
     }
 
-    public function test_form_has_the_agreed_fields_with_parent_phone_required_and_no_consent_sentence(): void
+    public function test_form_has_the_agreed_fields_with_parent_phone_required_and_a_consent_sentence(): void
     {
         $this->finished();
 
@@ -72,7 +72,8 @@ class ReportFlowTest extends TestCase
             ->assertSee('Cập nhật thông tin để xem báo cáo đầy đủ')
             ->assertSeeInOrder(['Họ tên', 'Ngày sinh của học sinh', 'Email', 'Điện thoại / Zalo của phụ huynh', 'Điện thoại / Zalo của học sinh', 'Trường', 'Tỉnh / thành phố', 'Thuộc đối tượng'])
             ->assertSee('Xem báo cáo')
-            ->assertDontSee('đồng ý')
+            ->assertSee('là bạn đồng ý cho VIGER EDU dùng thông tin trên để gửi kết quả và liên hệ tư vấn theo chính sách bảo mật.', false)
+            ->assertDontSee('href="" target="_blank"', false)
             ->assertDontSee('type="checkbox"', false)
             ->assertDontSee('cf-turnstile', false);
     }
@@ -193,7 +194,9 @@ class ReportFlowTest extends TestCase
         $this->assertStringNotContainsString('2009-03-15', (string) DB::table('respondents')->value('birth_date'), 'Ngày sinh lưu mã hóa');
         $this->assertSame('HS', $respondent->role);
         $this->assertStringNotContainsString('minhanh', (string) DB::table('respondents')->value('email'));
-        $this->assertSame(0, Consent::query()->count(), 'Không có câu đồng ý thì không ghi lời đồng ý');
+        $consent = Consent::query()->sole();
+        $this->assertStringContainsString('là bạn đồng ý cho VIGER EDU', $consent->text_snapshot);
+        $this->assertSame('dieu-khoan-2026-11', $consent->version);
 
         // Lần đầu: thẻ nhận chìa khóa xem (khach.js cất vào sessionStorage, đóng thẻ là mất).
         $this->assertSame(1, preg_match('/data-key="([^"]+)"/', $report->getContent(), $match));
@@ -360,19 +363,30 @@ class ReportFlowTest extends TestCase
         $this->assertSame(2, $respondent->testSessions()->count());
     }
 
-    public function test_consent_sentence_shows_and_is_recorded_only_when_admin_writes_one(): void
+    public function test_consent_sentence_follows_admin_text_links_the_privacy_policy_and_is_recorded(): void
     {
-        Setting::put('report_consent_text', 'Bấm "Xem báo cáo" là bạn đồng ý cho VIGER EDU liên hệ tư vấn.', 'report');
+        Setting::put('report_consent_text', 'Bấm "Xem báo cáo" là bạn đồng ý cho VIGER EDU liên hệ tư vấn theo chính sách bảo mật.', 'report');
         Setting::put('report_consent_version', 'dieu-khoan-2026-11', 'report');
+        Setting::put('report_privacy_url', 'https://viger.edu.vn/chinh-sach-bao-mat', 'report');
         Setting::flushCache();
         $this->finished();
 
-        $this->get(route('report.request'))->assertSee('Bấm &quot;Xem báo cáo&quot; là bạn đồng ý', false);
+        $this->get(route('report.request'))->assertSee('Bấm &quot;Xem báo cáo&quot; là bạn đồng ý', false)
+            ->assertSee('<a href="https://viger.edu.vn/chinh-sach-bao-mat" target="_blank" rel="noopener">chính sách bảo mật</a>', false);
         $this->post(route('report.submit'), self::FORM);
         $this->post(route('report.verify'), ['code' => $this->sentCode('minhanh@gmail.com')]);
 
         $consent = Consent::query()->sole();
-        $this->assertSame('Bấm "Xem báo cáo" là bạn đồng ý cho VIGER EDU liên hệ tư vấn.', $consent->text_snapshot);
+        $this->assertSame('Bấm "Xem báo cáo" là bạn đồng ý cho VIGER EDU liên hệ tư vấn theo chính sách bảo mật.', $consent->text_snapshot);
+
+        // Admin xóa câu đồng ý: không hiện, không ghi lời đồng ý.
+        Setting::put('report_consent_text', '', 'report');
+        Setting::flushCache();
+        $this->finished();
+        $this->get(route('report.request'))->assertDontSee('là bạn đồng ý', false);
+        $this->post(route('report.submit'), self::FORM);
+        $this->post(route('report.verify'), ['code' => $this->sentCode('minhanh@gmail.com', 1)]);
+        $this->assertSame(1, Consent::query()->count());
         $this->assertSame('dieu-khoan-2026-11', $consent->version);
     }
 

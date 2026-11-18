@@ -5,7 +5,7 @@
 **Bảng:** `crm_outbox` (event_id giữ nguyên khi gửi lại; payload **mã hóa**; trạng thái chờ gửi / đã gửi / lỗi / đang tắt kết nối; `last_error` không có dữ liệu cá nhân), `respondents.crm_customer_code`.
 
 **Code:**
-- `Services/LeadPayload.php`: dựng `lead/2`. Ô form đi theo `crm_key` → vị trí trong gói ở `config/crm.php` (ô không có trong bảng ánh xạ → `extra_fields`); chỉ gửi ô có giá trị và `to_crm`; SĐT dạng `+84…`; SĐT phụ huynh → `guardian.phone`; ngày sinh chỉ gửi **năm**; `consent.agreed = true` **chỉ khi** khách thật sự thấy câu đồng ý (có dòng `consents`), không thì `agreed = false`; `holland_result/3`, 36 câu, hành vi, UTM, link báo cáo nội bộ.
+- `Services/LeadPayload.php`: dựng `lead/2`. Ô form đi theo `crm_key` → vị trí trong gói ở `config/crm.php` (ô không có trong bảng ánh xạ → `extra_fields`); chỉ gửi ô có giá trị và `to_crm`; SĐT dạng `+84…`; SĐT phụ huynh → `guardian.phone`; ngày sinh gửi `contact.birth_date` kèm `birth_year`; `consent.agreed = true` **chỉ khi** khách thật sự thấy câu đồng ý (có dòng `consents`, câu đang bật mặc định), admin xóa câu thì `agreed = false`; `holland_result/3`, 36 câu, hành vi, UTM, link báo cáo nội bộ.
 - `Services/CrmSync.php`: `queueLead`, `queueEvents`, `retry`, `resumeDisabled`.
 - `Jobs/SendToCrm.php`: 2xx → đã gửi (lưu mã khách); 422 → lỗi (chỉ ghi tên trường); 401 / 403 / 429 / 5xx / mất mạng → gửi lại theo `crm_retry_minutes` (1, 5, 30, 120, 360 phút), hết lượt → lỗi.
 - `Services/CrmConfig.php`: bật / tắt, địa chỉ, token (`.env` `CRM_URL`, `CRM_TOKEN` được ưu tiên; nhập ở admin thì lưu mã hóa).

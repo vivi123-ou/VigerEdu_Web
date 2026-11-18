@@ -1,6 +1,14 @@
-# HỢP ĐỒNG KẾT NỐI GIỮA CÁC ỨNG DỤNG – VIGER EDU (bản 3, 14/11/2026)
+# HỢP ĐỒNG KẾT NỐI GIỮA CÁC ỨNG DỤNG – VIGER EDU (bản 3.1, 18/11/2026)
 
-> Thay bản 2. Dùng chung cho Web chính (Tuấn), Holland và CRM (Vân), Chatbot (Ý).
+> **Bản 3.1 (18/11/2026)** sửa theo quyết định của Vân và đúng như Holland đang gửi:
+> - `consent`: bỏ `guardian_required`, `guardian_confirmed` (không còn ô phụ huynh đồng ý); thêm `text` (đúng câu đồng ý khách thấy).
+> - `contact.birth_date` (YYYY-MM-DD) gửi kèm `contact.birth_year`.
+> - `guardian.phone` = số điện thoại phụ huynh (Holland bắt buộc ô này).
+> - `external_ref` = mã báo cáo 8 ký tự; `quiz.view_url` = link báo cáo nội bộ Holland (phải đăng nhập).
+> - `holland-result/3`: ghi đúng giá trị thật của `relation`, `reliability`, `flags`, mã ngành; thêm `majors[].shown_to_customer`.
+> - Mục 2.6: cách Holland gửi (hàng đợi, gửi lại cùng `event_id`).
+>
+> Bản 3 (14/11/2026) thay bản 2. Dùng chung cho Web chính (Tuấn), Holland và CRM (Vân), Chatbot (Ý).
 > Bản 2 (`lead/1`, `holland-result/1` kiểu FIT) **không dùng nữa**.
 > Thiết kế tổng thể: `docs/THIET_KE_TONG_THE_V1.md`.
 
@@ -38,37 +46,40 @@
   "schema_version": "lead/2",
   "event_id": "5c0e8a3e-2f7b-4f3b-9a51-1d2a7c1e9b10",
   "channel": "holland",
-  "external_ref": "HL-9f2c",
-  "customer_code": null,
-  "consent": { "agreed": true, "version": "dieu-khoan-2026-11", "agreed_at": "2026-11-14T09:35:00+07:00",
-               "guardian_required": true, "guardian_confirmed": true },
+  "external_ref": "B61B8A81",
+  "customer_code": "KH0001",
+  "consent": { "agreed": true, "version": "dieu-khoan-2026-11", "agreed_at": "2026-11-18T09:35:00+07:00",
+               "text": "Bấm \"Xem báo cáo\" là bạn đồng ý cho VIGER EDU dùng thông tin trên để gửi kết quả và liên hệ tư vấn theo chính sách bảo mật." },
   "contact": {
-    "role": "HS", "full_name": "Nguyễn Văn A", "birth_year": 2009,
-    "phone": "+84900000000", "phone_verified": false,
+    "role": "HS", "full_name": "Nguyễn Văn A", "birth_date": "2009-03-15", "birth_year": 2009,
+    "phone": "+84987654321", "phone_verified": false,
     "email": "a@example.com", "email_verified": true,
-    "province": "TP.HCM"
+    "province": "TP. Hồ Chí Minh"
   },
-  "guardian": { "full_name": null, "phone": null, "email": null },
-  "profile": { "current_level": "Lớp 11", "current_school": null, "gpa": 8.2,
-               "english_level": "IELTS 6.0+", "german_level": null, "budget": null, "timing": null },
-  "extra_fields": { "truong_chuyen": true },
+  "guardian": { "phone": "+84912345678" },
+  "profile": { "current_school": "THPT Lê Quý Đôn" },
+  "extra_fields": { "truong_chuyen": "co" },
   "holland_result": { "...": "xem mục 3.2 (holland-result/3)" },
   "quiz": {
-    "attempt_id": "9f2c…", "completed_at": "2026-11-14T09:33:00+07:00", "form_version": "cfg-12",
+    "attempt_id": "b61b8a81-…", "completed_at": "2026-11-18T09:33:00+07:00", "form_version": "cfg-12",
     "answers": [ { "code": "I012", "group": "I", "value": 4, "ms": 5200 } ],
-    "view_url": "https://holland.viger.edu.vn/admin/attempts/9f2c…"
+    "view_url": "https://holland.viger.edu.vn/admin/bao-cao-noi-bo?ma=b61b8a81-…"
   },
-  "events": [ { "type": "quiz_finished", "at": "2026-11-14T09:33:00+07:00", "meta": { "duration_s": 460 } } ],
-  "utm": { "source": "facebook", "medium": "post", "campaign": "tam-ly-2026" },
-  "message": null
+  "events": [ { "type": "quiz_finished", "at": "2026-11-18T09:33:00+07:00", "meta": { "duration_s": 460 } } ],
+  "utm": { "source": "viger.edu.vn" }
 }
 ```
+
+Ví dụ trên là dữ liệu giả. Các trường của `contact`, `guardian`, `profile` lấy theo `crm_key` của ô form Holland (`docs/TU_DIEN_DU_LIEU_CHUNG.xlsx`, bảng ánh xạ ở `config/crm.php` của Holland); trường CRM chưa có (`profile.gpa`, `english_level`, `budget`…) do CRM tự thu sau.
 
 Quy tắc:
 
 - **Bắt buộc:**
-  - `consent.agreed = true`;
+  - `consent.agreed = true` (Holland chỉ gửi `true` khi khách thật sự thấy câu đồng ý dưới nút "Xem báo cáo"; admin Holland xóa câu này thì gói có `agreed: false` và CRM trả `422`);
   - có ít nhất `contact.phone` hoặc `contact.email`.
+- `consent.text` là đúng câu khách thấy lúc bấm; `consent.version` đổi khi câu đổi.
+- `contact.birth_date` dạng `YYYY-MM-DD`; luôn có kèm `contact.birth_year`.
+- `guardian.phone`: số điện thoại phụ huynh. Người điền là phụ huynh thì đây là số của chính họ và `contact.phone` không có.
 - SĐT chuẩn hóa về `+84…` ở **bên gửi**; CRM chuẩn hóa lại lần nữa.
 - **Chỉ gửi trường có giá trị.** Không gửi chuỗi rỗng hay `null` cho trường không có dữ liệu.
 - Trường tùy biến do admin Holland thêm đi vào `extra_fields`. CRM tự tạo định nghĩa trường nếu chưa có, ở trạng thái "Chờ duyệt".
@@ -117,7 +128,14 @@ Gửi nhiều lần cùng `session_code` thì CRM nối thêm tin nhắn mới.
 
 ### 2.5 `GET /ping` – kiểm tra kết nối
 
-Trả `{ "ok": true, "channel": "holland" }`.
+Trả `{ "ok": true, "channel": "holland" }`. Holland dùng ở nút "Kiểm tra kết nối" (trang "Gửi khách sang CRM").
+
+### 2.6 Cách Holland gửi
+
+- Mỗi gói nằm trong hàng đợi của Holland (mã hóa) và gửi nền; CRM lỗi hay đang tắt thì khách Holland vẫn xem báo cáo.
+- `lead/2`: gửi khi khách nhập đúng mã email. `events/1`: hành vi sau khi CRM đã trả `customer_code`.
+- `2xx`: xong, Holland lưu `customer_code`. `422`: Holland đánh dấu lỗi, quản trị viên sửa rồi bấm gửi lại.
+- `401`, `403`, `429`, `5xx`, mất mạng: Holland gửi lại sau 1, 5, 30 phút, 2 giờ, 6 giờ (sửa được), **cùng `event_id`**.
 
 ## 3. API của Holland (`https://holland.viger.edu.vn/api/v1`)
 
@@ -135,10 +153,16 @@ Báo cáo của một lượt làm bài:
   "scores": { "R": 3.33, "I": 4.67, "A": 4.17, "S": 4.33, "E": 2.33, "C": 3.17 },
   "item_counts": { "R": 6, "I": 6, "A": 6, "S": 6, "E": 6, "C": 6 },
   "ranking": ["I","S","A","R","C","E"],
-  "code_full": "ISA", "code_public": "IS", "alternates": ["SIA","IAS"],
-  "relation": "cach_mot", "consistency": "Trung bình", "reliability": "Tốt", "flags": [],
-  "majors": [ { "id": 12, "name_vi": "Tâm lý học", "name_de": "Psychologie", "c_index": 15, "label": "Liên quan nhiều" } ] }
+  "code_full": "ISA", "code_public": "IS", "alternates": ["IAS"],
+  "relation": "cach_mot", "consistency": "Trung bình", "reliability": "Tin cậy", "flags": [],
+  "majors": [ { "id": "MAJ012", "name_vi": "Tâm lý học", "name_de": "Psychologie", "c_index": 15,
+                "label": "Ngành nền của cặp IS", "shown_to_customer": true } ] }
 ```
+
+- `code_full`: mã 3 chữ (nội bộ); `code_public`: mã khách thấy (hiện luôn 2 chữ).
+- `relation` của 2 nhóm đầu: `lien_ke` | `cach_mot` | `doi_khang`. `consistency`: `Cao` | `Trung bình` | `Thấp`.
+- `reliability`: `Tin cậy` | `Cần xem lại` | `Chưa đủ tin cậy`. `flags`: mã cờ (`qua_nhanh`, `mot_muc_chiem`, `chuoi_giong_nhau`, `doan_bam_voi`, `nhom_thieu_du_lieu`…).
+- `majors`: toàn bộ ngành gợi ý (bản nội bộ), `shown_to_customer` cho biết khách có thấy ngành đó không; `id` là mã ngành của Holland.
 
 Không có phần trăm phù hợp.
 

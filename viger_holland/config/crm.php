@@ -19,8 +19,8 @@ return [
         'phone' => 'contact.phone',
         'province' => 'contact.province',
         'birth_year' => 'contact.birth_year',
-        // Ngày sinh: hợp đồng hiện chỉ có năm sinh (chỉ gửi năm cho tới khi sửa từ điển chung).
-        'birth_date' => 'contact.birth_year',
+        // Ngày sinh (YYYY-MM-DD, Vân chốt 18/11 gửi cả ngày tháng năm); LeadPayload tự thêm contact.birth_year tách từ ngày này.
+        'birth_date' => 'contact.birth_date',
         'parent_phone' => 'guardian.phone',
         'parent_name' => 'guardian.full_name',
         'current_school' => 'profile.current_school',

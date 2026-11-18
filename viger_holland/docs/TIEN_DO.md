@@ -50,7 +50,11 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 - Lệnh `crm:retry` (lịch 5 phút), `crm:payload {mã báo cáo}` (gói đã che cho người làm CRM).
 - **Kiểm thử: 142/142 đạt** (thêm `CrmSyncTest` 11 ca; log được kiểm tra không có họ tên, email, SĐT).
 
-**Cần Vân / Thầy chốt trước khi chạy thật:** (1) câu đồng ý: bật câu đồng ý, hay sửa hợp đồng để CRM nhận `agreed: false` kèm đánh dấu; (2) sửa `HOP_DONG_KET_NOI.md` mục 2.1 (guardian.phone, consent, ping) – cần Vân cho phép; (3) từ điển chung thêm `birth_date` nếu muốn gửi ngày sinh.
+**Vân chốt sau H5 (18/11):**
+- **Bật lại câu đồng ý** dưới nút "Xem báo cáo" (mặc định câu theo mẫu, phiên bản `dieu-khoan-2026-11`); thêm ô "Link chính sách bảo mật" (có link thì cụm "chính sách bảo mật" thành link). Gói CRM có `consent.agreed = true` + đúng câu khách thấy; admin xóa câu thì gói có `agreed: false` (không bao giờ tự nhận là đã đồng ý).
+- **Gửi CRM cả ngày tháng năm sinh** (`contact.birth_date`) kèm `contact.birth_year`.
+- **Hợp đồng kết nối lên bản 3.1** (cả `viger_holland/docs` và `viger_crm/docs`): consent mới, birth_date, guardian.phone, external_ref, view_url, giá trị thật của holland-result/3 (`relation` dạng `lien_ke` / `cach_mot` / `doi_khang`), mục 2.6 cách Holland gửi.
+- Còn lại: **từ điển chung `TU_DIEN_DU_LIEU_CHUNG.xlsx` chưa có dòng `birth_date`** (Vân thêm và báo CRM, web chính, chatbot); cần link trang chính sách bảo mật thật.
 
 ### H4b đã làm (18/11/2026): trang quản trị về khách
 

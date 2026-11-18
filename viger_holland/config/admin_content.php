@@ -88,7 +88,8 @@ return [
             'Form thông tin' => [
                 ['key' => 'report_form_title', 'label' => 'Tiêu đề form', 'type' => 'text', 'required' => true],
                 ['key' => 'report_form_button', 'label' => 'Chữ nút gửi form', 'type' => 'text', 'required' => true],
-                ['key' => 'report_consent_text', 'label' => 'Câu đồng ý dưới nút', 'type' => 'textarea', 'hint' => 'Để trống thì không hiện (đang để trống theo quyết định 18/11). Có câu thì khách bấm nút là đồng ý, và câu được lưu lại.'],
+                ['key' => 'report_consent_text', 'label' => 'Câu đồng ý dưới nút', 'type' => 'textarea', 'hint' => 'Khách bấm nút là đồng ý; đúng câu khách thấy được lưu lại và gửi sang CRM. Để trống thì CRM không nhận khách (hợp đồng bắt buộc có đồng ý).'],
+                ['key' => 'report_privacy_url', 'label' => 'Link chính sách bảo mật', 'type' => 'url', 'hint' => 'Có link thì cụm "chính sách bảo mật" trong câu đồng ý thành link mở trang này.'],
                 ['key' => 'report_consent_version', 'label' => 'Mã phiên bản câu đồng ý', 'type' => 'text', 'hint' => 'Ví dụ: dieu-khoan-2026-11. Đổi câu đồng ý thì đổi mã này.'],
                 ['key' => 'report_bot_error', 'label' => 'Báo lỗi khi kiểm tra chống bot không qua', 'type' => 'text'],
             ],

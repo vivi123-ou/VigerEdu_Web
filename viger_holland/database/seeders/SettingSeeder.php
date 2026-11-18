@@ -109,8 +109,10 @@ class SettingSeeder extends Seeder
                 // Form nhận báo cáo, mã xác nhận, email, báo cáo đầy đủ (H4); sửa ở "Chữ trên báo cáo & email"
                 'report_form_title' => 'Cập nhật thông tin để xem báo cáo đầy đủ',
                 'report_form_button' => 'Xem báo cáo',
-                'report_consent_text' => '', // Vân chốt 18/11: không có câu đồng ý. Gõ câu vào đây thì câu hiện dưới nút và được lưu lại.
-                'report_consent_version' => '',
+                // Câu đồng ý dưới nút "Xem báo cáo" (Vân bật lại 18/11, hợp đồng CRM cần consent.agreed = true). Đúng câu khách thấy được lưu lại.
+                'report_consent_text' => 'Bấm "Xem báo cáo" là bạn đồng ý cho VIGER EDU dùng thông tin trên để gửi kết quả và liên hệ tư vấn theo chính sách bảo mật.',
+                'report_consent_version' => 'dieu-khoan-2026-11',
+                'report_privacy_url' => '', // có link thì cụm "chính sách bảo mật" trong câu đồng ý thành link
                 'report_bot_error' => 'Chưa kiểm tra được trình duyệt. Bạn tải lại trang rồi thử lại.',
                 'otp_title' => 'Nhập mã xác nhận',
                 'otp_sent_text' => 'Mã 6 số đã gửi tới {email}.',

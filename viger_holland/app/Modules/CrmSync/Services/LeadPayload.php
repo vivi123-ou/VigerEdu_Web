@@ -24,6 +24,9 @@ class LeadPayload
     /** Khóa nội bộ: id các hành vi đã gói vào lead (bỏ đi trước khi gửi, dùng để đánh dấu đã gửi). */
     public const TRACKING_IDS = '__tracking_ids';
 
+    /** Quan hệ 2 nhóm đầu trên lục giác → mã gửi CRM (hợp đồng mục 3.2). */
+    private const RELATIONS = ['Liền kề' => 'lien_ke', 'Cách một' => 'cach_mot', 'Đối kháng' => 'doi_khang'];
+
     /**
      * @return array<string, mixed>
      */
@@ -93,6 +96,9 @@ class LeadPayload
             $key = $field?->crm_key;
             if ($key !== null && isset($paths[$key])) {
                 Arr::set($grouped, $paths[$key], $this->format($key, $raw));
+                if ($key === 'birth_date' && ! Arr::has($grouped, 'contact.birth_year')) {
+                    Arr::set($grouped, 'contact.birth_year', (int) substr($raw, 0, 4));
+                }
             } else {
                 $extra[$value->key] = $raw;
             }
@@ -106,7 +112,7 @@ class LeadPayload
         return match ($crmKey) {
             'phone', 'parent_phone' => self::e164($value),
             'birth_year' => (int) $value,
-            'birth_date' => (int) substr($value, 0, 4),
+            'birth_date' => substr($value, 0, 10),
             'email' => mb_strtolower($value),
             default => $value,
         };
@@ -145,7 +151,7 @@ class LeadPayload
             'code_full' => $result['code3'],
             'code_public' => $result['customer']['code'],
             'alternates' => $result['alternates'] ?? [],
-            'relation' => $result['relations']['1-2']['relation'] ?? null,
+            'relation' => self::RELATIONS[$result['relations']['1-2']['relation'] ?? ''] ?? null,
             'consistency' => $result['consistency'] ?? null,
             'reliability' => $result['quality']['reliability'] ?? null,
             'flags' => collect($result['quality']['flags'] ?? [])->pluck('code')->all(),
@@ -216,6 +222,9 @@ class LeadPayload
     public static function masked(array $payload): array
     {
         $payload = self::forWire($payload);
+        if (Arr::has($payload, 'contact.birth_date')) {
+            Arr::set($payload, 'contact.birth_date', substr((string) Arr::get($payload, 'contact.birth_date'), 0, 4).'-xx-xx');
+        }
         foreach (['contact.full_name', 'guardian.full_name'] as $path) {
             if (Arr::has($payload, $path)) {
                 $name = (string) Arr::get($payload, $path);

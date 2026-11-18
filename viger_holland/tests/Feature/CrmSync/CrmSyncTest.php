@@ -103,11 +103,15 @@ class CrmSyncTest extends TestCase
             $this->assertSame('lead/2', $p['schema_version']);
             $this->assertSame('holland', $p['channel']);
             $this->assertSame(InternalReport::code($session), $p['external_ref']);
-            $this->assertSame(['agreed' => false], $p['consent'], 'Không có câu đồng ý thì không được gửi agreed = true');
+            $this->assertTrue($p['consent']['agreed'], 'Câu đồng ý đang bật mặc định');
+            $this->assertSame('dieu-khoan-2026-11', $p['consent']['version']);
+            $this->assertStringContainsString('là bạn đồng ý cho VIGER EDU', $p['consent']['text']);
             $this->assertSame('Nguyễn Minh Anh', $p['contact']['full_name']);
             $this->assertSame('+84987654321', $p['contact']['phone']);
             $this->assertSame('+84912345678', $p['guardian']['phone']);
             $this->assertSame(2009, $p['contact']['birth_year']);
+            $this->assertSame('2009-03-15', $p['contact']['birth_date'], 'Gửi cả ngày tháng năm sinh (Vân chốt 18/11)');
+            $this->assertSame('cach_mot', $p['holland_result']['relation']);
             $this->assertSame('HS', $p['contact']['role']);
             $this->assertSame('TP. Hồ Chí Minh', $p['contact']['province']);
             $this->assertFalse($p['contact']['phone_verified']);
@@ -121,7 +125,6 @@ class CrmSyncTest extends TestCase
             $this->assertSame(['form_submitted', 'report_unlocked'], array_column($p['events'], 'type'));
             $this->assertArrayNotHasKey('__tracking_ids', $p);
             $this->assertArrayNotHasKey('extra_fields', $p, 'Không có ô mở rộng nào được điền');
-            $this->assertStringNotContainsString('2009-03-15', json_encode($p), 'Chỉ gửi năm sinh');
             $this->assertStringNotContainsString('null', json_encode($p), 'Không gửi giá trị rỗng');
 
             return true;
@@ -245,21 +248,17 @@ class CrmSyncTest extends TestCase
         $this->assertSame('KH0042', $leads[1]->data()['customer_code']);
     }
 
-    public function test_consent_is_sent_as_agreed_only_when_the_customer_saw_the_sentence(): void
+    public function test_consent_is_never_claimed_when_admin_removed_the_sentence(): void
     {
         $this->connect();
-        Setting::put('report_consent_text', 'Bấm "Xem báo cáo" là bạn đồng ý cho VIGER EDU liên hệ tư vấn.', 'report');
-        Setting::put('report_consent_version', 'dieu-khoan-2026-11', 'report');
+        Setting::put('report_consent_text', '', 'report');
         Setting::flushCache();
         Http::fake([self::CRM.'/*' => Http::response(['customer_code' => 'KH0001'])]);
 
         $this->customerUnlocksReport();
 
         Http::assertSent(function (Request $request) {
-            $consent = $request->data()['consent'];
-            $this->assertTrue($consent['agreed']);
-            $this->assertSame('dieu-khoan-2026-11', $consent['version']);
-            $this->assertArrayHasKey('agreed_at', $consent);
+            $this->assertSame(['agreed' => false], $request->data()['consent'], 'Khách không thấy câu đồng ý thì không được gửi agreed = true');
 
             return true;
         });
@@ -301,6 +300,8 @@ class CrmSyncTest extends TestCase
         $this->assertStringNotContainsString('0912345678', $output);
         $this->assertStringNotContainsString('minhanh@gmail.com', $output);
         $this->assertStringNotContainsString('Nguyễn Minh Anh', $output);
+        $this->assertStringContainsString('2009-xx-xx', $output);
+        $this->assertStringNotContainsString('2009-03-15', $output);
         $this->assertSame(1, Artisan::call('crm:payload', ['ma' => 'ZZZZZZZZ']));
     }
 

@@ -21,7 +21,7 @@ Mỗi việc một bộ đếm riêng (`AppServiceProvider`). Viết `throttle:5
 - `field_values`: giá trị khách điền, **mã hóa**, gắn với lượt làm bài;
 - `respondents`: hồ sơ khách tạo **sau khi** nhập đúng mã, gộp theo email. Họ tên, email, SĐT, SĐT phụ huynh, ngày sinh **mã hóa**; `email_hash`, `phone_hash`, `parent_phone_hash` (HMAC) để tra cứu;
 - `otp_codes`: chỉ lưu HMAC của mã và băm email;
-- `consents`: chỉ có khi admin gõ câu đồng ý (cài đặt `report_consent_text`, mặc định trống).
+- `consents`: đúng câu đồng ý khách thấy và phiên bản (cài đặt `report_consent_text`, `report_consent_version`, bật mặc định từ 18/11; `report_privacy_url` biến cụm "chính sách bảo mật" thành link).
 
 **8 ô mặc định** (chốt 14/11, thêm 18/11):
 - bắt buộc: Họ tên, Ngày sinh của học sinh (chọn trên lịch có sẵn của trình duyệt, `crm_key` = `birth_date`; CRM nhận `birth_year` tách từ ngày này), Email, Điện thoại / Zalo của phụ huynh (`parent_phone`), Thuộc đối tượng (`HS` / `PH` / `KHAC`);

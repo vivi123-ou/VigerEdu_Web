@@ -18,6 +18,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -63,7 +64,7 @@ class ReportController extends Controller
             'fields' => $this->form->fields(),
             'form' => $this->form,
             'values' => $values,
-            'consent' => setting('report_consent_text'),
+            'consent' => self::consentHtml((string) setting('report_consent_text'), (string) setting('report_privacy_url')),
             'turnstileKey' => $this->turnstile->enabled() ? config('services.turnstile.site_key') : null,
         ]);
     }
@@ -208,6 +209,22 @@ class ReportController extends Controller
         $this->tracker->record($session, 'report_viewed', ['reload' => true]);
 
         return $this->private(response()->view('public.partials.report-body', ['report' => CustomerReport::make($session)]));
+    }
+
+    /**
+     * Câu đồng ý hiện dưới nút: chữ đã thoát HTML; có link chính sách thì cụm "chính sách bảo mật" thành link.
+     */
+    public static function consentHtml(string $text, string $privacyUrl): ?HtmlString
+    {
+        if (trim($text) === '') {
+            return null;
+        }
+        $html = e($text);
+        if (preg_match('#^https?://#', $privacyUrl)) {
+            $html = str_replace(e('chính sách bảo mật'), '<a href="'.e($privacyUrl).'" target="_blank" rel="noopener">'.e('chính sách bảo mật').'</a>', $html);
+        }
+
+        return new HtmlString($html);
     }
 
     /**
