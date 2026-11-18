@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mẫu 3 – Báo cáo sở thích nghề nghiệp (khách)</title>
+<link rel="stylesheet" href="mau.css">
+<style>
+  body { background: #fff; }
+  .contact { border-bottom: 1px solid var(--line); background: #fbf8f2; font-size: .9rem; }
+  .contact__in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding: .55rem 0; }
+  .contact a { color: var(--red); font-weight: 600; text-decoration: none; }
+  .doc { width: min(60rem, 100% - 2rem); margin: 0 auto; padding: 2.5rem 0 1rem; }
+  .doc-title { text-align: center; margin-bottom: 2rem; }
+  .doc-title__kicker { color: var(--red); font-weight: 700; letter-spacing: .14em; font-size: .9rem; }
+  .doc-title__kicker::before, .doc-title__kicker::after { content: "—"; margin: 0 .6rem; color: var(--red); }
+  .doc-title h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: .75rem 0 .25rem; }
+  .meta { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem 1.5rem; color: var(--ink-2); font-size: .9rem; }
+  .meta b { color: var(--ink); font-weight: 600; }
+  .notice { margin: 1.5rem 0 0; padding: .7rem 1rem; border: 1px solid #f3e2b8; background: #fffaf0; color: #6b4e12; font-size: .875rem; border-radius: .5rem; text-align: center; }
+  .sec { margin-top: 2.75rem; }
+  .sec__h { display: flex; align-items: baseline; gap: .75rem; border-bottom: 2px solid var(--ink); padding-bottom: .5rem; margin-bottom: 1.25rem; }
+  .sec__no { font: 700 .9rem "Inter"; color: var(--red); }
+  .sec__h h2 { font: 700 1.15rem "Inter", sans-serif; letter-spacing: 0; margin: 0; color: var(--ink); text-transform: uppercase; }
+  .two { display: grid; gap: 2rem; align-items: start; } @media (min-width: 52rem) { .two { grid-template-columns: 1.35fr 1fr; } }
+  .codebox { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .codebox__code { font: 700 2.6rem "Playfair Display", serif; color: var(--red); letter-spacing: .05em; line-height: 1; }
+  .codebox__name { font-weight: 600; font-size: 1.05rem; }
+  .desc h3 { font: 700 .95rem "Inter"; color: var(--ink); margin: 1.1rem 0 .25rem; letter-spacing: 0; }
+  .desc p { margin: 0; color: var(--ink-2); text-align: justify; }
+  .figure { border: 1px solid var(--line); border-radius: .75rem; padding: 1rem; text-align: center; }
+  .figure figcaption { font-size: .8rem; color: var(--muted); margin-top: .25rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: .25rem 1rem; font-size: .8rem; color: var(--ink-2); margin: 0 0 1rem; }
+  .legend i { display: inline-block; width: .7rem; height: .7rem; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
+  .scale { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .scale td { padding: .6rem .5rem; border-bottom: 1px solid var(--line-2); vertical-align: middle; }
+  .scale td:first-child { width: 17rem; font-weight: 500; white-space: nowrap; }
+  .scale a { text-decoration: none; border-bottom: 1px dashed #b7c0cb; }
+  .scale .lv { width: 9rem; text-align: right; color: var(--ink-2); font-size: .85rem; }
+  .track { height: .5rem; background: var(--line-2); border-radius: 999px; overflow: hidden; }
+  .track span { display: block; height: 100%; background: #9aa8b8; border-radius: 999px; }
+  .track span.top { background: var(--red); }
+  .lt { font: 700 .8rem "Inter"; color: var(--ink); display: inline-block; width: 1.4rem; }
+  .tbl { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .tbl th, .tbl td { border: 1px solid var(--line); padding: .7rem .8rem; text-align: left; vertical-align: top; }
+  .tbl thead th { background: #f7f4ee; color: var(--ink); font-weight: 700; }
+  .tbl td small { display: block; color: var(--muted); }
+  .tbl a { color: var(--red); text-decoration: none; font-weight: 600; white-space: nowrap; }
+  .lvl { font-weight: 600; white-space: nowrap; } .lvl--1 { color: var(--red); } .lvl--2 { color: #9a6700; } .lvl--3 { color: var(--ink-2); }
+  @media (max-width: 40rem) { .tbl thead { display: none; } .tbl, .tbl tbody, .tbl tr, .tbl td { display: block; } .tbl tr { border: 1px solid var(--line); margin-bottom: .75rem; } .tbl td { border: 0; border-bottom: 1px solid var(--line-2); } .tbl td::before { content: attr(data-th); display: block; font-size: .75rem; color: var(--muted); font-weight: 600; } }
+  .next { border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: .5rem; padding: 1.25rem 1.5rem; display: grid; gap: 1rem; }
+  @media (min-width: 52rem) { .next { grid-template-columns: 1.5fr 1fr; align-items: center; } }
+  .next ul { margin: .5rem 0 0; padding-left: 1.1rem; color: var(--ink-2); }
+  .next__cta { display: grid; gap: .5rem; }
+  .btn-sq { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .7rem 1rem; border-radius: .5rem; font: 600 .95rem "Inter"; text-decoration: none; border: 1px solid var(--line); color: var(--ink); background: #fff; }
+  .btn-sq--red { background: var(--red); border-color: var(--red); color: #fff; }
+  .notes { font-size: .875rem; color: var(--ink-2); margin-top: 2.5rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  .notes p { margin: .35rem 0; }
+  .tools { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem; margin-top: 1.5rem; font-size: .9rem; }
+  .tools a { color: var(--ink-2); text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; }
+  .tools a:hover { color: var(--red); }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7"/><path d="M6 10v10h4v-6h4v6h4V10"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.6-5 6.5-5s5.5 1.5 6.5 5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 15c2 .6 3.2 2.2 3.5 5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></symbol>
+    <symbol id="i-hexagon" viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/></symbol>
+    <symbol id="i-form" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><circle cx="9" cy="10" r="1.75"/><path d="m21 16-5-5-9 9"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.5"/><path d="M4.5 5.5v13c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5v-13M4.5 12c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5"/></symbol>
+    <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M7 14h10v7H7z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="m8.2 10.8 7.6-4.1M8.2 13.2l7.6 4.1"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9.5 9.5h5v5h-5zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="1.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
+  </defs>
+</svg>
+
+<header class="bar" style="background:#fff"><div class="wrap bar__in">
+  <a class="brand" href="#"><img src="../../public/img/logo.png" alt=""><span><b>VIGER.EDU.VN</b><small>From Vietnam to Europe</small></span></a>
+  <nav class="nav"><a href="#">Về chúng tôi</a><a href="#">Giáo dục tại Đức</a><a href="#">Tư vấn</a><a href="#">Chương trình học</a><a href="#">Blog</a></nav>
+  <a class="btn btn--sm" href="#"><svg class="ic"><use href="#i-arrow-left"/></svg> Trang chủ</a>
+</div></header>
+
+<div class="contact"><div class="wrap contact__in">
+  <span><svg class="ic" style="color:var(--red)"><use href="#i-phone"/></svg> Tư vấn 1:1 miễn phí về kết quả: <a href="tel:0819949968">0819 949 968</a> (gọi hoặc Zalo, 8:00–20:00)</span>
+  <a href="tel:0819949968">Gọi ngay <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+</div></div>
+
+<main class="doc">
+  <div class="doc-title">
+    <span class="doc-title__kicker">KẾT QUẢ</span>
+    <h1>Nghiên cứu – Xã hội</h1>
+    <div class="meta"><span>Họ tên: <b>Nguyễn Minh Anh</b></span><span>Ngày làm bài: <b>13/11/2026</b></span><span>Phương pháp: <b>Holland (RIASEC) · 36 câu</b></span></div>
+    <p class="notice">Báo cáo chỉ hiện trên màn hình này, đóng trang là không xem lại được. Bạn có thể làm lại bài với bộ câu hỏi mới, hoặc gọi hotline để nhận bản đầy đủ từ chuyên viên.</p>
+  </div>
+
+  <section class="sec">
+    <div class="sec__h"><span class="sec__no">01</span><h2>Nhóm sở thích của bạn</h2></div>
+    <div class="two">
+      <div class="desc">
+        <div class="codebox"><span class="codebox__code">IS</span><span><span class="codebox__name">Mã Holland của bạn</span><br><span class="muted small">Nghiên cứu (I) · Xã hội (S)</span></span></div>
+        <h3>Nghiên cứu (I) – nhóm nổi bật nhất</h3>
+        <p>Bạn thích quan sát, tìm hiểu, phân tích để hiểu thấu một vấn đề; thường đặt câu hỏi “vì sao” và tự tìm cách kiểm chứng.</p>
+        <h3>Xã hội (S) – nhóm thứ hai</h3>
+        <p>Bạn quan tâm đến con người: lắng nghe, hướng dẫn, hỗ trợ người khác phát triển.</p>
+        <h3>Khi kết hợp</h3>
+        <p>Hai nhóm này cách nhau một bậc trên lục giác Holland. Môi trường hợp với bạn thường có cả <b>nghiên cứu</b> lẫn <b>làm việc với con người</b>: tâm lý, sức khỏe, giáo dục, khoa học xã hội.</p>
+      </div>
+      <figure class="figure" style="margin:0">
+        <svg class="hex" viewBox="0 0 300 300" width="100%" style="max-width:290px" role="img" aria-label="Lục giác Holland">
+          <polygon points="150,40 245.3,95 245.3,205 150,260 54.7,205 54.7,95" fill="#fff" stroke="#cfd8e3" stroke-width="1.2"/>
+          <polygon points="150,95 197.6,122.5 197.6,177.5 150,205 102.4,177.5 102.4,122.5" fill="none" stroke="#e2e8f0" stroke-dasharray="3 4"/>
+          <g stroke="#eef2f6"><line x1="150" y1="150" x2="150" y2="40"/><line x1="150" y1="150" x2="245.3" y2="95"/><line x1="150" y1="150" x2="245.3" y2="205"/><line x1="150" y1="150" x2="150" y2="260"/><line x1="150" y1="150" x2="54.7" y2="205"/><line x1="150" y1="150" x2="54.7" y2="95"/></g>
+          <polygon points="150,85.9 237.4,99.55 225.5,193.6 150,241.6 118.3,168.3 98.3,120.15" fill="rgba(193,18,31,.12)" stroke="#c1121f" stroke-width="2" stroke-linejoin="round"/>
+          <g fill="#c1121f"><circle cx="237.4" cy="99.55" r="4.5"/><circle cx="150" cy="241.6" r="4.5"/></g>
+          <text x="150" y="26" text-anchor="middle">R</text><text x="266" y="90" text-anchor="middle">I</text><text x="266" y="220" text-anchor="middle">A</text>
+          <text x="150" y="284" text-anchor="middle">S</text><text x="34" y="220" text-anchor="middle">E</text><text x="34" y="90" text-anchor="middle">C</text>
+        </svg>
+        <figcaption>Lục giác Holland: hình càng vươn về đỉnh nào, bạn càng thích kiểu hoạt động đó.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec__h"><span class="sec__no">02</span><h2>Mức độ quan tâm theo 6 nhóm</h2></div>
+    <p class="legend"><span><i style="background:var(--red)"></i>Nhóm nổi bật</span><span><i style="background:#9aa8b8"></i>Nhóm khác</span><span>Mức độ: Rất ít · Ít · Trung bình · Quan tâm · Rất quan tâm</span></p>
+    <table class="scale">
+      <tr><td><span class="lt">I</span><a href="#" style="color:inherit">Nghiên cứu, phân tích</a></td><td><div class="track"><span class="top" style="width:92%"></span></div></td><td class="lv">Rất quan tâm</td></tr>
+      <tr><td><span class="lt">S</span><a href="#" style="color:inherit">Hỗ trợ, phát triển con người</a></td><td><div class="track"><span class="top" style="width:83%"></span></div></td><td class="lv">Rất quan tâm</td></tr>
+      <tr><td><span class="lt">A</span><a href="#" style="color:inherit">Sáng tạo, nghệ thuật</a></td><td><div class="track"><span style="width:79%"></span></div></td><td class="lv">Quan tâm</td></tr>
+      <tr><td><span class="lt">R</span><a href="#" style="color:inherit">Thực hành, kỹ thuật</a></td><td><div class="track"><span style="width:58%"></span></div></td><td class="lv">Trung bình</td></tr>
+      <tr><td><span class="lt">C</span><a href="#" style="color:inherit">Tổ chức, quy trình</a></td><td><div class="track"><span style="width:54%"></span></div></td><td class="lv">Trung bình</td></tr>
+      <tr><td><span class="lt">E</span><a href="#" style="color:inherit">Kinh doanh, tạo ảnh hưởng</a></td><td><div class="track"><span style="width:33%"></span></div></td><td class="lv">Ít quan tâm</td></tr>
+    </table>
+    <p class="muted small">Bấm tên nhóm để đọc bài giới thiệu trên viger.edu.vn.</p>
+  </section>
+
+  <section class="sec">
+    <div class="sec__h"><span class="sec__no">03</span><h2>Ngành học tại Đức phù hợp với bạn</h2></div>
+    <table class="tbl">
+      <thead><tr><th>Ngành học (tiếng Việt / tiếng Đức)</th><th>Mức liên quan</th><th>Nghề có thể làm</th><th>Loại trường</th><th></th></tr></thead>
+      <tbody>
+        <tr><td data-th="Ngành học">Tâm lý học<small>Psychologie</small></td><td data-th="Mức liên quan"><span class="lvl lvl--1">Gợi ý chính</span></td><td data-th="Nghề có thể làm">Nhà nghiên cứu tâm lý; chuyên viên phát triển nhân sự</td><td data-th="Loại trường">Universität</td><td><a href="#">Tìm hiểu »</a></td></tr>
+        <tr><td data-th="Ngành học">Khoa học sức khỏe<small>Gesundheitswissenschaften</small></td><td data-th="Mức liên quan"><span class="lvl lvl--1">Gợi ý chính</span></td><td data-th="Nghề có thể làm">Nghiên cứu sức khỏe cộng đồng; quản lý chương trình y tế</td><td data-th="Loại trường">Universität, Hochschule</td><td><a href="#">Tìm hiểu »</a></td></tr>
+        <tr><td data-th="Ngành học">Khoa học môi trường<small>Umweltwissenschaften</small></td><td data-th="Mức liên quan"><span class="lvl lvl--2">Liên quan nhiều</span></td><td data-th="Nghề có thể làm">Chuyên viên nghiên cứu môi trường; tư vấn bền vững</td><td data-th="Loại trường">Universität</td><td><a href="#">Tìm hiểu »</a></td></tr>
+        <tr><td data-th="Ngành học">Giáo dục nghệ thuật<small>Kunstpädagogik</small></td><td data-th="Mức liên quan"><span class="lvl lvl--3">Liên quan</span></td><td data-th="Nghề có thể làm">Giáo viên nghệ thuật; nhà giáo dục bảo tàng</td><td data-th="Loại trường">Universität, Kunsthochschule</td><td><a href="#">Tìm hiểu »</a></td></tr>
+      </tbody>
+    </table>
+    <p class="muted small">Các hướng ngành dựa trên sở thích, chưa xét học lực, ngoại ngữ và tài chính. Chuyên viên tư vấn có danh sách đầy đủ hơn.</p>
+  </section>
+
+  <section class="sec">
+    <div class="sec__h"><span class="sec__no">04</span><h2>Bước tiếp theo</h2></div>
+    <div class="next">
+      <div>
+        <strong>Buổi tư vấn chuyên sâu miễn phí</strong>
+        <p style="margin:.35rem 0 0;color:var(--ink-2)">Kết quả này mới là bước đầu. Để chọn ngành và trường ở Đức, chuyên viên sẽ cùng bạn xem thêm:</p>
+        <ul><li>tính cách, hoàn cảnh và môi trường học bạn mong muốn;</li><li>học lực, ngoại ngữ, khả năng tài chính;</li><li>mục tiêu sau khi học: ở lại Đức, định cư hay về Việt Nam làm việc.</li></ul>
+      </div>
+      <div class="next__cta">
+        <a class="btn-sq btn-sq--red" href="tel:0819949968"><svg class="ic"><use href="#i-phone"/></svg> Gọi 0819 949 968</a>
+        <a class="btn-sq" href="#"><svg class="ic"><use href="#i-message"/></svg> Nhắn Zalo</a>
+        <span class="muted small" style="text-align:center">Chuyên viên cũng sẽ chủ động liên hệ bạn trong 1–2 ngày làm việc.</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="tools">
+    <a href="#"><svg class="ic"><use href="#i-cpu"/></svg> Hỏi trợ lý AI về kết quả (khi đã gắn chatbot)</a>
+    <span style="display:flex;gap:1.25rem"><a href="#"><svg class="ic"><use href="#i-share"/></svg> Chia sẻ mã của bạn</a><a href="#"><svg class="ic"><use href="#i-refresh"/></svg> Làm lại bài (câu hỏi mới)</a></span>
+  </div>
+
+  <div class="notes">
+    <p><b>Lưu ý:</b> Kết quả mang tính tham khảo, giúp bạn hiểu sở thích nghề nghiệp của mình. Holland đo sở thích, không đo năng lực và không bảo đảm khả năng trúng tuyển.</p>
+    <p><b>Lời khuyên:</b> Bấm “Tìm hiểu” ở từng ngành để đọc bài giới thiệu chi tiết, hoặc tra tên ngành tiếng Đức trên Hochschulkompass để xem các trường đang đào tạo.</p>
+  </div>
+</main>
+
+<footer class="foot"><div class="wrap">
+  <div class="foot__grid">
+    <div><a class="brand" href="#"><img src="../../public/img/logo.png" alt=""><span><b>VIGER.EDU.VN</b><small>From Vietnam to Europe</small></span></a>
+      <p style="margin-top:1rem">Đồng hành cùng người trẻ Việt Nam trên hành trình học tập tại Đức.</p></div>
+    <div><h4>Liên hệ</h4><ul><li><svg class="ic"><use href="#i-phone"/></svg> 0819 949 968</li><li><svg class="ic"><use href="#i-mail"/></svg> info@spn.com.vn</li><li><svg class="ic"><use href="#i-pin"/></svg> 6 Phùng Khắc Khoan, Phường Sài Gòn, TP.HCM</li></ul></div>
+    <div><h4>Khám phá</h4><ul><li><a href="#">Giáo dục tại Đức</a></li><li><a href="#">Tư vấn du học</a></li><li><a href="#">Blog</a></li><li><a href="#">Về trang chủ</a></li></ul></div>
+  </div>
+  <div class="foot__copy"><span>© 2026 VIGER.EDU.VN</span><span>Trắc nghiệm Holland · holland.viger.edu.vn</span></div>
+</div></footer>
+<p class="note-demo">Mẫu giao diện · <a href="index.html">Xem các mẫu khác</a></p>
+</body>
+</html>

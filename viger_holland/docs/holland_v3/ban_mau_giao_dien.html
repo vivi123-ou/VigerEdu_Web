@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VIGER Holland</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap">
+<style>
+/* Bố cục: thanh trên cố định (4 khu), nội dung một cột rộng tối đa 1080px; màu theo web chính viger.edu.vn */
+:root {
+  --bg: #fdfbf7; --surface: #ffffff; --sunk: #f4f1ec; --line: #e2e8f0; --line-strong: #c9d2dd;
+  --fg: #12263f; --fg-2: #4a5c71; --muted: #7a8b9c;
+  --accent: #c1121f; --accent-ink: #ffffff; --accent-soft: #fdf2f2;
+  --gold: #ffb703; --gold-soft: #fff4d6;
+  --bar-strong: #12263f; --bar-mid: #8796a8; --bar-weak: #cfd7e1;
+  --ok: #1f7a4d; --ok-soft: #e6f4ec; --warn: #9a6200; --warn-soft: #fff4d6; --bad: #a3141f; --bad-soft: #fde8e9;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --r: 12px; --r-sm: 8px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1724; --surface: #152234; --sunk: #1b2b40; --line: #263850; --line-strong: #36506f;
+  --fg: #e9eef5; --fg-2: #b4c1d1; --muted: #8696aa;
+  --accent: #ef4b55; --accent-ink: #160406; --accent-soft: #3a1418;
+  --gold: #ffc53d; --gold-soft: #3a2e10;
+  --bar-strong: #e9eef5; --bar-mid: #7f93ab; --bar-weak: #3a4f69;
+  --ok: #5cc98f; --ok-soft: #12321f; --warn: #f1b453; --warn-soft: #3a2b0e; --bad: #f2707a; --bad-soft: #3d151a;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e1724; --surface: #152234; --sunk: #1b2b40; --line: #263850; --line-strong: #36506f;
+  --fg: #e9eef5; --fg-2: #b4c1d1; --muted: #8696aa;
+  --accent: #ef4b55; --accent-ink: #160406; --accent-soft: #3a1418;
+  --gold: #ffc53d; --gold-soft: #3a2e10;
+  --bar-strong: #e9eef5; --bar-mid: #7f93ab; --bar-weak: #3a4f69;
+  --ok: #5cc98f; --ok-soft: #12321f; --warn: #f1b453; --warn-soft: #3a2b0e; --bad: #f2707a; --bad-soft: #3d151a;
+  color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--font-body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface) }
+h1, h2, h3 { margin: 0; text-wrap: balance; line-height: 1.25 }
+h1 { font: 700 clamp(26px, 4vw, 34px)/1.2 var(--font-display) }
+h2 { font: 700 22px/1.3 var(--font-display) }
+h3 { font-size: 16px; font-weight: 600 }
+p { margin: 0 }
+button, input, select { font: inherit; color: inherit }
+.num { font-variant-numeric: tabular-nums }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* thanh trên */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line) }
+.top .wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 10px }
+.brand { display: flex; align-items: baseline; gap: 8px; margin-right: auto }
+.brand b { font: 700 19px var(--font-display); letter-spacing: .02em }
+.brand b span { color: var(--accent) }
+.brand small { color: var(--muted); font-size: 12px; letter-spacing: .06em; text-transform: uppercase }
+.nav { display: flex; gap: 4px; flex-wrap: wrap }
+.nav a { padding: 7px 12px; border-radius: 999px; color: var(--fg-2); text-decoration: none; font-weight: 500; font-size: 14px }
+.nav a[aria-current="page"] { background: var(--fg); color: var(--bg) }
+.nav a:hover:not([aria-current]) { background: var(--sunk) }
+.nav a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, .opt:focus-within { outline: 2px solid var(--accent); outline-offset: 2px }
+
+main { padding-block: 28px 64px }
+.view { display: grid; gap: 22px }
+.lead { color: var(--fg-2); max-width: 66ch }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px }
+.sunk { background: var(--sunk); border-radius: var(--r); padding: 16px }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px }
+.grid2 > *, .grid3 > * { min-width: 0 }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600 }
+.btn { border: 1px solid var(--line-strong); background: var(--surface); padding: 10px 18px; border-radius: 999px; cursor: pointer; font-weight: 600 }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink) }
+.btn.dark { background: var(--fg); border-color: var(--fg); color: var(--bg) }
+.btn.small { padding: 6px 12px; font-size: 13px }
+.btn:disabled { opacity: .45; cursor: not-allowed }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; background: var(--sunk); color: var(--fg-2) }
+.chip.ok { background: var(--ok-soft); color: var(--ok) } .chip.warn { background: var(--warn-soft); color: var(--warn) } .chip.bad { background: var(--bad-soft); color: var(--bad) }
+.chip.red { background: var(--accent-soft); color: var(--accent) } .chip.gold { background: var(--gold-soft); color: var(--warn) }
+.help { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line-strong); font: 600 11px var(--font-body); color: var(--fg-2); cursor: help; vertical-align: middle; position: relative }
+.help:hover::after, .help:focus::after { content: attr(data-tip); position: absolute; left: 50%; top: 24px; transform: translateX(-50%); width: min(280px, 70vw); background: var(--fg); color: var(--bg); font: 400 12.5px/1.45 var(--font-body); padding: 9px 11px; border-radius: 8px; z-index: 20; text-align: left }
+.what { display: flex; gap: 10px; align-items: flex-start; background: var(--gold-soft); border-radius: var(--r-sm); padding: 10px 14px; font-size: 13.5px; color: var(--fg) }
+.what b { white-space: nowrap }
+.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-sm) }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px }
+th { text-align: left; background: var(--sunk); font-weight: 600; color: var(--fg-2); padding: 9px 10px; white-space: nowrap; position: sticky; top: 0 }
+td { padding: 8px 10px; border-top: 1px solid var(--line); vertical-align: top }
+td.c, th.c { text-align: center }
+.mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px }
+
+/* bước học sinh */
+.steps { display: flex; gap: 8px; flex-wrap: wrap }
+.steps span { font-size: 13px; padding: 4px 12px; border-radius: 999px; background: var(--sunk); color: var(--muted) }
+.steps span.on { background: var(--fg); color: var(--bg) }
+.steps span.done { color: var(--fg-2) }
+.method { display: grid; grid-template-columns: 120px 1fr; gap: 18px; align-items: center }
+.hexlogo { width: 120px; height: 120px }
+@media (max-width: 520px) { .method { grid-template-columns: 1fr } }
+label.f { display: grid; gap: 5px; font-size: 13.5px; font-weight: 500 }
+label.f input, label.f select { border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 9px 11px; background: var(--surface); width: 100% }
+label.f .req { color: var(--accent) }
+label.f .err { color: var(--bad); font-size: 12.5px; font-weight: 500 }
+details.opt-group { border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; background: var(--surface) }
+details.opt-group summary { cursor: pointer; font-weight: 600 }
+.subjects { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px }
+
+.progress { height: 8px; background: var(--sunk); border-radius: 999px; overflow: hidden }
+.progress i { display: block; height: 100%; background: var(--accent); transition: width .2s }
+.q { font: 600 clamp(20px, 3vw, 26px)/1.35 var(--font-display) }
+.opts { display: grid; gap: 10px }
+.opt { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 12px 14px; cursor: pointer; background: var(--surface) }
+.opt input { accent-color: var(--accent); width: 18px; height: 18px }
+.opt .k { width: 26px; height: 26px; border-radius: 50%; background: var(--sunk); display: grid; place-items: center; font-weight: 700; font-size: 13px; flex: none }
+.opt.sel { border-color: var(--fg); background: var(--sunk) }
+.opt.kb { border-style: dashed }
+.nudge { border-left: 3px solid var(--gold); padding: 8px 12px; background: var(--gold-soft); border-radius: 0 8px 8px 0; font-size: 13.5px }
+
+/* kết quả */
+.viewas { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px; gap: 2px; background: var(--surface) }
+.viewas button { border: 0; background: transparent; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 13.5px; color: var(--fg-2) }
+.viewas button[aria-pressed="true"] { background: var(--fg); color: var(--bg) }
+.code { font: 700 clamp(44px, 8vw, 64px)/1 var(--font-display); letter-spacing: .06em }
+.code .dim { color: var(--muted) }
+.bars { display: grid; gap: 9px }
+.bar { display: grid; grid-template-columns: 128px 1fr 150px; gap: 12px; align-items: center; font-size: 14px }
+.bar .track { position: relative; height: 22px; border-radius: 4px; background: linear-gradient(90deg, var(--sunk) 0 20%, transparent 20% 40%, var(--sunk) 40% 60%, transparent 60% 80%, var(--sunk) 80%); border: 1px solid var(--line) }
+.bar .fill { position: absolute; inset: 0 auto 0 0; border-radius: 3px 4px 4px 3px }
+.bar .mark { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 2px dashed var(--accent) }
+.bar .v { color: var(--fg-2); font-size: 13px }
+@media (max-width: 560px) { .bar { grid-template-columns: 90px 1fr; } .bar .v { grid-column: 2 } }
+.scale-labels { display: grid; grid-template-columns: 128px 1fr 150px; gap: 12px; font-size: 11.5px; color: var(--muted) }
+.scale-labels div:nth-child(2) { display: flex; justify-content: space-between }
+@media (max-width: 560px) { .scale-labels { grid-template-columns: 90px 1fr } .scale-labels div:nth-child(3) { display: none } }
+.hex svg { width: 100%; max-width: 300px; height: auto; display: block; margin: 0 auto }
+.majors { display: grid; gap: 10px }
+.major { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px 14px; background: var(--surface) }
+.major .de { font-style: italic; color: var(--fg-2); font-size: 13.5px }
+.major .why { grid-column: 1 / -1; font-size: 13px; color: var(--fg-2) }
+.inside { border-left: 3px solid var(--fg); padding-left: 12px }
+.locked { border: 1px dashed var(--line-strong); border-radius: var(--r); padding: 16px; color: var(--fg-2) }
+
+/* sơ đồ hệ thống */
+.arch { display: grid; gap: 14px }
+.layer { display: grid; grid-template-columns: 170px 1fr; gap: 14px; align-items: stretch }
+.layer > h3 { background: var(--fg); color: var(--bg); border-radius: var(--r-sm); padding: 12px; font-size: 14px; display: flex; align-items: center }
+.layer .boxes { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; min-width: 0 }
+.box { border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 10px 12px; background: var(--surface); font-size: 13.5px }
+.box b { display: block; font-size: 14px }
+.box small { color: var(--muted); font-family: ui-monospace, Menlo, monospace; font-size: 12px }
+@media (max-width: 640px) { .layer { grid-template-columns: 1fr } }
+.flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13.5px }
+.flow span { border: 1px solid var(--line-strong); border-radius: 999px; padding: 5px 12px; background: var(--surface) }
+.flow i { color: var(--muted); font-style: normal }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 8px }
+.tabs button { border: 1px solid transparent; background: transparent; padding: 7px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--fg-2) }
+.tabs button[aria-selected="true"] { background: var(--sunk); border-color: var(--line); color: var(--fg) }
+.toggle { appearance: none; width: 36px; height: 20px; border-radius: 999px; background: var(--bar-weak); position: relative; cursor: pointer; vertical-align: middle }
+.toggle::after { content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); top: 2px; left: 2px; transition: left .15s }
+.toggle:checked { background: var(--ok) } .toggle:checked::after { left: 18px }
+input.set { width: 90px; border: 1px solid var(--line-strong); border-radius: 6px; padding: 5px 8px; background: var(--surface) }
+.toast { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; z-index: 30 }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><b>VIGER <span>EDU</span></b><small>Holland · bản mẫu</small></div>
+    <nav class="nav" aria-label="Khu vực">
+      <a href="#hoc-sinh">Học sinh</a>
+      <a href="#tu-van">Tư vấn viên</a>
+      <a href="#quan-tri">Quản trị</a>
+      <a href="#he-thong">Cấu trúc hệ thống</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="app"></main>
+<div class="toast" id="toast" hidden></div>
+
+<script type="application/json" id="seed">{"major_occupation": [{"id": "LNK001", "major_id": "MAJ001", "occupation_id": "OCC001", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK002", "major_id": "MAJ002", "occupation_id": "OCC002", "type": "Potential pathway", "routes": "Uni, HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK003", "major_id": "MAJ003", "occupation_id": "OCC003", "type": "Potential pathway", "routes": "Uni, HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK004", "major_id": "MAJ004", "occupation_id": "OCC004", "type": "Potential pathway", "routes": "Uni, HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK005", "major_id": "MAJ005", "occupation_id": "OCC005", "type": "Potential pathway", "routes": "Uni, HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK006", "major_id": "MAJ006", "occupation_id": "OCC006", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK007", "major_id": "MAJ007", "occupation_id": "OCC007", "type": "Potential pathway", "routes": "Uni, HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK008", "major_id": "MAJ008", "occupation_id": "OCC008", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK009", "major_id": "MAJ009", "occupation_id": "OCC009", "type": "Potential pathway", "routes": "Uni, HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK010", "major_id": "MAJ010", "occupation_id": "OCC010", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK011", "major_id": "MAJ011", "occupation_id": "OCC011", "type": "Potential pathway", "routes": "Uni, HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK012", "major_id": "MAJ012", "occupation_id": "OCC012", "type": "Potential pathway", "routes": "Uni", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK013", "major_id": "MAJ013", "occupation_id": "OCC013", "type": "Potential pathway", "routes": "HAW, Uni, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK014", "major_id": "MAJ014", "occupation_id": "OCC014", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK015", "major_id": "MAJ015", "occupation_id": "OCC015", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK016", "major_id": "MAJ016", "occupation_id": "OCC016", "type": "Potential pathway", "routes": "Uni, HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK017", "major_id": "MAJ017", "occupation_id": "OCC017", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK018", "major_id": "MAJ018", "occupation_id": "OCC018", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK019", "major_id": "MAJ019", "occupation_id": "OCC019", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK020", "major_id": "MAJ020", "occupation_id": "OCC020", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK021", "major_id": "MAJ021", "occupation_id": "OCC021", "type": "Potential pathway", "routes": "Uni", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK022", "major_id": "MAJ022", "occupation_id": "OCC022", "type": "Potential pathway", "routes": "Uni, HAW", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK023", "major_id": "MAJ023", "occupation_id": "OCC023", "type": "Potential pathway", "routes": "HAW, ART", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK024", "major_id": "MAJ024", "occupation_id": "OCC024", "type": "Potential pathway", "routes": "HAW, DUAL", "source": "Layer 4", "status": "Illustrative - not institution verified"}, {"id": "LNK025", "major_id": "MAJ002", "occupation_id": "OCC025", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK026", "major_id": "MAJ001", "occupation_id": "OCC026", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK027", "major_id": "MAJ025", "occupation_id": "OCC027", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK028", "major_id": "MAJ026", "occupation_id": "OCC028", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK029", "major_id": "MAJ027", "occupation_id": "OCC029", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK030", "major_id": "MAJ028", "occupation_id": "OCC030", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK031", "major_id": "MAJ016", "occupation_id": "OCC031", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK032", "major_id": "MAJ029", "occupation_id": "OCC032", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK033", "major_id": "MAJ030", "occupation_id": "OCC033", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK034", "major_id": "MAJ031", "occupation_id": "OCC013", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK035", "major_id": "MAJ008", "occupation_id": "OCC034", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK036", "major_id": "MAJ032", "occupation_id": "OCC035", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK037", "major_id": "MAJ021", "occupation_id": "OCC036", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK038", "major_id": "MAJ033", "occupation_id": "OCC037", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK039", "major_id": "MAJ007", "occupation_id": "OCC038", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK040", "major_id": "MAJ034", "occupation_id": "OCC039", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK041", "major_id": "MAJ035", "occupation_id": "OCC040", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK042", "major_id": "MAJ036", "occupation_id": "OCC041", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK043", "major_id": "MAJ037", "occupation_id": "OCC042", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK044", "major_id": "MAJ038", "occupation_id": "OCC043", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK045", "major_id": "MAJ039", "occupation_id": "OCC044", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK046", "major_id": "MAJ040", "occupation_id": "OCC045", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK047", "major_id": "MAJ041", "occupation_id": "OCC046", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK048", "major_id": "MAJ042", "occupation_id": "OCC047", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK049", "major_id": "MAJ043", "occupation_id": "OCC048", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK050", "major_id": "MAJ044", "occupation_id": "OCC049", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK051", "major_id": "MAJ045", "occupation_id": "OCC050", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK052", "major_id": "MAJ009", "occupation_id": "OCC051", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "LNK053", "major_id": "MAJ046", "occupation_id": "OCC009", "type": "Potential pathway", "routes": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}], "majors": [{"id": "MAJ001", "name_vi": "Cơ khí", "name_de": "Maschinenbau", "name_en": "Mechanical Engineering", "group_id": 1, "group": "Kỹ thuật & Công nghiệp 4.0", "codes": ["RIE"], "code_source": "SIT – HRK 13.01.2014: Maschinenbau", "pairs": ["RI"], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ002", "name_vi": "Cơ điện tử", "name_de": "Mechatronik", "name_en": "Mechatronics", "group_id": 1, "group": "Kỹ thuật & Công nghiệp 4.0", "codes": ["ICR"], "code_source": "SIT – HRK 13.01.2014: Mechatronik", "pairs": ["RI"], "routes": "Uni, HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ003", "name_vi": "Kỹ thuật điện", "name_de": "Elektrotechnik", "name_en": "Electrical Engineering", "group_id": 1, "group": "Kỹ thuật & Công nghiệp 4.0", "codes": ["IRE"], "code_source": "SIT – HRK 13.01.2014: Elektrotechnik", "pairs": [], "routes": "Uni, HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ004", "name_vi": "Kỹ thuật xây dựng", "name_de": "Bauingenieurwesen", "name_en": "Civil Engineering", "group_id": 1, "group": "Kỹ thuật & Công nghiệp 4.0", "codes": ["RIC"], "code_source": "SIT – HRK 13.01.2014: Bauingenieurwesen", "pairs": [], "routes": "Uni, HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ005", "name_vi": "Khoa học máy tính", "name_de": "Informatik", "name_en": "Computer Science", "group_id": 2, "group": "Tin học, AI & Dữ liệu", "codes": ["IRE"], "code_source": "SIT – HRK 13.01.2014: Informatik", "pairs": [], "routes": "Uni, HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ006", "name_vi": "Khoa học dữ liệu", "name_de": "Data Science", "name_en": "Data Science", "group_id": 2, "group": "Tin học, AI & Dữ liệu", "codes": [], "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã", "pairs": ["IC"], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ007", "name_vi": "Hệ thống thông tin quản lý", "name_de": "Wirtschaftsinformatik", "name_en": "Business Information Systems", "group_id": 2, "group": "Tin học, AI & Dữ liệu", "codes": ["EIR"], "code_source": "SIT – HRK 13.01.2014: Wirtschaftsinformatik", "pairs": ["IE"], "routes": "Uni, HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ008", "name_vi": "Tin học truyền thông", "name_de": "Medieninformatik", "name_en": "Media Informatics", "group_id": 2, "group": "Tin học, AI & Dữ liệu", "codes": ["IRA"], "code_source": "SIT – HRK 13.01.2014: Medieninformatik", "pairs": ["IA"], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ009", "name_vi": "Quản trị kinh doanh", "name_de": "Betriebswirtschaftslehre", "name_en": "Business Administration", "group_id": 3, "group": "Kinh tế & Quản trị", "codes": ["ECI"], "code_source": "SIT – HRK 13.01.2014: Betriebswirtschaftslehre", "pairs": ["EC"], "routes": "Uni, HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ010", "name_vi": "Kinh doanh quốc tế", "name_de": "International Business", "name_en": "International Business", "group_id": 3, "group": "Kinh tế & Quản trị", "codes": ["ECS"], "code_source": "SIT – HRK 13.01.2014: Internationale Betriebswirtschaftslehre (gần nhất)", "pairs": [], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ011", "name_vi": "Marketing", "name_de": "Marketing", "name_en": "Marketing", "group_id": 3, "group": "Kinh tế & Quản trị", "codes": ["EAS"], "code_source": "SIT – HRK 13.01.2014: Marketing, Vertrieb", "pairs": [], "routes": "Uni, HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ012", "name_vi": "Kinh tế học", "name_de": "Volkswirtschaftslehre", "name_en": "Economics", "group_id": 3, "group": "Kinh tế & Quản trị", "codes": ["IEC"], "code_source": "SIT – HRK 13.01.2014: Volkswirtschaftslehre", "pairs": [], "routes": "Uni", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ013", "name_vi": "Quản trị logistics", "name_de": "Logistikmanagement", "name_en": "Logistics Management", "group_id": 4, "group": "Logistics & Giao thông", "codes": ["CER"], "code_source": "SIT – HRK 13.01.2014: Logistik, Transport, Verkehrswirtschaft (gần nhất)", "pairs": [], "routes": "HAW, Uni, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ014", "name_vi": "Quản trị chuỗi cung ứng", "name_de": "Supply Chain Management", "name_en": "Supply Chain Management", "group_id": 4, "group": "Logistics & Giao thông", "codes": [], "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã", "pairs": [], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ015", "name_vi": "Kỹ thuật giao thông", "name_de": "Verkehrswesen", "name_en": "Transport Engineering", "group_id": 4, "group": "Logistics & Giao thông", "codes": ["IRC"], "code_source": "SIT – HRK 13.01.2014: Verkehrstechnik (gần nhất)", "pairs": [], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ016", "name_vi": "Kỹ thuật – kinh tế", "name_de": "Wirtschaftsingenieurwesen", "name_en": "Industrial Engineering and Management", "group_id": 1, "group": "Kỹ thuật & Công nghiệp 4.0", "codes": ["EIR"], "code_source": "SIT – HRK 13.01.2014: Wirtschaftsingenieurwesen", "pairs": ["RE"], "routes": "Uni, HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ017", "name_vi": "Kỹ thuật môi trường", "name_de": "Umweltingenieurwesen", "name_en": "Environmental Engineering", "group_id": 5, "group": "Môi trường, Năng lượng & Sự sống", "codes": ["IRC"], "code_source": "SIT – HRK 13.01.2014: Umweltingenieurwesen", "pairs": [], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ018", "name_vi": "Năng lượng tái tạo", "name_de": "Erneuerbare Energien", "name_en": "Renewable Energy", "group_id": 5, "group": "Môi trường, Năng lượng & Sự sống", "codes": ["IRC"], "code_source": "SIT – HRK 13.01.2014: Erneuerbare Energien", "pairs": [], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ019", "name_vi": "Công nghệ sinh học", "name_de": "Biotechnologie", "name_en": "Biotechnology", "group_id": 5, "group": "Môi trường, Năng lượng & Sự sống", "codes": ["ICR"], "code_source": "SIT – HRK 13.01.2014: Biotechnologie", "pairs": [], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ020", "name_vi": "Khoa học môi trường", "name_de": "Umweltwissenschaften", "name_en": "Environmental Sciences", "group_id": 5, "group": "Môi trường, Năng lượng & Sự sống", "codes": ["ISE"], "code_source": "SIT – HRK 13.01.2014: Umweltwissenschaft", "pairs": [], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ021", "name_vi": "Tâm lý học", "name_de": "Psychologie", "name_en": "Psychology", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["ISC"], "code_source": "SIT – HRK 13.01.2014: Psychologie", "pairs": ["IS"], "routes": "Uni", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ022", "name_vi": "Khoa học giáo dục", "name_de": "Erziehungswissenschaft", "name_en": "Educational Science", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["SIC"], "code_source": "SIT – HRK 13.01.2014: Pädagogik, Erziehungswissenschaft", "pairs": [], "routes": "Uni, HAW", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ023", "name_vi": "Thiết kế truyền thông", "name_de": "Kommunikationsdesign", "name_en": "Communication Design", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["AEC"], "code_source": "SIT – HRK 13.01.2014: Kommunikationsdesign", "pairs": [], "routes": "HAW, ART", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ024", "name_vi": "Công tác xã hội", "name_de": "Soziale Arbeit", "name_en": "Social Work", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["SCI"], "code_source": "SIT – HRK 13.01.2014: Soziale Arbeit", "pairs": [], "routes": "HAW, DUAL", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ025", "name_vi": "Thiết kế sản phẩm", "name_de": "Produktdesign", "name_en": "Product Design", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["ACE"], "code_source": "SIT – HRK 13.01.2014: Industriedesign, Produktdesign", "pairs": ["RA"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ026", "name_vi": "Thiết kế công nghiệp", "name_de": "Industriedesign", "name_en": "Industrial Design", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["ACE"], "code_source": "SIT – HRK 13.01.2014: Industriedesign, Produktdesign", "pairs": ["RA"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ027", "name_vi": "Hoạt động trị liệu", "name_de": "Ergotherapie", "name_en": "Occupational Therapy", "group_id": 7, "group": "Sức khỏe & Trị liệu (đề xuất thêm)", "codes": ["SRI"], "code_source": "SIT – HRK 13.01.2014: Ergotherapie", "pairs": ["RS"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ028", "name_vi": "Vật lý trị liệu", "name_de": "Physiotherapie", "name_en": "Physiotherapy", "group_id": 7, "group": "Sức khỏe & Trị liệu (đề xuất thêm)", "codes": ["SIR"], "code_source": "SIT – HRK 13.01.2014: Physiotherapie", "pairs": ["RS"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ029", "name_vi": "Quản lý xây dựng", "name_de": "Baumanagement", "name_en": "Construction Management", "group_id": 1, "group": "Kỹ thuật & Công nghiệp 4.0", "codes": ["RIC"], "code_source": "SIT – HRK 13.01.2014: Bauingenieurwesen (gần nhất)", "pairs": ["RE"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ030", "name_vi": "Kỹ thuật sản xuất", "name_de": "Produktionstechnik", "name_en": "Production Engineering", "group_id": 1, "group": "Kỹ thuật & Công nghiệp 4.0", "codes": ["IRE"], "code_source": "SIT – HRK 13.01.2014: Produktionstechnik", "pairs": ["RC"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ031", "name_vi": "Logistics", "name_de": "Logistik", "name_en": "Logistics", "group_id": 4, "group": "Logistics & Giao thông", "codes": ["CER"], "code_source": "SIT – HRK 13.01.2014: Logistik, Transport, Verkehrswirtschaft", "pairs": ["RC"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ032", "name_vi": "Khoa học nhận thức", "name_de": "Kognitionswissenschaft", "name_en": "Cognitive Science", "group_id": 2, "group": "Tin học, AI & Dữ liệu", "codes": [], "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã", "pairs": ["IA"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ033", "name_vi": "Khoa học sức khỏe", "name_de": "Gesundheitswissenschaften", "name_en": "Health Sciences", "group_id": 7, "group": "Sức khỏe & Trị liệu (đề xuất thêm)", "codes": ["SIC"], "code_source": "SIT – HRK 13.01.2014: Gesundheitswissenschaft", "pairs": ["IS"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ034", "name_vi": "Phân tích kinh doanh", "name_de": "Business Analytics", "name_en": "Business Analytics", "group_id": 2, "group": "Tin học, AI & Dữ liệu", "codes": [], "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã", "pairs": ["IE"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ035", "name_vi": "Toán kinh tế", "name_de": "Wirtschaftsmathematik", "name_en": "Business Mathematics", "group_id": 2, "group": "Tin học, AI & Dữ liệu", "codes": ["IEC"], "code_source": "SIT – HRK 13.01.2014: Wirtschaftsmathematik", "pairs": ["IC"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ036", "name_vi": "Giáo dục truyền thông", "name_de": "Medienpädagogik", "name_en": "Media Education", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["SAC"], "code_source": "SIT – HRK 13.01.2014: Medienpädagogik (Lehramt) (gần nhất)", "pairs": ["AS"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ037", "name_vi": "Giáo dục nghệ thuật", "name_de": "Kunstpädagogik", "name_en": "Art Education", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["ASR"], "code_source": "SIT – HRK 13.01.2014: Kunstpädagogik", "pairs": ["AS"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ038", "name_vi": "Quản trị truyền thông", "name_de": "Medienmanagement", "name_en": "Media Management", "group_id": 3, "group": "Kinh tế & Quản trị", "codes": ["ESA"], "code_source": "SIT – HRK 13.01.2014: Medienwirtschaft, Medienmanagement", "pairs": ["AE"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ039", "name_vi": "Quản trị truyền thông – PR", "name_de": "Kommunikationsmanagement", "name_en": "Communication Management", "group_id": 3, "group": "Kinh tế & Quản trị", "codes": [], "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã", "pairs": ["AE"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ040", "name_vi": "Truyền thông kỹ thuật", "name_de": "Technische Kommunikation", "name_en": "Technical Communication", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": [], "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã", "pairs": ["AC"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ041", "name_vi": "Thiết kế thông tin", "name_de": "Informationsdesign", "name_en": "Information Design", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": [], "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã", "pairs": ["AC"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ042", "name_vi": "Quản trị nhân sự", "name_de": "Personalmanagement", "name_en": "Human Resource Management", "group_id": 3, "group": "Kinh tế & Quản trị", "codes": ["ECS"], "code_source": "SIT – HRK 13.01.2014: Personalmanagement, Personalwesen", "pairs": ["SE"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ043", "name_vi": "Quản lý dịch vụ xã hội", "name_de": "Sozialmanagement", "name_en": "Social Management", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["CES"], "code_source": "SIT – HRK 13.01.2014: Public Management, Sozialmanagement (gần nhất)", "pairs": ["SE"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ044", "name_vi": "Quản lý y tế", "name_de": "Gesundheitsmanagement", "name_en": "Healthcare Management", "group_id": 7, "group": "Sức khỏe & Trị liệu (đề xuất thêm)", "codes": ["ESC"], "code_source": "SIT – HRK 13.01.2014: Gesundheitsmanagement", "pairs": ["SC"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ045", "name_vi": "Quản lý giáo dục", "name_de": "Bildungsmanagement", "name_en": "Education Management", "group_id": 6, "group": "Xã hội, Giáo dục & Sáng tạo", "codes": ["ESC"], "code_source": "SIT – HRK 13.01.2014: Bildungsmanagement", "pairs": ["SC"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}, {"id": "MAJ046", "name_vi": "Kiểm soát tài chính (Controlling)", "name_de": "Controlling", "name_en": "Management Accounting and Control", "group_id": 3, "group": "Kinh tế & Quản trị", "codes": ["CEI"], "code_source": "SIT – HRK 13.01.2014: Rechnungswesen, Steuerwesen, Controlling", "pairs": ["EC"], "routes": "Cần tra", "status": "Đề xuất – chưa kiểm định", "active": true}], "questions": [{"code": "R01", "group": "R", "facet": 1, "variant": "A", "text": "Người thích làm việc bằng tay, sửa chữa đồ vật", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "R02", "group": "R", "facet": 2, "variant": "A", "text": "Người khỏe mạnh, thích vận động ngoài trời", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "R03", "group": "R", "facet": 3, "variant": "A", "text": "Người thực tế, thích kết quả nhìn thấy được", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "R04", "group": "R", "facet": 4, "variant": "A", "text": "Có thể lắp ráp, sửa chữa đồ điện, xe đạp", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "R05", "group": "R", "facet": 5, "variant": "A", "text": "Có thể sử dụng dụng cụ, máy móc", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "R06", "group": "R", "facet": 6, "variant": "A", "text": "Có thể đọc bản vẽ kỹ thuật", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "R07", "group": "R", "facet": 1, "variant": "B", "text": "Thích làm mô hình, đồ thủ công", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "R08", "group": "R", "facet": 2, "variant": "B", "text": "Thích làm việc trong xưởng, công trường", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "R09", "group": "R", "facet": 3, "variant": "B", "text": "Thích tìm hiểu máy móc hoạt động thế nào", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I01", "group": "I", "facet": 1, "variant": "A", "text": "Người thích quan sát, tìm hiểu nguyên nhân", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I02", "group": "I", "facet": 2, "variant": "A", "text": "Người tò mò, hay đặt câu hỏi", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I03", "group": "I", "facet": 3, "variant": "A", "text": "Người thích suy nghĩ logic", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I04", "group": "I", "facet": 4, "variant": "A", "text": "Có thể giải bài toán khó", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I05", "group": "I", "facet": 5, "variant": "A", "text": "Có thể làm thí nghiệm khoa học", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I06", "group": "I", "facet": 6, "variant": "A", "text": "Có thể phân tích số liệu", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I07", "group": "I", "facet": 1, "variant": "B", "text": "Thích đọc sách khoa học", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I08", "group": "I", "facet": 2, "variant": "B", "text": "Thích tìm lời giải cho vấn đề khó", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "I09", "group": "I", "facet": 3, "variant": "B", "text": "Thích nghiên cứu một chủ đề thật sâu", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A01", "group": "A", "facet": 1, "variant": "A", "text": "Người giàu trí tưởng tượng", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A02", "group": "A", "facet": 2, "variant": "A", "text": "Người thích tự do, không gò bó", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A03", "group": "A", "facet": 3, "variant": "A", "text": "Người nhạy cảm với cái đẹp", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A04", "group": "A", "facet": 4, "variant": "A", "text": "Có thể vẽ, thiết kế, chụp ảnh", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A05", "group": "A", "facet": 5, "variant": "A", "text": "Có thể viết truyện, thơ, bài luận hay", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A06", "group": "A", "facet": 6, "variant": "A", "text": "Có thể chơi nhạc cụ, hát, diễn", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A07", "group": "A", "facet": 1, "variant": "B", "text": "Thích sáng tác, tạo ra cái mới", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A08", "group": "A", "facet": 2, "variant": "B", "text": "Thích học ngoại ngữ, văn hóa", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "A09", "group": "A", "facet": 3, "variant": "B", "text": "Thích trang trí, phối màu", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S01", "group": "S", "facet": 1, "variant": "A", "text": "Người thân thiện, hay giúp đỡ người khác", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S02", "group": "S", "facet": 2, "variant": "A", "text": "Người kiên nhẫn, biết lắng nghe", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S03", "group": "S", "facet": 3, "variant": "A", "text": "Người hiểu cảm xúc người khác", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S04", "group": "S", "facet": 4, "variant": "A", "text": "Có thể giảng bài cho bạn hiểu", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S05", "group": "S", "facet": 5, "variant": "A", "text": "Có thể làm việc nhóm tốt", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S06", "group": "S", "facet": 6, "variant": "A", "text": "Có thể an ủi, động viên người khác", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S07", "group": "S", "facet": 1, "variant": "B", "text": "Thích chăm sóc người khác", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S08", "group": "S", "facet": 2, "variant": "B", "text": "Thích hoạt động tình nguyện", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "S09", "group": "S", "facet": 3, "variant": "B", "text": "Thích làm việc với trẻ em", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E01", "group": "E", "facet": 1, "variant": "A", "text": "Người năng động, thích dẫn dắt", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E02", "group": "E", "facet": 2, "variant": "A", "text": "Người tự tin, thích thuyết phục", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E03", "group": "E", "facet": 3, "variant": "A", "text": "Người dám chấp nhận rủi ro", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E04", "group": "E", "facet": 4, "variant": "A", "text": "Có thể lãnh đạo một nhóm", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E05", "group": "E", "facet": 5, "variant": "A", "text": "Có thể bán hàng, đàm phán", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E06", "group": "E", "facet": 6, "variant": "A", "text": "Có thể nói trước đám đông", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E07", "group": "E", "facet": 1, "variant": "B", "text": "Thích kinh doanh, kiếm tiền", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E08", "group": "E", "facet": 2, "variant": "B", "text": "Thích tổ chức sự kiện", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "E09", "group": "E", "facet": 3, "variant": "B", "text": "Thích cạnh tranh, đặt mục tiêu cao", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C01", "group": "C", "facet": 1, "variant": "A", "text": "Người cẩn thận, ngăn nắp", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C02", "group": "C", "facet": 2, "variant": "A", "text": "Người đúng giờ, có kế hoạch", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C03", "group": "C", "facet": 3, "variant": "A", "text": "Người tỉ mỉ, chính xác", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C04", "group": "C", "facet": 4, "variant": "A", "text": "Có thể làm việc với số liệu, bảng tính", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C05", "group": "C", "facet": 5, "variant": "A", "text": "Có thể sắp xếp hồ sơ gọn gàng", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C06", "group": "C", "facet": 6, "variant": "A", "text": "Có thể làm theo quy trình chặt chẽ", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C07", "group": "C", "facet": 1, "variant": "B", "text": "Thích công việc ổn định, rõ ràng", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C08", "group": "C", "facet": 2, "variant": "B", "text": "Thích lập danh sách, kế hoạch", "version": "v1-tam", "active": true, "placeholder": true}, {"code": "C09", "group": "C", "facet": 3, "variant": "B", "text": "Thích kiểm tra lỗi, đối chiếu sổ sách", "version": "v1-tam", "active": true, "placeholder": true}], "settings": {"items_per_group": 6, "draw_mode": "fixed", "scale_min": 1, "scale_max": 5, "allow_dont_know": true, "min_valid_per_group": 4, "third_letter_threshold": 4.2, "third_letter_requires_full": true, "near_tie_gap": 0.25, "interest_mark": 3.4, "bands": [[1.8, "Rất ít quan tâm"], [2.6, "Ít quan tâm"], [3.4, "Quan tâm trung bình"], [4.2, "Quan tâm"], [5.0, "Rất quan tâm"]], "c_labels": [[15, "Liên quan nhiều"], [11, "Liên quan"], [7, "Có thể khám phá"]], "max_majors_public": 5, "dont_know_flag_total": 6, "one_option_share": 0.9, "longstring": 10, "fast_avg_seconds": 2.0, "rushed_run": 5, "rushed_seconds": 1.0, "fixed_set": ["R01", "R02", "R03", "R04", "R05", "R06", "I01", "I02", "I03", "I04", "I05", "I06", "A01", "A02", "A03", "A04", "A05", "A06", "S01", "S02", "S03", "S04", "S05", "S06", "E01", "E02", "E03", "E04", "E05", "E06", "C01", "C02", "C03", "C04", "C05", "C06"]}, "form_fields": [{"key": "ho_ten", "label": "Họ và tên", "type": "Chữ", "required": true, "to_crm": true, "on_report": true, "group": "Liên hệ", "note": null}, {"key": "so_dien_thoai", "label": "Số điện thoại / Zalo", "type": "Số điện thoại", "required": true, "to_crm": true, "on_report": false, "group": "Liên hệ", "note": "Dùng để tìm và gộp khách trùng"}, {"key": "nam_sinh", "label": "Năm sinh", "type": "Năm (chọn)", "required": true, "to_crm": true, "on_report": false, "group": "Cá nhân", "note": "Suy ra lớp, kiểm tra cần đồng ý của phụ huynh"}, {"key": "email", "label": "Email nhận báo cáo", "type": "Email", "required": false, "to_crm": true, "on_report": false, "group": "Liên hệ", "note": null}, {"key": "dong_y", "label": "Đồng ý xử lý dữ liệu", "type": "Ô đánh dấu", "required": true, "to_crm": true, "on_report": false, "group": "Pháp lý", "note": "Không được đánh dấu sẵn; lưu thời điểm đồng ý"}, {"key": "sdt_phu_huynh", "label": "Số điện thoại phụ huynh", "type": "Số điện thoại", "required": false, "to_crm": true, "on_report": false, "group": "Liên hệ", "note": null}, {"key": "tinh", "label": "Tỉnh / thành phố", "type": "Danh sách", "required": false, "to_crm": true, "on_report": false, "group": "Cá nhân", "note": null}, {"key": "truong_dang_hoc", "label": "Trường đang học", "type": "Chữ, gợi ý tự động", "required": false, "to_crm": true, "on_report": false, "group": "Học tập", "note": null}, {"key": "lop", "label": "Lớp / năm học", "type": "Danh sách", "required": false, "to_crm": true, "on_report": true, "group": "Học tập", "note": null}, {"key": "ban_hoc", "label": "Ban / khối (Tự nhiên, Xã hội…)", "type": "Danh sách", "required": false, "to_crm": true, "on_report": false, "group": "Học tập", "note": null}, {"key": "dtb_hoc_ba", "label": "Điểm trung bình học bạ (thang 10)", "type": "Số 0–10", "required": false, "to_crm": true, "on_report": false, "group": "Học tập", "note": "Theo năm gần nhất"}, {"key": "diem_mon", "label": "Điểm các môn chính", "type": "Bảng môn – điểm", "required": false, "to_crm": true, "on_report": false, "group": "Học tập", "note": "Danh sách môn do quản trị viên chọn: Toán, Văn, Anh, Lý, Hóa, Sinh, Tin…"}, {"key": "ngoai_ngu", "label": "Ngoại ngữ và chứng chỉ", "type": "Danh sách + điểm", "required": false, "to_crm": true, "on_report": false, "group": "Học tập", "note": "IELTS, Goethe, TestDaF…"}, {"key": "bac_quan_tam", "label": "Hướng học quan tâm", "type": "Danh sách", "required": false, "to_crm": true, "on_report": true, "group": "Mục tiêu", "note": "Đại học nghiên cứu (Uni) / Đại học ứng dụng (HAW) / Chưa biết"}, {"key": "ngon_ngu_hoc", "label": "Ngôn ngữ học dự kiến", "type": "Danh sách", "required": false, "to_crm": true, "on_report": false, "group": "Mục tiêu", "note": "Tiếng Đức / Tiếng Anh / Chưa biết"}, {"key": "thoi_diem_du_kien", "label": "Thời điểm dự kiến đi", "type": "Năm", "required": false, "to_crm": true, "on_report": false, "group": "Mục tiêu", "note": null}, {"key": "muc_tai_chinh", "label": "Khả năng tài chính (khoảng)", "type": "Danh sách khoảng", "required": false, "to_crm": true, "on_report": false, "group": "Mục tiêu", "note": "Chỉ khoảng, không hỏi số cụ thể"}, {"key": "nguon", "label": "Biết đến qua", "type": "Danh sách", "required": false, "to_crm": true, "on_report": false, "group": "Marketing", "note": "Ghi tự động nếu đi từ quảng cáo"}], "riasec_types": [{"code": "R", "name": "Thực hành", "label": "Thực hành, kỹ thuật", "hex_index": 0}, {"code": "I", "name": "Nghiên cứu", "label": "Nghiên cứu, phân tích", "hex_index": 1}, {"code": "A", "name": "Sáng tạo", "label": "Sáng tạo, nghệ thuật", "hex_index": 2}, {"code": "S", "name": "Xã hội", "label": "Hỗ trợ, phát triển con người", "hex_index": 3}, {"code": "E", "name": "Kinh doanh", "label": "Kinh doanh, tạo ảnh hưởng", "hex_index": 4}, {"code": "C", "name": "Tổ chức", "label": "Tổ chức, quy trình", "hex_index": 5}], "environments": [{"code": "DESIGN_OFFICE", "name": "Văn phòng thiết kế", "activities": "CAD, phối hợp kỹ thuật", "hint": "R;I;C"}, {"code": "LAB", "name": "Phòng thí nghiệm", "activities": "Thí nghiệm, đo lường", "hint": "I;R;C"}, {"code": "RESEARCH_LAB", "name": "Trung tâm nghiên cứu", "activities": "Phân tích, nghiên cứu", "hint": "I;A"}, {"code": "FACTORY", "name": "Nhà máy", "activities": "Sản xuất, kiểm tra hệ thống", "hint": "R;C;I"}, {"code": "FIELD", "name": "Thực địa", "activities": "Khảo sát, thu thập mẫu", "hint": "R;I"}, {"code": "CONSTRUCTION_SITE", "name": "Công trường", "activities": "Giám sát thi công", "hint": "R;E;C"}, {"code": "OFFICE", "name": "Văn phòng", "activities": "Họp, phân tích, báo cáo", "hint": "C;E;I"}, {"code": "REMOTE", "name": "Làm việc từ xa", "activities": "Phần mềm, phối hợp trực tuyến", "hint": "Không suy ra RIASEC"}, {"code": "CLIENT_SITE", "name": "Tại khách hàng", "activities": "Tư vấn, triển khai", "hint": "E;S;I"}, {"code": "STUDIO", "name": "Studio sáng tạo", "activities": "Thiết kế, sản xuất nội dung", "hint": "A;E"}, {"code": "WAREHOUSE", "name": "Kho và logistics", "activities": "Vận hành, điều phối", "hint": "R;C"}, {"code": "SCHOOL", "name": "Trường học", "activities": "Giáo dục, hỗ trợ", "hint": "S;A"}, {"code": "TRAINING_ROOM", "name": "Phòng đào tạo", "activities": "Hướng dẫn, phát triển", "hint": "S;E"}, {"code": "COMMUNITY", "name": "Cộng đồng", "activities": "Hỗ trợ dịch vụ xã hội", "hint": "S;E"}], "third_letters": [{"code": "R", "specialty_de": "Anwendungsorientierte Technik", "specialty_en": "Applied Engineering", "skills": "thiết kế nguyên mẫu, công cụ và thử nghiệm"}, {"code": "I", "specialty_de": "Datenanalyse und Forschung", "specialty_en": "Data Analytics and Research", "skills": "phương pháp nghiên cứu, thống kê và tư duy phản biện"}, {"code": "A", "specialty_de": "Design und Innovation", "specialty_en": "Design and Innovation", "skills": "tư duy thiết kế, portfolio và thử nghiệm ý tưởng"}, {"code": "S", "specialty_de": "Menschzentrierte Gestaltung", "specialty_en": "Human-Centred Design", "skills": "phỏng vấn người dùng, giao tiếp và đạo đức"}, {"code": "E", "specialty_de": "Innovationsmanagement", "specialty_en": "Innovation Management", "skills": "thuyết trình, quản lý dự án và ra quyết định"}, {"code": "C", "specialty_de": "Qualitätsmanagement", "specialty_en": "Quality Management", "skills": "kiểm soát chất lượng, tài liệu và quy trình"}], "riasec_pairs": [{"pair": "RI", "name": "Thực hành + Nghiên cứu", "hex_distance": 1, "relation": "Liền kề", "majors": ["MAJ002", "MAJ001"], "occupations": ["Robotics Engineer / Robotikingenieur", "Mechanical Engineer / Maschinenbauingenieur"], "foundation": "Toán, Vật lý, lập trình và thực hành kỹ thuật; Toán, Vật lý, cơ học và thiết kế kỹ thuật"}, {"pair": "RA", "name": "Thực hành + Sáng tạo", "hex_distance": 2, "relation": "Cách một", "majors": ["MAJ025", "MAJ026"], "occupations": ["Product Designer / Produktdesigner", "Industrial Designer / Industriedesigner"], "foundation": "Phác thảo, thiết kế, vật liệu và hồ sơ sản phẩm; Tư duy tạo hình, CAD, nguyên mẫu và portfolio"}, {"pair": "RS", "name": "Thực hành + Xã hội", "hex_distance": 3, "relation": "Đối kháng", "majors": ["MAJ027", "MAJ028"], "occupations": ["Occupational Therapist / Ergotherapeut", "Physiotherapist / Physiotherapeut"], "foundation": "Sinh học, giao tiếp, thực hành; kiểm tra điều kiện hành nghề; Sinh học, vận động, tiếng Đức và quy định nghề"}, {"pair": "RE", "name": "Thực hành + Kinh doanh", "hex_distance": 2, "relation": "Cách một", "majors": ["MAJ016", "MAJ029"], "occupations": ["Technical Project Manager / Technischer Projektmanager", "Construction Manager / Bauprojektmanager"], "foundation": "Toán, kỹ thuật, quản lý dự án; Kỹ thuật xây dựng, quản trị và thực hành dự án"}, {"pair": "RC", "name": "Thực hành + Tổ chức", "hex_distance": 1, "relation": "Liền kề", "majors": ["MAJ030", "MAJ031"], "occupations": ["Production Engineer / Produktionsingenieur", "Logistics Planner / Logistikplaner"], "foundation": "Toán, kỹ thuật sản xuất, quy trình và an toàn; Toán ứng dụng, vận hành và phân tích quy trình"}, {"pair": "IA", "name": "Nghiên cứu + Sáng tạo", "hex_distance": 1, "relation": "Liền kề", "majors": ["MAJ008", "MAJ032"], "occupations": ["Interaction Developer / Interaktionsentwickler", "Cognitive Science Researcher / Kognitionswissenschaftler"], "foundation": "Toán, lập trình, thiết kế tương tác; Toán, phương pháp nghiên cứu, thống kê"}, {"pair": "IS", "name": "Nghiên cứu + Xã hội", "hex_distance": 2, "relation": "Cách một", "majors": ["MAJ021", "MAJ033"], "occupations": ["Psychology Researcher / Psychologieforscher", "Health Researcher / Gesundheitsforscher"], "foundation": "Thống kê, phương pháp nghiên cứu, ngôn ngữ; kiểm tra nghề được quản lý; Sinh học, thống kê và nghiên cứu sức khỏe"}, {"pair": "IE", "name": "Nghiên cứu + Kinh doanh", "hex_distance": 3, "relation": "Đối kháng", "majors": ["MAJ007", "MAJ034"], "occupations": ["Business Analyst / Business-Analyst", "Business Analytics Specialist / Business-Analytics-Spezialist"], "foundation": "Toán, CNTT, phân tích kinh doanh; Thống kê, dữ liệu, kinh tế và lập trình"}, {"pair": "IC", "name": "Nghiên cứu + Tổ chức", "hex_distance": 2, "relation": "Cách một", "majors": ["MAJ006", "MAJ035"], "occupations": ["Data Analyst / Datenanalyst", "Quantitative Analyst / Quantitativer Analyst"], "foundation": "Toán, thống kê, Python và dữ liệu; Giải tích, xác suất, mô hình định lượng"}, {"pair": "AS", "name": "Sáng tạo + Xã hội", "hex_distance": 1, "relation": "Liền kề", "majors": ["MAJ036", "MAJ037"], "occupations": ["Media Educator / Medienpädagoge", "Art Educator / Kunstpädagoge"], "foundation": "Truyền thông, giáo dục và dự án sáng tạo; Nghệ thuật, sư phạm, portfolio; kiểm tra yêu cầu nghề"}, {"pair": "AE", "name": "Sáng tạo + Kinh doanh", "hex_distance": 2, "relation": "Cách một", "majors": ["MAJ038", "MAJ039"], "occupations": ["Media Manager / Medienmanager", "Communication Manager / Kommunikationsmanager"], "foundation": "Sáng tạo nội dung, marketing và quản trị; Truyền thông, nghiên cứu công chúng và lập kế hoạch"}, {"pair": "AC", "name": "Sáng tạo + Tổ chức", "hex_distance": 3, "relation": "Đối kháng", "majors": ["MAJ040", "MAJ041"], "occupations": ["Technical Writer / Technischer Redakteur", "Information Designer / Informationsdesigner"], "foundation": "Viết, cấu trúc thông tin và hiểu biết công nghệ; Thiết kế thông tin, trực quan hóa, công cụ số"}, {"pair": "SE", "name": "Xã hội + Kinh doanh", "hex_distance": 1, "relation": "Liền kề", "majors": ["MAJ042", "MAJ043"], "occupations": ["HR Specialist / Personalreferent", "Social Services Manager / Sozialmanager"], "foundation": "Giao tiếp, tổ chức, luật lao động cơ bản; Khoa học xã hội, quản trị và dự án cộng đồng"}, {"pair": "SC", "name": "Xã hội + Tổ chức", "hex_distance": 2, "relation": "Cách một", "majors": ["MAJ044", "MAJ045"], "occupations": ["Healthcare Administrator / Gesundheitsmanager", "Education Coordinator / Bildungskoordinator"], "foundation": "Tổ chức dịch vụ, dữ liệu, hiểu biết y tế; Giáo dục, quy trình, quản trị dự án"}, {"pair": "EC", "name": "Kinh doanh + Tổ chức", "hex_distance": 1, "relation": "Liền kề", "majors": ["MAJ009", "MAJ046"], "occupations": ["Operations Manager / Betriebsmanager", "Financial Controller / Controller"], "foundation": "Toán kinh tế, kế toán, quản trị; Kế toán, tài chính, Excel và dữ liệu"}], "occupations": [{"id": "OCC001", "name_en": "Mechanical Design Engineer", "name_de": "Konstruktionsingenieur/in", "field": "ENG", "tasks": "Thiết kế CAD; tính toán; thử nghiệm", "skills": "Toán; Vật lý; CAD", "level": "Bachelor/Master", "regulation": "No", "riasec": "RI", "environments": "DESIGN_OFFICE, LAB, FACTORY", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC002", "name_en": "Automation Engineer", "name_de": "Automatisierungsingenieur/in", "field": "ENG", "tasks": "Thiết kế hệ thống điều khiển; tích hợp cảm biến", "skills": "Điều khiển; lập trình; điện tử", "level": "Bachelor/Master", "regulation": "No", "riasec": "RI", "environments": "FACTORY, LAB, OFFICE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC003", "name_en": "Electrical Engineer", "name_de": "Elektroingenieur/in", "field": "ENG", "tasks": "Thiết kế mạch; kiểm tra hệ thống điện", "skills": "Toán; mạch điện; đo lường", "level": "Bachelor/Master", "regulation": "No", "riasec": "RI", "environments": "LAB, FACTORY, FIELD", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC004", "name_en": "Civil Engineer", "name_de": "Bauingenieur/in", "field": "ENG", "tasks": "Thiết kế công trình; phối hợp thi công", "skills": "Cơ học; kết cấu; quản lý dự án", "level": "Bachelor/Master", "regulation": "Check role", "riasec": "RC", "environments": "OFFICE, CONSTRUCTION_SITE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC005", "name_en": "Software Developer", "name_de": "Softwareentwickler/in", "field": "IT", "tasks": "Lập trình; kiểm thử; bảo trì phần mềm", "skills": "Thuật toán; lập trình; teamwork", "level": "Bachelor/Master", "regulation": "No", "riasec": "IC", "environments": "OFFICE, REMOTE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC006", "name_en": "Data Analyst", "name_de": "Datenanalyst/in", "field": "IT", "tasks": "Làm sạch dữ liệu; phân tích; trực quan hóa", "skills": "Thống kê; Python; SQL", "level": "Bachelor/Master", "regulation": "No", "riasec": "IC", "environments": "OFFICE, REMOTE, LAB", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC007", "name_en": "IT Consultant", "name_de": "IT-Berater/in", "field": "IT", "tasks": "Phân tích yêu cầu; thiết kế giải pháp", "skills": "Quy trình; hệ thống thông tin; giao tiếp", "level": "Bachelor/Master", "regulation": "No", "riasec": "IE", "environments": "CLIENT_SITE, OFFICE, REMOTE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC008", "name_en": "UX Designer", "name_de": "UX-Designer/in", "field": "IT", "tasks": "Nghiên cứu người dùng; thiết kế giao diện", "skills": "UX; prototype; nghiên cứu người dùng", "level": "Bachelor/Master", "regulation": "No", "riasec": "IA", "environments": "STUDIO, OFFICE, REMOTE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC009", "name_en": "Financial Controller", "name_de": "Controller/in", "field": "BUS", "tasks": "Dự toán; phân tích chi phí; báo cáo", "skills": "Kế toán; Excel; ERP", "level": "Bachelor/Master", "regulation": "No", "riasec": "EC", "environments": "OFFICE, REMOTE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC010", "name_en": "Business Development Manager", "name_de": "Business-Development-Manager/in", "field": "BUS", "tasks": "Nghiên cứu thị trường; tìm đối tác", "skills": "Phân tích thị trường; ngoại ngữ; đàm phán", "level": "Bachelor/Master", "regulation": "No", "riasec": "EI", "environments": "OFFICE, CLIENT_SITE, REMOTE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC011", "name_en": "Marketing Manager", "name_de": "Marketingmanager/in", "field": "BUS", "tasks": "Lập chiến dịch; phân tích khách hàng", "skills": "Marketing; dữ liệu; giao tiếp", "level": "Bachelor/Master", "regulation": "No", "riasec": "EA", "environments": "OFFICE, STUDIO, REMOTE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC012", "name_en": "Economic Analyst", "name_de": "Wirtschaftsanalyst/in", "field": "BUS", "tasks": "Phân tích chỉ số kinh tế; dự báo", "skills": "Kinh tế lượng; thống kê", "level": "Bachelor/Master", "regulation": "No", "riasec": "IE", "environments": "OFFICE, RESEARCH_LAB", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC013", "name_en": "Logistics Planner", "name_de": "Logistikplaner/in", "field": "LOG", "tasks": "Lập kế hoạch vận tải; tối ưu luồng hàng", "skills": "Quản trị vận hành; dữ liệu; ERP", "level": "Bachelor/Master", "regulation": "No", "riasec": "CR", "environments": "WAREHOUSE, OFFICE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC014", "name_en": "Supply Chain Analyst", "name_de": "Supply-Chain-Analyst/in", "field": "LOG", "tasks": "Phân tích tồn kho; dự báo nhu cầu", "skills": "Thống kê; ERP; Excel", "level": "Bachelor/Master", "regulation": "No", "riasec": "IC", "environments": "OFFICE, WAREHOUSE, REMOTE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC015", "name_en": "Transport Planner", "name_de": "Verkehrsplaner/in", "field": "LOG", "tasks": "Phân tích lưu lượng; thiết kế mạng giao thông", "skills": "GIS; mô hình hóa; toán", "level": "Bachelor/Master", "regulation": "No", "riasec": "IR", "environments": "OFFICE, FIELD", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC016", "name_en": "Production Planner", "name_de": "Produktionsplaner/in", "field": "LOG", "tasks": "Lập lịch sản xuất; phối hợp vật tư", "skills": "Quy trình; ERP; kỹ thuật", "level": "Bachelor/Master", "regulation": "No", "riasec": "CR", "environments": "FACTORY, OFFICE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC017", "name_en": "Environmental Engineer", "name_de": "Umweltingenieur/in", "field": "GREEN", "tasks": "Đánh giá tác động; đề xuất giải pháp", "skills": "Hóa; môi trường; GIS", "level": "Bachelor/Master", "regulation": "Check role", "riasec": "IR", "environments": "FIELD, LAB, OFFICE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC018", "name_en": "Energy Engineer", "name_de": "Energieingenieur/in", "field": "GREEN", "tasks": "Thiết kế và tối ưu hệ thống năng lượng", "skills": "Điện; nhiệt; mô hình năng lượng", "level": "Bachelor/Master", "regulation": "No", "riasec": "RI", "environments": "FIELD, OFFICE, LAB", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC019", "name_en": "Biotechnologist", "name_de": "Biotechnologe/in", "field": "GREEN", "tasks": "Thí nghiệm; phân tích mẫu; quy trình", "skills": "Sinh học; hóa học; an toàn phòng lab", "level": "Bachelor/Master", "regulation": "Check role", "riasec": "IC", "environments": "LAB, FACTORY", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC020", "name_en": "Environmental Researcher", "name_de": "Umweltforscher/in", "field": "GREEN", "tasks": "Khảo sát; phân tích dữ liệu môi trường", "skills": "Sinh thái; thống kê; nghiên cứu", "level": "Master often helpful", "regulation": "No", "riasec": "IS", "environments": "FIELD, RESEARCH_LAB", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC021", "name_en": "Learning and Development Specialist", "name_de": "Personalentwickler/in", "field": "SOC", "tasks": "Khảo sát nhu cầu; thiết kế đào tạo", "skills": "Tâm lý; đào tạo; nghiên cứu", "level": "Bachelor/Master", "regulation": "No for this role", "riasec": "IS", "environments": "OFFICE, TRAINING_ROOM", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC022", "name_en": "Education Programme Officer", "name_de": "Bildungsreferent/in", "field": "SOC", "tasks": "Thiết kế chương trình; đánh giá đào tạo", "skills": "Sư phạm; nghiên cứu; quản lý", "level": "Bachelor/Master", "regulation": "Check role", "riasec": "SA", "environments": "SCHOOL, OFFICE, TRAINING_ROOM", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC023", "name_en": "Communication Designer", "name_de": "Kommunikationsdesigner/in", "field": "SOC", "tasks": "Thiết kế nhận diện; sản xuất nội dung", "skills": "Thiết kế; portfolio; phần mềm đồ họa", "level": "Bachelor/Master", "regulation": "No", "riasec": "AE", "environments": "STUDIO, OFFICE, REMOTE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC024", "name_en": "Social Worker", "name_de": "Sozialarbeiter/in", "field": "SOC", "tasks": "Tư vấn; hỗ trợ cá nhân; phối hợp dịch vụ", "skills": "Giao tiếp; pháp luật xã hội; thực hành", "level": "Bachelor", "regulation": "Check state recognition", "riasec": "SC", "environments": "COMMUNITY, SCHOOL, OFFICE", "source": "Layer 4 (04_OCCUPATIONS)", "status": "Illustrative - expert review needed"}, {"id": "OCC025", "name_en": "Robotics Engineer", "name_de": "Robotikingenieur", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RI", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC026", "name_en": "Mechanical Engineer", "name_de": "Maschinenbauingenieur", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RI", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC027", "name_en": "Product Designer", "name_de": "Produktdesigner", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RA", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC028", "name_en": "Industrial Designer", "name_de": "Industriedesigner", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RA", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC029", "name_en": "Occupational Therapist", "name_de": "Ergotherapeut", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RS", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC030", "name_en": "Physiotherapist", "name_de": "Physiotherapeut", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RS", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC031", "name_en": "Technical Project Manager", "name_de": "Technischer Projektmanager", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RE", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC032", "name_en": "Construction Manager", "name_de": "Bauprojektmanager", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RE", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC033", "name_en": "Production Engineer", "name_de": "Produktionsingenieur", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "RC", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC034", "name_en": "Interaction Developer", "name_de": "Interaktionsentwickler", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "IA", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC035", "name_en": "Cognitive Science Researcher", "name_de": "Kognitionswissenschaftler", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "IA", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC036", "name_en": "Psychology Researcher", "name_de": "Psychologieforscher", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "IS", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC037", "name_en": "Health Researcher", "name_de": "Gesundheitsforscher", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "IS", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC038", "name_en": "Business Analyst", "name_de": "Business-Analyst", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "IE", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC039", "name_en": "Business Analytics Specialist", "name_de": "Business-Analytics-Spezialist", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "IE", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC040", "name_en": "Quantitative Analyst", "name_de": "Quantitativer Analyst", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "IC", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC041", "name_en": "Media Educator", "name_de": "Medienpädagoge", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "AS", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC042", "name_en": "Art Educator", "name_de": "Kunstpädagoge", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "AS", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC043", "name_en": "Media Manager", "name_de": "Medienmanager", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "AE", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC044", "name_en": "Communication Manager", "name_de": "Kommunikationsmanager", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "AE", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC045", "name_en": "Technical Writer", "name_de": "Technischer Redakteur", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "AC", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC046", "name_en": "Information Designer", "name_de": "Informationsdesigner", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "AC", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC047", "name_en": "HR Specialist", "name_de": "Personalreferent", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "SE", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC048", "name_en": "Social Services Manager", "name_de": "Sozialmanager", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "SE", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC049", "name_en": "Healthcare Administrator", "name_de": "Gesundheitsmanager", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "SC", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC050", "name_en": "Education Coordinator", "name_de": "Bildungskoordinator", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "SC", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}, {"id": "OCC051", "name_en": "Operations Manager", "name_de": "Betriebsmanager", "field": null, "tasks": null, "skills": null, "level": null, "regulation": null, "riasec": "EC", "environments": null, "source": "15_CAP_NEN", "status": "Đề xuất – chưa kiểm định"}]}</script>
+<script>// HollandEngine (JS) – cùng quy tắc và kết quả với engine/HollandEngine.php
+const ORDER = 'RIASEC';
+function hexD(a, b) { const d = Math.abs(ORDER.indexOf(a) - ORDER.indexOf(b)); return Math.min(d, 6 - d); }
+const REL = { 1: 'Liền kề', 2: 'Cách một', 3: 'Đối kháng' };
+const CONS = { 1: 'Cao', 2: 'Trung bình', 3: 'Thấp' };
+function cIndex(student, major) {
+  let c = 0;
+  [3, 2, 1].forEach((w, i) => { if (i < major.length && i < student.length) c += w * (3 - hexD(student[i], major[i])); });
+  return c;
+}
+function cmp(a, b) { for (let i = 0; i < a.length; i++) { if (a[i] < b[i]) return -1; if (a[i] > b[i]) return 1; } return 0; }
+const r4 = (x) => Math.round(x * 10000) / 10000;
+
+function makeEngine(D) {
+  const S = D.settings;
+  const band = (m) => { for (const [max, l] of S.bands) if (m <= max + 1e-9) return l; return S.bands[S.bands.length - 1][1]; };
+  const pairKey = (a, b) => (ORDER.indexOf(a) < ORDER.indexOf(b) ? a + b : b + a);
+
+  function recommend(code3, groups) {
+    const byId = Object.fromEntries(D.majors.map((m) => [m.id, m]));
+    const pair = D.riasec_pairs.find((p) => p.pair === pairKey(code3[0], code3[1]));
+    const best = (mj) => {
+      let b = null;
+      for (const c of mj.codes) {
+        const ci = cIndex(code3, c);
+        let w = 0; [3, 2, 1].forEach((wt, i) => { if (c[i]) w += wt * groups[c[i]].mean; });
+        if (!b || cmp([ci, w], [b.c, b.w]) > 0) b = { c: ci, w: r4(w), code: c };
+      }
+      return b;
+    };
+    const label = (c) => { if (c === null || c === undefined) return 'Chưa có mã ngành'; for (const [min, l] of S.c_labels) if (c >= min) return l; return null; };
+    const pairRows = (pair ? pair.majors : []).filter((id) => byId[id] && byId[id].active).map((id, k) => {
+      const mj = byId[id]; const b = best(mj) || {};
+      return { id, name_vi: mj.name_vi, name_de: mj.name_de, source: 'pair', pair: pair.pair, code: b.code ?? null, c: b.c ?? null, w: b.w ?? 0, orig: k, label: 'Ngành nền của cặp ' + pair.pair };
+    });
+    pairRows.sort((x, y) => cmp([y.c ?? -1, y.w, -y.orig], [x.c ?? -1, x.w, -x.orig]));
+    const others = [];
+    for (const mj of D.majors) {
+      if (!mj.active || (pair && pair.majors.includes(mj.id)) || !mj.codes.length) continue;
+      const b = best(mj);
+      if (groups[b.code[0]].mean <= S.interest_mark) continue;
+      const l = label(b.c); if (l === null) continue;
+      others.push({ id: mj.id, name_vi: mj.name_vi, name_de: mj.name_de, source: 'catalog', pair: null, code: b.code, c: b.c, w: b.w, label: l });
+    }
+    others.sort((x, y) => cmp([y.c, y.w], [x.c, x.w]) || (x.id < y.id ? -1 : x.id > y.id ? 1 : 0));
+    return [...pairRows, ...others].map((r, i) => { const o = { ...r, rank: i + 1 }; delete o.orig; return o; });
+  }
+
+  function flags(answers, groups) {
+    const f = [];
+    const scored = answers.filter((a) => !a.check);
+    const kbTotal = Object.values(groups).reduce((s, g) => s + g.dont_know, 0);
+    if (kbTotal > S.dont_know_flag_total) f.push({ code: 'nhieu_khong_biet', level: 'nhe', detail: `${kbTotal} câu "Không biết"` });
+    const short = Object.values(groups).filter((g) => !g.enough).map((g) => g.code);
+    if (short.length) f.push({ code: 'nhom_thieu_du_lieu', level: short.length >= 2 ? 'nang' : 'nhe', detail: short.join(', ') });
+    const vals = scored.map((a) => a.value).filter((v) => v !== null);
+    if (vals.length) {
+      const cnt = {}; vals.forEach((v) => (cnt[v] = (cnt[v] || 0) + 1));
+      const share = Math.max(...Object.values(cnt)) / scored.length;
+      if (share >= S.one_option_share) f.push({ code: 'mot_muc_chiem', level: 'nang', detail: Math.round(share * 100) + '% cùng một mức' });
+    }
+    let run = 0, longest = 0, prev = 'x';
+    for (const a of scored) { run = a.value !== null && a.value === prev ? run + 1 : 1; prev = a.value; longest = Math.max(longest, run); }
+    if (longest >= S.longstring) f.push({ code: 'chuoi_giong_nhau', level: 'nhe', detail: `${longest} câu liên tiếp cùng mức` });
+    const ms = answers.map((a) => a.ms).filter((v) => v !== null && v !== undefined);
+    if (ms.length === answers.length && ms.length) {
+      const avg = ms.reduce((s, v) => s + Math.min(v, 60000), 0) / ms.length / 1000;
+      if (avg < S.fast_avg_seconds) f.push({ code: 'qua_nhanh', level: 'nang', detail: Math.round(avg * 10) / 10 + ' giây/câu' });
+      let rr = 0, b = 0; for (const v of ms) { rr = v < S.rushed_seconds * 1000 ? rr + 1 : 0; b = Math.max(b, rr); }
+      if (b >= S.rushed_run) f.push({ code: 'doan_bam_voi', level: 'nhe', detail: `${b} câu liên tiếp dưới 1 giây` });
+    }
+    const heavy = f.filter((x) => x.level === 'nang').length;
+    return { reliability: heavy ? 'Chưa đủ tin cậy' : f.length ? 'Cần xem lại' : 'Tin cậy', items: f };
+  }
+
+  function score(answers) {
+    const sum = {}, cnt = {}, kb = {};
+    for (const g of ORDER) { sum[g] = 0; cnt[g] = 0; kb[g] = 0; }
+    for (const a of answers) { if (a.check) continue; if (a.value === null) kb[a.group]++; else { sum[a.group] += a.value; cnt[a.group]++; } }
+    const groups = {};
+    for (const g of ORDER) {
+      const mean = cnt[g] ? sum[g] / cnt[g] : 0;
+      groups[g] = { code: g, mean: r4(mean), answered: cnt[g], dont_know: kb[g], enough: cnt[g] >= S.min_valid_per_group, band: cnt[g] ? band(mean) : 'Chưa đủ dữ liệu' };
+    }
+    const order = Object.values(groups).sort((x, y) => cmp([y.enough ? 1 : 0, y.mean, -ORDER.indexOf(y.code)], [x.enough ? 1 : 0, x.mean, -ORDER.indexOf(x.code)])).map((g) => g.code);
+    const [g1, g2, g3, g4] = order; const m = (g) => groups[g].mean;
+    const code2 = g1 + g2, code3 = g1 + g2 + g3;
+    const thirdDetail = m(g3) > S.third_letter_threshold && (!S.third_letter_requires_full || groups[g3].answered >= S.items_per_group);
+    const alternates = [];
+    if (m(g3) - m(g4) <= S.near_tie_gap + 1e-9) alternates.push(g1 + g2 + g4);
+    if (m(g2) - m(g3) <= S.near_tie_gap + 1e-9) alternates.push(g1 + g3 + g2);
+    if (m(g1) - m(g2) <= S.near_tie_gap + 1e-9) alternates.push(g2 + g1 + g3);
+    const rel = (a, b) => ({ pair: a + b, distance: hexD(a, b), relation: REL[hexD(a, b)] });
+    const relations = { '1-2': rel(g1, g2), '1-3': rel(g1, g3), '2-3': rel(g2, g3) };
+    let x = 0, y = 0;
+    [...ORDER].forEach((g, i) => { x += m(g) * Math.cos((i * 60 * Math.PI) / 180); y += m(g) * Math.sin((i * 60 * Math.PI) / 180); });
+    const means = [...ORDER].map(m);
+    return {
+      schema: 'holland-result/3', groups, order, code2, code3, third_detail: thirdDetail,
+      third: thirdDetail ? D.third_letters.find((t) => t.code === g3) : null, alternates, relations, consistency: CONS[relations['1-2'].distance],
+      profile: { elevation: r4(means.reduce((s, v) => s + v, 0) / 6), differentiation: r4(Math.max(...means) - Math.min(...means)), axis_x: r4(x), axis_y: r4(y), strength: r4(Math.hypot(x, y)) },
+      majors: recommend(code3, groups), flags: flags(answers, groups),
+    };
+  }
+  return { score, band, cIndex, hexD, pairKey, recommend };
+}
+if (typeof module !== 'undefined') module.exports = { makeEngine, hexD, cIndex, ORDER, REL, CONS };
+</script>
+<script>
+const D = JSON.parse(document.getElementById('seed').textContent);
+const NAME = { R: 'Thực hành', I: 'Nghiên cứu', A: 'Sáng tạo', S: 'Xã hội', E: 'Kinh doanh', C: 'Tổ chức' };
+const LIKERT = ['Chưa bao giờ đúng', 'Chỉ đúng trong một vài trường hợp', 'Đúng một nửa', 'Đúng hầu hết trong mọi trường hợp', 'Hoàn toàn đúng'];
+const SUBJECTS = ['Toán', 'Ngữ văn', 'Tiếng Anh', 'Vật lý', 'Hóa học', 'Sinh học', 'Tin học'];
+const FLAG_TIPS = {
+  nhieu_khong_biet: 'Em chưa trải nghiệm nhiều hoạt động: giới thiệu hoạt động thực tế, video nghề rồi hỏi lại.',
+  nhom_thieu_du_lieu: 'Nhóm có ít hơn 4 câu được trả lời: không kết luận về nhóm này, hỏi trực tiếp.',
+  mot_muc_chiem: 'Gần như mọi câu cùng một mức: có thể em làm cho xong. Mời em làm lại hoặc phỏng vấn trực tiếp.',
+  chuoi_giong_nhau: 'Một chuỗi dài câu cùng mức: hỏi lại nhóm câu đó.',
+  qua_nhanh: 'Trung bình dưới 2 giây mỗi câu: chưa đủ thời gian đọc, mời em làm lại.',
+  doan_bam_voi: 'Có đoạn bấm rất nhanh: hỏi lại các câu trong đoạn đó.',
+};
+const SAMPLES = {
+  'ISA (mẫu của Thầy)': { R: [3,4,3,4,3,3], I: [5,5,4,5,5,4], A: [4,4,5,4,4,4], S: [4,5,4,5,4,4], E: [2,3,2,3,2,2], C: [3,3,4,3,3,3] },
+  'IRC (chữ 3 > 4,2)': { R: [5,4,5,4,5,4], I: [5,5,5,4,5,4], A: [3,3,3,3,3,3], S: [2,3,2,3,2,3], E: [2,2,2,2,3,2], C: [4,5,4,4,5,4] },
+  'SIA (đảo thứ tự)': { R: [3,4,3,4,3,3], I: [4,5,4,5,4,4], A: [4,4,4,4,4,4], S: [5,5,4,5,5,4], E: [2,3,2,3,2,2], C: [3,3,4,3,3,3] },
+  'RS (đối kháng)': { R: [4,5,4,4,5,4], I: [3,2,3,2,3,2], A: [3,2,3,2,3,2], S: [4,5,4,4,5,4], E: [3,2,3,2,3,2], C: [3,2,3,2,3,2] },
+  'Mọi câu chọn 3': { R: [3,3,3,3,3,3], I: [3,3,3,3,3,3], A: [3,3,3,3,3,3], S: [3,3,3,3,3,3], E: [3,3,3,3,3,3], C: [3,3,3,3,3,3] },
+};
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmt = (x, d = 2) => (x ?? 0).toFixed(d).replace('.', ',');
+const help = (t) => `<span class="help" tabindex="0" data-tip="${esc(t)}" aria-label="${esc(t)}">i</span>`;
+const what = (t) => `<div class="what">${help('Mỗi trang quản trị có khung này; nội dung lưu trong bảng help_texts, quản trị viên tự sửa.')}<div><b>Trang này làm gì?</b> ${t}</div></div>`;
+function toast(t) { const el = document.getElementById('toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (el.hidden = true), 2200); }
+
+let E = makeEngine(D);
+const ST = { step: 0, info: {}, qs: [], answers: [], i: 0, shownAt: 0, fastRun: 0, result: null, viewAs: 'khach', adminTab: 'cai-dat', errors: {} };
+
+function drawQuestions() {
+  const s = D.settings; const per = s.items_per_group; let pick = {};
+  for (const g of ORDER) {
+    const bank = D.questions.filter((q) => q.group === g && q.active);
+    let chosen;
+    if (s.draw_mode === 'fixed') chosen = bank.filter((q) => s.fixed_set.includes(q.code));
+    else if (s.draw_mode === 'by_facet') { const facets = [...new Set(bank.map((q) => q.facet))]; chosen = facets.map((f) => { const opts = bank.filter((q) => q.facet === f); return opts[Math.floor(Math.random() * opts.length)]; }); }
+    else chosen = [...bank].sort(() => Math.random() - 0.5);
+    pick[g] = chosen.slice(0, per);
+  }
+  const out = []; for (let k = 0; k < per; k++) for (const g of ORDER) if (pick[g][k]) out.push(pick[g][k]);
+  return out;
+}
+function startQuiz() { ST.qs = drawQuestions(); ST.answers = ST.qs.map((q) => ({ code: q.code, group: q.group, value: undefined, ms: null })); ST.i = 0; ST.shownAt = performance.now(); ST.fastRun = 0; }
+function fillSample(name) {
+  const p = SAMPLES[name]; ST.qs = drawQuestions(); const idx = Object.fromEntries([...ORDER].map((g) => [g, 0]));
+  ST.answers = ST.qs.map((q) => ({ code: q.code, group: q.group, value: p[q.group][idx[q.group]++], ms: 4000 }));
+  if (!ST.info.ho_ten) ST.info = { ho_ten: 'Nguyễn Văn An (mẫu)', so_dien_thoai: '0900000000', nam_sinh: '2009', dong_y: true, lop: '11', dtb_hoc_ba: '8,4', bac_quan_tam: 'Đại học ứng dụng (HAW)' };
+  finish();
+}
+function finish() { ST.result = E.score(ST.answers.map((a) => ({ ...a, value: a.value === undefined ? null : a.value }))); ST.step = 3; ST.viewAs = 'khach'; render(); window.scrollTo(0, 0); }
+
+/* ---------------- HỌC SINH ---------------- */
+function viewStudent() {
+  const steps = ['Chọn bài', 'Thông tin', 'Làm bài', 'Kết quả'].map((t, i) => `<span class="${i === ST.step ? 'on' : i < ST.step ? 'done' : ''}">${i + 1}. ${t}</span>`).join('');
+  let body = '';
+  if (ST.step === 0) body = stepMethod();
+  if (ST.step === 1) body = stepInfo();
+  if (ST.step === 2) body = stepQuiz();
+  if (ST.step === 3) body = stepResult();
+  return `<section class="view"><div class="steps" aria-label="Các bước">${steps}</div>${body}</section>`;
+}
+function hexLogo(code) {
+  const pts = [...ORDER].map((g, i) => { const a = (Math.PI / 180) * (90 - i * 60); return [60 + 44 * Math.cos(a), 60 - 44 * Math.sin(a), g]; });
+  return `<svg class="hexlogo" viewBox="0 0 120 120" role="img" aria-label="Lục giác Holland"><polygon points="${pts.map((p) => p[0] + ',' + p[1]).join(' ')}" fill="none" stroke="var(--line-strong)" stroke-width="2"/>${pts.map((p) => `<circle cx="${p[0]}" cy="${p[1]}" r="12" fill="${code && code.includes(p[2]) ? 'var(--accent)' : 'var(--surface)'}" stroke="var(--fg)" stroke-width="1.5"/><text x="${p[0]}" y="${p[1] + 4.5}" text-anchor="middle" font-size="12" font-weight="700" fill="${code && code.includes(p[2]) ? 'var(--accent-ink)' : 'var(--fg)'}">${p[2]}</text>`).join('')}</svg>`;
+}
+function stepMethod() {
+  return `<div><h1>Em hợp với nhóm ngành nào?</h1><p class="lead" style="margin-top:8px">Trắc nghiệm sở thích nghề nghiệp miễn phí, khoảng 6 – 8 phút. Kết quả gợi ý ngành học tại Đức để em khám phá cùng tư vấn viên.</p></div>
+  <div class="card method">${hexLogo('ISA')}<div style="display:grid;gap:8px"><div class="eyebrow">Phương pháp 1</div><h2>Trắc nghiệm Holland</h2>
+  <p class="lead">36 câu về các hoạt động hằng ngày, chia 6 nhóm sở thích. Mỗi câu chọn một trong 5 mức; câu nào em chưa từng làm thì chọn "Không biết".</p>
+  <div class="row"><button class="btn primary" data-act="go1">Bắt đầu</button><span class="chip">${D.settings.items_per_group * 6} câu</span><span class="chip">Không cần tài khoản</span></div></div></div>
+  <div class="card" style="display:grid;gap:10px"><div class="eyebrow">Dành cho người xem bản mẫu</div><p>Điền nhanh một bộ câu trả lời mẫu để xem ngay trang kết quả:</p>
+  <div class="row">${Object.keys(SAMPLES).map((n) => `<button class="btn small" data-sample="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>`;
+}
+function field(f) {
+  const v = ST.info[f.key] ?? ''; const err = ST.errors[f.key] ? `<span class="err">${esc(ST.errors[f.key])}</span>` : '';
+  const lab = `${esc(f.label)}${f.required ? ' <span class="req">*</span>' : ''}`;
+  if (f.key === 'dong_y') return `<label style="display:flex;align-items:flex-start;gap:10px;font-size:14px"><input type="checkbox" style="margin-top:3px;flex:none" id="f-dong_y" data-f="dong_y" ${v ? 'checked' : ''}> <span>${lab} – Em đồng ý để VIGER EDU dùng câu trả lời và thông tin này để tính kết quả và tư vấn. Em dưới 16 tuổi: phụ huynh xác nhận khi tư vấn viên liên hệ.</span></label>${err}`;
+  if (f.key === 'diem_mon') return `<div style="display:grid;gap:8px"><span style="font-size:13.5px;font-weight:500">${lab} ${help('Danh sách môn do quản trị viên chọn ở trang Trường thông tin.')}</span><div class="subjects">${SUBJECTS.map((s) => `<label class="f"><span style="font-weight:400">${s}</span><input id="f-mon-${s}" data-mon="${s}" inputmode="decimal" placeholder="0 – 10" value="${esc((ST.info.diem_mon || {})[s] || '')}"></label>`).join('')}</div></div>`;
+  let input;
+  if (f.key === 'nam_sinh') input = `<select id="f-nam_sinh" data-f="nam_sinh"><option value="">Chọn năm</option>${Array.from({ length: 16 }, (_, i) => 2014 - i).map((y) => `<option ${String(y) === String(v) ? 'selected' : ''}>${y}</option>`).join('')}</select>`;
+  else if (f.key === 'lop') input = `<select id="f-lop" data-f="lop"><option value="">Chọn</option>${['9', '10', '11', '12', 'Đã tốt nghiệp', 'Sinh viên'].map((x) => `<option ${x === v ? 'selected' : ''}>${x}</option>`).join('')}</select>`;
+  else if (f.key === 'bac_quan_tam') input = `<select id="f-bac" data-f="bac_quan_tam"><option value="">Chọn</option>${['Đại học nghiên cứu (Uni)', 'Đại học ứng dụng (HAW)', 'Chưa biết'].map((x) => `<option ${x === v ? 'selected' : ''}>${x}</option>`).join('')}</select>`;
+  else input = `<input id="f-${f.key}" data-f="${f.key}" value="${esc(v)}" ${f.key === 'so_dien_thoai' || f.key === 'sdt_phu_huynh' ? 'inputmode="tel"' : ''} ${f.key === 'email' ? 'type="email"' : ''}>`;
+  return `<label class="f"><span>${lab}</span>${input}${err}</label>`;
+}
+function stepInfo() {
+  const shown = D.form_fields.filter((f) => f.visible !== false);
+  const req = shown.filter((f) => f.required && f.key !== 'dong_y'); const opt = shown.filter((f) => !f.required);
+  const groups = {}; opt.forEach((f) => (groups[f.group] = groups[f.group] || []).push(f));
+  return `<div><h1>Thông tin của em</h1><p class="lead" style="margin-top:6px">Ô có dấu <span style="color:var(--accent)">*</span> là bắt buộc. Phần còn lại em có thể bỏ qua và bổ sung sau; tư vấn viên sẽ gợi ý sát hơn khi có thêm thông tin.</p></div>
+  <form class="card" id="info" novalidate style="display:grid;gap:18px">
+    <div class="grid3">${req.map(field).join('')}</div>
+    ${Object.entries(groups).map(([g, fs]) => `<details class="opt-group" ${g === 'Học tập' ? 'open' : ''}><summary>${esc(g)} <span style="color:var(--muted);font-weight:400">– không bắt buộc</span></summary><div class="grid3" style="margin-top:14px">${fs.filter((f) => f.key !== 'diem_mon').map(field).join('')}</div>${fs.some((f) => f.key === 'diem_mon') ? '<div style="margin-top:14px">' + field(fs.find((f) => f.key === 'diem_mon')) + '</div>' : ''}</details>`).join('')}
+    ${field(D.form_fields.find((f) => f.key === 'dong_y'))}
+    <div class="row"><button type="button" class="btn" data-act="back0">Quay lại</button><button class="btn primary" type="submit">Làm bài trắc nghiệm</button></div>
+  </form>`;
+}
+function stepQuiz() {
+  const q = ST.qs[ST.i]; const a = ST.answers[ST.i]; const n = ST.qs.length; const done = ST.answers.filter((x) => x.value !== undefined).length;
+  return `<div class="card" style="display:grid;gap:18px">
+    <div class="row" style="justify-content:space-between"><span class="eyebrow num">Câu ${ST.i + 1} / ${n}</span><span class="chip num">Đã trả lời ${done}</span></div>
+    <div class="progress" aria-hidden="true"><i style="width:${(done / n) * 100}%"></i></div>
+    <p class="q">${esc(q.text)}</p>
+    <p style="color:var(--fg-2)">Câu này đúng với em đến mức nào?</p>
+    <div class="opts" role="radiogroup" aria-label="Mức độ">
+      ${LIKERT.map((t, k) => `<label class="opt ${a.value === k + 1 ? 'sel' : ''}"><input type="radio" name="ans" id="ans-${k + 1}" value="${k + 1}" ${a.value === k + 1 ? 'checked' : ''}><span class="k">${k + 1}</span><span>${t}</span></label>`).join('')}
+      ${D.settings.allow_dont_know ? `<label class="opt kb ${a.value === null ? 'sel' : ''}"><input type="radio" name="ans" id="ans-kb" value="kb" ${a.value === null ? 'checked' : ''}><span class="k">?</span><span>Không biết / em chưa từng làm hoạt động này</span></label>` : ''}
+    </div>
+    ${ST.fastRun >= 3 ? '<p class="nudge">Em nhớ đọc kỹ từng câu nhé. Không có đáp án đúng sai, chỉ cần đúng với em.</p>' : ''}
+    <div class="row" style="justify-content:space-between"><button class="btn" data-act="prev" ${ST.i === 0 ? 'disabled' : ''}>Câu trước</button>
+    ${ST.i === n - 1 ? `<button class="btn primary" data-act="finish" ${done < n ? 'disabled' : ''}>Xem kết quả</button>` : `<button class="btn dark" data-act="next" ${a.value === undefined ? 'disabled' : ''}>Câu tiếp theo</button>`}</div>
+  </div>`;
+}
+
+function barsHTML(r, detail) {
+  const s = D.settings; const pct = (v) => ((v - 1) / 4) * 100;
+  const top = detail === 'khach' ? (r.third_detail ? 3 : 2) : 3;
+  return `<div class="bars">${r.order.map((g, i) => { const G = r.groups[g];
+    const color = i < top ? 'var(--bar-strong)' : i === 2 ? 'var(--bar-mid)' : 'var(--bar-weak)';
+    return `<div class="bar"><span><b>${g}</b> · ${NAME[g]}</span><div class="track" title="${fmt(G.mean)}"><div class="fill" style="width:${pct(G.mean)}%;background:${G.enough ? color : 'repeating-linear-gradient(45deg,var(--bar-weak) 0 4px,transparent 4px 8px)'}"></div>${i === 2 ? `<div class="mark" style="left:${pct(s.third_letter_threshold)}%" title="Ngưỡng đọc chữ thứ ba"></div>` : ''}</div>
+    <span class="v num">${detail === 'khach' ? fmt(G.mean, 1) : fmt(G.mean)} · ${esc(G.band)}${G.dont_know && detail !== 'khach' ? ` · ${G.dont_know} KB` : ''}</span></div>`; }).join('')}
+    <div class="scale-labels"><div></div><div><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><div></div></div></div>`;
+}
+function hexChart(r) {
+  const cx = 150, cy = 150, R = 105; const pt = (g, v) => { const i = ORDER.indexOf(g); const a = (Math.PI / 180) * (90 - i * 60); const rr = ((v - 1) / 4) * R; return [cx + rr * Math.cos(a), cy - rr * Math.sin(a)]; };
+  const ring = (v) => [...ORDER].map((g) => pt(g, v).join(',')).join(' ');
+  return `<svg viewBox="0 0 300 300" role="img" aria-label="Lục giác hồ sơ">${[1.8, 2.6, 3.4, 4.2, 5].map((v) => `<polygon points="${ring(v)}" fill="none" stroke="${v === 4.2 ? 'var(--accent)' : 'var(--line)'}" stroke-dasharray="${v === 4.2 ? '4 3' : ''}"/>`).join('')}
+  ${[['R', 'S'], ['I', 'E'], ['A', 'C']].map(([a, b]) => `<line x1="${pt(a, 5)[0]}" y1="${pt(a, 5)[1]}" x2="${pt(b, 5)[0]}" y2="${pt(b, 5)[1]}" stroke="var(--line-strong)" stroke-dasharray="2 4"/>`).join('')}
+  <polygon points="${[...ORDER].map((g) => pt(g, r.groups[g].mean).join(',')).join(' ')}" fill="var(--accent)" fill-opacity=".18" stroke="var(--accent)" stroke-width="2"/>
+  ${[...ORDER].map((g) => { const [x, y] = pt(g, 5.9); return `<text x="${x}" y="${y + 5}" text-anchor="middle" font-size="15" font-weight="700" fill="var(--fg)">${g}</text>`; }).join('')}</svg>`;
+}
+function relSentence(rel) {
+  return { 'Liền kề': 'Hai nhóm này nằm cạnh nhau, bổ trợ cho nhau.', 'Cách một': 'Hai nhóm này khác nhau vừa phải.', 'Đối kháng': 'Em quan tâm hai hướng khá khác nhau – tư vấn viên sẽ giúp em tìm ngành kết hợp cả hai.' }[rel];
+}
+function majorList(r, who) {
+  const showAll = who !== 'khach'; const lim = showAll ? 8 : D.settings.max_majors_public;
+  const ms = r.majors.slice(0, lim);
+  if (!ms.length) return '<p class="lead">Chưa có ngành phù hợp trong danh mục.</p>';
+  return `<div class="majors">${ms.map((m) => `<div class="major"><div><b>${esc(m.name_vi || m.name_de)}</b> <span class="de">${esc(m.name_de)}</span></div>
+    <div>${m.source === 'pair' ? '<span class="chip red">Ngành nền của cặp</span>' : `<span class="chip">${esc(m.label)}</span>`}</div>
+    <div class="why">${who === 'khach' ? (m.source === 'pair' ? `Ngành tiêu biểu của nhóm ${NAME[r.code2[0]]} – ${NAME[r.code2[1]]}.` : 'Hoạt động của ngành gần với các nhóm em quan tâm.') :
+      `Mã ngành <span class="mono">${esc(m.code || '—')}</span> · chỉ số C ${m.c ?? '—'}/18 · ${m.source === 'pair' ? 'cặp ' + m.pair : 'danh mục'}${who === 'admin' ? ` · trọng số ${fmt(m.w)} · ${esc(m.id)}` : ''}`}</div></div>`).join('')}</div>`;
+}
+function stepResult() {
+  const r = ST.result; if (!r) return '';
+  const who = ST.viewAs;
+  const vs = `<div class="row" style="justify-content:space-between"><div><div class="eyebrow">Kết quả của ${esc(ST.info.ho_ten || 'em')}</div></div>
+    <div class="viewas" role="group" aria-label="Xem như">${[['khach', 'Khách'], ['tuvan', 'Tư vấn viên'], ['admin', 'Quản trị']].map(([k, t]) => `<button aria-pressed="${who === k}" data-viewas="${k}">${t}</button>`).join('')}</div></div>`;
+  const unreliable = r.flags.reliability === 'Chưa đủ tin cậy';
+  const showCode3 = who !== 'khach' || r.third_detail;
+  const g3 = r.order[2];
+  const head = `<div class="grid2"><div class="card" style="display:grid;gap:10px">
+    <div class="eyebrow">${showCode3 ? 'Mã Holland' : 'Hai nhóm em quan tâm nhất'} ${help(showCode3 ? 'Ba nhóm có điểm trung bình cao nhất, theo thứ tự: cá tính – loại công việc – môi trường.' : 'Hai nhóm có điểm trung bình cao nhất. Chữ thứ ba chỉ được đọc chi tiết khi nhóm thứ ba trên ' + fmt(D.settings.third_letter_threshold, 1) + ' điểm.')}</div>
+    <div class="code">${r.code2[0]}<span style="color:var(--accent)">${r.code2[1]}</span>${showCode3 ? (r.third_detail ? g3 : `<span class="dim">${g3}</span>`) : ''}</div>
+    <p><b>${NAME[r.code2[0]]} · ${NAME[r.code2[1]]}${showCode3 ? ' · ' + NAME[g3] : ''}</b></p>
+    <p style="color:var(--fg-2)">${esc(relSentence(r.relations['1-2'].relation))}</p>
+    ${who !== 'khach' ? `<div class="row"><span class="chip">${r.relations['1-2'].relation} (1–2)</span><span class="chip">${r.relations['1-3'].relation} (1–3)</span><span class="chip">${r.relations['2-3'].relation} (2–3)</span><span class="chip">Nhất quán: ${r.consistency}</span></div>` : ''}
+    ${who !== 'khach' && !r.third_detail ? `<p class="nudge">Khách chỉ thấy 2 chữ <b>${r.code2}</b> vì nhóm thứ ba (${g3}) = ${fmt(r.groups[g3].mean)}${r.groups[g3].answered < D.settings.items_per_group ? `, chỉ ${r.groups[g3].answered}/${D.settings.items_per_group} câu` : ''} chưa đạt điều kiện &gt; ${fmt(D.settings.third_letter_threshold, 1)} và đủ ${D.settings.items_per_group} câu.</p>` : ''}
+    ${who !== 'khach' && r.alternates.length ? `<p style="font-size:13.5px">Mã thay thế (sát điểm ≤ ${fmt(D.settings.near_tie_gap)}): ${r.alternates.map((c) => `<span class="mono">${c}</span>`).join(', ')}</p>` : ''}
+  </div>
+  <div class="card" style="display:grid;gap:10px">${r.third_detail ? `<div class="eyebrow">Hướng chuyên sâu theo chữ thứ ba (${g3})</div><h3>${esc(r.third.specialty_en)} · <span style="font-weight:400;font-style:italic">${esc(r.third.specialty_de)}</span></h3><p style="color:var(--fg-2)">Kỹ năng nên bồi dưỡng: ${esc(r.third.skills)}.</p>` :
+    `<div class="eyebrow">Nhóm thứ ba đang hình thành</div><p>${NAME[g3]} (${g3}) ${who === 'khach' ? fmt(r.groups[g3].mean, 1) : fmt(r.groups[g3].mean)} điểm. Khi nhóm này vượt ${fmt(D.settings.third_letter_threshold, 1)} điểm, báo cáo sẽ đọc thêm hướng chuyên sâu.</p><p style="color:var(--fg-2)">Tư vấn viên sẽ cùng em tìm hiểu thêm.</p>`}
+    ${who !== 'khach' ? `<div class="row" style="margin-top:4px"><span class="chip ${r.flags.reliability === 'Tin cậy' ? 'ok' : r.flags.reliability === 'Cần xem lại' ? 'warn' : 'bad'}">Độ tin cậy: ${r.flags.reliability}</span></div>
+      ${r.flags.items.map((f) => `<p style="font-size:13.5px"><b>${esc(f.detail)}</b> – ${esc(FLAG_TIPS[f.code])}</p>`).join('')}` : ''}
+  </div></div>`;
+  const profile = `<div class="card grid2" style="align-items:center"><div style="display:grid;gap:12px;min-width:0"><h3>Sáu nhóm sở thích ${help('Điểm mỗi nhóm = trung bình các câu đã trả lời trong nhóm, thang 1 – 5. Vạch đỏ: ngưỡng ' + fmt(D.settings.third_letter_threshold, 1) + ' để đọc chữ thứ ba.')}</h3>${barsHTML(r, who)}</div><div class="hex">${hexChart(r)}</div></div>`;
+  const majors = unreliable && who === 'khach' ? `<div class="locked"><h3>Ngành gợi ý</h3><p style="margin-top:6px">Câu trả lời của em chưa đủ để gợi ý ngành (ví dụ chọn gần như cùng một mức cho mọi câu). Em có thể làm lại khi rảnh, hoặc đặt lịch để tư vấn viên trao đổi trực tiếp.</p></div>` :
+    `<div class="card" style="display:grid;gap:12px"><div class="row" style="justify-content:space-between"><h3>Ngành có thể khám phá tại Đức ${help('Hai ngành nền của cặp xếp trước (theo thứ tự mã của em), sau đó là ngành khác trong danh mục có mã gần hồ sơ của em.')}</h3>${who !== 'khach' ? '<span class="chip">Xếp theo chỉ số C (Brown & Gore, 1994)</span>' : ''}</div>${majorList(r, who)}
+    <p style="font-size:13px;color:var(--muted)">Kết quả mô tả sở thích, không đánh giá năng lực. Đây là gợi ý để em khám phá và trao đổi với tư vấn viên.</p></div>`;
+  const admin = who === 'admin' ? `<div class="card" style="display:grid;gap:10px"><h3>Dữ liệu tính toán (chỉ quản trị viên)</h3><div class="tw"><table class="num"><tr><th>Nhóm</th><th class="c">Đã trả lời</th><th class="c">Không biết</th><th class="c">Trung bình</th><th>Nhãn</th><th class="c">Đủ dữ liệu</th></tr>
+    ${[...ORDER].map((g) => { const G = r.groups[g]; return `<tr><td><b>${g}</b> ${NAME[g]}</td><td class="c">${G.answered}</td><td class="c">${G.dont_know}</td><td class="c">${fmt(G.mean, 4)}</td><td>${G.band}</td><td class="c">${G.enough ? 'Có' : 'Không'}</td></tr>`; }).join('')}</table></div>
+    <p class="mono" style="font-size:12.5px;color:var(--fg-2)">mức chung ${fmt(r.profile.elevation)} · độ phân hóa ${fmt(r.profile.differentiation)} · trục X ${fmt(r.profile.axis_x)} · trục Y ${fmt(r.profile.axis_y)} · độ rõ hướng ${fmt(r.profile.strength)} · schema ${r.schema}</p></div>` : '';
+  const actions = who === 'khach' ? `<div class="row"><button class="btn primary" data-act="book">Đặt lịch tư vấn</button><button class="btn" data-act="go1">Bổ sung thông tin học tập</button><button class="btn" data-act="restart">Làm lại</button></div>` :
+    `<div class="row"><a class="btn" href="#tu-van" style="text-decoration:none;color:inherit">Mở thẻ khách trong CRM</a><button class="btn" data-act="restart">Làm bài mới</button></div>`;
+  return vs + head + profile + majors + admin + actions;
+}
+
+/* ---------------- TƯ VẤN VIÊN ---------------- */
+function viewConsultant() {
+  if (!ST.result) fillSampleSilent();
+  const r = ST.result; const info = ST.info;
+  const filled = D.form_fields.filter((f) => f.to_crm && f.key !== 'dong_y' && (f.key === 'diem_mon' ? info.diem_mon && Object.values(info.diem_mon).some(Boolean) : info[f.key]));
+  const g3 = r.order[2];
+  return `<section class="view">
+    <div><div class="eyebrow">crm.viger.edu.vn · Thẻ khách hàng</div><h1>${esc(info.ho_ten || 'Khách mẫu')}</h1></div>
+    ${what('Tư vấn viên tìm khách theo số điện thoại và thấy mọi thứ cần cho buổi tư vấn. Trường khách bỏ trống không hiện.')}
+    <div class="grid2">
+      <div class="card" style="display:grid;gap:10px"><h3>Thông tin khách</h3>
+        <div class="tw"><table>${filled.map((f) => `<tr><td style="color:var(--fg-2);width:45%">${esc(f.label)}</td><td>${f.key === 'diem_mon' ? Object.entries(info.diem_mon).filter(([, v]) => v).map(([k, v]) => `${k} ${esc(v)}`).join(' · ') : esc(info[f.key] === true ? 'Có' : info[f.key])}</td></tr>`).join('')}</table></div>
+        <p style="font-size:12.5px;color:var(--muted)">${D.form_fields.filter((f) => f.to_crm && f.key !== 'dong_y').length - filled.length} trường khách chưa điền đang được ẩn.</p></div>
+      <div class="card" style="display:grid;gap:8px"><h3>Holland</h3>
+        <div class="row"><span class="code" style="font-size:40px">${r.code3}</span><span class="chip">Khách thấy: ${r.third_detail ? r.code3 : r.code2}</span></div>
+        <div class="row"><span class="chip ${r.flags.reliability === 'Tin cậy' ? 'ok' : r.flags.reliability === 'Cần xem lại' ? 'warn' : 'bad'}">${r.flags.reliability}</span><span class="chip">${r.relations['1-2'].relation}</span><span class="chip">Nhất quán ${r.consistency}</span>${r.alternates.length ? `<span class="chip gold">Mã thay thế ${r.alternates.join(', ')}</span>` : ''}</div>
+        ${r.flags.items.length ? r.flags.items.map((f) => `<p style="font-size:13.5px"><b>${esc(f.detail)}</b> – ${esc(FLAG_TIPS[f.code])}</p>`).join('') : '<p style="font-size:13.5px;color:var(--fg-2)">Không có cờ. Kết quả dùng được để tư vấn.</p>'}
+        <p style="font-size:13.5px"><b>Câu hỏi gợi mở:</b> Em thích ${NAME[r.code2[0]].toLowerCase()} vì điều gì? Khi làm việc ${NAME[r.code2[1]].toLowerCase()}, em muốn ở vai trò nào? ${r.relations['1-2'].relation === 'Đối kháng' ? 'Hai hướng này có thể kết hợp ở ngành nào em từng nghe?' : ''}</p></div>
+    </div>
+    <div class="card" style="display:grid;gap:12px"><h3>Sáu nhóm (đủ số liệu)</h3>${barsHTML(r, 'tuvan')}</div>
+    <div class="card" style="display:grid;gap:12px"><h3>Ngành và điều kiện ${help('Ma trận sở thích × điều kiện của bản kiến trúc: tư vấn viên đánh dấu điều kiện, ngành tự xếp vào 4 ô.')}</h3>
+      <div class="tw"><table><tr><th>#</th><th>Ngành</th><th class="c">Mã</th><th class="c">C</th><th>Nguồn</th><th class="c">Ngoại ngữ</th><th class="c">Học lực</th><th class="c">Tài chính</th></tr>
+      ${r.majors.slice(0, 6).map((m) => `<tr><td class="num">${m.rank}</td><td><b>${esc(m.name_vi || m.name_de)}</b><br><span style="color:var(--fg-2);font-style:italic">${esc(m.name_de)}</span></td><td class="c mono">${esc(m.code || '—')}</td><td class="c num">${m.c ?? '—'}</td><td>${m.source === 'pair' ? 'Ngành nền cặp ' + m.pair : 'Danh mục'}</td>${['nn', 'hl', 'tc'].map((k) => `<td class="c"><select aria-label="Điều kiện" id="dk-${m.id}-${k}"><option>Chưa rõ</option><option>Đạt</option><option>Cần bổ sung</option></select></td>`).join('')}</tr>`).join('')}</table></div></div>
+    <div class="card" style="display:grid;gap:10px"><h3>Ghi nhận sau tư vấn ${help('Dữ liệu quan trọng nhất để kiểm định ứng dụng: mỗi lần ghi là một lần so kết quả của máy với nhận định của người.')}</h3>
+      <div class="row">${['Khớp', 'Khớp một phần', 'Không khớp'].map((t) => `<label class="row" style="gap:6px"><input type="radio" name="khop" id="khop-${t}"> ${t}</label>`).join('')}</div>
+      <label class="f" style="max-width:420px">Ngành em chọn cuối cùng<select id="nganh-chon"><option>Chưa chọn</option>${D.majors.map((m) => `<option>${esc(m.name_vi || m.name_de)}</option>`).join('')}</select></label>
+      <div><button class="btn dark" data-act="saveNote">Lưu ghi nhận</button></div></div>
+  </section>`;
+}
+function fillSampleSilent() { const p = SAMPLES['ISA (mẫu của Thầy)']; ST.qs = drawQuestions(); const idx = Object.fromEntries([...ORDER].map((g) => [g, 0])); ST.answers = ST.qs.map((q) => ({ code: q.code, group: q.group, value: p[q.group][idx[q.group]++], ms: 4000 })); ST.info = { ho_ten: 'Nguyễn Văn An (mẫu)', so_dien_thoai: '0900000000', nam_sinh: '2009', lop: '11', dtb_hoc_ba: '8,4', diem_mon: { 'Toán': '8,8', 'Tiếng Anh': '8,0' }, bac_quan_tam: 'Đại học ứng dụng (HAW)', dong_y: true }; ST.result = E.score(ST.answers); }
+
+/* ---------------- QUẢN TRỊ ---------------- */
+const ADMIN_TABS = [['cai-dat', 'Cài đặt'], ['cau-hoi', 'Câu hỏi'], ['cap', '15 cặp'], ['ma120', '120 mã'], ['nganh', 'Ngành'], ['truong', 'Trường thông tin']];
+function viewAdmin() {
+  const t = ST.adminTab;
+  const tabs = `<div class="tabs" role="tablist">${ADMIN_TABS.map(([k, l]) => `<button role="tab" aria-selected="${t === k}" data-tab="${k}">${l}</button>`).join('')}</div>`;
+  let body = '';
+  if (t === 'cai-dat') body = adminSettings();
+  if (t === 'cau-hoi') body = adminQuestions();
+  if (t === 'cap') body = adminPairs();
+  if (t === 'ma120') body = adminCodes();
+  if (t === 'nganh') body = adminMajors();
+  if (t === 'truong') body = adminFields();
+  return `<section class="view"><div><div class="eyebrow">holland.viger.edu.vn/quan-tri</div><h1>Quản trị</h1></div>${tabs}${body}</section>`;
+}
+function adminSettings() {
+  const s = D.settings;
+  const rows = [['third_letter_threshold', 'Ngưỡng đọc chữ thứ ba (lớn hơn)', 'Thầy: > 4,2'], ['items_per_group', 'Số câu mỗi nhóm', '6 cho bản 36 câu, 12 cho bản 72 câu'],
+    ['min_valid_per_group', 'Số câu tối thiểu có trả lời mỗi nhóm', 'Câu "Không biết" bỏ ra khỏi phép chia'], ['near_tie_gap', 'Mức "sát điểm" để hiện mã thay thế', 'Thầy ghi "cần hiệu chuẩn"; tạm 0,25'],
+    ['interest_mark', 'Mốc "Quan tâm" để nhận ngành ngoài cặp', 'Ngành có chữ đầu là nhóm dưới mốc thì không gợi ý'], ['max_majors_public', 'Số ngành khách thấy', '']];
+  return `${what('Mọi con số của thuật toán nằm ở đây, không viết cứng trong mã nguồn. Đổi xong, mọi trang dùng ngay; kết quả cũ vẫn giữ vì mỗi bài lưu phiên bản cài đặt.')}
+  <div class="card"><div class="tw"><table><tr><th>Cài đặt</th><th>Giá trị</th><th>Ghi chú</th></tr>${rows.map(([k, l, n]) => `<tr><td>${l}</td><td><input class="set num" id="set-${k}" data-set="${k}" value="${String(s[k]).replace('.', ',')}" inputmode="decimal"></td><td style="color:var(--fg-2)">${n}</td></tr>`).join('')}
+  <tr><td>Cách rút đề</td><td><select id="set-draw" data-set="draw_mode">${[['fixed', 'Cố định'], ['by_facet', 'Theo ý'], ['random', 'Ngẫu nhiên']].map(([v, t]) => `<option value="${v}" ${s.draw_mode === v ? 'selected' : ''}>${t}</option>`).join('')}</select></td><td style="color:var(--fg-2)">Cố định cho thí điểm; "Theo ý" lấy mỗi ý một cách viết</td></tr>
+  <tr><td>Cho chọn "Không biết"</td><td><input type="checkbox" class="toggle" id="set-kb" data-set="allow_dont_know" ${s.allow_dont_know ? 'checked' : ''}></td><td></td></tr></table></div>
+  <div class="row" style="margin-top:12px"><button class="btn dark" data-act="previewImpact">Xem trước tác động lên 5 hồ sơ mẫu</button></div><div id="impact" style="margin-top:12px"></div></div>
+  <div class="card" style="display:grid;gap:8px"><h3>Năm khung nhãn</h3><div class="row">${s.bands.map(([m, l]) => `<span class="chip">đến ${fmt(m)} · ${l}</span>`).join('')}</div>
+  <h3 style="margin-top:8px">Nhãn mức liên quan theo chỉ số C</h3><div class="row">${s.c_labels.map(([m, l]) => `<span class="chip">từ ${m} · ${l}</span>`).join('')}</div></div>`;
+}
+function impactTable() {
+  const rows = Object.entries(SAMPLES).map(([n, p]) => { const ans = []; for (let k = 0; k < 6; k++) for (const g of ORDER) ans.push({ code: g, group: g, value: p[g][k], ms: 4000 }); const r = E.score(ans); return `<tr><td>${esc(n)}</td><td class="mono">${r.code3}</td><td class="mono">${r.third_detail ? r.code3 : r.code2}</td><td>${r.flags.reliability}</td><td>${esc(r.majors[0]?.name_de || '—')}</td></tr>`; }).join('');
+  return `<div class="tw"><table><tr><th>Hồ sơ mẫu</th><th>Mã đủ</th><th>Khách thấy</th><th>Độ tin cậy</th><th>Ngành đầu</th></tr>${rows}</table></div>`;
+}
+function adminQuestions() {
+  const s = D.settings;
+  return `${what('Ngân hàng câu hỏi: mỗi câu thuộc một nhóm, một ý và một cách viết. Đề được rút theo cài đặt; nhập và xuất Excel để Thầy soạn câu.')}
+  <div class="row"><button class="btn dark" data-act="noop">+ Thêm câu</button><button class="btn" data-act="noop">Nhập Excel</button><button class="btn" data-act="noop">Xuất Excel</button><button class="btn" data-act="draw">Xem thử một đề</button><span class="chip">${D.questions.length} câu trong ngân hàng</span><span class="chip">Cách rút: ${{ fixed: 'Cố định', by_facet: 'Theo ý', random: 'Ngẫu nhiên' }[s.draw_mode]}</span></div>
+  <div id="draw"></div>
+  <p class="nudge">Nội dung câu đang tạm lấy từ bộ câu cũ; thay bằng bộ 72 câu R01 – C12 của Thầy bằng nút "Nhập Excel".</p>
+  <div class="tw" style="max-height:460px"><table><tr><th>Mã</th><th>Nhóm</th><th class="c">Ý</th><th class="c">Cách viết</th><th>Nội dung</th><th class="c">Trong bộ cố định</th><th class="c">Bật</th></tr>
+  ${D.questions.map((q) => `<tr><td class="mono">${q.code}</td><td>${q.group}</td><td class="c">${q.facet}</td><td class="c">${q.variant}</td><td>${esc(q.text)}</td><td class="c">${s.fixed_set.includes(q.code) ? '✓' : ''}</td><td class="c"><input type="checkbox" class="toggle" aria-label="Bật câu ${q.code}" id="q-${q.code}" ${q.active ? 'checked' : ''} data-q="${q.code}"></td></tr>`).join('')}</table></div>`;
+}
+function adminPairs() {
+  const byId = Object.fromEntries(D.majors.map((m) => [m.id, m]));
+  return `${what('15 cặp hai chữ của Thầy: quan hệ trên lục giác, 2 ngành nền, 2 nghề, môn nền. Sửa một cặp thì 8 mã ba chữ liên quan tự cập nhật.')}
+  <div class="tw"><table><tr><th>Cặp</th><th>Quan hệ</th><th>Ngành nền 1</th><th>Ngành nền 2</th><th>Nghề</th><th>Môn nền</th></tr>
+  ${D.riasec_pairs.map((p) => `<tr><td class="mono"><b>${p.pair}</b></td><td><span class="chip ${p.relation === 'Đối kháng' ? 'red' : p.relation === 'Liền kề' ? 'ok' : ''}">${p.relation}</span></td>${p.majors.map((id) => `<td>${esc(byId[id].name_vi)}<br><span style="color:var(--fg-2);font-style:italic">${esc(byId[id].name_de)}</span> <span class="mono">${esc(byId[id].codes[0] || '—')}</span></td>`).join('')}<td style="font-size:13px">${p.occupations.map(esc).join('<br>')}</td><td style="font-size:13px;color:var(--fg-2)">${esc(p.foundation)}</td></tr>`).join('')}</table></div>`;
+}
+function adminCodes() {
+  const q = (ST.codeFilter || '').toUpperCase();
+  const all = []; for (const a of ORDER) for (const b of ORDER) for (const c of ORDER) if (a !== b && b !== c && a !== c) all.push(a + b + c);
+  const byId = Object.fromEntries(D.majors.map((m) => [m.id, m]));
+  const rows = all.filter((c) => !q || c.startsWith(q) || c.includes(q)).map((code) => {
+    const fake = Object.fromEntries([...ORDER].map((g) => [g, { mean: 3 }])); [...code].forEach((g, i) => (fake[g] = { mean: 5 - i * 0.3 }));
+    const ms = E.recommend(code, fake).filter((m) => m.source === 'pair');
+    const pair = E.pairKey(code[0], code[1]); const P = D.riasec_pairs.find((p) => p.pair === pair); const T = D.third_letters.find((t) => t.code === code[2]);
+    return `<tr><td class="mono"><b>${code}</b></td><td class="mono">${pair}</td><td>${P.relation}</td><td>${ms.map((m) => `${esc(m.name_de)} <span class="mono" style="color:var(--fg-2)">${m.code || '—'}·C${m.c ?? '—'}</span>`).join(' → ')}</td><td>${esc(T.specialty_en)}</td><td style="font-size:13px;color:var(--fg-2)">Ưu tiên ${D.riasec_types.find((t) => t.code === code[0]).label.toLowerCase()}; kết hợp ${D.riasec_types.find((t) => t.code === code[1]).label.toLowerCase()}; bổ sung ${D.riasec_types.find((t) => t.code === code[2]).label.toLowerCase()}.</td></tr>`; }).join('');
+  return `${what('120 mã không gõ tay: ghép từ 6 nhóm + 15 cặp + 6 hướng chuyên sâu. Thứ tự ngành của cặp theo mã có thứ tự, nên ISA và SIA khác nhau.')}
+  <label class="f" style="max-width:260px">Lọc mã (ví dụ IS, SI, RIC)<input id="code-filter" data-codefilter value="${esc(ST.codeFilter || '')}" maxlength="3"></label>
+  <div class="tw" style="max-height:520px"><table><tr><th>Mã</th><th>Cặp</th><th>Quan hệ 1–2</th><th>Ngành nền theo thứ tự</th><th>Chuyên sâu (chữ 3)</th><th>Diễn giải (mẫu câu của Thầy)</th></tr>${rows}</table></div>`;
+}
+function adminMajors() {
+  return `${what('Danh mục ngành hợp nhất từ hai file của Thầy. Mã Holland lấy theo Studium-Interessentest (HRK); ngành chưa có mã chờ chuyên gia gán. Ẩn chứ không xóa.')}
+  <div class="row"><button class="btn dark" data-act="noop">+ Thêm ngành</button><button class="btn" data-act="noop">Nhập Excel</button><span class="chip">${D.majors.length} ngành</span><span class="chip warn">${D.majors.filter((m) => !m.codes.length).length} chưa có mã</span></div>
+  <div class="tw" style="max-height:520px"><table><tr><th>Mã</th><th>Ngành</th><th>Cụm</th><th class="c">Mã Holland</th><th>Nguồn mã</th><th>Cặp</th><th>Hình thức</th><th class="c">Hiện</th></tr>
+  ${D.majors.map((m) => `<tr><td class="mono">${m.id}</td><td><b>${esc(m.name_vi)}</b><br><span style="color:var(--fg-2);font-style:italic">${esc(m.name_de)}</span></td><td style="font-size:13px">${esc(m.group)}</td><td class="c mono">${m.codes.join(', ') || '<span class="chip warn">chưa có</span>'}</td><td style="font-size:12.5px;color:var(--fg-2)">${esc(m.code_source)}</td><td class="mono">${m.pairs.join(', ')}</td><td style="font-size:13px">${esc(m.routes)}</td><td class="c"><input type="checkbox" class="toggle" id="m-${m.id}" data-m="${m.id}" ${m.active ? 'checked' : ''} aria-label="Hiện ${esc(m.name_vi)}"></td></tr>`).join('')}</table></div>`;
+}
+function adminFields() {
+  return `${what('Các ô học sinh điền. Bật "Bắt buộc", "Gửi CRM", "In báo cáo", "Hiện" cho từng ô; form ở bước 2 đổi ngay. Thử tắt "Bắt buộc" của Năm sinh rồi mở trang Học sinh.')}
+  <div class="tw"><table><tr><th>Ô</th><th>Kiểu</th><th>Nhóm</th><th class="c">Bắt buộc</th><th class="c">Gửi CRM</th><th class="c">In báo cáo</th><th class="c">Hiện</th></tr>
+  ${D.form_fields.map((f) => `<tr><td><b>${esc(f.label)}</b><br><span class="mono" style="color:var(--muted)">${f.key}</span></td><td>${esc(f.type)}</td><td>${esc(f.group)}</td>${['required', 'to_crm', 'on_report', 'visible'].map((k) => `<td class="c"><input type="checkbox" class="toggle" id="ff-${f.key}-${k}" data-ff="${f.key}" data-k="${k}" ${(k === 'visible' ? f.visible !== false : f[k]) ? 'checked' : ''} ${f.key === 'dong_y' ? 'disabled' : ''} aria-label="${k} ${esc(f.label)}"></td>`).join('')}</tr>`).join('')}</table></div>`;
+}
+
+/* ---------------- CẤU TRÚC HỆ THỐNG ---------------- */
+function viewSystem() {
+  const L = (t, boxes) => `<div class="layer"><h3>${t}</h3><div class="boxes">${boxes.map(([b, d, c]) => `<div class="box"><b>${b}</b>${d}${c ? `<br><small>${c}</small>` : ''}</div>`).join('')}</div></div>`;
+  return `<section class="view">
+  <div><div class="eyebrow">Laravel · holland.viger.edu.vn</div><h1>Cấu trúc hệ thống</h1><p class="lead" style="margin-top:8px">Bốn lớp, mỗi lớp chỉ nói chuyện với lớp kề nó. Phần tính toán tách khỏi giao diện nên đổi cách tính không phải sửa trang, và đổi trang không làm sai cách tính.</p></div>
+  <div class="card arch">
+    ${L('Giao diện', [['Học sinh', 'Chọn bài · Thông tin · Làm bài · Kết quả · Đặt lịch', 'resources/views/student'], ['Tư vấn viên', 'Thẻ khách (ở CRM, đọc qua API)', 'crm.viger.edu.vn'], ['Quản trị', 'Cài đặt · Câu hỏi · Cặp · 120 mã · Ngành · Trường thông tin', 'resources/views/admin'], ['API', 'questions · score · result · catalog', 'routes/api.php']])}
+    ${L('Trình bày', [['ReportPresenter', 'Một kết quả, ba cách xem: khách, tư vấn viên, quản trị', 'app/Presenters'], ['FormSchema', 'Đọc cấu hình ô nhập, kiểm tra bắt buộc', 'app/Services/Customer'], ['HelpText', 'Chú thích "Trang này làm gì?"', 'help_texts']])}
+    ${L('Tính toán', [['QuestionPicker', 'Rút đề: cố định / theo ý / ngẫu nhiên', 'app/Services/Assessment'], ['ScoringService', 'Trung bình 6 nhóm, bỏ câu "Không biết"', 'app/Services/Assessment'], ['ProfileAnalyzer', '2 chữ, điều kiện chữ 3, mã thay thế, quan hệ lục giác, cờ', 'app/Services/Holland'], ['CodeCatalog', 'Ghép 120 mã từ 27 dòng', 'app/Services/Holland'], ['MajorMatcher', 'Ngành nền của cặp, chỉ số C', 'app/Services/Catalog'], ['CrmSync', 'Gửi phiếu hồ sơ, gửi lại khi lỗi', 'app/Services/Integration']])}
+    ${L('Dữ liệu', [['Câu hỏi & bài làm', 'questions · question_sets · attempts · answers', ''], ['Tham chiếu Holland', 'riasec_types · riasec_pairs · third_letters', ''], ['Ngành – nghề', 'majors · major_codes · occupations · major_occupation', ''], ['Khách', 'customers · form_fields · field_values · consents', ''], ['Vận hành', 'settings · versions · audit_logs · crm_outbox', '']])}
+  </div>
+  <div class="card" style="display:grid;gap:10px"><h3>Luồng một lượt làm bài</h3>
+    <div class="flow"><span>Rút đề</span><i>→</i><span>Lưu câu trả lời + thời gian</span><i>→</i><span>Trung bình 6 nhóm</span><i>→</i><span>Xếp hạng</span><i>→</i><span>2 chữ (luôn có)</span><i>→</i><span>Chữ 3 &gt; ${fmt(D.settings.third_letter_threshold, 1)} và đủ ${D.settings.items_per_group} câu?</span><i>→</i><span>Ngành theo chỉ số C</span><i>→</i><span>Báo cáo theo người xem</span><i>→</i><span>Gửi CRM</span></div></div>
+  <div class="grid2">
+    <div class="card" style="display:grid;gap:8px"><h3>Cái gì sửa ở trang quản trị</h3><ul style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Ngưỡng, số câu, cách rút đề</li><li>Câu hỏi (nhập Excel), bật / tắt</li><li>15 cặp, chữ thứ ba, ngành, nghề, mã Holland</li><li>Ô thông tin khách: bắt buộc, gửi CRM</li><li>Chú thích trên mọi trang</li></ul></div>
+    <div class="card" style="display:grid;gap:8px"><h3>Cái gì cố định trong mã nguồn</h3><ul style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Công thức trung bình cộng</li><li>Cách xếp hạng, khoảng cách lục giác</li><li>Chỉ số C, cách ghép 120 mã</li><li>Đã kiểm tra: bản PHP và bản JS trong trang này cho kết quả giống nhau trên 8 hồ sơ kiểm thử</li></ul></div>
+  </div>
+  <div class="card" style="display:grid;gap:8px"><h3>Dữ liệu đang chạy trong bản mẫu</h3><div class="row">
+    <span class="chip">${D.riasec_types.length} nhóm</span><span class="chip">${D.riasec_pairs.length} cặp</span><span class="chip">${D.third_letters.length} chữ thứ ba</span><span class="chip">120 mã ghép tự động</span><span class="chip">${D.majors.length} ngành</span><span class="chip">${D.occupations.length} nghề</span><span class="chip">${D.major_occupation.length} liên kết</span><span class="chip">${D.form_fields.length} ô thông tin</span><span class="chip">${D.questions.length} câu (tạm)</span></div></div>
+  </section>`;
+}
+
+/* ---------------- ĐIỀU HƯỚNG ---------------- */
+const ROUTES = { 'hoc-sinh': viewStudent, 'tu-van': viewConsultant, 'quan-tri': viewAdmin, 'he-thong': viewSystem };
+function route() { const h = location.hash.slice(1); return ROUTES[h] ? h : 'hoc-sinh'; }
+function render() {
+  const r = route();
+  document.querySelectorAll('.nav a').forEach((a) => (a.getAttribute('href') === '#' + r ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+  document.getElementById('app').innerHTML = ROUTES[r]();
+  if (r === 'hoc-sinh' && ST.step === 2) ST.shownAt = performance.now();
+}
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('[data-act],[data-sample],[data-viewas],[data-tab]'); if (!t) return;
+  if (t.dataset.sample) { fillSample(t.dataset.sample); return; }
+  if (t.dataset.viewas) { ST.viewAs = t.dataset.viewas; render(); return; }
+  if (t.dataset.tab) { ST.adminTab = t.dataset.tab; render(); return; }
+  const a = t.dataset.act;
+  if (a === 'go1') { ST.step = 1; render(); }
+  if (a === 'back0') { ST.step = 0; render(); }
+  if (a === 'prev') { ST.i = Math.max(0, ST.i - 1); render(); }
+  if (a === 'next') { ST.i = Math.min(ST.i + 1, ST.qs.length - 1); render(); }
+  if (a === 'finish') finish();
+  if (a === 'restart') { ST.step = 0; ST.result = null; location.hash = '#hoc-sinh'; render(); }
+  if (a === 'book') toast('Bản mẫu: trang đặt lịch sẽ mở ở đây');
+  if (a === 'saveNote') toast('Đã lưu ghi nhận (bản mẫu)');
+  if (a === 'noop') toast('Bản mẫu: chức năng này có trong web app thật');
+  if (a === 'draw') { const qs = drawQuestions(); document.getElementById('draw').innerHTML = `<div class="sunk" style="font-size:13px"><b>Một đề rút thử (${qs.length} câu):</b> <span class="mono">${qs.map((q) => q.code).join(' ')}</span></div>`; }
+  if (a === 'previewImpact') document.getElementById('impact').innerHTML = impactTable();
+});
+document.addEventListener('change', (e) => {
+  const t = e.target;
+  if (t.name === 'ans') {
+    const v = t.value === 'kb' ? null : +t.value; const ms = Math.round(performance.now() - ST.shownAt);
+    const a = ST.answers[ST.i]; a.value = v; a.ms = (a.ms || 0) + ms;
+    ST.fastRun = ms < 1000 ? ST.fastRun + 1 : 0;
+    const at = ST.i; if (ST.i < ST.qs.length - 1) setTimeout(() => { if (ST.step === 2 && ST.i === at) { ST.i++; render(); } }, 180); else render();
+    return;
+  }
+  if (t.dataset.f) { ST.info[t.dataset.f] = t.type === 'checkbox' ? t.checked : t.value; return; }
+  if (t.dataset.set) {
+    const k = t.dataset.set; if (t.type === 'checkbox') D.settings[k] = t.checked; else if (k === 'draw_mode') D.settings[k] = t.value; else { const n = parseFloat(t.value.replace(',', '.')); if (!isNaN(n)) D.settings[k] = n; }
+    E = makeEngine(D); if (ST.result && ST.answers.length) ST.result = E.score(ST.answers.map((a) => ({ ...a, value: a.value === undefined ? null : a.value }))); toast('Đã lưu cài đặt'); render(); return;
+  }
+  if (t.dataset.q) { D.questions.find((q) => q.code === t.dataset.q).active = t.checked; return; }
+  if (t.dataset.m) { D.majors.find((m) => m.id === t.dataset.m).active = t.checked; E = makeEngine(D); if (ST.result) ST.result = E.score(ST.answers.map((a) => ({ ...a, value: a.value === undefined ? null : a.value }))); return; }
+  if (t.dataset.ff) { const f = D.form_fields.find((x) => x.key === t.dataset.ff); f[t.dataset.k] = t.checked; toast('Đã cập nhật ô "' + f.label + '"'); return; }
+});
+document.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.dataset.f && t.type !== 'checkbox') ST.info[t.dataset.f] = t.value;
+  if (t.dataset.mon) { ST.info.diem_mon = ST.info.diem_mon || {}; ST.info.diem_mon[t.dataset.mon] = t.value; }
+  if (t.dataset.codefilter !== undefined) { ST.codeFilter = t.value; const pos = t.selectionStart; render(); const el = document.getElementById('code-filter'); el.focus(); el.setSelectionRange(pos, pos); }
+});
+document.addEventListener('submit', (e) => {
+  if (e.target.id !== 'info') return; e.preventDefault(); ST.errors = {};
+  for (const f of D.form_fields.filter((x) => x.required && x.visible !== false)) if (!ST.info[f.key]) ST.errors[f.key] = f.key === 'dong_y' ? 'Em cần đồng ý để tiếp tục.' : 'Ô này bắt buộc.';
+  if (ST.info.so_dien_thoai && !/^0\d{9}$/.test(String(ST.info.so_dien_thoai).replace(/\s/g, ''))) ST.errors.so_dien_thoai = 'Số điện thoại cần 10 chữ số, bắt đầu bằng 0.';
+  if (ST.info.dtb_hoc_ba) { const n = parseFloat(String(ST.info.dtb_hoc_ba).replace(',', '.')); if (isNaN(n) || n < 0 || n > 10) ST.errors.dtb_hoc_ba = 'Điểm từ 0 đến 10.'; }
+  if (Object.keys(ST.errors).length) { render(); return; }
+  startQuiz(); ST.step = 2; render(); window.scrollTo(0, 0);
+});
+render();
+</script>
+
+</html>

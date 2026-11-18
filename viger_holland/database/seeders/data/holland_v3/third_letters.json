@@ -1,0 +1,50 @@
+[
+ {
+  "code": "R",
+  "specialty_vi": "Kỹ thuật ứng dụng",
+  "specialty_de": "Anwendungsorientierte Technik",
+  "specialty_en": "Applied Engineering",
+  "skills": "thiết kế nguyên mẫu, công cụ và thử nghiệm",
+  "description": "Nhóm Thực hành của bạn cũng ở mức cao, nên bạn thích thêm việc tự tay làm, thử công cụ và xem kết quả thực tế. Bạn có thể tìm hiểu hướng thiết kế nguyên mẫu, công cụ và thử nghiệm."
+ },
+ {
+  "code": "I",
+  "specialty_vi": "Phân tích dữ liệu và nghiên cứu",
+  "specialty_de": "Datenanalyse und Forschung",
+  "specialty_en": "Data Analytics and Research",
+  "skills": "phương pháp nghiên cứu, thống kê và tư duy phản biện",
+  "description": "Nhóm Nghiên cứu của bạn cũng ở mức cao, nên bạn thích thêm việc đặt câu hỏi, tìm dữ liệu và kiểm chứng điều mình quan tâm. Bạn có thể tìm hiểu phân tích dữ liệu, phương pháp nghiên cứu và tư duy phản biện."
+ },
+ {
+  "code": "A",
+  "specialty_vi": "Thiết kế và đổi mới",
+  "specialty_de": "Design und Innovation",
+  "specialty_en": "Design and Innovation",
+  "skills": "tư duy thiết kế, portfolio và thử nghiệm ý tưởng",
+  "description": "Nhóm Sáng tạo của bạn cũng ở mức cao, nên bạn thích thêm việc thử ý tưởng mới và làm ra sản phẩm có dấu ấn riêng. Bạn có thể tìm hiểu tư duy thiết kế, portfolio và thử nghiệm ý tưởng."
+ },
+ {
+  "code": "S",
+  "specialty_vi": "Thiết kế lấy con người làm trung tâm",
+  "specialty_de": "Menschzentrierte Gestaltung",
+  "specialty_en": "Human-Centred Design",
+  "skills": "phỏng vấn người dùng, giao tiếp và đạo đức",
+  "description": "Nhóm Xã hội của bạn cũng ở mức cao, nên bạn thích thêm việc lắng nghe và hiểu nhu cầu của người khác. Bạn có thể tìm hiểu thiết kế lấy con người làm trung tâm, phỏng vấn người dùng và giao tiếp."
+ },
+ {
+  "code": "E",
+  "specialty_vi": "Quản lý đổi mới",
+  "specialty_de": "Innovationsmanagement",
+  "specialty_en": "Innovation Management",
+  "skills": "thuyết trình, quản lý dự án và ra quyết định",
+  "description": "Nhóm Kinh doanh của bạn cũng ở mức cao, nên bạn thích thêm việc thuyết phục, dẫn dắt và biến ý tưởng thành kế hoạch. Bạn có thể tìm hiểu quản lý đổi mới, thuyết trình, quản lý dự án và ra quyết định."
+ },
+ {
+  "code": "C",
+  "specialty_vi": "Quản lý chất lượng",
+  "specialty_de": "Qualitätsmanagement",
+  "specialty_en": "Quality Management",
+  "skills": "kiểm soát chất lượng, tài liệu và quy trình",
+  "description": "Nhóm Tổ chức của bạn cũng ở mức cao, nên bạn thích thêm việc sắp xếp, kiểm tra chi tiết và giữ mọi thứ đúng quy trình. Bạn có thể tìm hiểu quản lý chất lượng, tài liệu và quy trình."
+ }
+]

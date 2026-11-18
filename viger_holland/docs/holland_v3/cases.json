@@ -1,0 +1,2278 @@
+{
+    "HS01_mau_cua_Thay_ISA": {
+        "answers": [
+            {
+                "code": "R01",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I01",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A01",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S01",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E01",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C01",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R02",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I02",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A02",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S02",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E02",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C02",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R03",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I03",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A03",
+                "group": "A",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "S03",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E03",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C03",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "R04",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I04",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A04",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S04",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E04",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C04",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R05",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I05",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A05",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S05",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E05",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C05",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R06",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I06",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A06",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S06",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E06",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C06",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            }
+        ],
+        "expected": {
+            "means": {
+                "R": 3.3333,
+                "I": 4.6667,
+                "A": 4.1667,
+                "S": 4.3333,
+                "E": 2.3333,
+                "C": 3.1667
+            },
+            "order": [
+                "I",
+                "S",
+                "A",
+                "R",
+                "C",
+                "E"
+            ],
+            "code2": "IS",
+            "code3": "ISA",
+            "third_detail": false,
+            "alternates": [
+                "IAS"
+            ],
+            "relation_1_2": "Cách một",
+            "consistency": "Trung bình",
+            "strength": 2.906,
+            "reliability": "Tin cậy",
+            "flags": [],
+            "majors_top5": [
+                [
+                    "MAJ021",
+                    "Psychologie",
+                    "ISC",
+                    15,
+                    "Ngành nền của cặp IS"
+                ],
+                [
+                    "MAJ033",
+                    "Gesundheitswissenschaften",
+                    "SIC",
+                    5,
+                    "Ngành nền của cặp IS"
+                ],
+                [
+                    "MAJ020",
+                    "Umweltwissenschaften",
+                    "ISE",
+                    16,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ037",
+                    "Kunstpädagogik",
+                    "ASR",
+                    13,
+                    "Liên quan"
+                ],
+                [
+                    "MAJ012",
+                    "Volkswirtschaftslehre",
+                    "IEC",
+                    13,
+                    "Liên quan"
+                ]
+            ]
+        }
+    },
+    "HS02_IRC_chu3_vuot_4_2": {
+        "answers": [
+            {
+                "code": "R01",
+                "group": "R",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "I01",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A01",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S01",
+                "group": "S",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "E01",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C01",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "R02",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I02",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A02",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S02",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E02",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C02",
+                "group": "C",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "R03",
+                "group": "R",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "I03",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A03",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S03",
+                "group": "S",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "E03",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C03",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "R04",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I04",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A04",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S04",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E04",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C04",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "R05",
+                "group": "R",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "I05",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A05",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S05",
+                "group": "S",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "E05",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C05",
+                "group": "C",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "R06",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I06",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A06",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S06",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E06",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C06",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            }
+        ],
+        "expected": {
+            "means": {
+                "R": 4.5,
+                "I": 4.6667,
+                "A": 3,
+                "S": 2.5,
+                "E": 2.1667,
+                "C": 4.3333
+            },
+            "order": [
+                "I",
+                "R",
+                "C",
+                "A",
+                "S",
+                "E"
+            ],
+            "code2": "IR",
+            "code3": "IRC",
+            "third_detail": true,
+            "alternates": [
+                "ICR",
+                "RIC"
+            ],
+            "relation_1_2": "Liền kề",
+            "consistency": "Cao",
+            "strength": 4.0449,
+            "reliability": "Tin cậy",
+            "flags": [],
+            "majors_top5": [
+                [
+                    "MAJ002",
+                    "Mechatronik",
+                    "ICR",
+                    15,
+                    "Ngành nền của cặp RI"
+                ],
+                [
+                    "MAJ001",
+                    "Maschinenbau",
+                    "RIE",
+                    12,
+                    "Ngành nền của cặp RI"
+                ],
+                [
+                    "MAJ015",
+                    "Verkehrswesen",
+                    "IRC",
+                    18,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ017",
+                    "Umweltingenieurwesen",
+                    "IRC",
+                    18,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ018",
+                    "Erneuerbare Energien",
+                    "IRC",
+                    18,
+                    "Liên quan nhiều"
+                ]
+            ]
+        }
+    },
+    "HS03_IRC_chu3_thieu_1_cau": {
+        "answers": [
+            {
+                "code": "R01",
+                "group": "R",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "I01",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A01",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S01",
+                "group": "S",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "E01",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C01",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "R02",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I02",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A02",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S02",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E02",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C02",
+                "group": "C",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "R03",
+                "group": "R",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "I03",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A03",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S03",
+                "group": "S",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "E03",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C03",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "R04",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I04",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A04",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S04",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E04",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C04",
+                "group": "C",
+                "value": null,
+                "ms": 4000
+            },
+            {
+                "code": "R05",
+                "group": "R",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "I05",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A05",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S05",
+                "group": "S",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "E05",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C05",
+                "group": "C",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "R06",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I06",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A06",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S06",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E06",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C06",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            }
+        ],
+        "expected": {
+            "means": {
+                "R": 4.5,
+                "I": 4.6667,
+                "A": 3,
+                "S": 2.5,
+                "E": 2.1667,
+                "C": 4.4
+            },
+            "order": [
+                "I",
+                "R",
+                "C",
+                "A",
+                "S",
+                "E"
+            ],
+            "code2": "IR",
+            "code3": "IRC",
+            "third_detail": false,
+            "alternates": [
+                "ICR",
+                "RIC"
+            ],
+            "relation_1_2": "Liền kề",
+            "consistency": "Cao",
+            "strength": 4.0632,
+            "reliability": "Tin cậy",
+            "flags": [],
+            "majors_top5": [
+                [
+                    "MAJ002",
+                    "Mechatronik",
+                    "ICR",
+                    15,
+                    "Ngành nền của cặp RI"
+                ],
+                [
+                    "MAJ001",
+                    "Maschinenbau",
+                    "RIE",
+                    12,
+                    "Ngành nền của cặp RI"
+                ],
+                [
+                    "MAJ015",
+                    "Verkehrswesen",
+                    "IRC",
+                    18,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ017",
+                    "Umweltingenieurwesen",
+                    "IRC",
+                    18,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ018",
+                    "Erneuerbare Energien",
+                    "IRC",
+                    18,
+                    "Liên quan nhiều"
+                ]
+            ]
+        }
+    },
+    "HS04_SIA_dao_thu_tu": {
+        "answers": [
+            {
+                "code": "R01",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I01",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A01",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S01",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E01",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C01",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R02",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I02",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A02",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S02",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E02",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C02",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R03",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I03",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A03",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S03",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E03",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C03",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "R04",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I04",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A04",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S04",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E04",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C04",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R05",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I05",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A05",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S05",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E05",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C05",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R06",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I06",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A06",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S06",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E06",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C06",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            }
+        ],
+        "expected": {
+            "means": {
+                "R": 3.3333,
+                "I": 4.3333,
+                "A": 4,
+                "S": 4.6667,
+                "E": 2.3333,
+                "C": 3.1667
+            },
+            "order": [
+                "S",
+                "I",
+                "A",
+                "R",
+                "C",
+                "E"
+            ],
+            "code2": "SI",
+            "code3": "SIA",
+            "third_detail": false,
+            "alternates": [],
+            "relation_1_2": "Cách một",
+            "consistency": "Trung bình",
+            "strength": 2.5658,
+            "reliability": "Tin cậy",
+            "flags": [],
+            "majors_top5": [
+                [
+                    "MAJ033",
+                    "Gesundheitswissenschaften",
+                    "SIC",
+                    15,
+                    "Ngành nền của cặp IS"
+                ],
+                [
+                    "MAJ021",
+                    "Psychologie",
+                    "ISC",
+                    5,
+                    "Ngành nền của cặp IS"
+                ],
+                [
+                    "MAJ028",
+                    "Physiotherapie",
+                    "SIR",
+                    16,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ022",
+                    "Erziehungswissenschaft",
+                    "SIC",
+                    15,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ027",
+                    "Ergotherapie",
+                    "SRI",
+                    15,
+                    "Liên quan nhiều"
+                ]
+            ]
+        }
+    },
+    "HS05_RS_doi_khang": {
+        "answers": [
+            {
+                "code": "R01",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I01",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A01",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S01",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E01",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C01",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R02",
+                "group": "R",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "I02",
+                "group": "I",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "A02",
+                "group": "A",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "S02",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E02",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C02",
+                "group": "C",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "R03",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I03",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A03",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S03",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E03",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C03",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R04",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I04",
+                "group": "I",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "A04",
+                "group": "A",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "S04",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E04",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C04",
+                "group": "C",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "R05",
+                "group": "R",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "I05",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A05",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S05",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E05",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C05",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R06",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I06",
+                "group": "I",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "A06",
+                "group": "A",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "S06",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E06",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C06",
+                "group": "C",
+                "value": 2,
+                "ms": 4000
+            }
+        ],
+        "expected": {
+            "means": {
+                "R": 4.3333,
+                "I": 2.5,
+                "A": 2.5,
+                "S": 4.3333,
+                "E": 2.5,
+                "C": 2.5
+            },
+            "order": [
+                "R",
+                "S",
+                "I",
+                "A",
+                "E",
+                "C"
+            ],
+            "code2": "RS",
+            "code3": "RSI",
+            "third_detail": false,
+            "alternates": [
+                "RSA",
+                "SRI"
+            ],
+            "relation_1_2": "Đối kháng",
+            "consistency": "Thấp",
+            "strength": 0,
+            "reliability": "Tin cậy",
+            "flags": [],
+            "majors_top5": [
+                [
+                    "MAJ028",
+                    "Physiotherapie",
+                    "SIR",
+                    4,
+                    "Ngành nền của cặp RS"
+                ],
+                [
+                    "MAJ027",
+                    "Ergotherapie",
+                    "SRI",
+                    3,
+                    "Ngành nền của cặp RS"
+                ],
+                [
+                    "MAJ004",
+                    "Bauingenieurwesen",
+                    "RIC",
+                    12,
+                    "Liên quan"
+                ],
+                [
+                    "MAJ029",
+                    "Baumanagement",
+                    "RIC",
+                    12,
+                    "Liên quan"
+                ],
+                [
+                    "MAJ001",
+                    "Maschinenbau",
+                    "RIE",
+                    11,
+                    "Liên quan"
+                ]
+            ]
+        }
+    },
+    "HS06_tat_ca_3": {
+        "answers": [
+            {
+                "code": "R01",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I01",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A01",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S01",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E01",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C01",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R02",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I02",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A02",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S02",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E02",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C02",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R03",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I03",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A03",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S03",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E03",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C03",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R04",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I04",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A04",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S04",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E04",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C04",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R05",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I05",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A05",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S05",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E05",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C05",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R06",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I06",
+                "group": "I",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "A06",
+                "group": "A",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "S06",
+                "group": "S",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "E06",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C06",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            }
+        ],
+        "expected": {
+            "means": {
+                "R": 3,
+                "I": 3,
+                "A": 3,
+                "S": 3,
+                "E": 3,
+                "C": 3
+            },
+            "order": [
+                "R",
+                "I",
+                "A",
+                "S",
+                "E",
+                "C"
+            ],
+            "code2": "RI",
+            "code3": "RIA",
+            "third_detail": false,
+            "alternates": [
+                "RIS",
+                "RAI",
+                "IRA"
+            ],
+            "relation_1_2": "Liền kề",
+            "consistency": "Cao",
+            "strength": 0,
+            "reliability": "Chưa đủ tin cậy",
+            "flags": [
+                "mot_muc_chiem",
+                "chuoi_giong_nhau"
+            ],
+            "majors_top5": [
+                [
+                    "MAJ001",
+                    "Maschinenbau",
+                    "RIE",
+                    16,
+                    "Ngành nền của cặp RI"
+                ],
+                [
+                    "MAJ002",
+                    "Mechatronik",
+                    "ICR",
+                    9,
+                    "Ngành nền của cặp RI"
+                ]
+            ]
+        }
+    },
+    "HS07_nhieu_khong_biet": {
+        "answers": [
+            {
+                "code": "R01",
+                "group": "R",
+                "value": null,
+                "ms": 4000
+            },
+            {
+                "code": "I01",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A01",
+                "group": "A",
+                "value": null,
+                "ms": 4000
+            },
+            {
+                "code": "S01",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E01",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C01",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R02",
+                "group": "R",
+                "value": null,
+                "ms": 4000
+            },
+            {
+                "code": "I02",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A02",
+                "group": "A",
+                "value": null,
+                "ms": 4000
+            },
+            {
+                "code": "S02",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E02",
+                "group": "E",
+                "value": null,
+                "ms": 4000
+            },
+            {
+                "code": "C02",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R03",
+                "group": "R",
+                "value": null,
+                "ms": 4000
+            },
+            {
+                "code": "I03",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A03",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S03",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E03",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C03",
+                "group": "C",
+                "value": null,
+                "ms": 4000
+            },
+            {
+                "code": "R04",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I04",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A04",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S04",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E04",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C04",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R05",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I05",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A05",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S05",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E05",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C05",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R06",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I06",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A06",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S06",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E06",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C06",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            }
+        ],
+        "expected": {
+            "means": {
+                "R": 4,
+                "I": 4.6667,
+                "A": 4,
+                "S": 4.3333,
+                "E": 2.2,
+                "C": 3
+            },
+            "order": [
+                "I",
+                "S",
+                "A",
+                "C",
+                "E",
+                "R"
+            ],
+            "code2": "IS",
+            "code3": "ISA",
+            "third_detail": false,
+            "alternates": [],
+            "relation_1_2": "Cách một",
+            "consistency": "Trung bình",
+            "strength": 3.0288,
+            "reliability": "Cần xem lại",
+            "flags": [
+                "nhieu_khong_biet",
+                "nhom_thieu_du_lieu"
+            ],
+            "majors_top5": [
+                [
+                    "MAJ021",
+                    "Psychologie",
+                    "ISC",
+                    15,
+                    "Ngành nền của cặp IS"
+                ],
+                [
+                    "MAJ033",
+                    "Gesundheitswissenschaften",
+                    "SIC",
+                    5,
+                    "Ngành nền của cặp IS"
+                ],
+                [
+                    "MAJ020",
+                    "Umweltwissenschaften",
+                    "ISE",
+                    16,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ037",
+                    "Kunstpädagogik",
+                    "ASR",
+                    13,
+                    "Liên quan"
+                ],
+                [
+                    "MAJ012",
+                    "Volkswirtschaftslehre",
+                    "IEC",
+                    13,
+                    "Liên quan"
+                ]
+            ]
+        }
+    },
+    "HS08_bam_voi": {
+        "answers": [
+            {
+                "code": "R01",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I01",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A01",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S01",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E01",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C01",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R02",
+                "group": "R",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "I02",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A02",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S02",
+                "group": "S",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "E02",
+                "group": "E",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "C02",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R03",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I03",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A03",
+                "group": "A",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "S03",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E03",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C03",
+                "group": "C",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "R04",
+                "group": "R",
+                "value": 4,
+                "ms": 700
+            },
+            {
+                "code": "I04",
+                "group": "I",
+                "value": 5,
+                "ms": 700
+            },
+            {
+                "code": "A04",
+                "group": "A",
+                "value": 4,
+                "ms": 700
+            },
+            {
+                "code": "S04",
+                "group": "S",
+                "value": 5,
+                "ms": 700
+            },
+            {
+                "code": "E04",
+                "group": "E",
+                "value": 3,
+                "ms": 700
+            },
+            {
+                "code": "C04",
+                "group": "C",
+                "value": 3,
+                "ms": 700
+            },
+            {
+                "code": "R05",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I05",
+                "group": "I",
+                "value": 5,
+                "ms": 4000
+            },
+            {
+                "code": "A05",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S05",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E05",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C05",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "R06",
+                "group": "R",
+                "value": 3,
+                "ms": 4000
+            },
+            {
+                "code": "I06",
+                "group": "I",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "A06",
+                "group": "A",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "S06",
+                "group": "S",
+                "value": 4,
+                "ms": 4000
+            },
+            {
+                "code": "E06",
+                "group": "E",
+                "value": 2,
+                "ms": 4000
+            },
+            {
+                "code": "C06",
+                "group": "C",
+                "value": 3,
+                "ms": 4000
+            }
+        ],
+        "expected": {
+            "means": {
+                "R": 3.3333,
+                "I": 4.6667,
+                "A": 4.1667,
+                "S": 4.3333,
+                "E": 2.3333,
+                "C": 3.1667
+            },
+            "order": [
+                "I",
+                "S",
+                "A",
+                "R",
+                "C",
+                "E"
+            ],
+            "code2": "IS",
+            "code3": "ISA",
+            "third_detail": false,
+            "alternates": [
+                "IAS"
+            ],
+            "relation_1_2": "Cách một",
+            "consistency": "Trung bình",
+            "strength": 2.906,
+            "reliability": "Cần xem lại",
+            "flags": [
+                "doan_bam_voi"
+            ],
+            "majors_top5": [
+                [
+                    "MAJ021",
+                    "Psychologie",
+                    "ISC",
+                    15,
+                    "Ngành nền của cặp IS"
+                ],
+                [
+                    "MAJ033",
+                    "Gesundheitswissenschaften",
+                    "SIC",
+                    5,
+                    "Ngành nền của cặp IS"
+                ],
+                [
+                    "MAJ020",
+                    "Umweltwissenschaften",
+                    "ISE",
+                    16,
+                    "Liên quan nhiều"
+                ],
+                [
+                    "MAJ037",
+                    "Kunstpädagogik",
+                    "ASR",
+                    13,
+                    "Liên quan"
+                ],
+                [
+                    "MAJ012",
+                    "Volkswirtschaftslehre",
+                    "IEC",
+                    13,
+                    "Liên quan"
+                ]
+            ]
+        }
+    }
+}
