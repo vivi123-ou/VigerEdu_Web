@@ -38,7 +38,7 @@
   - **Trang quản trị `/admin`:** **Filament v5** (có Livewire, Tailwind riêng của Filament). Panel ở `app/Providers/Filament/AdminPanelProvider.php`. Trang của từng module nằm ở `app/Modules/<Module>/Filament/`. Quyền kiểm tra bằng Policy (`app/Modules/*/Policies`). Các trang nội dung cũ (sửa trang giới thiệu, nhúng, giao diện, thư viện ảnh) chuyển dần sang Filament ở H6.
 - Package ngoài Laravel: **`filament/filament` v5 và `openspout/openspout` v4** (Filament cần bản 4). Plugin Filament hoặc package khác: **hỏi tôi trước**. Chỉ chọn plugin có tác giả uy tín, còn cập nhật, hỗ trợ đúng bản Filament. Chạy `composer audit` định kỳ.
 - Thông báo kiểm tra dữ liệu tiếng Việt ở `lang/vi/validation.php`. Không để lộ mã `validation.*` cho người dùng.
-- Git: nhánh `feature/holland-v3` (tách từ `dev`), commit theo giai đoạn, message tiếng Việt. **Không push, không merge.** Không commit `.env`.
+- Git (từ 18/11): **repo chung `VigerEdu_Web` (riêng tư)** gồm 4 thư mục `viger_web/` (Tuấn), `viger_holland/` (repo này), `viger_crm/`, `viger_chatbot/`; máy Vân: `D:\OU\VigerEdu_Web`. Làm Holland trên nhánh `feature/holland-v3` (tách từ `gom-4-thu-muc`), chỉ sửa trong `viger_holland/` (sửa thư mục khác phải hỏi), commit theo giai đoạn, message tiếng Việt, **không ghi Claude cùng đóng góp**. **Không push, không merge** khi Vân chưa bảo. Không commit `.env`. Repo cũ `VigerEdu_Holland` chỉ để lưu.
 - Giao diện và thông báo **tiếng Việt**. Class, bảng, cột **tiếng Anh**.
 - Tên trường thông tin khách / khóa gửi CRM: đúng `docs/TU_DIEN_DU_LIEU_CHUNG.xlsx` và `docs/lua_chon_chuan.json`.
 - **Nguyên tắc "mở"**: không ghi cứng chữ, hình, lựa chọn, ngưỡng, tên miền trong code/view; lấy từ bảng cài đặt / danh mục admin.
