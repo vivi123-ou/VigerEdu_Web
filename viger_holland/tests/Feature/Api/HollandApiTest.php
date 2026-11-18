@@ -120,14 +120,25 @@ class HollandApiTest extends TestCase
         config(['database.connections.backup_test' => ['driver' => 'sqlite', 'database' => $db], 'database.default' => 'backup_test']);
         $dir = storage_path('app/backups');
         @mkdir($dir, 0700, true);
-        $old = $dir.'/holland-20000101-000000.sql.gz';
-        file_put_contents($old, 'cu');
-        touch($old, now()->subDays(30)->getTimestamp());
+        // Ngoài 14 ngày: mỗi tuần chỉ giữ bản mới nhất, trong 8 tuần; cũ hơn 8 tuần thì xóa.
+        $wednesday = now()->subWeeks(4)->startOfWeek()->addDays(2)->setTime(2, 0);
+        $files = [
+            'tuan-cu-ban-moi' => [$wednesday, true],
+            'tuan-cu-ban-truoc' => [$wednesday->copy()->subDay(), false],
+            'qua-8-tuan' => [now()->subWeeks(10), false],
+        ];
+        foreach ($files as $name => [$time]) {
+            file_put_contents($dir."/holland-{$name}.sql.gz", 'cu');
+            touch($dir."/holland-{$name}.sql.gz", $time->getTimestamp());
+        }
 
         $this->artisan('holland:backup')->assertSuccessful();
 
-        $this->assertFileDoesNotExist($old);
-        $latest = collect(glob($dir.'/holland-*.sql.gz'))->sortDesc()->first();
+        foreach ($files as $name => [, $kept]) {
+            $kept ? $this->assertFileExists($dir."/holland-{$name}.sql.gz") : $this->assertFileDoesNotExist($dir."/holland-{$name}.sql.gz");
+        }
+        @unlink($dir.'/holland-tuan-cu-ban-moi.sql.gz');
+        $latest = collect(glob($dir.'/holland-2*.sql.gz'))->sortDesc()->first();
         $this->assertSame(file_get_contents($db), gzdecode((string) file_get_contents($latest)));
         @unlink($latest);
         config(['database.default' => 'sqlite']);

@@ -3,47 +3,57 @@
 namespace App\Modules\Schools\Filament\Pages;
 
 use App\Filament\Pages\TabbedTablePage;
+use App\Filament\Support\ImportActions;
 use App\Models\AdminActivity;
 use App\Models\User;
+use App\Modules\Assessment\Models\Major;
 use App\Modules\Schools\Models\Country;
 use App\Modules\Schools\Models\Region;
 use App\Modules\Schools\Models\School;
+use App\Modules\Schools\Models\SchoolProgram;
+use App\Modules\Schools\Services\ProgramImport;
 use App\Modules\Schools\Services\SchoolImport;
+use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Wizard\Step;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\Attributes\Url;
 
 /**
- * Làm gì:   Trang "Trường & vùng": danh sách trường đại học (mặc định ẩn ĐH Hành chính / Đặc thù), vùng (bang) và quốc gia.
+ * Làm gì:   Trang "Trường & vùng": danh sách trường đại học (mặc định ẩn ĐH Hành chính / Đặc thù), ngành của từng trường
+ *           (trường ↔ ngành, nhập được từ Excel), vùng (bang) và quốc gia.
  *           Tư vấn viên và quản trị viên xem (Vân chốt 17/11); chỉ người có quyền catalog.manage sửa, thêm và
  *           "Nhập từ Excel" (2 bước: tải file → ghép cột, máy tự đoán sẵn). Thiết kế mở: thêm nước khác là thêm dòng + nhập file.
  * Ai gọi:   Filament (/admin/truong-va-vung). Quyền: schools.view (xem), catalog.manage (sửa, nhập).
- * Dữ liệu:  countries, regions, schools; admin_activities.
+ * Dữ liệu:  countries, regions, schools, school_programs, majors (chỉ đọc); admin_activities.
  */
 class SchoolsCatalog extends TabbedTablePage
 {
     protected static ?string $slug = 'truong-va-vung';
 
     protected static string $menuKey = 'schools';
+
+    /** Lọc sẵn thẻ "Ngành của trường" theo trường (nút "Ngành" ở dòng trường). */
+    #[Url(as: 'truong')]
+    public ?int $schoolFilter = null;
+
+    /** Lọc sẵn thẻ "Ngành của trường" theo ngành (cột "Số trường" ở trang Ngành học). */
+    #[Url(as: 'nganh')]
+    public ?int $majorFilter = null;
 
     /** Loại hình mặc định ẩn khi nhập trường mới. */
     private const HIDDEN_TYPES = ['ĐH Hành chính', 'ĐH Đặc thù'];
@@ -71,6 +81,7 @@ class SchoolsCatalog extends TabbedTablePage
     {
         return [
             'truong' => ['Trường', 'Trường đang ẩn (ví dụ ĐH Hành chính, ĐH Đặc thù) không hiện; chọn bộ lọc "Đang ẩn" để xem.'],
+            'chuong-trinh' => ['Ngành của trường', 'Trường nào dạy ngành nào (mỗi bậc một dòng). Lọc theo ngành để biết trường nào có ngành gợi ý cho khách.'],
             'vung' => ['Vùng / bang', 'Thông tin giới thiệu từng bang cho tư vấn viên.'],
             'quoc-gia' => ['Quốc gia', 'Thêm quốc gia mới rồi nhập danh sách trường của nước đó từ Excel.'],
         ];
@@ -81,6 +92,7 @@ class SchoolsCatalog extends TabbedTablePage
         $edit = fn () => static::canEdit();
 
         return match ($this->tab) {
+            'chuong-trinh' => $this->programsTable($table, $edit),
             'vung' => $table
                 ->query(Region::query()->with('country')->withCount('schools'))
                 ->defaultSort('name')
@@ -122,7 +134,7 @@ class SchoolsCatalog extends TabbedTablePage
                 ]),
 
             default => $table
-                ->query(School::query()->with(['region', 'country']))
+                ->query(School::query()->with(['region', 'country'])->withCount('programs'))
                 ->defaultSort('name')
                 ->columns([
                     TextColumn::make('name')->label('Trường')->description(fn (School $s) => $s->short_name)->searchable(['name', 'short_name', 'display_name', 'city'])->wrap(),
@@ -145,57 +157,112 @@ class SchoolsCatalog extends TabbedTablePage
                         ->trueLabel('Chỉ trường đang ẩn')->falseLabel('Trường đang hiện')->placeholder('Tất cả'),
                 ])
                 ->headerActions([
-                    $this->importAction()->visible($edit)->authorize($edit),
+                    ImportActions::import('import', 'trường', SchoolImport::class, 'catalog.truong', [
+                        Select::make('country_id')->label('Quốc gia của các trường')->required()
+                            ->options(fn () => Country::query()->orderBy('sort_order')->pluck('name', 'id')->all())
+                            ->default(fn () => Country::query()->orderBy('sort_order')->value('id')),
+                    ], fn (array $data) => ['country' => Country::query()->findOrFail($data['country_id']), 'hidden_types' => self::HIDDEN_TYPES])
+                        ->visible($edit)->authorize($edit),
+                    ImportActions::template('schoolTemplate', 'mau-danh-sach-truong.xlsx', SchoolImport::class)->visible($edit)->authorize($edit),
                     CreateAction::make()->label('Thêm trường')->visible($edit)->authorize($edit)->schema($this->schoolSchema())
                         ->after(fn (Model $record) => $this->logChange($record, 'trường '.$record->name)),
                 ])
                 ->recordActions([
+                    Action::make('programs')->label(fn (School $s) => 'Ngành ('.$s->programs_count.')')->icon(Heroicon::OutlinedAcademicCap)->color('gray')
+                        ->url(fn (School $s) => static::getUrl(['the' => 'chuong-trinh', 'truong' => $s->id])),
                     EditAction::make()->visible($edit)->authorize($edit)->schema($this->schoolSchema())
                         ->after(fn (Model $record) => $this->logChange($record, 'trường '.$record->name)),
                 ]),
         };
     }
 
-    private function importAction(): Action
+    /**
+     * Thẻ "Ngành của trường": mỗi dòng một trường + một ngành (+ bậc). Tư vấn viên xem; người có catalog.manage sửa, nhập Excel.
+     */
+    private function programsTable(Table $table, Closure $edit): Table
     {
-        return Action::make('import')->label('Nhập từ Excel')->icon(Heroicon::OutlinedArrowUpTray)->color('gray')
-            ->modalHeading('Nhập danh sách trường từ Excel')
-            ->steps([
-                Step::make('Tải file')->description('File Excel (.xlsx) hoặc .csv, dòng đầu là tên cột.')->schema([
-                    Select::make('country_id')->label('Quốc gia của các trường')->options(fn () => Country::query()->orderBy('sort_order')->pluck('name', 'id')->all())
-                        ->default(fn () => Country::query()->orderBy('sort_order')->value('id'))->required(),
-                    FileUpload::make('file')->label('File')->disk('local')->directory('imports')->required()
-                        ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv', 'text/plain'])
-                        ->live()
-                        ->afterStateUpdated(function ($state, Set $set): void {
-                            $file = is_array($state) ? reset($state) : $state;
-                            if (! $file instanceof TemporaryUploadedFile) {
-                                return;
-                            }
-                            $import = app(SchoolImport::class);
-                            $headers = $import->headers($file->getRealPath());
-                            $set('headers', $headers);
-                            foreach ($import->guess($headers) as $field => $column) {
-                                $set('map.'.$field, $column);
-                            }
-                        }),
-                    Hidden::make('headers'),
-                ]),
-                Step::make('Ghép cột')->description('Chọn cột trong file ứng với từng ô. Máy đã đoán sẵn, bạn kiểm tra lại. Cột không chọn được lưu ở phần thêm.')
-                    ->schema(fn (Get $get) => collect(School::IMPORTABLE)->map(fn (string $label, string $field) => Select::make('map.'.$field)
-                        ->label($label)->required($field === 'name')
-                        ->options(collect($get('headers') ?? [])->filter()->mapWithKeys(fn ($h) => [$h => $h])->all()))
-                        ->values()->all())->columns(2),
+        $log = fn (string $action, string $verb, SchoolProgram $record) => AdminActivity::record($action, 'catalog.chuong-trinh', $record->id,
+            $verb.' ngành "'.$record->major?->name_vi.'" của trường '.$record->school?->name);
+        $degree = fn (array $data) => ['degree' => (string) ($data['degree'] ?? '')] + $data;
+
+        return $table
+            ->query(SchoolProgram::query()->with(['school.region', 'major']))
+            ->defaultSort('id', 'desc')
+            ->searchable()
+            ->searchPlaceholder('Tìm tên trường, ngành, chương trình')
+            ->searchUsing(fn (Builder $query, string $search) => $query->where(fn (Builder $query) => $query
+                ->where('program_name', 'like', "%{$search}%")
+                ->orWhereHas('school', fn (Builder $q) => $q->where('name', 'like', "%{$search}%")->orWhere('short_name', 'like', "%{$search}%")->orWhere('city', 'like', "%{$search}%"))
+                ->orWhereHas('major', fn (Builder $q) => $q->where('name_vi', 'like', "%{$search}%")->orWhere('name_de', 'like', "%{$search}%"))))
+            ->emptyStateHeading('Chưa có ngành nào được gắn với trường')
+            ->emptyStateDescription('Bấm "Tải file mẫu", điền trường – ngành rồi "Nhập từ Excel", hoặc bấm "Thêm ngành cho trường".')
+            ->columns([
+                TextColumn::make('school.name')->label('Trường')->wrap()
+                    ->description(fn (SchoolProgram $p) => collect([$p->school?->city, $p->school?->region?->name])->filter()->implode(' · ')),
+                TextColumn::make('major.name_vi')->label('Ngành')->description(fn (SchoolProgram $p) => $p->major?->name_de)->wrap(),
+                TextColumn::make('degree')->label('Bậc')->badge()->placeholder('Chưa rõ'),
+                TextColumn::make('program_name')->label('Chương trình')->wrap()->placeholder('—')
+                    ->url(fn (SchoolProgram $p) => $p->url, shouldOpenInNewTab: true),
+                TextColumn::make('language')->label('Ngôn ngữ')->placeholder('—'),
+                IconColumn::make('is_verified')->label('Đã kiểm tra')->boolean(),
             ])
-            ->action(function (array $data): void {
-                $path = Storage::disk('local')->path((string) $data['file']);
-                $stats = app(SchoolImport::class)->import($path, Country::query()->findOrFail($data['country_id']), $data['map'] ?? [], self::HIDDEN_TYPES);
-                Storage::disk('local')->delete((string) $data['file']);
-                AdminActivity::record(AdminActivity::ACTION_IMPORT, 'catalog.truong', null,
-                    "Nhập trường từ Excel: thêm {$stats['created']}, cập nhật {$stats['updated']}, bỏ qua {$stats['skipped']}");
-                Notification::make()->success()->title('Đã nhập xong')
-                    ->body("Thêm {$stats['created']} trường, cập nhật {$stats['updated']}, bỏ qua {$stats['skipped']} dòng không có tên trường.")->send();
-            });
+            ->filters([
+                SelectFilter::make('major_id')->label('Ngành')->searchable()->default($this->majorFilter)
+                    ->options(fn () => Major::query()->orderBy('name_vi')->pluck('name_vi', 'id')->all()),
+                SelectFilter::make('school_id')->label('Trường')->searchable()->default($this->schoolFilter)
+                    ->options(fn () => School::query()->orderBy('name')->pluck('name', 'id')->all()),
+                SelectFilter::make('region')->label('Vùng / bang')->searchable()
+                    ->options(fn () => Region::query()->orderBy('name')->pluck('name', 'id')->all())
+                    ->query(fn (Builder $query, array $data) => filled($data['value'] ?? null)
+                        ? $query->whereHas('school', fn (Builder $q) => $q->where('region_id', $data['value'])) : $query),
+                SelectFilter::make('degree')->label('Bậc')
+                    ->options(fn () => SchoolProgram::query()->where('degree', '!=', '')->distinct()->orderBy('degree')->pluck('degree', 'degree')->all()),
+                TernaryFilter::make('is_verified')->label('Đã kiểm tra'),
+            ])
+            ->headerActions([
+                ImportActions::import('importPrograms', 'trường – ngành', ProgramImport::class, 'catalog.chuong-trinh')->visible($edit)->authorize($edit),
+                ImportActions::template('programTemplate', 'mau-truong-nganh.xlsx', ProgramImport::class)->visible($edit)->authorize($edit),
+                CreateAction::make()->label('Thêm ngành cho trường')->visible($edit)->authorize($edit)->schema($this->programSchema())
+                    ->mutateDataUsing($degree)
+                    ->after(fn (SchoolProgram $record) => $log(AdminActivity::ACTION_CREATE, 'Thêm', $record)),
+            ])
+            ->recordActions([
+                EditAction::make()->visible($edit)->authorize($edit)->schema($this->programSchema())
+                    ->mutateDataUsing($degree)
+                    ->after(fn (SchoolProgram $record) => $log(AdminActivity::ACTION_UPDATE, 'Sửa', $record)),
+                DeleteAction::make()->label('Bỏ')->visible($edit)->authorize($edit)
+                    ->modalHeading('Bỏ ngành này khỏi trường?')
+                    ->before(fn (SchoolProgram $record) => $log(AdminActivity::ACTION_DELETE, 'Bỏ', $record)),
+            ]);
+    }
+
+    /**
+     * @return list<mixed>
+     */
+    private function programSchema(): array
+    {
+        return [
+            Select::make('school_id')->label('Trường')->required()->searchable()
+                ->options(fn () => School::query()->orderBy('name')->pluck('name', 'id')->all()),
+            Select::make('major_id')->label('Ngành (trong danh mục)')->required()->searchable()
+                ->options(fn () => Major::query()->orderBy('name_vi')->get()
+                    ->mapWithKeys(fn (Major $m) => [$m->id => $m->name_vi.($m->name_de ? ' ('.$m->name_de.')' : '')])->all())
+                ->helperText('Chưa có ngành: thêm ở "Ngành học & nghề gợi ý" trước.'),
+            TextInput::make('degree')->label('Bậc')->maxLength(50)->datalist(['Bachelor', 'Master', 'Staatsexamen', 'Diplom'])
+                ->rules([fn (Get $get, ?Model $record) => function (string $attribute, $value, $fail) use ($get, $record): void {
+                    $exists = SchoolProgram::query()->where('school_id', $get('school_id'))->where('major_id', $get('major_id'))
+                        ->where('degree', (string) $value)->when($record, fn ($q) => $q->whereKeyNot($record->getKey()))->exists();
+                    if ($exists) {
+                        $fail('Trường này đã có ngành này ở bậc này.');
+                    }
+                }]),
+            TextInput::make('program_name')->label('Tên chương trình tại trường')->maxLength(255)->placeholder('Informatik (B.Sc.)'),
+            TextInput::make('language')->label('Ngôn ngữ dạy')->maxLength(50)->datalist(['Deutsch', 'Englisch', 'Deutsch / Englisch']),
+            TextInput::make('study_form')->label('Hình thức học')->maxLength(50)->datalist(['Vollzeit', 'Dual', 'Teilzeit']),
+            TextInput::make('url')->label('Link chương trình')->url()->maxLength(255),
+            Toggle::make('is_verified')->label('Đã kiểm tra trên trang trường / Hochschulkompass'),
+            Textarea::make('note')->label('Ghi chú')->rows(2),
+        ];
     }
 
     /**

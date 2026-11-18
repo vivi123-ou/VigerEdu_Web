@@ -31,7 +31,7 @@ class SeedDataTest extends TestCase
 
         $this->assertSame($first, $this->counts());
         $this->assertSame([
-            'roles' => 3, 'permissions' => 16, 'riasec_types' => 6, 'riasec_pairs' => 15, 'pair_major' => 30,
+            'roles' => 3, 'permissions' => 17, 'riasec_types' => 6, 'riasec_pairs' => 15, 'pair_major' => 30,
             'third_letters' => 6, 'major_groups' => 7, 'subjects' => 9, 'majors' => 46, 'environments' => 14,
             'occupations' => 51, 'major_occupation' => 53, 'question_facets' => 60, 'questions' => 300,
             'test_config_versions' => 1, 'form_fields' => 8,

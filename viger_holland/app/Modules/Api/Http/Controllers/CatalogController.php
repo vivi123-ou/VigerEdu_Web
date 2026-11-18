@@ -7,6 +7,8 @@ use App\Modules\Assessment\Models\Major;
 use App\Modules\Assessment\Models\RiasecPair;
 use App\Modules\Assessment\Models\RiasecType;
 use App\Modules\Assessment\Models\ThirdLetter;
+use App\Modules\Schools\Models\School;
+use App\Modules\Schools\Models\SchoolProgram;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -30,6 +32,17 @@ class CatalogController extends Controller
                 ->get(['code', 'name_vi', 'name_de', 'name_en', 'holland_codes', 'routes', 'is_verified', 'source_url'])
                 // Hệ đào tạo chỉ trả khi ngành đã kiểm tra (dữ liệu chưa kiểm tra có ghi chú nội bộ như "Cần tra").
                 ->map(fn (Major $m) => ['routes' => $m->is_verified ? $m->routes : null] + $m->toArray()),
+            'schools' => School::query()->where('is_hidden', false)->with('region:id,name')->orderBy('name')->get()->map(fn (School $s) => [
+                'id' => $s->id, 'name' => $s->name, 'short_name' => $s->short_name, 'type' => $s->type, 'ownership' => $s->ownership,
+                'region' => $s->region?->name, 'city' => $s->city, 'website' => $s->website,
+            ]),
+            'programs' => SchoolProgram::query()->with(['school:id,name,is_hidden', 'major:id,code'])->get()
+                ->reject(fn (SchoolProgram $p) => $p->school === null || $p->school->is_hidden || $p->major === null)
+                ->map(fn (SchoolProgram $p) => [
+                    'school_id' => $p->school_id, 'school' => $p->school->name, 'major' => $p->major->code, 'degree' => $p->degree ?: null,
+                    'program_name' => $p->program_name, 'language' => $p->language, 'study_form' => $p->study_form, 'url' => $p->url,
+                    'is_verified' => $p->is_verified,
+                ])->values(),
             default => abort(404),
         };
 

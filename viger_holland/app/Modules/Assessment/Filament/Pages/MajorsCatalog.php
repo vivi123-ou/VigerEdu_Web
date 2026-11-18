@@ -3,10 +3,15 @@
 namespace App\Modules\Assessment\Filament\Pages;
 
 use App\Filament\Pages\TabbedTablePage;
+use App\Filament\Support\ImportActions;
 use App\Modules\Assessment\Models\Major;
 use App\Modules\Assessment\Models\Occupation;
+use App\Modules\Assessment\Services\MajorImport;
+use App\Modules\Schools\Filament\Pages\SchoolsCatalog;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -19,11 +24,12 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Làm gì:   Trang "Ngành học & nghề gợi ý": thẻ Ngành (tên Việt / Đức, mã Holland của ngành, hệ đào tạo, link nguồn chính thức,
- *           dấu "Đã kiểm tra", đang dùng / ngừng dùng) và thẻ Nghề (tên Việt / Đức / Anh). Thêm mới tự đặt mã (MAJ…, OCC…).
+ *           dấu "Đã kiểm tra", đang dùng / ngừng dùng, nghề liên quan, số trường có ngành → bấm để xem trường) và thẻ Nghề
+ *           (tên Việt / Đức / Anh). Thêm mới tự đặt mã (MAJ…, OCC…). Ngành nhập / cập nhật được từ Excel (có file mẫu).
  *           Không xóa: ngừng dùng thì không gợi ý nữa nhưng lượt làm bài cũ vẫn đọc được.
  *           Ngành "Đã kiểm tra" phải có link nguồn (Vân chốt 17/11: ngành có thật ở Đức, theo nguồn chính thức).
  * Ai gọi:   Filament (/admin/nganh-hoc-va-nghe). Quyền: catalog.manage.
- * Dữ liệu:  majors, occupations (liên kết ngành – nghề giữ theo dữ liệu nạp, chưa sửa ở đây).
+ * Dữ liệu:  majors, occupations, major_occupation (nghề liên quan), school_programs (đếm số trường).
  */
 class MajorsCatalog extends TabbedTablePage
 {
@@ -72,13 +78,17 @@ class MajorsCatalog extends TabbedTablePage
         }
 
         return $table
-            ->query(Major::query())
+            ->query(Major::query()->withCount(['programs', 'occupationLinks']))
             ->defaultSort('sort_order')
             ->columns([
                 TextColumn::make('code')->label('Mã')->sortable(),
                 TextColumn::make('name_vi')->label('Ngành')->description(fn (Major $m) => $m->name_de)->searchable(['name_vi', 'name_de'])->wrap(),
                 TextColumn::make('holland_codes')->label('Mã Holland')->badge()->placeholder('Chưa có'),
                 TextColumn::make('routes')->label('Hệ đào tạo')->placeholder('—'),
+                TextColumn::make('occupation_links_count')->label('Nghề')->alignCenter(),
+                TextColumn::make('programs_count')->label('Số trường')->alignCenter()->color('primary')
+                    ->tooltip('Bấm để xem trường có ngành này')
+                    ->url(fn (Major $m) => SchoolsCatalog::getUrl(['the' => 'chuong-trinh', 'nganh' => $m->id])),
                 IconColumn::make('is_verified')->label('Đã kiểm tra')->boolean(),
                 IconColumn::make('is_active')->label('Đang dùng')->boolean(),
             ])
@@ -87,9 +97,11 @@ class MajorsCatalog extends TabbedTablePage
                 TernaryFilter::make('is_active')->label('Đang dùng'),
             ])
             ->headerActions([
+                ImportActions::import('importMajors', 'ngành học', MajorImport::class, 'catalog.nganh-hoc')->authorize($authorize),
+                ImportActions::template('majorTemplate', 'mau-nganh-hoc.xlsx', MajorImport::class)->authorize($authorize),
                 CreateAction::make()->label('Thêm ngành')->authorize($authorize)->schema($this->majorSchema())
                     ->mutateDataUsing(fn (array $data) => $data + [
-                        'code' => $this->nextCode(Major::class, 'MAJ'),
+                        'code' => MajorImport::nextCode(),
                         'sort_order' => (int) Major::withTrashed()->max('sort_order') + 1,
                     ])
                     ->after(fn (Model $record) => $this->logChange($record, 'ngành '.$record->code)),
@@ -119,6 +131,15 @@ class MajorsCatalog extends TabbedTablePage
             Toggle::make('is_verified')->label('Đã kiểm tra: ngành có thật ở Đức, theo nguồn chính thức')
                 ->rules([fn (Get $get) => fn (string $attribute, $value, $fail) => $value && blank($get('source_url')) ? $fail('Nhập link nguồn chính thức trước khi đánh dấu đã kiểm tra.') : null]),
             Toggle::make('is_active')->label('Đang dùng (được gợi ý)')->default(true),
+            Repeater::make('occupationLinks')->relationship()->label('Nghề liên quan (hiện ở báo cáo, tối đa 3 nghề đầu)')
+                ->addActionLabel('Thêm nghề')->defaultItems(0)->columns(2)->reorderable(false)
+                ->components([
+                    Select::make('occupation_id')->label('Nghề')->required()->searchable()->distinct()
+                        ->options(fn () => Occupation::query()->orderBy('name_vi')->get()
+                            ->mapWithKeys(fn (Occupation $o) => [$o->id => ($o->name_vi ?: $o->name_de).($o->name_vi && $o->name_de ? ' ('.$o->name_de.')' : '')])->all())
+                        ->helperText('Chưa có nghề: thêm ở thẻ "Nghề" trước.'),
+                    TextInput::make('link_type')->label('Loại liên kết')->maxLength(100)->datalist(['Trực tiếp', 'Liên quan', 'Mở rộng']),
+                ]),
         ];
     }
 

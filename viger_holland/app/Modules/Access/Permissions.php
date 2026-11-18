@@ -56,6 +56,8 @@ final class Permissions
             'Ứng dụng có mã đọc được kết quả Holland (không có họ tên, liên lạc).'],
         'logs.view' => ['Được xem lịch sử thao tác', self::GROUP_SYSTEM,
             'Ai sửa gì, ai xem báo cáo của khách nào, lúc nào.'],
+        'system.manage' => ['Được đổi cài đặt hệ thống và chặn / bỏ chặn địa chỉ IP', self::GROUP_SYSTEM,
+            'Nhật ký tự dọn sau bao lâu, sao lưu giữ bao lâu, các địa chỉ IP bị chặn vì truy cập bất thường.'],
     ];
 
     /**

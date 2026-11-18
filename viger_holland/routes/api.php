@@ -16,6 +16,6 @@ Route::prefix('v1')->middleware('throttle:api')->group(function (): void {
 
     Route::middleware('api.token:results:read')->group(function (): void {
         Route::get('results/{token}', [ResultController::class, 'show'])->name('api.results.show');
-        Route::get('catalog/{type}', [CatalogController::class, 'show'])->whereIn('type', ['types', 'pairs', 'third', 'majors'])->name('api.catalog.show');
+        Route::get('catalog/{type}', [CatalogController::class, 'show'])->whereIn('type', ['types', 'pairs', 'third', 'majors', 'schools', 'programs'])->name('api.catalog.show');
     });
 });

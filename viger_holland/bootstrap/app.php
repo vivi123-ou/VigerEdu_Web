@@ -6,6 +6,7 @@ use App\Http\Middleware\NoIndex;
 use App\Modules\Api\Http\Middleware\AuthenticateApiClient;
 use App\Modules\CrmSync\Console\RetryCrm;
 use App\Modules\CrmSync\Console\ShowCrmPayload;
+use App\Modules\System\Console\PruneOldRecords;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         RetryCrm::class,
         ShowCrmPayload::class,
+        PruneOldRecords::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([

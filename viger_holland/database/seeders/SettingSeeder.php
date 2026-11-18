@@ -179,7 +179,15 @@ class SettingSeeder extends Seeder
                 'crm_url' => '',
                 'crm_retry_minutes' => '1,5,30,120,360',
                 'crm_customer_url' => '',
-                'backup_keep_days' => '14', // holland:backup giữ bản sao lưu bấy nhiêu ngày // ví dụ https://crm.viger.edu.vn/khach/{ma}; để trống thì không hiện nút "Mở hồ sơ trong CRM"
+            ],
+            'system' => [
+                // Sửa ở "Cài đặt hệ thống" (config/admin_content.php, khóa 'system'). holland:prune dọn mỗi đêm, holland:backup sao lưu mỗi đêm.
+                'logs_keep_months' => '12',
+                'tracking_keep_months' => '12',
+                'crm_sent_keep_days' => '90',
+                'app_log_keep_days' => '30',
+                'backup_keep_days' => '14',
+                'backup_keep_weeks' => '8',
             ],
             'embed' => [
                 // Khối "Trắc nghiệm Holland" trên web chính (/embed, /api/v1/public/intro)

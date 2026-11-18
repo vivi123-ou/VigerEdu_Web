@@ -28,7 +28,7 @@ use RuntimeException;
 final class ContentFields
 {
     /**
-     * @param  array{key: string, label: string, type: string, hint?: string, required?: bool}  $field
+     * @param  array{key: string, label: string, type: string, hint?: string, required?: bool, min?: int, max?: int, unit?: string}  $field
      */
     public static function make(array $field): Component
     {
@@ -39,6 +39,8 @@ final class ContentFields
             'domains' => Textarea::make($key)->rows(4)->placeholder('https://viger.edu.vn'),
             'rich' => self::rich($key),
             'color' => ColorPicker::make($key),
+            'number' => TextInput::make($key)->type('number')->inputMode('numeric')
+                ->suffix($field['unit'] ?? null)->extraInputAttributes(['min' => $field['min'] ?? 0, 'max' => $field['max'] ?? 100000]),
             'font' => Select::make($key)->native(false)
                 ->options(collect(config('holland.fonts'))->mapWithKeys(fn ($value, string $font) => [$font => $font])->all()),
             'image' => self::image($key),

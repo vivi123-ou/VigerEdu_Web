@@ -47,7 +47,7 @@ class ActivityLog extends Page implements HasTable
 
     public function getSubheading(): string|Htmlable|null
     {
-        return static::menuItem()['summary'] ?? null;
+        return (static::menuItem()['summary'] ?? '').' Ghi liên tục, tự xóa dòng cũ hơn '.max(1, (int) setting('logs_keep_months', '12')).' tháng (đổi ở "Cài đặt hệ thống").';
     }
 
     protected function getHeaderActions(): array

@@ -75,16 +75,16 @@ class SchoolsCatalogTest extends TestCase
         $this->assertSame('Code', $mapping['external_code']);
         $this->assertSame('Bundesland', $mapping['region']);
 
-        $stats = $import->import($path, $austria, $mapping, ['ĐH Hành chính']);
-        $this->assertSame(['created' => 2, 'updated' => 0, 'skipped' => 1], $stats);
+        $stats = $import->import($path, $mapping, ['country' => $austria, 'hidden_types' => ['ĐH Hành chính']]);
+        $this->assertSame(['created' => 2, 'updated' => 0, 'skipped' => 1, 'problems' => ['Dòng 4: không có tên trường']], $stats);
         $vienna = School::query()->where('external_code', 'W1')->firstOrFail();
         $this->assertSame('Wien', $vienna->region->name);
         $this->assertSame($austria->id, $vienna->region->country_id);
         $this->assertSame(['Ghi chú riêng' => 'lớn nhất Áo'], $vienna->extra);
         $this->assertTrue(School::query()->where('external_code', 'G1')->value('is_hidden'));
 
-        $stats = $import->import($path, $austria, $mapping);
-        $this->assertSame(['created' => 0, 'updated' => 2, 'skipped' => 1], $stats);
+        $stats = $import->import($path, $mapping, ['country' => $austria]);
+        $this->assertSame([0, 2, 1], [$stats['created'], $stats['updated'], $stats['skipped']]);
         $this->assertSame(392, School::query()->count());
     }
 

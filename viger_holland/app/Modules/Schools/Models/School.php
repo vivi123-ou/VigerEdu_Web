@@ -5,6 +5,7 @@ namespace App\Modules\Schools\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Làm gì:   Một trường đại học. Loại hình, hình thức là chữ (theo file nguồn của từng nước); cột khác lưu ở extra.
@@ -45,5 +46,15 @@ class School extends Model
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
+    }
+
+    /**
+     * Ngành trường này dạy (mỗi bậc một dòng).
+     *
+     * @return HasMany<SchoolProgram, $this>
+     */
+    public function programs(): HasMany
+    {
+        return $this->hasMany(SchoolProgram::class);
     }
 }

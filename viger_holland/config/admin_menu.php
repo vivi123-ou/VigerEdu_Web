@@ -22,6 +22,7 @@ use App\Modules\Respondent\Filament\Pages\CustomersList;
 use App\Modules\Respondent\Filament\Pages\FormFields;
 use App\Modules\Respondent\Filament\Pages\LookupReports;
 use App\Modules\Schools\Filament\Pages\SchoolsCatalog;
+use App\Modules\System\Filament\Pages\SystemSettings;
 
 /*
 |--------------------------------------------------------------------------
@@ -179,6 +180,9 @@ return [
                     ['Kiểm tra một ngành', 'bấm "Sửa", dán link Hochschulkompass hoặc studienwahl.de vào "Link nguồn chính thức", tick "Đã kiểm tra", bấm "Lưu".'],
                     ['Thêm ngành', 'bấm "Thêm ngành", nhập tên và mã Holland của ngành (ví dụ ISC).'],
                     ['Không muốn gợi ý một ngành nữa', 'bấm "Sửa", tắt "Đang dùng". Ngành không bị xóa, lượt làm bài cũ vẫn đọc được.'],
+                    ['Chọn nghề cho một ngành', 'bấm "Sửa" ở ngành, kéo xuống "Nghề liên quan", bấm "Thêm nghề", chọn nghề, bấm "Lưu". Nghề mới thì thêm ở thẻ "Nghề" trước.'],
+                    ['Xem trường có ngành này', 'bấm con số ở cột "Số trường".'],
+                    ['Nhập nhiều ngành một lần', 'bấm "Tải file mẫu", điền vào file, rồi "Nhập từ Excel". Ngành đã có (cùng mã hoặc cùng tên Đức) được cập nhật, không tạo trùng.'],
                     ['Sửa tên nghề', 'chọn thẻ "Nghề", bấm "Sửa".'],
                 ],
             ],
@@ -194,9 +198,12 @@ return [
                     ['Tìm trường', 'gõ tên, tên viết tắt hoặc thành phố vào ô tìm kiếm; lọc theo bang, loại hình.'],
                     ['Xem trường đang ẩn', 'chọn bộ lọc "Trường đang ẩn" → "Chỉ trường đang ẩn" (ĐH Hành chính, ĐH Đặc thù ẩn sẵn).'],
                     ['Nhập danh sách trường (quản trị viên)', 'bấm "Nhập từ Excel", chọn quốc gia và file, kiểm tra bước "Ghép cột" rồi bấm "Gửi". Trường đã có được cập nhật, không tạo trùng.'],
+                    ['Xem ngành của một trường', 'bấm "Ngành" ở dòng trường.'],
+                    ['Xem trường có một ngành', 'thẻ "Ngành của trường", chọn ngành ở bộ lọc "Ngành".'],
+                    ['Gắn ngành cho trường (quản trị viên)', 'thẻ "Ngành của trường": bấm "Thêm ngành cho trường"; hoặc bấm "Tải file mẫu", điền mỗi dòng một trường + một ngành, rồi "Nhập từ Excel". Dòng nào không tìm thấy trường / ngành sẽ được báo lại.'],
                     ['Thêm nước khác', 'thẻ "Quốc gia", bấm "Thêm quốc gia", rồi nhập file trường của nước đó.'],
                 ],
-                'note' => 'Gợi ý "trường có ngành này" sẽ có khi team điền file trường ↔ ngành.',
+                'note' => 'Trường có ngành gợi ý cũng hiện trong báo cáo nội bộ (chỉ quản trị viên và tư vấn viên thấy, khách không thấy).',
             ],
         ],
         'form-fields' => [
@@ -362,6 +369,21 @@ return [
                     ['Cần vai trò mới (ví dụ Kế toán)', 'bấm "Thêm vai trò", đặt tên, tick việc được làm.'],
                 ],
                 'note' => 'Quản trị viên luôn được làm mọi việc. Tải dữ liệu khách ra Excel chỉ dành cho quản trị viên.',
+            ],
+        ],
+        'system' => [
+            'group' => 'Quản lý hệ thống', 'label' => 'Cài đặt hệ thống', 'icon' => 'heroicon-o-cog-6-tooth',
+            'permission' => 'system.manage',
+            'page' => SystemSettings::class,
+            'summary' => 'Nhật ký giữ bao lâu rồi tự dọn, sao lưu giữ bao lâu.',
+            'help' => [
+                'intro' => 'Các con số giữ cho hệ thống chạy lâu dài không bị tràn dữ liệu. Mỗi đêm phần mềm tự sao lưu (02:00) và tự dọn nhật ký cũ (03:00).',
+                'steps' => [
+                    ['Đổi thời gian giữ nhật ký', 'sửa số tháng / ngày ở phần "Nhật ký tự dọn", bấm "Lưu".'],
+                    ['Đổi thời gian giữ bản sao lưu', 'sửa ở phần "Sao lưu", bấm "Lưu".'],
+                    ['Xem hệ thống đã dọn gì', 'mở "Lịch sử thao tác", tìm "Hệ thống tự dọn".'],
+                ],
+                'note' => 'Dữ liệu khách và kết quả làm bài không bao giờ tự xóa.',
             ],
         ],
         'logs' => [

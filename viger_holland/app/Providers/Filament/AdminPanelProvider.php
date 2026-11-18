@@ -45,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
         'Schools' => 'App\\Modules\\Schools\\Filament',
         'Api' => 'App\\Modules\\Api\\Filament',
         'Content' => 'App\\Modules\\Content\\Filament',
+        'System' => 'App\\Modules\\System\\Filament',
     ];
 
     public function panel(Panel $panel): Panel

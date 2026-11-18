@@ -52,6 +52,7 @@ final class ContentPages
 
             $rules[$key] = match ($field['type']) {
                 'color' => [$presence, 'regex:/^#[0-9a-fA-F]{6}$/'],
+                'number' => [$presence, 'integer', 'min:'.($field['min'] ?? 0), 'max:'.($field['max'] ?? 100000)],
                 'font' => [$presence, Rule::in(array_keys(config('holland.fonts')))],
                 'url' => [$presence, 'url:http,https', 'max:255'],
                 'email' => [$presence, 'email', 'max:255'],
@@ -61,6 +62,10 @@ final class ContentPages
                 'textarea' => [$presence, 'string', 'max:2000'],
                 default => [$presence, 'string', 'max:255'],
             };
+
+            if ($field['type'] === 'number') {
+                $messages["{$key}.max"] = 'Ô :attribute lớn nhất là :max.';
+            }
 
             if ($field['type'] === 'links') {
                 $rules["{$key}.*.label"] = ['nullable', 'string', 'max:60'];
@@ -77,6 +82,8 @@ final class ContentPages
             'url' => 'Ô :attribute chưa phải địa chỉ web. Ví dụ: viger.edu.vn',
             'email' => 'Email chưa đúng (ví dụ: ten@viger.edu.vn).',
             'in' => 'Lựa chọn ở ô :attribute không hợp lệ.',
+            'integer' => 'Ô :attribute phải là số nguyên.',
+            'min' => 'Ô :attribute nhỏ nhất là :min.',
             'max' => 'Ô :attribute quá dài.',
         ];
 

@@ -164,6 +164,27 @@ return [
         ],
     ],
 
+    'system' => [
+        'title' => 'Cài đặt hệ thống',
+        'menu' => 'system',
+        'group' => 'system',
+        'sections' => [
+            'Nhật ký tự dọn (chạy mỗi đêm lúc 03:00)' => [
+                ['key' => 'logs_keep_months', 'label' => 'Lịch sử thao tác giữ', 'type' => 'number', 'unit' => 'tháng', 'min' => 1, 'max' => 120, 'required' => true, 'hint' => 'Ghi liên tục; dòng cũ hơn số tháng này tự xóa để không tràn dữ liệu. Thầy đề xuất 12 tháng.'],
+                ['key' => 'tracking_keep_months', 'label' => 'Hành vi khách (mở trang, bấm nút) giữ', 'type' => 'number', 'unit' => 'tháng', 'min' => 1, 'max' => 120, 'required' => true],
+                ['key' => 'crm_sent_keep_days', 'label' => 'Gói đã gửi CRM thành công giữ', 'type' => 'number', 'unit' => 'ngày', 'min' => 7, 'max' => 3650, 'required' => true, 'hint' => 'Gói lỗi, đang chờ thì không xóa. Khách vẫn còn nguyên ở CRM.'],
+                ['key' => 'app_log_keep_days', 'label' => 'File nhật ký lỗi của phần mềm giữ', 'type' => 'number', 'unit' => 'ngày', 'min' => 1, 'max' => 365, 'required' => true, 'hint' => 'storage/logs: mỗi ngày một file. Bị tấn công làm log tăng vọt thì ổ cũng không bị đầy.'],
+            ],
+            'Sao lưu (chạy mỗi đêm lúc 02:00)' => [
+                ['key' => 'backup_keep_days', 'label' => 'Giữ bản sao lưu hằng ngày', 'type' => 'number', 'unit' => 'ngày', 'min' => 1, 'max' => 365, 'required' => true],
+                ['key' => 'backup_keep_weeks', 'label' => 'Giữ thêm mỗi tuần một bản trong', 'type' => 'number', 'unit' => 'tuần', 'min' => 0, 'max' => 260, 'required' => true, 'hint' => 'Bản cuối cùng của mỗi tuần được giữ lâu hơn để quay lại khi web bị phá mà phát hiện muộn. 0 = không giữ.'],
+            ],
+            'Khách cần liên lạc' => [
+                ['key' => 'contacts_days', 'label' => 'Nhân viên thấy khách của', 'type' => 'number', 'unit' => 'ngày gần nhất', 'min' => 1, 'max' => 365, 'required' => true, 'hint' => 'Không ghi ra trên trang của nhân viên.'],
+            ],
+        ],
+    ],
+
     'appearance' => [
         'title' => 'Logo, màu, hotline, chân trang',
         'menu' => 'appearance',

@@ -11,9 +11,9 @@
         <li x-data="{ copied: false }">
             <p><strong>{{ $loop->iteration }}.</strong> {{ $label }}</p>
             <div class="hz-codes__row">
-                <pre class="hz-codes__code">{{ $code }}</pre>
+                <pre class="hz-codes__code" x-ref="code">{{ $code }}</pre>
                 <x-filament::button size="sm" color="gray" icon="heroicon-o-clipboard-document"
-                    x-on:click="navigator.clipboard.writeText(@js($code)); copied = true; setTimeout(() => copied = false, 2000)">
+                    x-on:click="navigator.clipboard.writeText($refs.code.textContent); copied = true; setTimeout(() => copied = false, 2000)">
                     <span x-text="copied ? 'Đã chép' : 'Chép'">Chép</span>
                 </x-filament::button>
             </div>

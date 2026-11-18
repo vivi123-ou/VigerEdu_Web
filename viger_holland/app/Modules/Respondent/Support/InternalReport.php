@@ -14,6 +14,7 @@ use App\Modules\CrmSync\Models\CrmOutbox;
 use App\Modules\CrmSync\Services\CrmConfig;
 use App\Modules\Respondent\Models\FormField;
 use App\Modules\Respondent\Services\ReportForm;
+use App\Modules\Schools\Filament\Pages\SchoolsCatalog;
 use Illuminate\Support\Carbon;
 
 /**
@@ -182,7 +183,7 @@ final class InternalReport
     private static function majors(array $result, int $publicLimit): array
     {
         $shown = array_column($result['customer']['majors'] ?? [], 'id');
-        $models = Major::query()->whereIn('code', array_column($result['majors'] ?? [], 'id'))->with('occupations')->get()->keyBy('code');
+        $models = Major::query()->whereIn('code', array_column($result['majors'] ?? [], 'id'))->with(['occupations', 'programs' => fn ($q) => $q->with('school:id,name,short_name,city')->orderByDesc('is_verified')])->get()->keyBy('code');
 
         return array_map(function (array $row) use ($shown, $models): array {
             $major = $models[$row['id']] ?? null;
@@ -196,6 +197,10 @@ final class InternalReport
                 'routes' => $row['routes'] ?? null,
                 'verified' => (bool) ($row['verified'] ?? false),
                 'occupations' => $major ? $major->occupations->take(3)->map(fn (Occupation $o) => CustomerReport::occupationName($o))->implode(', ') : '',
+                'schools' => $major ? $major->programs->unique('school_id')->take(5)
+                    ->map(fn ($p) => ($p->school->short_name ?: $p->school->name).($p->school->city ? ' ('.$p->school->city.')' : ''))->values()->all() : [],
+                'schools_total' => $major ? $major->programs->unique('school_id')->count() : 0,
+                'schools_url' => $major ? SchoolsCatalog::getUrl(['the' => 'chuong-trinh', 'nganh' => $major->id]) : null,
             ];
         }, $result['majors'] ?? []);
     }

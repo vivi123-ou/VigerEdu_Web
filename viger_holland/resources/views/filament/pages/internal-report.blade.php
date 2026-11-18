@@ -124,7 +124,7 @@
             description="Ngành nền của cặp 2 chữ đầu đứng trước, sau đó xếp theo mức khớp với mã {{ $r['code3'] }}. Khách chỉ thấy các ngành có nhãn, không thấy con số.">
             <div class="hz-scroll">
                 <table class="hz-table">
-                    <thead><tr><th>#</th><th>Ngành (Việt / Đức)</th><th>Mã ngành</th><th>Mức khớp (0–18)</th><th>Khách thấy</th><th>Hệ đào tạo</th><th>Nghề liên quan</th></tr></thead>
+                    <thead><tr><th>#</th><th>Ngành (Việt / Đức)</th><th>Mã ngành</th><th>Mức khớp (0–18)</th><th>Khách thấy</th><th>Hệ đào tạo</th><th>Nghề liên quan</th><th>Trường có ngành</th></tr></thead>
                     <tbody>
                         @foreach ($r['majors'] as $m)
                             <tr>
@@ -136,6 +136,14 @@
                                 <td>@if ($m['shown'])<span class="hz-badge ok">{{ $m['label'] }}</span>@else<span class="hz-muted">Khách không thấy</span>@endif</td>
                                 <td>{{ $m['routes'] ?? '—' }}</td>
                                 <td>{{ $m['occupations'] ?: '—' }}</td>
+                                <td>
+                                    @if ($m['schools_total'] > 0)
+                                        {{ implode(', ', $m['schools']) }}
+                                        <small><a class="hz-link" href="{{ $m['schools_url'] }}">Xem cả {{ $m['schools_total'] }} trường →</a></small>
+                                    @else
+                                        <span class="hz-muted">Chưa có dữ liệu</span>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

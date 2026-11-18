@@ -13,3 +13,6 @@ Schedule::command('crm:retry')->everyFiveMinutes()->withoutOverlapping();
 
 // Sao lưu database mỗi đêm (giữ backup_keep_days ngày). Máy chủ cần cron: * * * * * php artisan schedule:run
 Schedule::command('holland:backup')->dailyAt('02:00')->withoutOverlapping();
+
+// Dọn nhật ký cũ (lịch sử thao tác, hành vi, gói CRM đã gửi, mã hết hạn, file log) theo "Cài đặt hệ thống". Không đụng dữ liệu khách.
+Schedule::command('holland:prune')->dailyAt('03:00')->withoutOverlapping();
