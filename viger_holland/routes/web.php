@@ -8,16 +8,26 @@ use App\Http\Controllers\Admin\PageEditorController;
 use App\Http\Controllers\EmbedController;
 use App\Http\Controllers\HomeController;
 use App\Modules\Assessment\Http\Controllers\QuizController;
+use App\Modules\Respondent\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-// Luồng khách (H3): Bắt đầu → Làm bài từng trang → Kết quả sơ lược. Thông tin, mã email, báo cáo đầy đủ: H4.
-Route::post('lam-bai/bat-dau', [QuizController::class, 'start'])->middleware('throttle:10,1')->name('test.start');
+// Luồng khách (H3): Bắt đầu → Làm bài từng trang → Kết quả sơ lược.
+Route::post('lam-bai/bat-dau', [QuizController::class, 'start'])->middleware('throttle:quiz-start')->name('test.start');
 Route::get('lam-bai', [QuizController::class, 'show'])->name('test.show');
-Route::post('lam-bai', [QuizController::class, 'submit'])->middleware('throttle:30,1')->name('test.submit');
+Route::post('lam-bai', [QuizController::class, 'submit'])->middleware('throttle:quiz-page')->name('test.submit');
 Route::get('ket-qua', [QuizController::class, 'result'])->name('test.result');
-Route::view('nhan-bao-cao', 'public.updating')->name('report.request'); // H4: form thông tin + mã email
+
+// Luồng khách (H4): Form thông tin → Mã xác nhận qua email → Báo cáo đầy đủ (chỉ hiện một lần). Không có trang nào chứa mã trên link.
+Route::middleware('noindex')->group(function (): void {
+    Route::get('nhan-bao-cao', [ReportController::class, 'form'])->name('report.request');
+    Route::post('nhan-bao-cao', [ReportController::class, 'submit'])->middleware('throttle:report-form')->name('report.submit');
+    Route::get('xac-nhan', [ReportController::class, 'code'])->name('report.code');
+    Route::post('xac-nhan', [ReportController::class, 'verify'])->middleware('throttle:report-code')->name('report.verify');
+    Route::post('xac-nhan/gui-lai', [ReportController::class, 'resend'])->middleware('throttle:report-resend')->name('report.resend');
+    Route::get('bao-cao', [ReportController::class, 'show'])->name('report.show');
+});
 
 // Khối nhúng cho web chính (iframe + script)
 Route::get('embed', [EmbedController::class, 'show'])->name('embed');

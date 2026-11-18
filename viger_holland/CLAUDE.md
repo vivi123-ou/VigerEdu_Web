@@ -17,8 +17,8 @@
 
 - **Luồng khách** (điện thoại trước, chốt 14/11): giới thiệu → **làm bài 36 câu, 6 câu / trang, chấm ngôi sao 1–5** (không có "Chưa biết", câu nào cũng bắt buộc) → **kết quả sơ lược** → **điền thông tin** → **mã OTP qua email** → **báo cáo đầy đủ**. **Không có nút đặt lịch** (tư vấn viên liên hệ qua CRM).
 - **Vân chốt sau mẫu giao diện (cập nhật 17/11, thay THIET_KE khi khác):**
-  - Báo cáo khách **chỉ hiện trong tab đó, đóng là mất**: không email link, không PDF, không nút chia sẻ, không hiện họ tên, không ô vàng cảnh báo. Kết quả vẫn lưu cho CRM; muốn xem lại thì làm bài lại.
-  - Form 7 ô kiểu UEH: bắt buộc Họ tên, Năm sinh của học sinh, Email, Điện thoại / Zalo, Thuộc đối tượng (Học sinh / sinh viên, Phụ huynh, Khác → mã `KHAC`); không bắt buộc Trường, Tỉnh / thành phố. **Không có ô tick**: đồng ý bằng một câu dưới nút "Xem báo cáo"; Turnstile chạy ẩn. Học lực, ngoại ngữ, điểm, ngân sách: CRM thu sau.
+  - Báo cáo khách **chỉ hiện một lần** ngay sau khi nhập đúng mã (18/11: tải lại cũng mất): không email link, không PDF, không nút chia sẻ, không hiện họ tên, không ô vàng cảnh báo. Kết quả vẫn lưu cho CRM; muốn xem lại thì làm bài lại.
+  - Form 8 ô kiểu UEH: bắt buộc Họ tên, Năm sinh của học sinh, Email, **Điện thoại / Zalo của phụ huynh** (18/11), Thuộc đối tượng (Học sinh / sinh viên, Phụ huynh, Khác → mã `KHAC`); không bắt buộc Điện thoại / Zalo của học sinh (ẩn khi chọn Phụ huynh, ô Email thành "Email của học sinh"), Trường, Tỉnh / thành phố. **Không có ô tick, không có câu đồng ý** (18/11; câu đồng ý là ô cài đặt, để trống); Turnstile chạy ẩn. Học lực, ngoại ngữ, điểm, ngân sách: CRM thu sau.
   - Câu hỏi xưng **"Tôi…"**; 5 nhãn sao: Hoàn toàn không giống tôi / Không giống lắm / Phân vân / Khá giống tôi / Hoàn toàn giống tôi. Thanh tiến độ một dải liền, không "Phần x/6".
   - Đầu trang khách chỉ có logo, không menu; chân trang gọn (hotline 0819 949 968, info@spn.com.vn, 6 Phùng Khắc Khoan, Phường Sài Gòn, TP.HCM). Mẫu: `docs/mau_giao_dien/luong-khach.html`.
   - Bỏ SMS, bỏ đăng nhập Google. **Không có vai trò Marketing riêng**: marketing là Nhân viên (Nhân viên được sửa nội dung trang, thư viện ảnh).
@@ -93,7 +93,7 @@
 - [x] F2. Admin theo mẫu `docs/mau_giao_dien/admin-filament.html`: menu đặt tên theo việc làm (một chỗ: `config/admin_menu.php`), quyền viết thành câu "Được…", nút "?" hướng dẫn từng bước, ô lối tắt theo vai trò, trang "Sắp có", báo 404 thay 403
 - [x] H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + test 8 ca
 - [x] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
-- [ ] H4. Module Respondent: form thông tin, OTP email, đồng ý, báo cáo đầy đủ (chỉ xem trong tab, không email link)
+- [ ] H4. Module Respondent: form thông tin, OTP email, báo cáo đầy đủ (hiện một lần, không email link). H4a phía khách: xong 18/11; H4b admin (tra cứu báo cáo khách, khách cần liên lạc, chữ trên báo cáo & email): chưa
 - [ ] H5. Module CrmSync + Tracking: outbox, job, thử lại, trang Kết nối CRM (`docs/PROMPT_4_THU_THAP_THONG_TIN_CRM.md`)
 - [ ] H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt các trang nội dung cũ sang Filament
 - [ ] H7. API cho chatbot, sao lưu, tài liệu, nghiệm thu

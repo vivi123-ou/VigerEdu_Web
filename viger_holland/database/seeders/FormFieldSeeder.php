@@ -6,7 +6,7 @@ use App\Modules\Respondent\Models\FormField;
 use Illuminate\Database\Seeder;
 
 /**
- * Làm gì:   Nạp 7 ô của form "Cập nhật thông tin để xem báo cáo" (chốt 14/11, theo mẫu UEH) kèm tên trường bên CRM.
+ * Làm gì:   Nạp 8 ô của form "Cập nhật thông tin để xem báo cáo" (chốt 14/11 theo mẫu UEH; 18/11 thêm SĐT phụ huynh bắt buộc) kèm tên trường bên CRM.
  *           Học lực, ngoại ngữ, điểm môn, ngân sách: CRM thu sau, không hỏi ở đây.
  * Ai gọi:   DatabaseSeeder. Chạy lại không trùng; ô đã có thì không ghi đè (admin có thể đã sửa).
  * Dữ liệu:  bảng form_fields.
@@ -29,10 +29,12 @@ class FormFieldSeeder extends Seeder
         $fields = [
             ['key' => 'ho_ten', 'crm_key' => 'student_name', 'label' => 'Họ tên', 'type' => 'text', 'is_required' => true, 'is_system' => true],
             ['key' => 'nam_sinh', 'crm_key' => 'birth_year', 'label' => 'Năm sinh của học sinh', 'type' => 'year', 'is_required' => true, 'is_system' => true,
-                'help' => 'Dùng để biết lớp và kiểm tra cần phụ huynh đồng ý khi dưới 18 tuổi.'],
+                'help' => 'Phụ huynh điền thì ghi năm sinh của con.'],
             ['key' => 'email', 'crm_key' => 'email', 'label' => 'Email', 'type' => 'email', 'is_required' => true, 'is_system' => true,
-                'help' => 'Nhận mã xác nhận để mở báo cáo.'],
-            ['key' => 'so_dien_thoai', 'crm_key' => 'phone', 'label' => 'Điện thoại / Zalo', 'type' => 'phone', 'is_required' => true, 'is_system' => true],
+                'help' => 'Nhận mã xác nhận để mở báo cáo.', 'conditions' => ['label_if' => ['doi_tuong' => ['PH' => 'Email của học sinh']]]],
+            ['key' => 'sdt_phu_huynh', 'crm_key' => 'parent_phone', 'label' => 'Điện thoại / Zalo của phụ huynh', 'type' => 'phone', 'is_required' => true, 'is_system' => true],
+            ['key' => 'so_dien_thoai', 'crm_key' => 'phone', 'label' => 'Điện thoại / Zalo của học sinh', 'type' => 'phone', 'is_system' => true,
+                'help' => 'Ẩn khi người điền là phụ huynh (số của phụ huynh đã có ở ô trên).', 'conditions' => ['hide_if' => ['doi_tuong' => ['PH']]]],
             ['key' => 'truong', 'crm_key' => 'current_school', 'label' => 'Trường', 'type' => 'text', 'placeholder' => 'Nhập tên trường'],
             ['key' => 'tinh', 'crm_key' => 'province', 'label' => 'Tỉnh / thành phố', 'type' => 'select',
                 'options' => $choices(array_combine(self::PROVINCES, self::PROVINCES)), 'placeholder' => 'Chọn tỉnh / thành phố'],

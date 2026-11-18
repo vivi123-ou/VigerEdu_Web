@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    // Cloudflare Turnstile cho form nhận báo cáo (chạy ẩn). Để trống 2 khóa thì form bỏ qua bước này (máy chạy thử).
+    'turnstile' => [
+        'site_key' => env('TURNSTILE_SITE_KEY'),
+        'secret_key' => env('TURNSTILE_SECRET_KEY'),
+    ],
+
 ];

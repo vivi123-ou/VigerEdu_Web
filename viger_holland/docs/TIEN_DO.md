@@ -28,10 +28,34 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | F2. Admin theo mẫu `admin-filament.html`: tên theo việc làm, quyền "Được…", nút "?", lối tắt, "Sắp có", 404 | ✅ Xong (17/11) |
 | H2. Module Assessment: rút đề, chấm, phân tích, gợi ý ngành + 8 ca | ✅ Xong (17/11) |
 | H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | ✅ Xong (18/11) |
-| H4. Form thông tin, OTP email, báo cáo đầy đủ | Chưa làm (tiếp theo) |
+| H4. Form thông tin, OTP email, báo cáo đầy đủ | H4a (phía khách) ✅ 18/11 · H4b (admin) tiếp theo |
 | H5. CrmSync + Tracking | Chưa làm |
 | H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm |
 | H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+
+### Vân chốt 18/11 (H4)
+
+- Form thêm **Điện thoại / Zalo của phụ huynh, bắt buộc**. SĐT học sinh giữ lại, không bắt buộc, ẩn khi người điền chọn "Phụ huynh" (khi đó ô Email thành "Email của học sinh").
+- Báo cáo đầy đủ **chỉ hiện một lần** ngay sau khi nhập đúng mã; tải lại cũng mất.
+- **Bỏ câu đồng ý** (web khác không có). Câu đồng ý thành ô cài đặt `report_consent_text`, để trống; gõ vào thì câu hiện dưới nút và được lưu lại.
+- Câu chưa chọn ghi "Chưa chọn câu trả lời".
+
+### H4a đã làm (18/11/2026): phía khách
+
+- **Form** `/nhan-bao-cao`: 8 ô dựng từ `form_fields`, 2 cột (điện thoại 1 cột). Ô có điều kiện ẩn / đổi chữ ngay khi chọn (cột mới `form_fields.conditions`), máy chủ kiểm tra lại theo cùng điều kiện. Báo lỗi tiếng Việt dưới từng ô ("Vui lòng nhập điện thoại / Zalo của phụ huynh.", "… chưa đúng. Ví dụ: 0912 345 678."). SĐT `+84 912.345.678` tự chuẩn hóa thành `0912345678`. Turnstile chạy ẩn khi có khóa trong `.env`.
+- **Mã xác nhận** `/xac-nhan`: 6 số qua email, hiệu lực 5 phút, sai 5 lần khóa 30 phút **theo email** (làm lượt mới cũng không mở khóa sớm), gửi lại sau 60 giây, tối đa 5 mã / giờ / email. Sửa email gõ nhầm thì gửi ngay tới email mới. Email chỉ có mã. Mọi con số và câu chữ trong cài đặt.
+- **Báo cáo đầy đủ** `/bao-cao` theo màn hình 4 của mẫu: 01 nhóm sở thích (mã, giải thích 2 nhóm, chữ thứ 3 khi đủ điều kiện, khi hai nhóm kết hợp, lục giác), 02 mức độ 6 nhóm (nhãn chữ), 03 ngành tại Đức (nhãn chữ, lý do, nghề tham khảo), 04 bước tiếp theo (nút Zalo khi có số Zalo, nút gọi hotline), "Làm lại với câu hỏi mới", lưu ý. Không họ tên, không %, không PDF, không chia sẻ, không lưu bộ nhớ đệm. Mở lại → "Báo cáo đã đóng" + nút "Làm bài lại".
+- **Lưu dữ liệu:** bảng `respondents` (họ tên, email, SĐT, SĐT phụ huynh **mã hóa** + cột băm để tra cứu), `otp_codes` (chỉ lưu băm của mã), `consents`; `field_values` giờ cũng mã hóa. Hồ sơ chỉ tạo / sửa **sau khi** nhập đúng mã, cùng email thì dùng chung hồ sơ.
+- **Sửa lỗi giới hạn số lần gửi:** trước đây các route `throttle:5,1`, `throttle:30,1` dùng chung một bộ đếm theo IP, khách làm xong 6 trang bài sẽ bị chặn ở form. Nay mỗi việc một bộ đếm riêng.
+- Máy chạy thử: trang nhập mã hiện luôn mã (chỉ khi `APP_ENV=local`), email vào hộp thư thử cổng 1025. Database chạy thử của Vân đã thêm bảng mới, ô SĐT phụ huynh và chữ mặc định.
+- **Kiểm thử: 121/121 đạt** (thêm `ReportFlowTest` 14 ca: form bắt buộc / định dạng, phụ huynh điền, trọn luồng, chỉ hiện một lần, khóa sau 5 lần sai, hết hạn và gửi lại, sửa email, giới hạn mã / giờ, gộp hồ sơ, câu đồng ý, Turnstile, lỗi gửi email không ghi email vào log, trọn hành trình qua HTTP không bị chặn).
+
+**Cần Vân / Thầy / team:**
+1. **Nội dung giải thích chưa có:** 6 nhóm và 15 cặp trong danh mục chưa có đoạn giải thích (cột `description` trống). Báo cáo đang dùng câu mô tả ngắn 6 nhóm trong cài đặt và câu chung theo quan hệ lục giác (liền kề / cách một / đối diện). Cần người viết 6 + 15 đoạn; sửa ở H6 ("Giải thích các mã Holland").
+2. **Nghề tham khảo** đang hiện tên tiếng Đức (danh mục chưa có tên tiếng Việt).
+3. **Câu đồng ý và CRM:** hợp đồng kết nối (`HOP_DONG_KET_NOI.md` mục 2.1) bắt buộc gửi `consent.agreed = true`; Nghị định 13/2023: im lặng không được coi là đồng ý. Cần chốt ở H5 gửi gì cho CRM (hỏi Thầy).
+4. **Hộp thư gửi mã** khi lên máy chủ thật (điền SMTP vào `.env`).
+5. Loại trường (Uni, HAW…) chỉ hiện cho khách khi ngành đã "Đã kiểm tra" (dữ liệu chưa kiểm tra có ghi chú nội bộ như "Cần tra").
 
 ### H3 đã làm (18/11/2026)
 

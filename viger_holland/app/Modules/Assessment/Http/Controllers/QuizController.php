@@ -9,6 +9,7 @@ use App\Modules\Assessment\Models\RiasecType;
 use App\Modules\Assessment\Models\SessionQuestion;
 use App\Modules\Assessment\Models\TestSession;
 use App\Modules\Assessment\Services\AssessmentService;
+use App\Modules\Assessment\Support\CurrentTest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -27,8 +28,6 @@ use Illuminate\View\View;
  */
 class QuizController extends Controller
 {
-    private const SESSION_KEY = 'holland.test';
-
     private const DEVICE_COOKIE = 'holland_device';
 
     public function __construct(private readonly AssessmentService $assessment) {}
@@ -52,8 +51,7 @@ class QuizController extends Controller
             ->all();
 
         $session = $this->assessment->start(hash('sha256', $device), $utm ?: null);
-        $request->session()->put(self::SESSION_KEY, $session->uuid);
-        $request->session()->regenerate();
+        CurrentTest::remember($request, $session);
 
         return redirect()->route('test.show');
     }
@@ -152,14 +150,9 @@ class QuizController extends Controller
         ]);
     }
 
-    /**
-     * Lượt làm bài của trình duyệt này (lưu trong phiên đăng nhập của trình duyệt, không có trên địa chỉ trang).
-     */
     private function currentSession(Request $request): ?TestSession
     {
-        $uuid = $request->session()->get(self::SESSION_KEY);
-
-        return is_string($uuid) ? TestSession::query()->where('uuid', $uuid)->first() : null;
+        return CurrentTest::get($request);
     }
 
     /**

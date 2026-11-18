@@ -33,7 +33,7 @@ class SeedDataTest extends TestCase
             'roles' => 3, 'permissions' => 14, 'riasec_types' => 6, 'riasec_pairs' => 15, 'pair_major' => 30,
             'third_letters' => 6, 'major_groups' => 7, 'subjects' => 9, 'majors' => 46, 'environments' => 14,
             'occupations' => 51, 'major_occupation' => 53, 'question_facets' => 60, 'questions' => 300,
-            'test_config_versions' => 1, 'form_fields' => 7,
+            'test_config_versions' => 1, 'form_fields' => 8,
         ], $first);
     }
 
@@ -78,11 +78,11 @@ class SeedDataTest extends TestCase
         $this->assertSame(['RIE'], Major::where('code', 'MAJ001')->value('holland_codes'));
 
         $this->assertSame([
-            'ho_ten' => 'student_name', 'nam_sinh' => 'birth_year', 'email' => 'email', 'so_dien_thoai' => 'phone',
+            'ho_ten' => 'student_name', 'nam_sinh' => 'birth_year', 'email' => 'email', 'sdt_phu_huynh' => 'parent_phone', 'so_dien_thoai' => 'phone',
             'truong' => 'current_school', 'tinh' => 'province', 'doi_tuong' => 'role',
         ], FormField::orderBy('sort_order')->pluck('crm_key', 'key')->all());
 
-        $this->assertSame(['ho_ten', 'nam_sinh', 'email', 'so_dien_thoai', 'doi_tuong'], FormField::where('is_required', true)->orderBy('sort_order')->pluck('key')->all());
+        $this->assertSame(['ho_ten', 'nam_sinh', 'email', 'sdt_phu_huynh', 'doi_tuong'], FormField::where('is_required', true)->orderBy('sort_order')->pluck('key')->all());
         $this->assertSame(['HS', 'PH', 'KHAC'], array_column(FormField::where('key', 'doi_tuong')->value('options'), 'value'));
     }
 

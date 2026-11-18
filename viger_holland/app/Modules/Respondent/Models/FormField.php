@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Làm gì:   Một ô trên form "Cập nhật thông tin để xem báo cáo". Admin thêm, sửa, ẩn, đổi bắt buộc, đổi tên trường bên CRM.
- * Ai gọi:   FormSchema (H4) dựng form và kiểm tra dữ liệu; CrmSync (H5) đóng gói theo crm_key; FormFieldSeeder.
+ * Ai gọi:   ReportForm (H4) dựng form và kiểm tra dữ liệu; CrmSync (H5) đóng gói theo crm_key; FormFieldSeeder.
  * Dữ liệu:  bảng form_fields. Không chứa dữ liệu khách (giá trị khách điền nằm ở field_values).
  */
-#[Fillable(['key', 'crm_key', 'label', 'type', 'options', 'options_source', 'group', 'help', 'placeholder', 'is_required', 'to_crm', 'on_report', 'is_visible', 'is_system', 'sort_order'])]
+#[Fillable(['key', 'crm_key', 'label', 'type', 'options', 'options_source', 'conditions', 'group', 'help', 'placeholder', 'is_required', 'to_crm', 'on_report', 'is_visible', 'is_system', 'sort_order'])]
 class FormField extends Model
 {
     use SoftDeletes;
@@ -36,6 +36,7 @@ class FormField extends Model
     {
         return [
             'options' => 'array',
+            'conditions' => 'array',
             'is_required' => 'boolean',
             'to_crm' => 'boolean',
             'on_report' => 'boolean',

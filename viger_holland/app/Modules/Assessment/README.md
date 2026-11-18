@@ -28,11 +28,12 @@
 
 **Trang khách (H3, `Http/`):** Blade thuần, CSS `public/css/khach.css`, JS `public/js/khach.js`.
 - `Http/Controllers/QuizController.php`:
-  - `start` (POST `/lam-bai/bat-dau`, giới hạn 10 lần / phút): phát đề, ghi nguồn UTM, đặt cookie máy `holland_device` (chỉ lưu dạng băm) để hạn chế lặp câu; đang làm dở thì làm tiếp, không phát đề mới;
+  - `start` (POST `/lam-bai/bat-dau`, giới hạn 10 lần / phút, bộ đếm `quiz-start`): phát đề, ghi nguồn UTM, đặt cookie máy `holland_device` (chỉ lưu dạng băm) để hạn chế lặp câu; đang làm dở thì làm tiếp, không phát đề mới;
   - `show` (GET `/lam-bai`): mỗi trang `items_per_page` câu, chấm sao 1–5; không cho nhảy qua trang chưa làm;
-  - `submit` (POST `/lam-bai`, 30 lần / phút): lưu câu trả lời từng trang; thiếu câu thì quay lại đúng trang và tô đỏ câu thiếu; đủ 36 câu thì chấm và sang kết quả;
+  - `submit` (POST `/lam-bai`, 30 lần / phút, bộ đếm `quiz-page`): lưu câu trả lời từng trang; thiếu câu thì quay lại đúng trang và tô đỏ câu thiếu; đủ 36 câu thì chấm và sang kết quả;
   - `result` (GET `/ket-qua`): mã 2 chữ, tên 2 nhóm, lời giải thích của cặp, `preview_majors` ngành hiện rõ, các ngành còn lại làm mờ (không gửi tên ngành thật ra trình duyệt).
-- Lượt làm bài giữ trong phiên đăng nhập của trình duyệt (`holland.test`), không đưa mã vào đường link.
+- Lượt làm bài giữ trong phiên của trình duyệt (`Support/CurrentTest.php`, khóa `holland.test`), không đưa mã vào đường link.
+- `Support/CustomerReport.php` (H4): dữ liệu báo cáo đầy đủ của khách (giải thích nhóm, lục giác, mức độ 6 nhóm, ngành kèm lý do và nghề). Loại trường (Uni, HAW…) chỉ hiện khi ngành đã kiểm tra nguồn chính thức.
 - `Http/Requests/SubmitAnswersRequest.php`: kiểm tra dữ liệu gửi lên; `AssessmentService::saveAnswers()` kiểm tra lại câu có thuộc đề này không.
 - `Support/SampleReport.php`: khung "Báo cáo mẫu" ở trang bắt đầu (mã ví dụ lấy từ cài đặt `intro_sample_code`).
 - Chữ trên trang làm bài và trang kết quả: cài đặt nhóm `result` (`quiz_*`, `result_*`). Chữ có `{so_cau}` tự hiện số câu theo cài đặt.

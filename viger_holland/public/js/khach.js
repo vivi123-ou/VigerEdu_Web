@@ -91,3 +91,85 @@
         }
     });
 })();
+
+/*
+ * Form nhận báo cáo (H4): ô có điều kiện (data-conditions, lấy từ form_fields.conditions) ẩn hoặc đổi chữ ngay khi
+ * khách chọn ở ô khác, ví dụ chọn "Phụ huynh" thì ẩn SĐT học sinh và ô Email thành "Email của học sinh".
+ * Máy chủ kiểm tra lại theo cùng điều kiện nên tắt JavaScript vẫn đúng.
+ */
+(function () {
+    'use strict';
+
+    var form = document.querySelector('[data-report-form]');
+    if (!form) {
+        return;
+    }
+
+    function valueOf(key) {
+        var checked = form.querySelector('[name="' + key + '"]:checked');
+        if (checked) {
+            return checked.value;
+        }
+        var input = form.querySelector('[name="' + key + '"]:not([type="radio"])');
+        return input ? input.value : '';
+    }
+
+    function apply() {
+        form.querySelectorAll('[data-conditions]').forEach(function (box) {
+            var rules = JSON.parse(box.getAttribute('data-conditions') || '{}');
+            var hidden = false;
+            Object.keys(rules.hide_if || {}).forEach(function (key) {
+                if ((rules.hide_if[key] || []).map(String).indexOf(valueOf(key)) !== -1) {
+                    hidden = true;
+                }
+            });
+            box.hidden = hidden;
+
+            var label = box.getAttribute('data-label');
+            Object.keys(rules.label_if || {}).forEach(function (key) {
+                var chosen = valueOf(key);
+                if (chosen && rules.label_if[key][chosen]) {
+                    label = rules.label_if[key][chosen];
+                }
+            });
+            var text = box.querySelector('[data-label-text]');
+            if (text) {
+                text.textContent = label;
+            }
+        });
+    }
+
+    form.addEventListener('change', apply);
+})();
+
+/*
+ * Nhập mã (H4): nút "Gửi lại mã" đếm ngược theo số giây máy chủ báo; ô mã chỉ nhận số.
+ */
+(function () {
+    'use strict';
+
+    var button = document.querySelector('[data-resend]');
+    if (button) {
+        var left = parseInt(button.getAttribute('data-wait'), 10) || 0;
+        var counter = button.querySelector('[data-countdown]');
+        var tick = function () {
+            if (left <= 0) {
+                button.disabled = false;
+                counter.textContent = '';
+                return;
+            }
+            button.disabled = true;
+            counter.textContent = ' sau ' + Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0');
+            left -= 1;
+            setTimeout(tick, 1000);
+        };
+        tick();
+    }
+
+    var otp = document.querySelector('.otp-in');
+    if (otp) {
+        otp.addEventListener('input', function () {
+            otp.value = otp.value.replace(/\D/g, '').slice(0, parseInt(otp.getAttribute('maxlength'), 10) || 6);
+        });
+    }
+})();
