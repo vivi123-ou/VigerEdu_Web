@@ -9,6 +9,7 @@ use App\Modules\Assessment\Filament\Pages\TestSettings;
 use App\Modules\Assessment\Filament\Resources\Questions\QuestionResource;
 use App\Modules\CrmSync\Filament\Pages\CrmConnection;
 use App\Modules\Respondent\Filament\Pages\ContactsToCall;
+use App\Modules\Respondent\Filament\Pages\FormFields;
 use App\Modules\Respondent\Filament\Pages\LookupReports;
 
 /*
@@ -168,9 +169,19 @@ return [
         ],
         'form-fields' => [
             'group' => 'Bài trắc nghiệm', 'label' => 'Form khách điền thông tin', 'icon' => 'heroicon-o-clipboard-document-list',
-            'permission' => 'form_fields.manage', 'stage' => 'H6',
+            'permission' => 'form_fields.manage',
+            'page' => FormFields::class,
             'summary' => 'Các ô khách điền để xem báo cáo: ô nào bắt buộc, ô nào gửi sang CRM.',
-            'help' => ['intro' => 'Đổi chữ, thứ tự, bắt buộc hay không của các ô trong form khách điền.', 'steps' => []],
+            'help' => [
+                'intro' => 'Form khách điền sau khi làm bài, trước khi nhận mã xác nhận qua email.',
+                'steps' => [
+                    ['Đổi chữ, bắt buộc, ẩn một ô', 'bấm "Sửa" ở dòng của ô, đổi rồi bấm "Lưu".'],
+                    ['Đổi thứ tự', 'kéo biểu tượng ở đầu dòng lên / xuống.'],
+                    ['Thêm câu hỏi mới (ví dụ "Học trường chuyên?")', 'bấm "Thêm ô", chọn kiểu ô, thêm lựa chọn nếu là ô chọn.'],
+                    ['Ô mới gửi sang CRM thế nào', 'để trống "Tên trường bên CRM" thì CRM nhận ở phần mở rộng; CRM tự tạo trường chờ duyệt.'],
+                ],
+                'note' => 'Ô lõi (họ tên, ngày sinh, email, điện thoại, đối tượng) không xóa được. Ô Email luôn bắt buộc vì mã xác nhận gửi qua email.',
+            ],
         ],
 
         // ---- Trang khách xem (trang làm từ trước, sẽ chuyển sang Filament ở H6) ----
