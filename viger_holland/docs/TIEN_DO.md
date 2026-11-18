@@ -39,6 +39,7 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 - Báo cáo đầy đủ **chỉ hiện một lần** ngay sau khi nhập đúng mã; tải lại cũng mất.
 - **Bỏ câu đồng ý** (web khác không có). Câu đồng ý thành ô cài đặt `report_consent_text`, để trống; gõ vào thì câu hiện dưới nút và được lưu lại.
 - Câu chưa chọn ghi "Chưa chọn câu trả lời".
+- **Ngày sinh chọn trên lịch** (thay ô năm sinh): lịch có sẵn của trình duyệt, không cài thêm thư viện. Holland lưu đủ ngày sinh (mã hóa); CRM vẫn nhận `birth_year`. **Cần sửa từ điển dữ liệu chung** (`TU_DIEN_DU_LIEU_CHUNG.xlsx` đang ghi "Năm sinh – Chỉ lưu năm"): thêm `birth_date`, báo CRM, web chính, chatbot.
 
 - **Khách luôn chỉ thấy mã 2 chữ** (kể cả khi nhóm thứ 3 trên 4,2); admin / tư vấn viên thấy đủ 3 chữ. Khác quy tắc Thầy chốt 11/11 nên làm thành công tắc "Cho khách thấy chữ thứ 3" trong "Cách bốc đề & chấm điểm", mặc định tắt; Thầy muốn quy tắc cũ thì bật. Cần báo Thầy.
 

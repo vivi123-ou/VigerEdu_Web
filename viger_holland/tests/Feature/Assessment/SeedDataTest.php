@@ -79,11 +79,11 @@ class SeedDataTest extends TestCase
         $this->assertSame(['RIE'], Major::where('code', 'MAJ001')->value('holland_codes'));
 
         $this->assertSame([
-            'ho_ten' => 'student_name', 'nam_sinh' => 'birth_year', 'email' => 'email', 'sdt_phu_huynh' => 'parent_phone', 'so_dien_thoai' => 'phone',
+            'ho_ten' => 'student_name', 'ngay_sinh' => 'birth_date', 'email' => 'email', 'sdt_phu_huynh' => 'parent_phone', 'so_dien_thoai' => 'phone',
             'truong' => 'current_school', 'tinh' => 'province', 'doi_tuong' => 'role',
         ], FormField::orderBy('sort_order')->pluck('crm_key', 'key')->all());
 
-        $this->assertSame(['ho_ten', 'nam_sinh', 'email', 'sdt_phu_huynh', 'doi_tuong'], FormField::where('is_required', true)->orderBy('sort_order')->pluck('key')->all());
+        $this->assertSame(['ho_ten', 'ngay_sinh', 'email', 'sdt_phu_huynh', 'doi_tuong'], FormField::where('is_required', true)->orderBy('sort_order')->pluck('key')->all());
         $this->assertSame(['HS', 'PH', 'KHAC'], array_column(FormField::where('key', 'doi_tuong')->value('options'), 'value'));
     }
 

@@ -38,7 +38,7 @@ class ReportFlowTest extends TestCase
 
     private const FORM = [
         'ho_ten' => 'Nguyễn Minh Anh',
-        'nam_sinh' => '2009',
+        'ngay_sinh' => '2009-03-15',
         'email' => 'MinhAnh@Gmail.com ',
         'sdt_phu_huynh' => '+84 912.345.678',
         'so_dien_thoai' => '0987 654 321',
@@ -70,7 +70,7 @@ class ReportFlowTest extends TestCase
         $this->get(route('report.request'))->assertOk()
             ->assertSee('name="robots" content="noindex, nofollow"', false)
             ->assertSee('Cập nhật thông tin để xem báo cáo đầy đủ')
-            ->assertSeeInOrder(['Họ tên', 'Năm sinh của học sinh', 'Email', 'Điện thoại / Zalo của phụ huynh', 'Điện thoại / Zalo của học sinh', 'Trường', 'Tỉnh / thành phố', 'Thuộc đối tượng'])
+            ->assertSeeInOrder(['Họ tên', 'Ngày sinh của học sinh', 'Email', 'Điện thoại / Zalo của phụ huynh', 'Điện thoại / Zalo của học sinh', 'Trường', 'Tỉnh / thành phố', 'Thuộc đối tượng'])
             ->assertSee('Xem báo cáo')
             ->assertDontSee('đồng ý')
             ->assertDontSee('type="checkbox"', false)
@@ -88,12 +88,26 @@ class ReportFlowTest extends TestCase
                 'email' => 'Email chưa đúng. Ví dụ: ten@gmail.com.',
                 'so_dien_thoai' => 'Điện thoại / Zalo của học sinh chưa đúng. Ví dụ: 0912 345 678.',
                 'doi_tuong' => 'Vui lòng chọn thuộc đối tượng.',
-                'nam_sinh' => 'Vui lòng chọn năm sinh của học sinh.',
+                'ngay_sinh' => 'Vui lòng chọn ngày sinh của học sinh.',
             ]);
         Mail::assertNothingSent();
 
         // SĐT học sinh không bắt buộc.
         $this->post(route('report.submit'), ['so_dien_thoai' => ''] + self::FORM)->assertRedirect(route('report.code'));
+    }
+
+    public function test_birth_date_is_picked_on_a_calendar_within_a_sensible_range(): void
+    {
+        $this->finished();
+
+        $this->get(route('report.request'))->assertSee('type="date"', false)
+            ->assertSee('max="'.now()->subYears(5)->toDateString().'"', false);
+
+        foreach (['2030-01-01', '15/03/2009', now()->subYears(80)->toDateString()] as $bad) {
+            $this->from(route('report.request'))->post(route('report.submit'), ['ngay_sinh' => $bad] + self::FORM)
+                ->assertSessionHasErrors(['ngay_sinh' => 'Ngày sinh của học sinh chưa đúng.']);
+        }
+        Mail::assertNothingSent();
     }
 
     public function test_parent_filling_the_form_hides_student_phone_and_renames_email(): void
@@ -110,7 +124,7 @@ class ReportFlowTest extends TestCase
 
         $this->post(route('report.submit'), ['doi_tuong' => 'PH', 'so_dien_thoai' => 'không phải số'] + self::FORM)->assertRedirect(route('report.code'));
         $session = TestSession::query()->sole();
-        $this->assertSame(['ho_ten', 'nam_sinh', 'email', 'sdt_phu_huynh', 'truong', 'tinh', 'doi_tuong'], $session->fieldValues()->orderBy('id')->pluck('key')->all(),
+        $this->assertSame(['ho_ten', 'ngay_sinh', 'email', 'sdt_phu_huynh', 'truong', 'tinh', 'doi_tuong'], $session->fieldValues()->orderBy('id')->pluck('key')->all(),
             'Ô SĐT học sinh bị ẩn thì không lưu');
     }
 
@@ -172,7 +186,9 @@ class ReportFlowTest extends TestCase
         $this->assertSame('0912345678', $respondent->parent_phone);
         $this->assertSame('0987654321', $respondent->phone);
         $this->assertSame(Respondent::hashOf('0912345678'), $respondent->parent_phone_hash);
-        $this->assertSame(2009, $respondent->birth_year);
+        $this->assertSame(2009, $respondent->birth_year, 'CRM nhận năm sinh tách từ ngày sinh');
+        $this->assertSame('2009-03-15', $respondent->birth_date);
+        $this->assertStringNotContainsString('2009-03-15', (string) DB::table('respondents')->value('birth_date'), 'Ngày sinh lưu mã hóa');
         $this->assertSame('HS', $respondent->role);
         $this->assertStringNotContainsString('minhanh', (string) DB::table('respondents')->value('email'));
         $this->assertSame(0, Consent::query()->count(), 'Không có câu đồng ý thì không ghi lời đồng ý');

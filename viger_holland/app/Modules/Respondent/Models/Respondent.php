@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Ai gọi:   ReportAccessService (tạo / cập nhật sau khi xác nhận mã), tra cứu báo cáo (H4b), CrmSync (H5).
  * Dữ liệu:  bảng respondents. Có dữ liệu cá nhân: không ghi vào log.
  */
-#[Fillable(['uuid', 'full_name', 'email', 'email_hash', 'phone', 'phone_hash', 'parent_phone', 'parent_phone_hash', 'birth_year', 'role', 'email_verified_at'])]
-#[Hidden(['full_name', 'email', 'phone', 'parent_phone'])]
+#[Fillable(['uuid', 'full_name', 'email', 'email_hash', 'phone', 'phone_hash', 'parent_phone', 'parent_phone_hash', 'birth_date', 'birth_year', 'role', 'email_verified_at'])]
+#[Hidden(['full_name', 'email', 'phone', 'parent_phone', 'birth_date'])]
 class Respondent extends Model
 {
     use SoftDeletes;
@@ -31,6 +31,7 @@ class Respondent extends Model
             'email' => 'encrypted',
             'phone' => 'encrypted',
             'parent_phone' => 'encrypted',
+            'birth_date' => 'encrypted',
             'birth_year' => 'integer',
             'email_verified_at' => 'datetime',
         ];

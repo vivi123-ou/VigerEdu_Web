@@ -24,6 +24,7 @@ class FormField extends Model
         'phone' => 'Số điện thoại',
         'email' => 'Email',
         'year' => 'Năm',
+        'date' => 'Ngày (chọn trên lịch)',
         'number' => 'Số (ví dụ điểm 0–10)',
         'select' => 'Chọn một trong danh sách thả xuống',
         'radio' => 'Chọn một (nút tròn)',

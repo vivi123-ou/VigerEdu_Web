@@ -28,8 +28,8 @@ class FormFieldSeeder extends Seeder
 
         $fields = [
             ['key' => 'ho_ten', 'crm_key' => 'student_name', 'label' => 'Họ tên', 'type' => 'text', 'is_required' => true, 'is_system' => true],
-            ['key' => 'nam_sinh', 'crm_key' => 'birth_year', 'label' => 'Năm sinh của học sinh', 'type' => 'year', 'is_required' => true, 'is_system' => true,
-                'help' => 'Phụ huynh điền thì ghi năm sinh của con.'],
+            ['key' => 'ngay_sinh', 'crm_key' => 'birth_date', 'label' => 'Ngày sinh của học sinh', 'type' => 'date', 'is_required' => true, 'is_system' => true,
+                'help' => 'Chọn trên lịch. Phụ huynh điền thì chọn ngày sinh của con. CRM nhận năm sinh (birth_year) tách từ ngày này.'],
             ['key' => 'email', 'crm_key' => 'email', 'label' => 'Email', 'type' => 'email', 'is_required' => true, 'is_system' => true,
                 'help' => 'Nhận mã xác nhận để mở báo cáo.', 'conditions' => ['label_if' => ['doi_tuong' => ['PH' => 'Email của học sinh']]]],
             ['key' => 'sdt_phu_huynh', 'crm_key' => 'parent_phone', 'label' => 'Điện thoại / Zalo của phụ huynh', 'type' => 'phone', 'is_required' => true, 'is_system' => true],

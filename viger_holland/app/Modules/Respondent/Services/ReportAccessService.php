@@ -37,7 +37,9 @@ class ReportAccessService
                 'phone_hash' => Respondent::hashOf($values['phone'] ?? null),
                 'parent_phone' => $values['parent_phone'] ?? null,
                 'parent_phone_hash' => Respondent::hashOf($values['parent_phone'] ?? null),
-                'birth_year' => isset($values['birth_year']) ? (int) $values['birth_year'] : null,
+                'birth_date' => $values['birth_date'] ?? null,
+                // CRM nhận năm sinh: lấy từ ô năm sinh, hoặc tách từ ngày sinh (YYYY-MM-DD).
+                'birth_year' => isset($values['birth_year']) ? (int) $values['birth_year'] : (isset($values['birth_date']) ? (int) substr($values['birth_date'], 0, 4) : null),
                 'role' => $values['role'] ?? null,
                 'email_verified_at' => now(),
             ])->save();

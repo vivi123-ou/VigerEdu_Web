@@ -58,6 +58,10 @@
                                             <option value="{{ $y }}" @selected((string) $value === (string) $y)>{{ $y }}</option>
                                         @endfor
                                     </select>
+                                @elseif ($field->type === 'date')
+                                    {{-- Lịch có sẵn của trình duyệt (máy tính: bảng lịch; điện thoại: bánh xe chọn ngày), không cần thư viện ngoài. --}}
+                                    <input class="inp" id="{{ $id }}" name="{{ $field->key }}" type="date" value="{{ $value }}"
+                                           min="{{ \App\Modules\Respondent\Services\ReportForm::oldestDate() }}" max="{{ \App\Modules\Respondent\Services\ReportForm::youngestDate() }}" autocomplete="bday">
                                 @elseif ($field->type === 'textarea')
                                     <textarea class="inp" id="{{ $id }}" name="{{ $field->key }}" rows="3" placeholder="{{ $field->placeholder }}">{{ $value }}</textarea>
                                 @else

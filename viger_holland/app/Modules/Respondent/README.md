@@ -18,12 +18,12 @@ Mỗi việc một bộ đếm riêng (`AppServiceProvider`). Viết `throttle:5
 **Bảng:**
 - `form_fields`: các ô của form; `crm_key` theo `docs/TU_DIEN_DU_LIEU_CHUNG.xlsx`; `conditions` để ẩn / đổi chữ theo ô khác, ví dụ `{"hide_if":{"doi_tuong":["PH"]}}`, `{"label_if":{"doi_tuong":{"PH":"Email của học sinh"}}}`;
 - `field_values`: giá trị khách điền, **mã hóa**, gắn với lượt làm bài;
-- `respondents`: hồ sơ khách tạo **sau khi** nhập đúng mã, gộp theo email. Họ tên, email, SĐT, SĐT phụ huynh **mã hóa**; `email_hash`, `phone_hash`, `parent_phone_hash` (HMAC) để tra cứu;
+- `respondents`: hồ sơ khách tạo **sau khi** nhập đúng mã, gộp theo email. Họ tên, email, SĐT, SĐT phụ huynh, ngày sinh **mã hóa**; `email_hash`, `phone_hash`, `parent_phone_hash` (HMAC) để tra cứu;
 - `otp_codes`: chỉ lưu HMAC của mã và băm email;
 - `consents`: chỉ có khi admin gõ câu đồng ý (cài đặt `report_consent_text`, mặc định trống).
 
 **8 ô mặc định** (chốt 14/11, thêm 18/11):
-- bắt buộc: Họ tên, Năm sinh của học sinh, Email, Điện thoại / Zalo của phụ huynh (`parent_phone`), Thuộc đối tượng (`HS` / `PH` / `KHAC`);
+- bắt buộc: Họ tên, Ngày sinh của học sinh (chọn trên lịch có sẵn của trình duyệt, `crm_key` = `birth_date`; CRM nhận `birth_year` tách từ ngày này), Email, Điện thoại / Zalo của phụ huynh (`parent_phone`), Thuộc đối tượng (`HS` / `PH` / `KHAC`);
 - không bắt buộc: Điện thoại / Zalo của học sinh (ẩn khi chọn Phụ huynh), Trường, Tỉnh / thành phố.
 
 **Code:**

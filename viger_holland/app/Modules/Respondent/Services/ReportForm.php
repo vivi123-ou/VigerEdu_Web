@@ -82,6 +82,7 @@ class ReportForm
                 'email' => [...$base, 'string', 'max:150', 'email:rfc'],
                 'phone' => [...$base, 'string', 'max:20', 'regex:/^0\d{9,10}$/'],
                 'year' => [...$base, 'integer', 'between:'.($year - 70).','.($year - 5)],
+                'date' => [...$base, 'date_format:Y-m-d', 'after_or_equal:'.self::oldestDate(), 'before_or_equal:'.self::youngestDate()],
                 'number' => [...$base, 'numeric', 'between:0,100'],
                 'select', 'radio' => [...$base, 'string', Rule::in(array_column($field->options ?? [], 'value'))],
                 'textarea' => [...$base, 'string', 'max:1000'],
@@ -94,7 +95,10 @@ class ReportForm
             $messages[$field->key.'.between'] = ':Attribute chưa đúng.';
             $messages[$field->key.'.integer'] = ':Attribute chưa đúng.';
             $messages[$field->key.'.email'] = ':Attribute chưa đúng. Ví dụ: ten@gmail.com.';
-            if (in_array($field->type, ['select', 'radio', 'year'], true)) {
+            $messages[$field->key.'.date_format'] = ':Attribute chưa đúng.';
+            $messages[$field->key.'.after_or_equal'] = ':Attribute chưa đúng.';
+            $messages[$field->key.'.before_or_equal'] = ':Attribute chưa đúng.';
+            if (in_array($field->type, ['select', 'radio', 'year', 'date'], true)) {
                 $messages[$field->key.'.required'] = 'Vui lòng chọn :attribute.';
             }
         }
@@ -124,6 +128,19 @@ class ReportForm
         }
 
         return $input;
+    }
+
+    /**
+     * Khoảng ngày chọn được trên lịch ngày sinh: từ 70 năm trước đến 5 năm trước.
+     */
+    public static function oldestDate(): string
+    {
+        return now()->subYears(70)->toDateString();
+    }
+
+    public static function youngestDate(): string
+    {
+        return now()->subYears(5)->toDateString();
     }
 
     public static function normalizePhone(string $value): string
@@ -169,7 +186,7 @@ class ReportForm
     }
 
     /**
-     * Giá trị theo tên trường bên CRM (student_name, email, phone, parent_phone, birth_year, role…), dùng để tạo hồ sơ khách.
+     * Giá trị theo tên trường bên CRM (student_name, email, phone, parent_phone, birth_date, role…), dùng để tạo hồ sơ khách.
      *
      * @return array<string, string>
      */
