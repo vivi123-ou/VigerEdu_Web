@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Auth\Login;
+use App\Filament\Pages\ActivityLog;
 use App\Filament\Pages\ComingSoon;
 use App\Filament\Pages\Dashboard;
 use App\Http\Middleware\EnsureAdminAccess;
@@ -62,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups(collect(config('admin_menu.groups'))->map(fn (string $group) => NavigationGroup::make($group))->all())
             ->navigationItems($this->extraNavigationItems())
             ->renderHook(PanelsRenderHook::USER_MENU_BEFORE, fn () => view('filament.topbar-links'))
-            ->pages([Dashboard::class, ComingSoon::class])
+            ->pages([Dashboard::class, ComingSoon::class, ActivityLog::class])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->middleware([
                 EncryptCookies::class,

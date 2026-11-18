@@ -151,6 +151,7 @@ class AdminActivity extends Model
             self::ACTION_REVERT => 'Quay lại bản cũ',
             self::ACTION_SEARCH => 'Tra cứu',
             self::ACTION_VIEW => 'Xem',
+            'export' => 'Tải dữ liệu',
             default => $this->action,
         };
     }

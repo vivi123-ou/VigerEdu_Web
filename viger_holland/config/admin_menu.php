@@ -1,14 +1,17 @@
 <?php
 
+use App\Filament\Pages\ActivityLog;
 use App\Filament\Pages\Dashboard;
 use App\Modules\Access\Filament\Resources\Roles\RoleResource;
 use App\Modules\Access\Filament\Resources\Users\UserResource;
 use App\Modules\Assessment\Filament\Pages\HollandCodes;
 use App\Modules\Assessment\Filament\Pages\MajorsCatalog;
 use App\Modules\Assessment\Filament\Pages\TestSettings;
+use App\Modules\Assessment\Filament\Pages\TestStats;
 use App\Modules\Assessment\Filament\Resources\Questions\QuestionResource;
 use App\Modules\CrmSync\Filament\Pages\CrmConnection;
 use App\Modules\Respondent\Filament\Pages\ContactsToCall;
+use App\Modules\Respondent\Filament\Pages\CustomersList;
 use App\Modules\Respondent\Filament\Pages\FormFields;
 use App\Modules\Respondent\Filament\Pages\LookupReports;
 
@@ -83,25 +86,30 @@ return [
         ],
         'customers' => [
             'group' => 'Khách hàng', 'label' => 'Danh sách khách đã làm bài', 'icon' => 'heroicon-o-document-text',
-            'permission' => 'customers.list', 'stage' => 'H6',
+            'permission' => 'customers.list',
+            'page' => CustomersList::class,
             'summary' => 'Mọi khách đã làm bài, lọc theo ngày, mã Holland, nguồn quảng cáo.',
             'help' => [
                 'intro' => 'Toàn bộ khách đã làm bài, kèm kết quả. Bấm vào một khách để đọc báo cáo đầy đủ.',
                 'steps' => [
                     ['Lọc khách', 'chọn khoảng ngày, mã Holland hoặc nguồn ở thanh lọc.'],
-                    ['Tải ra Excel', 'bấm "Tải ra Excel" (chỉ quản trị viên).'],
+                    ['Tìm một khách', 'gõ đúng số điện thoại, email hoặc mã báo cáo vào ô tìm kiếm.'],
+                    ['Đọc báo cáo của khách', 'bấm "Đọc báo cáo" ở cuối dòng.'],
+                    ['Tải ra Excel', 'chọn bộ lọc rồi bấm "Tải ra Excel". Việc tải được ghi vào lịch sử thao tác.'],
                 ],
             ],
         ],
         'stats' => [
             'group' => 'Khách hàng', 'label' => 'Số liệu làm bài', 'icon' => 'heroicon-o-chart-bar',
-            'permission' => 'stats.view', 'stage' => 'H6', 'shortcut' => true,
+            'permission' => 'stats.view', 'shortcut' => true,
+            'page' => TestStats::class,
             'summary' => 'Bao nhiêu người làm bài, đến từ đâu, bỏ ngang ở bước nào.',
             'help' => [
                 'intro' => 'Con số tổng của tất cả khách, không có tên khách. Dùng để biết quảng cáo nào hiệu quả, trang nào làm khách bỏ ngang.',
                 'steps' => [
-                    ['Đổi khoảng thời gian', 'bấm 7 ngày, 30 ngày, Tháng này hoặc Tùy chọn.'],
-                    ['Xem số cụ thể', 'rê chuột lên cột hoặc đường của biểu đồ.'],
+                    ['Đổi khoảng thời gian', 'bấm 7 ngày, 30 ngày, Tháng này hoặc Tất cả.'],
+                    ['Xem số của một ngày', 'rê chuột lên cột ở biểu đồ "Lượt làm bài theo ngày".'],
+                    ['Biết quảng cáo nào hiệu quả', 'xem "Khách đến từ đâu": số theo nguồn gắn trong link quảng cáo (utm_source).'],
                 ],
             ],
         ],
@@ -303,9 +311,17 @@ return [
         ],
         'logs' => [
             'group' => 'Quản lý hệ thống', 'label' => 'Lịch sử thao tác', 'icon' => 'heroicon-o-clock',
-            'permission' => 'logs.view', 'stage' => 'H6',
+            'permission' => 'logs.view',
+            'page' => ActivityLog::class,
             'summary' => 'Ai sửa gì, ai xem báo cáo của khách nào, lúc nào.',
-            'help' => ['intro' => 'Ghi lại mọi việc trên trang quản trị để kiểm tra khi cần.', 'steps' => []],
+            'help' => [
+                'intro' => 'Ghi lại mọi việc trên trang quản trị để kiểm tra khi cần: sửa nội dung, tra cứu và mở báo cáo của khách, tải dữ liệu.',
+                'steps' => [
+                    ['Xem việc của một người', 'chọn tên ở bộ lọc "Người làm".'],
+                    ['Kiểm tra ai đã tải dữ liệu khách', 'chọn "Tải dữ liệu" ở bộ lọc "Loại việc".'],
+                ],
+                'note' => 'Lịch sử không sửa, không xóa được.',
+            ],
         ],
     ],
 ];

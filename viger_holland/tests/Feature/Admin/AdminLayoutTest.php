@@ -56,7 +56,7 @@ class AdminLayoutTest extends TestCase
         $shortcuts = AdminMenu::shortcutsFor($admin);
 
         $this->assertCount(6, $shortcuts);
-        $this->assertSame(['lookup', 'contacts', 'questions', 'settings', 'intro', 'media'], $shortcuts->pluck('key')->all(), 'Việc dùng được ngay đứng trước mục Sắp có');
+        $this->assertSame(['lookup', 'contacts', 'stats', 'questions', 'settings', 'intro'], $shortcuts->pluck('key')->all(), 'Việc dùng được ngay đứng trước mục Sắp có');
 
         $this->assertSame(['lookup'], AdminMenu::shortcutsFor(User::factory()->create(['role' => User::ROLE_COUNSELOR]))->pluck('key')->all());
         $this->assertSame(['contacts', 'intro', 'media'], AdminMenu::shortcutsFor(User::factory()->create(['role' => User::ROLE_STAFF]))->pluck('key')->all());
@@ -71,10 +71,11 @@ class AdminLayoutTest extends TestCase
 
     public function test_coming_soon_page_explains_the_stage_and_unknown_items_are_not_found(): void
     {
-        $this->get(route('filament.admin.pages.sap-co', ['muc' => 'customers']))
+        $this->get(route('filament.admin.pages.sap-co', ['muc' => 'seo']))
             ->assertOk()
-            ->assertSee('Danh sách khách đã làm bài')
-            ->assertSee('dự kiến xong ở giai đoạn H6');
+            ->assertSee('Hiển thị trên Google')
+            ->assertSee('dự kiến xong ở giai đoạn H7');
+        $this->get(route('filament.admin.pages.sap-co', ['muc' => 'customers']))->assertNotFound();
 
         $this->get(route('filament.admin.pages.sap-co', ['muc' => 'khong-co']))->assertNotFound();
         $this->get(route('filament.admin.pages.sap-co', ['muc' => 'questions']))->assertNotFound();

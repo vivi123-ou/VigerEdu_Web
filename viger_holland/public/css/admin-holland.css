@@ -54,3 +54,16 @@
   .hz-two{grid-template-columns:1fr 1fr}
   details{display:block}details>*{display:block}
 }
+
+/* Số liệu làm bài */
+.hz-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.hz-stat small{display:block;color:var(--hz-mute);font-size:13px}.hz-stat b{font-size:28px;font-weight:700}
+.hz-hbar{display:grid;grid-template-columns:minmax(120px,40%) 1fr 48px;gap:10px;align-items:center;padding:5px 0;font-size:14px}
+.hz-hbar .t{height:10px;border-radius:5px;background:var(--hz-soft);overflow:hidden}.hz-hbar .t i{display:block;height:100%;background:#2a78d6;border-radius:5px}
+.hz-hbar .n{text-align:right;font-variant-numeric:tabular-nums}
+.hz-days{display:flex;gap:4px;align-items:flex-end;height:180px;overflow-x:auto}
+.hz-day{flex:1;min-width:18px;display:flex;flex-direction:column;align-items:center;height:100%}
+.hz-day__bars{flex:1;width:100%;display:flex;gap:2px;align-items:flex-end}
+.hz-day__bars i{flex:1;background:#2a78d6;border-radius:3px 3px 0 0;min-height:1px}.hz-day__bars i.b{background:#eb6834}
+.hz-day small{font-size:10px;color:var(--hz-mute);margin-top:4px;white-space:nowrap}
+@media (max-width:900px){.hz-stat-row{grid-template-columns:1fr 1fr}}
