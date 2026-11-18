@@ -6,6 +6,7 @@ use App\Modules\Access\Models\Role;
 use App\Modules\Assessment\Models\Major;
 use App\Modules\Assessment\Models\Question;
 use App\Modules\Assessment\Models\RiasecPair;
+use App\Modules\Assessment\Models\RiasecType;
 use App\Modules\Assessment\Models\TestConfigVersion;
 use App\Modules\Respondent\Models\FormField;
 use Database\Seeders\DatabaseSeeder;
@@ -84,6 +85,23 @@ class SeedDataTest extends TestCase
 
         $this->assertSame(['ho_ten', 'nam_sinh', 'email', 'sdt_phu_huynh', 'doi_tuong'], FormField::where('is_required', true)->orderBy('sort_order')->pluck('key')->all());
         $this->assertSame(['HS', 'PH', 'KHAC'], array_column(FormField::where('key', 'doi_tuong')->value('options'), 'value'));
+    }
+
+    public function test_group_and_pair_explanations_are_loaded_and_never_overwrite_admin_edits(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertSame(6, RiasecType::query()->whereNotNull('description')->count());
+        $this->assertSame(15, RiasecPair::query()->whereNotNull('description')->count());
+        $this->assertStringStartsWith('Bạn thích quan sát, đặt câu hỏi “vì sao”', RiasecType::where('code', 'I')->value('description'));
+
+        // Database cũ chưa có đoạn giải thích: chạy seeder thì được điền; đoạn admin đã sửa thì giữ nguyên.
+        RiasecType::where('code', 'R')->update(['description' => null]);
+        RiasecPair::where('pair', 'IS')->update(['description' => 'Đoạn admin tự viết']);
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertStringStartsWith('Bạn thích làm việc bằng tay', RiasecType::where('code', 'R')->value('description'));
+        $this->assertSame('Đoạn admin tự viết', RiasecPair::where('pair', 'IS')->value('description'));
     }
 
     public function test_reseeding_does_not_overwrite_what_admin_changed(): void

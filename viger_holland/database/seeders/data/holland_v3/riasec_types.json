@@ -3,36 +3,42 @@
   "code": "R",
   "name": "Thực hành",
   "label": "Thực hành, kỹ thuật",
-  "hex_index": 0
+  "hex_index": 0,
+  "description": "Bạn thích làm việc bằng tay, dùng công cụ, máy móc và thấy rõ kết quả trước mắt. Bạn hứng thú khi được sửa chữa, lắp ráp, vận hành hoặc kiểm tra một thứ gì đó. Môi trường phù hợp thường có hoạt động thực tế, quy trình rõ và ít phải ngồi bàn giấy cả ngày."
  },
  {
   "code": "I",
   "name": "Nghiên cứu",
   "label": "Nghiên cứu, phân tích",
-  "hex_index": 1
+  "hex_index": 1,
+  "description": "Bạn thích quan sát, đặt câu hỏi “vì sao” và tự tìm cách kiểm chứng. Bạn hứng thú khi hiểu thấu một vấn đề hơn là chỉ làm theo hướng dẫn. Môi trường phù hợp thường cho bạn thời gian tìm tòi, dữ liệu để phân tích và không gian để thử nghiệm ý tưởng."
  },
  {
   "code": "A",
   "name": "Sáng tạo",
   "label": "Sáng tạo, nghệ thuật",
-  "hex_index": 2
+  "hex_index": 2,
+  "description": "Bạn thích tưởng tượng, thử cách làm mới và diễn đạt ý tưởng theo cách riêng. Bạn hứng thú khi được tự do tạo ra sản phẩm, câu chuyện, hình ảnh hoặc cách giải quyết khác lối quen. Môi trường phù hợp thường linh hoạt, ít gò bó và khuyến khích thử nghiệm."
  },
  {
   "code": "S",
   "name": "Xã hội",
   "label": "Hỗ trợ, phát triển con người",
-  "hex_index": 3
+  "hex_index": 3,
+  "description": "Bạn thích trò chuyện, lắng nghe và giúp người khác cảm thấy dễ chịu hơn. Bạn hứng thú khi được giải thích, hướng dẫn, chăm sóc hoặc kết nối mọi người với nhau. Môi trường phù hợp thường có tương tác với con người, hợp tác nhóm và việc hỗ trợ người khác."
  },
  {
   "code": "E",
   "name": "Kinh doanh",
   "label": "Kinh doanh, tạo ảnh hưởng",
-  "hex_index": 4
+  "hex_index": 4,
+  "description": "Bạn thích thuyết phục, tổ chức hoạt động và thử sức với mục tiêu rõ ràng. Bạn hứng thú khi được dẫn dắt, đàm phán hoặc biến một ý tưởng thành việc có thể chạy được. Môi trường phù hợp thường năng động, có cạnh tranh lành mạnh và cơ hội tự chủ."
  },
  {
   "code": "C",
   "name": "Tổ chức",
   "label": "Tổ chức, quy trình",
-  "hex_index": 5
+  "hex_index": 5,
+  "description": "Bạn thích sắp xếp thông tin, lên kế hoạch và làm mọi thứ theo trình tự rõ ràng. Bạn hứng thú khi được quản lý dữ liệu, kiểm tra chi tiết hoặc giữ cho công việc chạy đúng nhịp. Môi trường phù hợp thường có quy định, hồ sơ và cách làm ổn định."
  }
 ]

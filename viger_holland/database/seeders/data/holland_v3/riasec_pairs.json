@@ -12,7 +12,8 @@
    "Robotics Engineer / Robotikingenieur",
    "Mechanical Engineer / Maschinenbauingenieur"
   ],
-  "foundation": "Toán, Vật lý, lập trình và thực hành kỹ thuật; Toán, Vật lý, cơ học và thiết kế kỹ thuật"
+  "foundation": "Toán, Vật lý, lập trình và thực hành kỹ thuật; Toán, Vật lý, cơ học và thiết kế kỹ thuật",
+  "description": "Hai nhóm này khá gần nhau nên dễ kết hợp. Bạn thích vừa tìm hiểu nguyên lý vừa tự tay làm thử, kiểm tra hoặc sửa chữa. Môi trường hợp thường gắn với kỹ thuật, vận hành thực tế, phòng thí nghiệm hoặc công việc cần quan sát rồi thử nghiệm."
  },
  {
   "pair": "RA",
@@ -27,7 +28,8 @@
    "Product Designer / Produktdesigner",
    "Industrial Designer / Industriedesigner"
   ],
-  "foundation": "Phác thảo, thiết kế, vật liệu và hồ sơ sản phẩm; Tư duy tạo hình, CAD, nguyên mẫu và portfolio"
+  "foundation": "Phác thảo, thiết kế, vật liệu và hồ sơ sản phẩm; Tư duy tạo hình, CAD, nguyên mẫu và portfolio",
+  "description": "Hai nhóm này khác nhau nhưng bổ sung cho nhau. Bạn thích tìm hiểu cách mọi thứ vận hành rồi thể hiện ý tưởng theo cách riêng. Môi trường hợp thường có cả nghiên cứu lẫn sáng tạo, như thiết kế kỹ thuật, truyền thông khoa học hoặc làm sản phẩm mới."
  },
  {
   "pair": "RS",
@@ -42,7 +44,8 @@
    "Occupational Therapist / Ergotherapeut",
    "Physiotherapist / Physiotherapeut"
   ],
-  "foundation": "Sinh học, giao tiếp, thực hành; kiểm tra điều kiện hành nghề; Sinh học, vận động, tiếng Đức và quy định nghề"
+  "foundation": "Sinh học, giao tiếp, thực hành; kiểm tra điều kiện hành nghề; Sinh học, vận động, tiếng Đức và quy định nghề",
+  "description": "Hai nhóm này nằm ở hai hướng khác nhau, nên bạn có nhiều cách tiếp cận. Bạn có thể vừa làm việc thực tế vừa quan tâm đến con người và nhu cầu của họ. Môi trường hợp thường cần kết hợp cả hai, như dịch vụ hỗ trợ, chăm sóc sức khỏe cộng đồng hoặc công việc kỹ thuật có tương tác."
  },
  {
   "pair": "RE",
@@ -57,7 +60,8 @@
    "Technical Project Manager / Technischer Projektmanager",
    "Construction Manager / Bauprojektmanager"
   ],
-  "foundation": "Toán, kỹ thuật, quản lý dự án; Kỹ thuật xây dựng, quản trị và thực hành dự án"
+  "foundation": "Toán, kỹ thuật, quản lý dự án; Kỹ thuật xây dựng, quản trị và thực hành dự án",
+  "description": "Hai nhóm này khác nhau nhưng bổ sung cho nhau. Bạn thích làm việc thực tế và cũng muốn thử sức với mục tiêu, thuyết phục hoặc dẫn dắt. Môi trường hợp thường gắn với vận hành, kinh doanh, quản lý dự án hoặc công việc cần vừa tay nghề vừa tự chủ."
  },
  {
   "pair": "RC",
@@ -72,7 +76,8 @@
    "Production Engineer / Produktionsingenieur",
    "Logistics Planner / Logistikplaner"
   ],
-  "foundation": "Toán, kỹ thuật sản xuất, quy trình và an toàn; Toán ứng dụng, vận hành và phân tích quy trình"
+  "foundation": "Toán, kỹ thuật sản xuất, quy trình và an toàn; Toán ứng dụng, vận hành và phân tích quy trình",
+  "description": "Hai nhóm này khá gần nhau nên dễ kết hợp. Bạn thích làm việc thực tế trong khung rõ ràng, có quy trình và kiểm tra được kết quả. Môi trường hợp thường là vận hành, sản xuất, hậu cần hoặc công việc cần sắp xếp công cụ, dữ liệu và tiến độ."
  },
  {
   "pair": "IA",
@@ -87,7 +92,8 @@
    "Interaction Developer / Interaktionsentwickler",
    "Cognitive Science Researcher / Kognitionswissenschaftler"
   ],
-  "foundation": "Toán, lập trình, thiết kế tương tác; Toán, phương pháp nghiên cứu, thống kê"
+  "foundation": "Toán, lập trình, thiết kế tương tác; Toán, phương pháp nghiên cứu, thống kê",
+  "description": "Hai nhóm này khá gần nhau nên dễ kết hợp. Bạn thích tìm hiểu nguyên lý rồi diễn đạt, trình bày hoặc tạo ra cách nhìn mới. Môi trường hợp thường có nghiên cứu đi cùng sáng tạo, như truyền thông khoa học, thiết kế thông tin hoặc phát triển ý tưởng."
  },
  {
   "pair": "IS",
@@ -102,7 +108,8 @@
    "Psychology Researcher / Psychologieforscher",
    "Health Researcher / Gesundheitsforscher"
   ],
-  "foundation": "Thống kê, phương pháp nghiên cứu, ngôn ngữ; kiểm tra nghề được quản lý; Sinh học, thống kê và nghiên cứu sức khỏe"
+  "foundation": "Thống kê, phương pháp nghiên cứu, ngôn ngữ; kiểm tra nghề được quản lý; Sinh học, thống kê và nghiên cứu sức khỏe",
+  "description": "Hai nhóm này khác nhau nhưng bổ sung cho nhau. Bạn thích tìm hiểu kỹ vấn đề và cũng quan tâm đến con người, cách họ học hỏi và hợp tác. Môi trường hợp thường có cả nghiên cứu lẫn làm việc với người, như giáo dục, chăm sóc sức khỏe, khoa học xã hội."
  },
  {
   "pair": "IE",
@@ -117,7 +124,8 @@
    "Business Analyst / Business-Analyst",
    "Business Analytics Specialist / Business-Analytics-Spezialist"
   ],
-  "foundation": "Toán, CNTT, phân tích kinh doanh; Thống kê, dữ liệu, kinh tế và lập trình"
+  "foundation": "Toán, CNTT, phân tích kinh doanh; Thống kê, dữ liệu, kinh tế và lập trình",
+  "description": "Hai nhóm này nằm ở hai hướng khác nhau, nên bạn có nhiều cách tiếp cận. Bạn có thể vừa thích tìm hiểu sâu vừa muốn thử sức, thuyết phục và tạo ảnh hưởng. Môi trường hợp thường cần kết hợp cả hai, như đổi mới trong kinh doanh, tư vấn giải pháp hoặc phát triển sản phẩm."
  },
  {
   "pair": "IC",
@@ -132,7 +140,8 @@
    "Data Analyst / Datenanalyst",
    "Quantitative Analyst / Quantitativer Analyst"
   ],
-  "foundation": "Toán, thống kê, Python và dữ liệu; Giải tích, xác suất, mô hình định lượng"
+  "foundation": "Toán, thống kê, Python và dữ liệu; Giải tích, xác suất, mô hình định lượng",
+  "description": "Hai nhóm này khác nhau nhưng bổ sung cho nhau. Bạn thích nghiên cứu kỹ lưỡng và cũng muốn sắp xếp, ghi chép, kiểm tra cho rõ ràng. Môi trường hợp thường có phân tích đi cùng quản lý dữ liệu, như nghiên cứu vận hành, phân tích chính sách hoặc kiểm soát chất lượng."
  },
  {
   "pair": "AS",
@@ -147,7 +156,8 @@
    "Media Educator / Medienpädagoge",
    "Art Educator / Kunstpädagoge"
   ],
-  "foundation": "Truyền thông, giáo dục và dự án sáng tạo; Nghệ thuật, sư phạm, portfolio; kiểm tra yêu cầu nghề"
+  "foundation": "Truyền thông, giáo dục và dự án sáng tạo; Nghệ thuật, sư phạm, portfolio; kiểm tra yêu cầu nghề",
+  "description": "Hai nhóm này khá gần nhau nên dễ kết hợp. Bạn thích sáng tạo và cũng muốn dùng ý tưởng đó để giúp, giải thích hoặc kết nối với người khác. Môi trường hợp thường gắn với truyền thông, giáo dục, cộng đồng hoặc hoạt động sáng tạo có tương tác."
  },
  {
   "pair": "AE",
@@ -162,7 +172,8 @@
    "Media Manager / Medienmanager",
    "Communication Manager / Kommunikationsmanager"
   ],
-  "foundation": "Sáng tạo nội dung, marketing và quản trị; Truyền thông, nghiên cứu công chúng và lập kế hoạch"
+  "foundation": "Sáng tạo nội dung, marketing và quản trị; Truyền thông, nghiên cứu công chúng và lập kế hoạch",
+  "description": "Hai nhóm này khác nhau nhưng bổ sung cho nhau. Bạn thích tạo ra ý tưởng mới và cũng muốn biến nó thành việc có thể thuyết phục, bán hoặc dẫn dắt. Môi trường hợp thường gắn với kinh doanh sáng tạo, truyền thông, thương hiệu hoặc phát triển sản phẩm."
  },
  {
   "pair": "AC",
@@ -177,7 +188,8 @@
    "Technical Writer / Technischer Redakteur",
    "Information Designer / Informationsdesigner"
   ],
-  "foundation": "Viết, cấu trúc thông tin và hiểu biết công nghệ; Thiết kế thông tin, trực quan hóa, công cụ số"
+  "foundation": "Viết, cấu trúc thông tin và hiểu biết công nghệ; Thiết kế thông tin, trực quan hóa, công cụ số",
+  "description": "Hai nhóm này nằm ở hai hướng khác nhau, nên bạn có nhiều cách tiếp cận. Bạn có thể vừa thích tự do sáng tạo vừa muốn có quy trình, hồ sơ và sự ổn định. Môi trường hợp thường cần kết hợp cả hai, như thiết kế trong tổ chức, truyền thông nội bộ hoặc sản xuất có quy chuẩn."
  },
  {
   "pair": "SE",
@@ -192,7 +204,8 @@
    "HR Specialist / Personalreferent",
    "Social Services Manager / Sozialmanager"
   ],
-  "foundation": "Giao tiếp, tổ chức, luật lao động cơ bản; Khoa học xã hội, quản trị và dự án cộng đồng"
+  "foundation": "Giao tiếp, tổ chức, luật lao động cơ bản; Khoa học xã hội, quản trị và dự án cộng đồng",
+  "description": "Hai nhóm này khá gần nhau nên dễ kết hợp. Bạn thích làm việc với con người và cũng muốn tổ chức, thuyết phục hoặc dẫn dắt hoạt động. Môi trường hợp thường gắn với dịch vụ, giáo dục, kinh doanh hoặc công việc cộng đồng cần kết nối và thúc đẩy người khác."
  },
  {
   "pair": "SC",
@@ -207,7 +220,8 @@
    "Healthcare Administrator / Gesundheitsmanager",
    "Education Coordinator / Bildungskoordinator"
   ],
-  "foundation": "Tổ chức dịch vụ, dữ liệu, hiểu biết y tế; Giáo dục, quy trình, quản trị dự án"
+  "foundation": "Tổ chức dịch vụ, dữ liệu, hiểu biết y tế; Giáo dục, quy trình, quản trị dự án",
+  "description": "Hai nhóm này khác nhau nhưng bổ sung cho nhau. Bạn thích hỗ trợ người khác và cũng muốn sắp xếp, theo dõi để mọi việc rõ ràng. Môi trường hợp thường có tương tác con người đi cùng quy trình, như dịch vụ, giáo dục, chăm sóc sức khỏe hoặc hành chính hỗ trợ."
  },
  {
   "pair": "EC",
@@ -222,6 +236,7 @@
    "Operations Manager / Betriebsmanager",
    "Financial Controller / Controller"
   ],
-  "foundation": "Toán kinh tế, kế toán, quản trị; Kế toán, tài chính, Excel và dữ liệu"
+  "foundation": "Toán kinh tế, kế toán, quản trị; Kế toán, tài chính, Excel và dữ liệu",
+  "description": "Hai nhóm này khá gần nhau nên dễ kết hợp. Bạn thích thuyết phục, dẫn dắt và cũng muốn có kế hoạch, hồ sơ, quy trình để việc chạy ổn. Môi trường hợp thường gắn với kinh doanh, quản lý vận hành, tổ chức sự kiện hoặc điều phối dự án."
  }
 ]

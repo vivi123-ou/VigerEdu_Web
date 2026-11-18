@@ -10,6 +10,7 @@ use App\Modules\Assessment\Models\RiasecPair;
 use App\Modules\Assessment\Models\RiasecType;
 use App\Modules\Assessment\Models\Subject;
 use App\Modules\Assessment\Models\ThirdLetter;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
@@ -47,9 +48,11 @@ class CatalogSeeder extends Seeder
     public function run(): void
     {
         foreach ($this->json('riasec_types') as $row) {
-            RiasecType::firstOrCreate(['code' => $row['code']], [
+            $type = RiasecType::firstOrCreate(['code' => $row['code']], [
                 'name' => $row['name'], 'label' => $row['label'] ?? null, 'hex_index' => $row['hex_index'],
+                'description' => $row['description'] ?? null,
             ]);
+            $this->fillIfEmpty($type, 'description', $row['description'] ?? null);
         }
 
         foreach ($this->json('third_letters') as $row) {
@@ -88,7 +91,9 @@ class CatalogSeeder extends Seeder
             $pair = RiasecPair::firstOrCreate(['pair' => $row['pair']], [
                 'name' => $row['name'], 'hex_distance' => $row['hex_distance'], 'relation' => $row['relation'],
                 'occupations' => $row['occupations'] ?? [], 'foundation' => $row['foundation'] ?? null,
+                'description' => $row['description'] ?? null,
             ]);
+            $this->fillIfEmpty($pair, 'description', $row['description'] ?? null);
 
             if ($pair->wasRecentlyCreated) {
                 foreach (array_values($row['majors'] ?? []) as $i => $code) {
@@ -138,6 +143,16 @@ class CatalogSeeder extends Seeder
     /**
      * @return list<array<string, mixed>>
      */
+    /**
+     * Database đã có dòng này nhưng ô còn trống (ví dụ đoạn giải thích thêm sau) thì điền; ô đã có chữ thì giữ nguyên (admin có thể đã sửa).
+     */
+    private function fillIfEmpty(Model $model, string $column, ?string $value): void
+    {
+        if (blank($model->{$column}) && filled($value)) {
+            $model->update([$column => $value]);
+        }
+    }
+
     private function json(string $name): array
     {
         $path = config('holland.seed_path').'/'.$name.'.json';
