@@ -25,7 +25,7 @@ class EmbedController extends Controller
             'subtitle' => (string) setting('embed_subtitle', setting('intro_subtitle')),
             'image_url' => media_url(setting('embed_image', setting('banner_image'))),
             'button_text' => (string) setting('embed_button_text', setting('intro_button_text')),
-            'start_url' => route('home', ['utm_source' => 'web-chinh']),
+            'start_url' => route('home', ['utm_source' => 'viger.edu.vn']),
             // Hợp đồng kết nối mục 6c. GĐ3 đếm từ bảng lượt làm bài mới; hiện chưa có lượt nào.
             'stats' => ['total_attempts' => 0],
         ]);

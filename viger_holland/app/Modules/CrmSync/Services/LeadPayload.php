@@ -138,7 +138,7 @@ class LeadPayload
      * @param  array<string, mixed>  $result
      * @return array<string, mixed>
      */
-    private function result(array $result): array
+    public function result(array $result): array
     {
         $shown = array_column($result['customer']['majors'] ?? [], 'id');
 
@@ -166,7 +166,7 @@ class LeadPayload
     /**
      * @return list<array{code: string|null, group: string, value: int|null, ms: int|null}>
      */
-    private function answers(TestSession $session): array
+    public function answers(TestSession $session): array
     {
         $responses = $session->responses()->get()->keyBy('question_id');
 

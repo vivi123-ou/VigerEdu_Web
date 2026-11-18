@@ -15,7 +15,7 @@
             </li>
             <li>
                 <strong>Chỉ đặt link</strong> trên menu hoặc nút:
-                @include('admin.partials.copy-code', ['code' => route('home', ['utm_source' => 'web-chinh'])])
+                @include('admin.partials.copy-code', ['code' => route('home', ['utm_source' => 'viger.edu.vn'])])
             </li>
         </ol>
         <p class="muted"><a href="{{ route('embed') }}" target="_blank" rel="noopener">Xem ô đang hiện ↗</a></p>

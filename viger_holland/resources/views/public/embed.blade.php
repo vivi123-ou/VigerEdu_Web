@@ -21,7 +21,7 @@
             @if (filled(setting('embed_subtitle')))
                 <p class="embed-card__text">{{ setting('embed_subtitle') }}</p>
             @endif
-            <a class="btn btn--primary" href="{{ route('home', ['utm_source' => 'web-chinh', 'utm_medium' => 'embed']) }}" target="_blank" rel="noopener">
+            <a class="btn btn--primary" href="{{ route('home', ['utm_source' => 'viger.edu.vn', 'utm_medium' => 'embed']) }}" target="_blank" rel="noopener">
                 {{ setting('embed_button_text', setting('intro_button_text')) }} <span aria-hidden="true">→</span>
             </a>
         </div>

@@ -3,6 +3,7 @@
 use App\Http\Middleware\EnsureAdminAccess;
 use App\Http\Middleware\EnsureMenuAccess;
 use App\Http\Middleware\NoIndex;
+use App\Modules\Api\Http\Middleware\AuthenticateApiClient;
 use App\Modules\CrmSync\Console\RetryCrm;
 use App\Modules\CrmSync\Console\ShowCrmPayload;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -31,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => EnsureAdminAccess::class,
             'menu' => EnsureMenuAccess::class,
             'noindex' => NoIndex::class,
+            'api.token' => AuthenticateApiClient::class,
         ]);
 
         // Tài khoản bị khóa giữa phiên: đăng xuất và đưa về trang đăng nhập trước khi Filament kiểm tra quyền (nếu không sẽ hiện 403).

@@ -151,6 +151,19 @@ return [
         ],
     ],
 
+    'seo' => [
+        'title' => 'Hiển thị trên Google',
+        'menu' => 'seo',
+        'group' => 'seo',
+        'sections' => [
+            'Trang bắt đầu' => [
+                ['key' => 'seo_home_title', 'label' => 'Tiêu đề trên Google', 'type' => 'text', 'required' => true, 'hint' => 'Khoảng 50–60 ký tự, có từ khách hay tìm, ví dụ "Trắc nghiệm Holland miễn phí".'],
+                ['key' => 'seo_home_description', 'label' => 'Mô tả dưới tiêu đề', 'type' => 'textarea', 'hint' => 'Khoảng 150 ký tự: bài test giúp gì, miễn phí, mất bao lâu.'],
+                ['key' => 'seo_share_image', 'label' => 'Ảnh khi chia sẻ link (Facebook, Zalo)', 'type' => 'image', 'hint' => 'Ảnh ngang khoảng 1200 × 630. Để trống thì Facebook, Zalo tự chọn.'],
+            ],
+        ],
+    ],
+
     'appearance' => [
         'title' => 'Logo, màu, hotline, chân trang',
         'menu' => 'appearance',

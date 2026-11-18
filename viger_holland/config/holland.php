@@ -61,4 +61,8 @@ return [
     // Dữ liệu dùng chung với các hệ thống khác (regions.json: khu vực ở Đức, Ý thu thập, chốt 05/11/2026)
     'shared_seed_path' => database_path('seeders/data/shared'),
 
+    // Sao lưu (php artisan holland:backup, mỗi đêm 02:00). BACKUP_DISK: tên ổ trong config/filesystems.php để chép bản sao ra ngoài máy chủ.
+    'backup_disk' => env('BACKUP_DISK'),
+    'backup_mysqldump' => env('BACKUP_MYSQLDUMP', 'mysqldump'),
+
 ];

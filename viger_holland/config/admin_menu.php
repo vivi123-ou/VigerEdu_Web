@@ -4,6 +4,7 @@ use App\Filament\Pages\ActivityLog;
 use App\Filament\Pages\Dashboard;
 use App\Modules\Access\Filament\Resources\Roles\RoleResource;
 use App\Modules\Access\Filament\Resources\Users\UserResource;
+use App\Modules\Api\Filament\Pages\ApiClients;
 use App\Modules\Assessment\Filament\Pages\HollandCodes;
 use App\Modules\Assessment\Filament\Pages\MajorsCatalog;
 use App\Modules\Assessment\Filament\Pages\TestSettings;
@@ -292,11 +293,31 @@ return [
                 'note' => 'Bảng chỉ hiện số điện thoại đã che. Gửi lại vẫn giữ nguyên mã gói nên CRM không tạo khách trùng.',
             ],
         ],
+        'api' => [
+            'group' => 'Quản lý hệ thống', 'label' => 'Kết nối API (chatbot)', 'icon' => 'heroicon-o-key',
+            'permission' => 'api.manage',
+            'page' => ApiClients::class,
+            'summary' => 'Cấp mã cho chatbot, CRM đọc kết quả Holland (không có họ tên, liên lạc).',
+            'help' => [
+                'intro' => 'Chatbot và CRM đọc kết quả Holland qua API. Mỗi ứng dụng cần một mã kết nối riêng.',
+                'steps' => [
+                    ['Cấp mã cho chatbot', 'bấm "Cấp mã kết nối", đặt tên "Chatbot", bấm "Gửi", sao chép mã và gửi riêng cho người làm chatbot.'],
+                    ['Lỡ làm lộ mã', 'bấm "Thu hồi" ở dòng đó rồi cấp mã mới.'],
+                ],
+                'note' => 'Mã chỉ hiện một lần lúc cấp. Hướng dẫn cho người lập trình: docs/API_HOLLAND.md.',
+            ],
+        ],
         'seo' => [
             'group' => 'Quản lý hệ thống', 'label' => 'Hiển thị trên Google', 'icon' => 'heroicon-o-magnifying-glass-circle',
-            'permission' => 'appearance.manage', 'stage' => 'H7',
+            'permission' => 'appearance.manage', 'route' => 'admin.content.edit', 'params' => ['page' => 'seo'],
             'summary' => 'Tiêu đề, mô tả trang khi hiện trên Google và khi chia sẻ link.',
-            'help' => ['intro' => 'Sửa tiêu đề, mô tả, ảnh hiện khi trang được tìm thấy trên Google hoặc chia sẻ lên Facebook, Zalo.', 'steps' => []],
+            'help' => [
+                'intro' => 'Chữ hiện trên Google và khi dán link trang làm bài lên Facebook, Zalo. Chỉ trang bắt đầu hiện trên Google; trang làm bài, báo cáo, quản trị luôn bị ẩn.',
+                'steps' => [
+                    ['Đổi tiêu đề, mô tả', 'sửa 2 ô rồi bấm "Lưu". Google cập nhật sau vài ngày.'],
+                    ['Đổi ảnh khi chia sẻ link', 'bấm "Chọn ảnh" ở ô "Ảnh khi chia sẻ link".'],
+                ],
+            ],
         ],
         'users' => [
             'group' => 'Quản lý hệ thống', 'label' => 'Tài khoản nhân sự', 'icon' => 'heroicon-o-users',

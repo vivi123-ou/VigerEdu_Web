@@ -30,8 +30,23 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 | H3. Giao diện khách: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược | ✅ Xong (18/11) |
 | H4. Form thông tin, OTP email, báo cáo đầy đủ | ✅ Xong (18/11): H4a phía khách, H4b admin |
 | H5. CrmSync + Tracking | ✅ Xong (18/11) |
-| H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt trang nội dung cũ | Chưa làm (tiếp theo) |
-| H7. API chatbot, sao lưu, tài liệu, nghiệm thu | Chưa làm |
+| H6. Admin (Filament): danh mục, trường & vùng, form, danh sách khách, số liệu, lịch sử | ✅ Xong (18/11) |
+| H7. API chatbot, sao lưu, tài liệu, nghiệm thu | ✅ Xong (18/11), chờ nghiệm thu |
+
+### H6 + H7 đã làm (18/11/2026)
+
+- **Giải thích các mã Holland** (6 nhóm, 15 cặp kèm ngành nền, chữ thứ ba, đoạn riêng cho mã 3 chữ) và **Ngành học & nghề gợi ý** (đánh dấu "Đã kiểm tra" phải có link nguồn chính thức; thêm mới tự đặt mã; ngừng dùng thay cho xóa).
+- **Form khách điền thông tin**: sửa chữ, bắt buộc, ẩn / hiện, gửi CRM, tên trường bên CRM; kéo đổi thứ tự; thêm ô; ô Email luôn bắt buộc; thùng rác.
+- **Danh sách khách đã làm bài** (tìm đúng SĐT / email / mã báo cáo, lọc, Tải ra Excel có ghi lịch sử), **Số liệu làm bài** (phễu, dừng ở trang mấy, theo ngày, cặp mã, nguồn, ngành, chất lượng), **Lịch sử thao tác** (chỉ đọc). Chỉ quản trị viên.
+- **Trường & vùng** (module Schools): Quốc gia → Vùng → Trường, mở cho nhiều nước; nạp 16 bang, 390 trường (ẩn sẵn 20 trường Hành chính / Đặc thù); tư vấn viên xem (quyền mới `schools.view`), quản trị viên sửa và **Nhập từ Excel có bước ghép cột** (tự đoán), nhập lại không trùng.
+- **API cho chatbot** (module Api): `results/{attempt_id}?view=khach|tuvan`, `catalog/{types|pairs|third|majors}`; token băm + `hash_equals` + phạm vi; trang **Kết nối API (chatbot)** cấp / thu hồi (quyền mới `api.manage`). Tài liệu `docs/API_HOLLAND.md`.
+- **Sao lưu** `php artisan holland:backup` mỗi đêm 02:00, file nén, giữ 14 ngày, chép ra ổ ngoài nếu có `BACKUP_DISK`. Đã chạy thử trên database của Vân (44 bảng, không có SĐT / email đọc được).
+- **Hiển thị trên Google**: tiêu đề, mô tả, ảnh khi chia sẻ link.
+- Tài liệu: `docs/SO_TAY_SU_DUNG.md` (theo vai trò + phần kỹ thuật), `docs/NGHIEM_THU.md`.
+- Link khối giới thiệu cho web chính dùng `utm_source=viger.edu.vn` (thống nhất với menu web chính).
+- **Kiểm thử: 163/163 đạt.**
+
+**Còn lại / chờ:** chuyển các trang nội dung cũ sang Filament (đang chạy tốt, chỉ khác giao diện); xác thực 2 lớp cho quản trị viên; liên kết ngành – nghề sửa trên admin; "trường có ngành này" (chờ file trường ↔ ngành); các mục "Trước khi chạy thật" trong `docs/NGHIEM_THU.md`.
 
 ### Repo chung (18/11/2026)
 

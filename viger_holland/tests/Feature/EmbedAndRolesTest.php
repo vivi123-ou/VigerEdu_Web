@@ -28,7 +28,7 @@ class EmbedAndRolesTest extends TestCase
         $this->get(route('embed'))->assertOk()
             ->assertHeader('Content-Security-Policy', "frame-ancestors 'self' https://viger.edu.vn")
             ->assertSee('Làm bài trắc nghiệm')
-            ->assertSee('utm_source=web-chinh', false);
+            ->assertSee('utm_source=viger.edu.vn', false);
     }
 
     public function test_embed_script_mounts_iframe(): void

@@ -95,8 +95,8 @@
 - [x] H3. Giao diện khách theo mẫu v3: giới thiệu, làm bài 6 câu/trang, kết quả sơ lược
 - [x] H4. Module Respondent: form thông tin, OTP email, báo cáo đầy đủ (xem trong thẻ, không email link); admin: tra cứu báo cáo khách + báo cáo nội bộ, khách cần liên lạc, chữ trên báo cáo & email
 - [x] H5. Module CrmSync + Tracking: outbox, job, thử lại, trang "Gửi khách sang CRM", hành vi khách
-- [ ] H6. Admin (Filament): lượt làm bài, danh mục, trường thông tin, nhật ký; chuyển nốt các trang nội dung cũ sang Filament
-- [ ] H7. API cho chatbot, sao lưu, tài liệu, nghiệm thu
+- [x] H6. Admin (Filament): danh mục (giải thích mã, ngành, nghề, trường & vùng), form khách điền, danh sách khách + Excel, số liệu, lịch sử thao tác. Các trang nội dung cũ (Trang mở đầu, Ô giới thiệu, Kho ảnh, Logo…, Chữ trên báo cáo, Hiển thị trên Google) vẫn dùng khung cũ, chạy tốt, chuyển sang Filament khi cần
+- [x] H7. API cho chatbot (`docs/API_HOLLAND.md`), sao lưu hằng đêm, Hiển thị trên Google, tài liệu (`SO_TAY_SU_DUNG.md`, `NGHIEM_THU.md`)
 
 **Chỉ làm một giai đoạn mỗi lần.** Không sửa file ngoài phạm vi giai đoạn; cần sửa thì hỏi trước.
 

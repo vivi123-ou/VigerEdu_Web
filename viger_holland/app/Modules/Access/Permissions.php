@@ -52,6 +52,8 @@ final class Permissions
         'crm.manage' => ['Được cài đặt gửi khách sang CRM', self::GROUP_SYSTEM, null],
         'accounts.manage' => ['Được thêm tài khoản nhân sự và phân quyền', self::GROUP_SYSTEM,
             'Không sửa được tài khoản quản trị viên.'],
+        'api.manage' => ['Được cấp và thu hồi mã kết nối API (chatbot, CRM)', self::GROUP_SYSTEM,
+            'Ứng dụng có mã đọc được kết quả Holland (không có họ tên, liên lạc).'],
         'logs.view' => ['Được xem lịch sử thao tác', self::GROUP_SYSTEM,
             'Ai sửa gì, ai xem báo cáo của khách nào, lúc nào.'],
     ];

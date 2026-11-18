@@ -45,7 +45,7 @@ class AdminLayoutTest extends TestCase
             ->assertSee('Ô giới thiệu trên viger.edu.vn')
             ->assertSee('Tài khoản nhân sự')
             ->assertSee('Phân quyền')
-            ->assertSee('Sắp có')
+            ->assertDontSee('Sắp có')
             ->assertSee('Xem trang làm bài như khách')
             ->assertSee('Câu hỏi đang dùng');
     }
@@ -71,10 +71,9 @@ class AdminLayoutTest extends TestCase
 
     public function test_coming_soon_page_explains_the_stage_and_unknown_items_are_not_found(): void
     {
-        $this->get(route('filament.admin.pages.sap-co', ['muc' => 'seo']))
-            ->assertOk()
-            ->assertSee('Hiển thị trên Google')
-            ->assertSee('dự kiến xong ở giai đoạn H7');
+        // H7 xong: không còn mục "Sắp có"; mục đã làm mở trang "Sắp có" thì báo không tìm thấy.
+        $this->assertSame([], AdminMenu::items()->filter(fn (array $item) => AdminMenu::isComingSoon($item))->keys()->all());
+        $this->get(route('filament.admin.pages.sap-co', ['muc' => 'seo']))->assertNotFound();
         $this->get(route('filament.admin.pages.sap-co', ['muc' => 'customers']))->assertNotFound();
 
         $this->get(route('filament.admin.pages.sap-co', ['muc' => 'khong-co']))->assertNotFound();

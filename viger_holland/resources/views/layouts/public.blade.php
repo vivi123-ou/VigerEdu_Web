@@ -16,6 +16,9 @@
     <meta property="og:title" content="@yield('title', setting('seo_home_title', setting('test_name')))">
     <meta property="og:description" content="@yield('description', setting('seo_home_description'))">
     <meta property="og:type" content="website">
+    @if (filled(setting('seo_share_image')))
+        <meta property="og:image" content="{{ media_url(setting('seo_share_image')) }}">
+    @endif
     <link rel="icon" href="{{ media_url(setting('favicon_path', 'img/favicon.png')) }}">
     @include('partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">

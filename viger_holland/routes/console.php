@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 // Gửi lại các gói sang CRM bị lỗi tạm thời (mất mạng, CRM bảo trì…), mỗi 5 phút. Cần chạy php artisan schedule:work (máy chạy thử) hoặc cron trên máy chủ.
 Schedule::command('crm:retry')->everyFiveMinutes()->withoutOverlapping();
+
+// Sao lưu database mỗi đêm (giữ backup_keep_days ngày). Máy chủ cần cron: * * * * * php artisan schedule:run
+Schedule::command('holland:backup')->dailyAt('02:00')->withoutOverlapping();

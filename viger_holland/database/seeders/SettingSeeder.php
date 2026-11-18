@@ -178,7 +178,8 @@ class SettingSeeder extends Seeder
                 'crm_enabled' => '0',
                 'crm_url' => '',
                 'crm_retry_minutes' => '1,5,30,120,360',
-                'crm_customer_url' => '', // ví dụ https://crm.viger.edu.vn/khach/{ma}; để trống thì không hiện nút "Mở hồ sơ trong CRM"
+                'crm_customer_url' => '',
+                'backup_keep_days' => '14', // holland:backup giữ bản sao lưu bấy nhiêu ngày // ví dụ https://crm.viger.edu.vn/khach/{ma}; để trống thì không hiện nút "Mở hồ sơ trong CRM"
             ],
             'embed' => [
                 // Khối "Trắc nghiệm Holland" trên web chính (/embed, /api/v1/public/intro)
@@ -190,6 +191,7 @@ class SettingSeeder extends Seeder
             ],
             'seo' => [
                 'seo_home_title' => 'Trắc nghiệm Holland miễn phí – Bạn hợp với ngành nào?',
+                'seo_share_image' => '',
                 'seo_home_description' => 'Trắc nghiệm Holland (RIASEC) miễn phí: xác định nhóm sở thích nghề nghiệp và nhận gợi ý ngành học phù hợp để định hướng du học Đức.',
             ],
             'integrations' => [
