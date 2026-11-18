@@ -56,7 +56,7 @@ return [
             'help' => [
                 'intro' => 'Dùng trước khi tư vấn: tìm đúng khách rồi đọc báo cáo đầy đủ (6 điểm, mã 3 chữ, ngành gợi ý, các câu khách đã trả lời).',
                 'steps' => [
-                    ['Tìm khách', 'gõ đúng số điện thoại (của học sinh hoặc phụ huynh), email hoặc mã báo cáo 8 ký tự mà khách đọc cho bạn, rồi bấm "Tìm".'],
+                    ['Tìm khách', 'gõ đúng số điện thoại (của học sinh hoặc phụ huynh), email hoặc mã báo cáo 8 ký tự (nhân viên thấy mã ở trang Khách cần liên lạc), rồi bấm "Tìm".'],
                     ['Đọc báo cáo', 'bấm "Đọc báo cáo đầy đủ" ở dòng của khách.'],
                     ['Khách làm bài nhiều lần', 'mỗi lần là một dòng, lần mới nhất ở trên. Báo cáo có phần so sánh với lần trước.'],
                     ['Đọc nhanh', 'phần "Đọc trước khi tư vấn" tóm tắt điều cần biết: mã khách đang thấy, mã đầy đủ, điểm cần hỏi thêm.'],

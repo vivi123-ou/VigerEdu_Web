@@ -137,7 +137,6 @@ return [
                 ['key' => 'report_next_topic_3', 'label' => 'Chủ đề 3', 'type' => 'text'],
                 ['key' => 'report_zalo_button', 'label' => 'Chữ nút Zalo', 'type' => 'text', 'hint' => 'Nút chỉ hiện khi đã nhập số Zalo ở "Logo, màu, hotline, chân trang".'],
                 ['key' => 'report_retake', 'label' => 'Chữ nút làm lại', 'type' => 'text'],
-                ['key' => 'report_code_label', 'label' => 'Câu ghi mã báo cáo', 'type' => 'text', 'hint' => 'Giữ {ma}: mã 8 ký tự khách đọc cho chuyên viên để tra cứu.'],
                 ['key' => 'report_once_note', 'label' => 'Ghi chú báo cáo chỉ xem trên thẻ này', 'type' => 'text'],
                 ['key' => 'report_note', 'label' => 'Lưu ý cuối báo cáo', 'type' => 'textarea'],
                 ['key' => 'report_tip', 'label' => 'Lời khuyên cuối báo cáo', 'type' => 'textarea'],

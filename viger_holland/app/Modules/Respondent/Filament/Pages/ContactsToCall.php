@@ -17,7 +17,8 @@ use Illuminate\Support\Str;
 
 /**
  * Làm gì:   Trang "Khách cần liên lạc" (mẫu admin-filament.html màn hình 4): khách mới để lại thông tin, mới nhất ở trên;
- *           họ tên, điện thoại phụ huynh / học sinh (bấm để gọi, nút Zalo), email, đối tượng, năm sinh, tỉnh, lúc để lại.
+ *           họ tên, mã báo cáo (chuyển cho tư vấn viên tra cứu), điện thoại phụ huynh / học sinh (bấm để gọi, nút Zalo),
+ *           email, đối tượng, năm sinh, tỉnh, lúc để lại.
  *           KHÔNG có kết quả bài làm, KHÔNG có nút tải. Chỉ khách trong số ngày ở cài đặt contacts_days (mặc định 7);
  *           trang không ghi ra giới hạn này (Vân chốt 17/11). Mỗi lần mở trang được ghi vào nhật ký.
  *           Họ tên, SĐT lưu mã hóa nên tìm kiếm làm sau khi giải mã (số khách trong vài ngày nhỏ).
@@ -141,6 +142,7 @@ class ContactsToCall extends Page
 
         return $sessions->filter(fn (TestSession $s) => $s->respondent !== null)->map(fn (TestSession $s) => [
             'name' => $s->respondent->full_name,
+            'reportCode' => InternalReport::code($s),
             'parentPhone' => $s->respondent->parent_phone,
             'phone' => $s->respondent->phone,
             'email' => $s->respondent->email,

@@ -137,9 +137,6 @@
             @csrf
             <button class="linkbtn" type="submit">{{ setting('report_retake', 'Làm lại với câu hỏi mới') }}</button>
         </form>
-        @if (filled(setting('report_code_label')))
-            <span>{{ str_replace('{ma}', $report['reportCode'], (string) setting('report_code_label')) }}</span>
-        @endif
         @if (filled(setting('report_once_note')))
             <span>{{ setting('report_once_note') }}</span>
         @endif

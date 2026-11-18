@@ -171,7 +171,8 @@ class ReportFlowTest extends TestCase
             ->assertDontSeeText('%')
             ->assertDontSee('Cần tra')
             ->assertDontSee('ISA')
-            ->assertDontSee('PDF');
+            ->assertDontSee('PDF')
+            ->assertDontSee('Mã báo cáo', 'Mã báo cáo chỉ dùng nội bộ (Vân chốt 18/11)');
         foreach ($all as $name) {
             $report->assertSee($name);
         }

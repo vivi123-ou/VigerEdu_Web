@@ -120,12 +120,13 @@ class AdminCustomerPagesTest extends TestCase
 
     public function test_staff_sees_recent_contacts_only_without_results_or_limits(): void
     {
-        $this->customer('Nguyễn Minh Anh', 'minhanh@gmail.com', '0912345678', '0987654321');
+        $anh = $this->customer('Nguyễn Minh Anh', 'minhanh@gmail.com', '0912345678', '0987654321');
         $this->customer('Trần Thu Hà', 'thuha@gmail.com', '0903111222', null, now()->subDay());
         $this->customer('Khách Cũ', 'cu@gmail.com', '0911000000', null, now()->subDays(10));
         $this->actingAs($this->user(User::ROLE_STAFF));
 
         $this->get(ContactsToCall::getUrl())->assertOk()
+            ->assertSee('Mã báo cáo')->assertSee(InternalReport::code($anh))
             ->assertSee('Nguyễn Minh Anh')->assertSee('0912345678')->assertSee('0987654321')->assertSee('minhanh@gmail.com')
             ->assertSee('https://zalo.me/0912345678', false)
             ->assertSee('Trần Thu Hà')

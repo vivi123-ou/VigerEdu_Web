@@ -33,11 +33,12 @@
 
             <div class="hz-scroll" style="margin-top:14px">
                 <table class="hz-table">
-                    <thead><tr><th>Họ tên</th><th>Điện thoại phụ huynh</th><th>Điện thoại học sinh</th><th>Email</th><th>Đối tượng</th><th>Năm sinh</th><th>Tỉnh / thành</th><th>Để lại lúc</th><th></th></tr></thead>
+                    <thead><tr><th>Họ tên</th><th>Mã báo cáo</th><th>Điện thoại phụ huynh</th><th>Điện thoại học sinh</th><th>Email</th><th>Đối tượng</th><th>Năm sinh</th><th>Tỉnh / thành</th><th>Để lại lúc</th><th></th></tr></thead>
                     <tbody>
                         @forelse ($rows as $c)
                             <tr>
                                 <td><b>{{ $c['name'] }}</b></td>
+                                <td>{{ $c['reportCode'] }}</td>
                                 <td>@if ($c['parentPhone'])<a class="hz-link" href="tel:{{ $c['parentPhone'] }}">{{ $c['parentPhone'] }}</a>@else — @endif</td>
                                 <td>@if ($c['phone'])<a class="hz-link" href="tel:{{ $c['phone'] }}">{{ $c['phone'] }}</a>@else — @endif</td>
                                 <td>{{ $c['email'] }}</td>
@@ -52,7 +53,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="9" class="hz-muted" style="text-align:center;padding:24px">Chưa có khách nào.</td></tr>
+                            <tr><td colspan="10" class="hz-muted" style="text-align:center;padding:24px">Chưa có khách nào.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

@@ -75,7 +75,6 @@ final class CustomerReport
 
         return [
             'code' => $code,
-            'reportCode' => strtoupper(substr(str_replace('-', '', $session->uuid), 0, 8)),
             'names' => array_map($name, array_slice($letters, 0, 2)),
             'opening' => $fill(setting('report_opening')),
             'explain' => $explain,
