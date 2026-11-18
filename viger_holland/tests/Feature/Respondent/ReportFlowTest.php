@@ -128,7 +128,7 @@ class ReportFlowTest extends TestCase
             'Ô SĐT học sinh bị ẩn thì không lưu');
     }
 
-    public function test_full_flow_sends_a_code_saves_encrypted_data_and_shows_the_report_once(): void
+    public function test_full_flow_sends_a_code_saves_encrypted_data_and_keeps_the_report_only_in_the_same_tab(): void
     {
         $session = $this->finished();
 
@@ -150,7 +150,7 @@ class ReportFlowTest extends TestCase
         $wrong = $code === '000000' ? '111111' : '000000';
         $this->from(route('report.code'))->post(route('report.verify'), ['code' => $wrong])
             ->assertSessionHasErrors(['code' => 'Mã chưa đúng. Bạn còn 4 lần thử.']);
-        $this->get(route('report.show'))->assertOk()->assertSee('Báo cáo đã đóng', false);
+        $this->get(route('report.show'))->assertRedirect(route('report.request'), 'Chưa nhập đúng mã thì chưa có báo cáo');
 
         $this->post(route('report.verify'), ['code' => $code])->assertRedirect(route('report.show'));
 
@@ -194,11 +194,26 @@ class ReportFlowTest extends TestCase
         $this->assertStringNotContainsString('minhanh', (string) DB::table('respondents')->value('email'));
         $this->assertSame(0, Consent::query()->count(), 'Không có câu đồng ý thì không ghi lời đồng ý');
 
-        // Chỉ hiện một lần: tải lại, mở lại form hay nhập lại mã đều không thấy báo cáo nữa.
-        $this->get(route('report.show'))->assertOk()->assertSee('Báo cáo đã đóng')->assertDontSee('Ngành học tại Đức phù hợp với bạn')->assertSee('Làm bài lại');
+        // Lần đầu: thẻ nhận chìa khóa xem (khach.js cất vào sessionStorage, đóng thẻ là mất).
+        $this->assertSame(1, preg_match('/data-key="([^"]+)"/', $report->getContent(), $match));
+        $key = $match[1];
+
+        // Tải lại trang trong cùng thẻ: trang không tự in báo cáo, khach.js gửi chìa khóa để lấy lại.
+        $this->get(route('report.show'))->assertOk()
+            ->assertDontSee('Ngành học tại Đức phù hợp với bạn')->assertDontSee('data-key=', false)
+            ->assertSee('data-report-closed', false)->assertSee('Làm bài lại');
+        $this->postJson(route('report.view'), ['key' => $key])->assertOk()
+            ->assertHeader('Cache-Control', 'must-revalidate, no-cache, no-store, private')
+            ->assertSee('Ngành học tại Đức phù hợp với bạn')->assertDontSee('Nguyễn Minh Anh');
+
+        // Thẻ đã đóng / thẻ mới (không có chìa) hoặc chìa sai: không lấy được báo cáo, trang hiện "Báo cáo đã đóng".
+        $this->postJson(route('report.view'), [])->assertNotFound();
+        $this->postJson(route('report.view'), ['key' => 'chia-sai'])->assertNotFound();
         $this->get(route('report.request'))->assertRedirect(route('report.show'));
-        $this->post(route('report.verify'), ['code' => $code])->assertRedirect(route('report.show'));
-        $this->get(route('report.show'))->assertSee('Báo cáo đã đóng');
+
+        // Làm bài lượt mới: chìa cũ hết tác dụng.
+        $this->post(route('test.start'));
+        $this->postJson(route('report.view'), ['key' => $key])->assertNotFound();
     }
 
     public function test_whole_journey_over_http_is_not_blocked_by_rate_limits(): void

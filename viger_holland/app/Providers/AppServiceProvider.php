@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('quiz-page', fn (Request $request) => Limit::perMinute(30)->by($request->ip())->response($tooMany('answers')));
         RateLimiter::for('report-form', fn (Request $request) => Limit::perMinute(5)->by($request->ip())->response($tooMany('form')));
         RateLimiter::for('report-code', fn (Request $request) => Limit::perMinute(10)->by($request->ip())->response($tooMany('code')));
+        RateLimiter::for('report-view', fn (Request $request) => Limit::perMinute(30)->by($request->ip()));
         RateLimiter::for('report-resend', fn (Request $request) => Limit::perMinute(5)->by($request->ip())->response($tooMany('code')));
     }
 }

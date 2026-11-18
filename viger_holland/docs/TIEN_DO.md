@@ -36,7 +36,7 @@ Xem `docs/THIET_KE_TONG_THE_V1.md` mục 0:
 ### Vân chốt 18/11 (H4)
 
 - Form thêm **Điện thoại / Zalo của phụ huynh, bắt buộc**. SĐT học sinh giữ lại, không bắt buộc, ẩn khi người điền chọn "Phụ huynh" (khi đó ô Email thành "Email của học sinh").
-- Báo cáo đầy đủ **chỉ hiện một lần** ngay sau khi nhập đúng mã; tải lại cũng mất.
+- Báo cáo đầy đủ **chỉ xem được trong thẻ (tab) đã nhập đúng mã**: tải lại vẫn còn, đóng thẻ là mất (sửa lại cùng ngày, trước đó làm "tải lại cũng mất").
 - **Bỏ câu đồng ý** (web khác không có). Câu đồng ý thành ô cài đặt `report_consent_text`, để trống; gõ vào thì câu hiện dưới nút và được lưu lại.
 - Câu chưa chọn ghi "Chưa chọn câu trả lời".
 - **Ngày sinh chọn trên lịch** (thay ô năm sinh): lịch có sẵn của trình duyệt, không cài thêm thư viện. Holland lưu đủ ngày sinh (mã hóa); CRM vẫn nhận `birth_year`. **Cần sửa từ điển dữ liệu chung** (`TU_DIEN_DU_LIEU_CHUNG.xlsx` đang ghi "Năm sinh – Chỉ lưu năm"): thêm `birth_date`, báo CRM, web chính, chatbot.

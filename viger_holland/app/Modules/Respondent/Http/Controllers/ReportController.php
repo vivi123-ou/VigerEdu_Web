@@ -16,20 +16,25 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /**
  * Làm gì:   Luồng khách H4 sau kết quả sơ lược: form thông tin → mã xác nhận qua email → báo cáo đầy đủ.
- *           Báo cáo chỉ hiện MỘT lần ngay sau khi nhập đúng mã (Vân chốt 18/11): tải lại hay mở lại đều không thấy nữa,
+ *           Báo cáo xem được trong thẻ (tab) đã nhập đúng mã, tải lại vẫn còn; đóng thẻ là mất (Vân chốt 18/11),
  *           muốn xem lại thì làm bài lại. Không email link, không PDF, không chia sẻ, không hiện họ tên.
- * Ai gọi:   routes/web.php (report.request, report.submit, report.code, report.verify, report.resend, report.show).
+ * Ai gọi:   routes/web.php (report.request, report.submit, report.code, report.verify, report.resend, report.show, report.view).
  * Dữ liệu:  test_sessions (lượt của trình duyệt), field_values, otp_codes, respondents, consents. Không ghi họ tên,
  *           email, SĐT, mã vào log.
  */
 class ReportController extends Controller
 {
+    /** Băm của chìa khóa xem báo cáo và lượt làm bài nó mở (lưu phía máy chủ). */
     private const REPORT_KEY = 'holland.report';
+
+    /** Chìa khóa gốc, chỉ trao cho trang /bao-cao ngay sau khi nhập đúng mã (một lần), rồi nằm trong sessionStorage của thẻ. */
+    private const FRESH_KEY = 'holland.report_key';
 
     private const CONSENT_KEY = 'holland.consent';
 
@@ -130,7 +135,9 @@ class ReportController extends Controller
 
         $access->complete($session, $request->session()->pull(self::CONSENT_KEY));
         $request->session()->forget(self::DEV_CODE_KEY);
-        $request->session()->put(self::REPORT_KEY, $session->uuid);
+        $key = Str::random(48);
+        $request->session()->put(self::REPORT_KEY, ['uuid' => $session->uuid, 'hash' => hash('sha256', $key)]);
+        $request->session()->flash(self::FRESH_KEY, $key);
 
         return redirect()->route('report.show');
     }
@@ -152,22 +159,40 @@ class ReportController extends Controller
             ->with('status', setting('otp_resent', 'Đã gửi mã mới. Bạn kiểm tra hộp thư (cả mục Thư rác / Quảng cáo).'));
     }
 
-    public function show(Request $request): View|Response|RedirectResponse
+    /**
+     * Trang báo cáo. Ngay sau khi nhập đúng mã: hiện báo cáo và trao chìa khóa cho thẻ (khach.js cất vào sessionStorage).
+     * Tải lại trang: trang trống, khach.js gửi chìa khóa của thẻ lên view() để lấy lại báo cáo; thẻ không có chìa → "Báo cáo đã đóng".
+     */
+    public function show(Request $request): Response|RedirectResponse
     {
         $session = CurrentTest::get($request);
-        $allowed = $session !== null && $session->verified_at !== null
-            && $request->session()->pull(self::REPORT_KEY) === $session->uuid;
-
-        if (! $allowed) {
-            return $session === null ? redirect()->route('home') : $this->closed();
+        if ($session === null) {
+            return redirect()->route('home');
+        }
+        if ($session->verified_at === null) {
+            return redirect()->route($session->status === TestSession::STATUS_IN_PROGRESS ? 'test.show' : 'report.request');
         }
 
-        $session->update(['report_viewed_at' => now()]);
+        $key = $request->session()->get(self::FRESH_KEY);
+        $report = is_string($key) && $this->keyOpens($request, $session, $key) ? CustomerReport::make($session) : null;
+        if ($report !== null && $session->report_viewed_at === null) {
+            $session->update(['report_viewed_at' => now()]);
+        }
 
-        return response()
-            ->view('public.report', ['report' => CustomerReport::make($session)])
-            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, private')
-            ->header('Pragma', 'no-cache');
+        return $this->private(response()->view('public.report', ['report' => $report, 'key' => $report ? $key : null]));
+    }
+
+    /**
+     * Lấy lại thân báo cáo khi tải lại trang, bằng chìa khóa trong sessionStorage của thẻ. Sai chìa → 404 (trang hiện "Báo cáo đã đóng").
+     */
+    public function view(Request $request): Response
+    {
+        $session = CurrentTest::get($request);
+        $key = $request->input('key');
+
+        abort_unless($session !== null && $session->verified_at !== null && is_string($key) && $this->keyOpens($request, $session, $key), 404);
+
+        return $this->private(response()->view('public.partials.report-body', ['report' => CustomerReport::make($session)]));
     }
 
     /**
@@ -200,9 +225,23 @@ class ReportController extends Controller
         return null;
     }
 
-    private function closed(): Response
+    /**
+     * Chìa khóa có mở được báo cáo của lượt làm bài đang gắn với trình duyệt không (làm bài lượt mới thì chìa cũ hết tác dụng).
+     */
+    private function keyOpens(Request $request, TestSession $session, string $key): bool
     {
-        return response()->view('public.report-closed')->header('Cache-Control', 'no-store, private');
+        $stored = $request->session()->get(self::REPORT_KEY);
+
+        return is_array($stored) && ($stored['uuid'] ?? null) === $session->uuid
+            && hash_equals((string) ($stored['hash'] ?? ''), hash('sha256', $key));
+    }
+
+    /**
+     * Báo cáo có dữ liệu riêng của khách: không cho trình duyệt / máy chủ trung gian lưu lại.
+     */
+    private function private(Response $response): Response
+    {
+        return $response->header('Cache-Control', 'no-store, no-cache, must-revalidate, private')->header('Pragma', 'no-cache');
     }
 
     /**

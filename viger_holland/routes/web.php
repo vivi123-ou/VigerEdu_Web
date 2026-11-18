@@ -19,7 +19,7 @@ Route::get('lam-bai', [QuizController::class, 'show'])->name('test.show');
 Route::post('lam-bai', [QuizController::class, 'submit'])->middleware('throttle:quiz-page')->name('test.submit');
 Route::get('ket-qua', [QuizController::class, 'result'])->name('test.result');
 
-// Luồng khách (H4): Form thông tin → Mã xác nhận qua email → Báo cáo đầy đủ (chỉ hiện một lần). Không có trang nào chứa mã trên link.
+// Luồng khách (H4): Form thông tin → Mã xác nhận qua email → Báo cáo đầy đủ (xem trong thẻ đã mở, đóng thẻ là mất). Không có trang nào chứa mã trên link.
 Route::middleware('noindex')->group(function (): void {
     Route::get('nhan-bao-cao', [ReportController::class, 'form'])->name('report.request');
     Route::post('nhan-bao-cao', [ReportController::class, 'submit'])->middleware('throttle:report-form')->name('report.submit');
@@ -27,6 +27,7 @@ Route::middleware('noindex')->group(function (): void {
     Route::post('xac-nhan', [ReportController::class, 'verify'])->middleware('throttle:report-code')->name('report.verify');
     Route::post('xac-nhan/gui-lai', [ReportController::class, 'resend'])->middleware('throttle:report-resend')->name('report.resend');
     Route::get('bao-cao', [ReportController::class, 'show'])->name('report.show');
+    Route::post('bao-cao/xem', [ReportController::class, 'view'])->middleware('throttle:report-view')->name('report.view');
 });
 
 // Khối nhúng cho web chính (iframe + script)

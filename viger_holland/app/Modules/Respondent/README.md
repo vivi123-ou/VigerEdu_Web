@@ -1,6 +1,6 @@
 # Module Respondent (thông tin khách, mã xác nhận, báo cáo đầy đủ)
 
-**Làm gì:** sau kết quả sơ lược, khách điền form → nhận mã 6 số qua email → xem báo cáo đầy đủ **một lần** (Vân chốt 18/11). Muốn xem lại thì làm bài lại. Không email link, không PDF, không chia sẻ, không hiện họ tên.
+**Làm gì:** sau kết quả sơ lược, khách điền form → nhận mã 6 số qua email → xem báo cáo đầy đủ **trong thẻ (tab) đó**: tải lại vẫn còn, đóng thẻ là mất (Vân chốt 18/11). Thẻ nhận "chìa khóa xem" lưu trong `sessionStorage` (trình duyệt tự xóa khi đóng thẻ); máy chủ chỉ giữ băm của chìa, làm bài lượt mới thì chìa cũ hết tác dụng. Muốn xem lại thì làm bài lại. Không email link, không PDF, không chia sẻ, không hiện họ tên.
 
 **Luồng và đường dẫn** (`Http/Controllers/ReportController.php`, đều `noindex`, không có mã trên link):
 
@@ -11,7 +11,8 @@
 | GET `/xac-nhan` | Nhập mã, email che bớt, "Gửi lại mã", "Sửa email" | |
 | POST `/xac-nhan` | Kiểm tra mã → tạo / cập nhật hồ sơ → báo cáo | 10 (`report-code`) |
 | POST `/xac-nhan/gui-lai` | Gửi lại mã | 5 (`report-resend`) |
-| GET `/bao-cao` | Báo cáo đầy đủ, hiện một lần rồi thành "Báo cáo đã đóng" | |
+| GET `/bao-cao` | Báo cáo đầy đủ (lần đầu); tải lại thì `khach.js` lấy lại bằng chìa khóa của thẻ | |
+| POST `/bao-cao/xem` | Trả thân báo cáo khi đúng chìa khóa, sai → 404 ("Báo cáo đã đóng") | 30 (`report-view`) |
 
 Mỗi việc một bộ đếm riêng (`AppServiceProvider`). Viết `throttle:5,1` thì mọi route dùng chung một bộ đếm, khách làm xong 6 trang bài sẽ bị chặn ở form.
 
