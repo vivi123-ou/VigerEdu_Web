@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mẫu trang quản trị (Filament) – Trắc nghiệm Holland</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Mẫu trang quản trị theo giao diện Filament v5, bản 2: đặt tên theo việc người dùng làm, phân quyền theo công việc thật.
+   Dữ liệu câu hỏi là dữ liệu thật trong máy; thông tin khách là ví dụ. Trang tĩnh: không lưu gì. */
+:root{--p:#c1121f;--p50:#fdf2f2;--p100:#fbe3e4;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g900:#111827;--ok:#16a34a;--ok50:#f0fdf4;--warn:#b45309;--warn50:#fffbeb;--info:#2563eb;--info50:#eff6ff;--amber:#f59e0b}
+*{box-sizing:border-box}html,body{margin:0;background:#e9e7e2;color:var(--g900);font:400 14px/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}.ic.s{width:16px;height:16px}
+.board{max-width:1320px;margin:0 auto;padding:36px 20px 80px}
+.board>h1{font:700 22px Inter;margin:0 0 6px}.board>p{margin:0 0 6px;color:var(--g600);max-width:960px}
+.screen{margin:34px 0 54px}
+.screen__tag{display:flex;align-items:baseline;gap:12px;margin:0 0 10px;font-size:14px;color:var(--g600)}
+.screen__tag b{font:700 13px Inter;letter-spacing:.08em;color:var(--p);white-space:nowrap}
+.new{display:inline-block;background:#fef3c7;color:#92400e;border-radius:4px;padding:0 6px;font:600 11.5px/18px Inter;margin-left:6px;vertical-align:1px}
+.frame{background:#fff;border:1px solid #d6d3cc;border-radius:10px;overflow:hidden;box-shadow:0 12px 32px -18px rgba(17,24,39,.35)}
+.url{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#f6f5f2;border-bottom:1px solid #e2dfd8;font-size:12.5px;color:var(--g500)}
+.url i{width:10px;height:10px;border-radius:50%;background:#d9d6cf;display:inline-block}
+.url span{margin-left:10px;background:#fff;border:1px solid #e2dfd8;border-radius:5px;padding:2px 10px}
+.fi{display:grid;grid-template-columns:270px 1fr;min-height:560px;background:var(--g50)}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:12px;height:60px;padding:0 22px;background:#fff;border-bottom:1px solid var(--g200)}
+.top .logo img{height:34px;display:block}.top .sp{flex:1}
+.tbtn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g700);font-weight:500;font-size:13px}
+.tbtn.ghost{border-color:transparent;color:var(--g600)}
+.who{display:flex;align-items:center;gap:10px;padding-left:6px}.who small{display:block;color:var(--g500);font-size:12px;line-height:1.2}.who b{display:block;font-size:13px;line-height:1.2}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--g900);color:#fff;display:grid;place-items:center;font:600 12.5px Inter;flex:none}
+.side{padding:16px 12px;border-right:1px solid var(--g200);background:var(--g50)}
+.grp{margin:16px 0 4px;padding:0 10px;display:flex;justify-content:space-between;color:var(--g500);font-size:12.5px;font-weight:600}
+.item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;color:var(--g700);font-weight:500;margin:1px 0}
+.item .ic{color:var(--g400)}.item.on{background:#fff;color:var(--p);box-shadow:0 0 0 1px var(--g200)}.item.on .ic{color:var(--p)}
+.item.soon{color:var(--g400)}.item .tag{margin-left:auto;font:600 10.5px Inter;color:var(--g500);background:var(--g100);border-radius:6px;padding:1px 6px;white-space:nowrap}
+.main{padding:24px 32px 36px;min-width:0}
+.crumb{font-size:13px;color:var(--g500);margin-bottom:4px}
+.head{display:flex;align-items:flex-start;gap:12px;margin-bottom:4px}.head h2{font:700 26px/1.2 Inter;letter-spacing:-.02em;margin:0}
+.help{width:26px;height:26px;border-radius:50%;background:var(--amber);color:#fff;border:0;font:700 14px Inter;display:grid;place-items:center;margin-top:3px;box-shadow:0 0 0 3px #fde68a;flex:none}
+.head .acts{margin-left:auto;display:flex;gap:8px}
+.lead{color:var(--g600);margin:0 0 18px;max-width:820px}
+.btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;border:0;font-weight:600;font-size:13.5px;white-space:nowrap}
+.btn.pri{background:var(--p);color:#fff}.btn.sec{background:#fff;color:var(--g700);box-shadow:0 0 0 1px var(--g200)}.btn.dng{background:#fff;color:var(--p);box-shadow:0 0 0 1px var(--p100)}
+.btn.big{height:44px;padding:0 20px;font-size:15px}
+.card{background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(17,24,39,.07);margin-bottom:16px}
+.card>h3{margin:0;padding:14px 20px;font:600 15px Inter;border-bottom:1px solid var(--g100)}
+.card>.desc{padding:10px 20px 0;margin:0;color:var(--g500);font-size:13px}.card .body{padding:16px 20px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 0 0 1px rgba(17,24,39,.07)}
+.stat small{color:var(--g500);font-weight:500}.stat b{display:block;font:700 26px/1.3 Inter}.stat em{font-style:normal;font-size:12.5px;color:var(--g500)}.stat em.ok{color:var(--ok)}
+.hello{display:flex;align-items:center;gap:14px;background:#fff;border-radius:12px;padding:14px 18px;box-shadow:0 0 0 1px rgba(17,24,39,.07);margin-bottom:16px}
+.hello p{margin:0}.hello small{color:var(--g500)}
+.short{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sc{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 0 0 1px rgba(17,24,39,.07)}
+.sc .bx{width:38px;height:38px;border-radius:10px;background:var(--p50);color:var(--p);display:grid;place-items:center;flex:none}
+.sc b{display:block;font-weight:600}.sc span{color:var(--g500);font-size:13px}
+.tabs{display:inline-flex;gap:2px;background:#fff;border-radius:10px;padding:4px;box-shadow:0 0 0 1px rgba(17,24,39,.07);margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:6px 12px;border-radius:7px;color:var(--g600);font-weight:500;display:flex;gap:6px;align-items:center}
+.tab.on{background:var(--g100);color:var(--p)}.cnt{font:600 11.5px Inter;background:var(--g100);color:var(--g600);border-radius:6px;padding:0 6px}.tab.on .cnt{background:var(--p100);color:var(--p)}
+.tbar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--g100)}
+.search{display:flex;align-items:center;gap:8px;width:260px;height:36px;padding:0 10px;border:1px solid var(--g200);border-radius:8px;color:var(--g400);background:#fff}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-weight:600;font-size:13px;color:var(--g700);background:var(--g50);padding:9px 12px;border-bottom:1px solid var(--g200)}
+td{padding:10px 12px;border-bottom:1px solid var(--g100);vertical-align:top}
+.chk{width:16px;height:16px;border:1px solid var(--g300);border-radius:4px;display:inline-block;vertical-align:-3px;flex:none;position:relative;background:#fff}
+.chk.on{background:var(--p);border-color:var(--p)}.chk.on:after{content:"";position:absolute;left:4.5px;top:1.5px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.chk.lock{background:var(--g100);border-color:var(--g200)}
+.bd{display:inline-block;font:600 12px/20px Inter;border-radius:6px;padding:0 7px;white-space:nowrap}
+.bd.g{background:var(--g100);color:var(--g600)}.bd.ok{background:var(--ok50);color:var(--ok)}.bd.w{background:var(--warn50);color:var(--warn)}.bd.i{background:var(--info50);color:var(--info)}.bd.p{background:var(--p50);color:var(--p)}
+.link{color:var(--p);font-weight:600;display:inline-flex;gap:4px;align-items:center;white-space:nowrap}
+.pager{display:flex;justify-content:space-between;padding:10px 14px;color:var(--g500);font-size:13px}
+.form{display:grid;grid-template-columns:repeat(var(--c,2),1fr);gap:16px 20px}
+.f label{display:flex;align-items:center;gap:6px;font-weight:500;margin-bottom:6px}.f label .q{color:var(--g400);margin-left:auto}
+.f .in{display:flex;align-items:center;min-height:38px;border-radius:8px;box-shadow:0 0 0 1px var(--g300);padding:0 12px;background:#fff}
+.f .in.dis{background:var(--g50);color:var(--g500)}.f .in.area{align-items:flex-start;padding:8px 12px;min-height:62px}
+.f .in .suf{margin-left:auto;padding-left:10px;border-left:1px solid var(--g200);color:var(--g500);height:38px;display:flex;align-items:center}
+.f .hint{color:var(--g500);font-size:12.5px;margin-top:5px}.f .err{color:var(--p);font-size:12.5px;margin-top:5px}.f .in.bad{box-shadow:0 0 0 1px var(--p)}
+.req{color:var(--p)}.full{grid-column:1/-1}
+.tgl{display:inline-block;width:40px;height:22px;border-radius:999px;background:var(--p);position:relative;vertical-align:middle;flex:none}.tgl:after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.tgl.off{background:var(--g200)}.tgl.off:after{right:auto;left:3px}
+.stars{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.foot{display:flex;gap:8px;align-items:center;padding:12px 20px;background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(17,24,39,.07)}
+.empty{text-align:center;padding:44px 20px;color:var(--g500)}
+.empty .bx{width:52px;height:52px;border-radius:50%;background:var(--g100);display:grid;place-items:center;margin:0 auto 12px}
+.empty h4{margin:0 0 6px;color:var(--g900);font:600 16px Inter}
+.modal-bg{position:absolute;inset:0;background:rgba(17,24,39,.45);display:grid;place-items:center}
+.modal{background:#fff;border-radius:14px;width:560px;max-width:92%;padding:22px 24px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.modal h4{margin:0 0 10px;font:600 17px Inter;display:flex;gap:10px;align-items:center}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0 0 12px}
+.steps li{counter-increment:s;display:flex;gap:10px;margin:0 0 8px;color:var(--g700)}
+.steps li:before{content:counter(s);width:22px;height:22px;border-radius:50%;background:var(--p50);color:var(--p);font:700 12px/22px Inter;text-align:center;flex:none}
+.note{background:#fffbea;border:1px dashed #e7c66b;border-radius:8px;padding:10px 14px;font-size:13px;color:#6b4f00;margin:10px 0 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.code{font:12.5px/1.6 ui-monospace,Consolas,monospace;background:var(--g900);color:#e5e7eb;border-radius:8px;padding:12px 14px;white-space:pre-wrap;word-break:break-all;margin-top:10px}
+details.tech{border:1px solid var(--g200);border-radius:10px;padding:10px 14px;background:var(--g50)}
+details.tech summary{cursor:pointer;font-weight:600;color:var(--g600)}
+/* Ai làm gì */
+.people{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.person{background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(17,24,39,.07);padding:18px 20px}
+.person h4{margin:0;font:700 17px Inter;display:flex;gap:10px;align-items:center}
+.person .day{margin:8px 0 12px;color:var(--g600);font-size:13.5px;font-style:italic}
+.person h5{margin:12px 0 6px;font:600 13px Inter;color:var(--g500);text-transform:uppercase;letter-spacing:.04em}
+.person ul{margin:0;padding:0;list-style:none}.person li{display:flex;gap:8px;margin:0 0 6px;font-size:13.5px}
+.yes:before{content:"✓";color:var(--ok);font-weight:700}.no:before{content:"✕";color:var(--p);font-weight:700}
+/* Tra cứu */
+.lookup{background:#fff;border-radius:14px;box-shadow:0 0 0 1px rgba(17,24,39,.07);padding:22px 24px;margin-bottom:16px}
+.lookup h3{margin:0 0 4px;font:700 18px Inter}.lookup p{margin:0 0 14px;color:var(--g500)}
+.lookup .row{display:flex;gap:10px}.lookup .search{flex:1;width:auto;height:44px;font-size:15px;color:var(--g900)}
+.result{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(17,24,39,.07);padding:16px 18px}
+.result .code3{font:700 22px Inter;color:var(--p);background:var(--p50);border-radius:10px;padding:8px 12px}
+.result dl{display:grid;grid-template-columns:repeat(4,auto);gap:2px 18px;margin:6px 0 0;font-size:13px}.result dt{color:var(--g500)}.result dd{margin:0;font-weight:500}
+.perm-grp{margin:0 0 16px}.perm-grp h6{margin:0 0 8px;font:600 13px Inter;color:var(--g700);display:flex;gap:8px;align-items:center}
+.perm{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:8px}
+.perm:hover{background:var(--g50)}.perm b{display:block;font-weight:500}.perm span{color:var(--g500);font-size:12.5px}
+.perm.locked b{color:var(--g500)}
+.site{border:1px solid var(--g200);border-radius:12px;overflow:hidden;background:#fdfbf7}
+.site .nav{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:#fff;border-bottom:1px solid var(--g200);font-size:12px;color:var(--g500)}
+.site .hero{height:46px;background:var(--g100);margin:10px 14px;border-radius:6px}
+.site .blk{margin:0 14px 10px;border:2px dashed var(--p);border-radius:10px;overflow:hidden;background:#fff;position:relative}
+.site .blk .lbl{position:absolute;right:8px;top:8px;background:var(--p);color:#fff;font:600 11px Inter;border-radius:5px;padding:1px 7px}
+.site .blk .im{height:70px;background:linear-gradient(120deg,#12263f,#2b4a73)}
+.site .blk .tx{padding:10px 12px}.site .blk h5{margin:0 0 2px;font:700 15px Inter;color:#12263f}.site .blk p{margin:0 0 8px;color:#46576b;font-size:12.5px}
+.site .rest{height:40px;background:var(--g100);margin:0 14px 12px;border-radius:6px}
+/* Trang số liệu: màu biểu đồ theo bảng màu đã kiểm tra (xanh, cam, xanh ngọc; một sắc xanh cho độ lớn). Chữ luôn màu chữ, không màu cột. */
+.viz{--series-1:#2a78d6;--series-2:#eb6834;--series-3:#1baf7a;--seq-weak:#86b6ef;--grid:#eceef1;--axis:#9ca3af}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.seg{display:inline-flex;background:#fff;border-radius:8px;box-shadow:0 0 0 1px var(--g200);padding:3px}
+.seg span{padding:5px 12px;border-radius:6px;color:var(--g600);font-weight:500}.seg span.on{background:var(--g900);color:#fff}
+.muted{color:var(--g500);font-size:13px}
+.stats.five{grid-template-columns:repeat(5,1fr)}.stat em.up{color:var(--ok)}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.insight{display:flex;gap:8px;align-items:flex-start;margin:12px 0 0;padding:10px 12px;background:var(--g50);border-radius:8px;color:var(--g700);font-size:13px}
+.insight .ic{color:var(--amber);margin-top:1px}
+h4.sub{margin:18px 0 8px;font:600 13px Inter;color:var(--g700)}
+.hbar{display:grid;grid-template-columns:var(--lw,128px) 1fr auto;gap:10px;align-items:center;margin:0 0 9px;font-size:13px}
+.hbar .lab{color:var(--g700)}.hbar .val{color:var(--g900);font-weight:600;font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.hbar .val small{color:var(--g500);font-weight:400;margin-left:4px}
+.track{height:12px;border-radius:0 4px 4px 0;position:relative}
+.fill{height:100%;background:var(--series-1);border-radius:0 4px 4px 0;min-width:3px}
+.fill.weak{background:var(--seq-weak)}
+.drop{grid-column:2/4;margin:-4px 0 9px;font-size:12px;color:var(--g500)}.drop b{color:var(--g900);font-weight:600}
+.stack{display:flex;gap:2px;height:22px;margin:6px 0 10px}
+.stack span{border-radius:0;height:100%}.stack span:first-child{border-radius:4px 0 0 4px}.stack span:last-child{border-radius:0 4px 4px 0}
+.legend2{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--g700)}
+.legend2 i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
+.src td{vertical-align:middle;font-variant-numeric:tabular-nums}
+.qual{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.qual div{background:var(--g50);border-radius:10px;padding:12px}
+.qual b{display:block;font:700 22px Inter}.qual span{color:var(--g600);font-size:12.5px}
+.tip{position:fixed;pointer-events:none;background:var(--g900);color:#fff;font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.2);opacity:0;transition:opacity .08s;z-index:50;max-width:240px}
+.tip b{display:block}
+[data-tip]{cursor:default}
+svg.lc text{font:12px Inter;fill:var(--g500)}
+/* Báo cáo nội bộ */
+.rp-head{display:grid;grid-template-columns:repeat(5,auto);gap:12px 28px}
+.rp-head small,.codes2 small{display:block;color:var(--g500);font-size:12.5px}.rp-head b{display:block;font-weight:600}.rp-head .muted{font-size:12.5px}
+.codes2{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;margin-bottom:14px}
+.code3{display:inline-block;font:700 22px/1 Inter;color:var(--p);background:var(--p50);border-radius:10px;padding:8px 12px;margin-top:4px;letter-spacing:.04em}
+.code3.g{color:var(--g700);background:var(--g100)}
+ul.sum{margin:0;padding-left:18px;color:var(--g700)}ul.sum li{margin:0 0 6px}
+.sc-row{display:grid;grid-template-columns:118px 1fr 44px;gap:10px;align-items:center;margin:0 0 10px;font-size:13px}
+.sc-row .val{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.sc-track{position:relative;height:14px;background:var(--g100);border-radius:0 4px 4px 0}
+.sc-fill{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0;background:var(--series-1)}
+.sc-fill.weak{background:var(--seq-weak)}
+.sc-mark{position:absolute;top:-4px;bottom:-4px;border-left:1.5px dashed var(--g500)}
+.sc-axis{display:grid;grid-template-columns:118px 1fr 44px;gap:10px;font-size:11.5px;color:var(--g500)}
+.sc-axis .ax{position:relative;height:16px}.sc-axis .ax span{position:absolute;transform:translateX(-50%);white-space:nowrap;text-align:center;line-height:1.3}
+ul.tl{list-style:none;margin:0;padding:0}ul.tl li{position:relative;padding:0 0 12px 18px;color:var(--g700)}
+ul.tl li:before{content:"";position:absolute;left:3px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--g300)}
+ul.tl li:first-child:before{background:var(--series-1)}ul.tl b{display:block;font-weight:600;font-size:12.5px;color:var(--g500)}
+summary.sum-h{padding:14px 20px;font:600 15px Inter;cursor:pointer;border-bottom:1px solid var(--g100)}
+.stars-s{color:var(--amber);letter-spacing:1px;white-space:nowrap}.stars-s i{color:var(--g300);font-style:normal}
+@media (max-width:900px){.rp-head{grid-template-columns:1fr 1fr}.fi{grid-template-columns:1fr}.side{display:none}.stats,.stats.five,.short,.people,.two,.three,.qual{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="board">
+  <h1>Mẫu trang quản trị (Filament), bản 2</h1>
+  <p>Làm lại theo góp ý của Vân: <b>tên mục nói thẳng việc làm được</b>, <b>quyền viết thành câu "Được làm gì"</b>, <b>chia quyền theo việc thật trong ngày của từng người</b>. Mỗi trang có nút <b style="color:var(--amber)">?</b> hướng dẫn theo bước.</p>
+  <p>Trang tĩnh, chỉ để xem bố cục. Vân góp ý theo số màn hình, ví dụ "MH3: đổi chữ ô tìm kiếm".</p>
+
+  <!-- MH0: Ai làm gì -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 0</b> Ai làm gì trên trang quản trị (cách mình chia quyền)</div>
+    <div class="people">
+      <div class="person"><h4><span class="avatar">QV</span>Quản trị viên</h4>
+        <p class="day">"Tôi lo bài trắc nghiệm, nội dung web, tài khoản nhân sự và giữ dữ liệu khách."</p>
+        <h5>Làm được</h5><ul>
+          <li class="yes">Mọi việc của tư vấn viên và nhân viên</li>
+          <li class="yes">Sửa câu hỏi, cách rút đề và chấm điểm, giải thích mã Holland, ngành học</li>
+          <li class="yes">Xem danh sách tất cả khách đã làm bài</li>
+          <li class="yes">Xem số liệu phân tích: bao nhiêu người làm bài, đến từ đâu, bỏ ngang ở đâu, mã nào phổ biến</li>
+          <li class="yes">Tải dữ liệu khách ra Excel, sao lưu (chỉ người này)</li>
+          <li class="yes">Thêm tài khoản, phân quyền, xem lịch sử thao tác</li></ul>
+      </div>
+      <div class="person"><h4><span class="avatar" style="background:var(--info)">TV</span>Tư vấn viên</h4>
+        <p class="day">"Khách gọi hoặc CRM giao khách cho tôi. Trước khi tư vấn, tôi cần đọc kỹ kết quả Holland của đúng người đó."</p>
+        <h5>Làm được</h5><ul>
+          <li class="yes">Tra cứu báo cáo của <b>một</b> khách theo số điện thoại, email hoặc mã báo cáo</li>
+          <li class="yes">Đọc báo cáo đầy đủ: 6 điểm, mã 3 chữ, ngành gợi ý, 36 câu khách đã trả lời, cảnh báo làm bài vội</li></ul>
+        <h5>Không làm được</h5><ul>
+          <li class="no">Xem danh sách tất cả khách</li><li class="no">Xem số liệu phân tích</li><li class="no">Tải dữ liệu ra Excel</li><li class="no">Sửa câu hỏi, nội dung web</li></ul>
+      </div>
+      <div class="person"><h4><span class="avatar" style="background:var(--ok)">NV</span>Nhân viên (gồm marketing)</h4>
+        <p class="day">"Có khách mới để lại thông tin, tôi cần số điện thoại, Zalo để gọi mời tư vấn. Ngoài ra tôi cập nhật banner, chữ trên trang."</p>
+        <h5>Làm được</h5><ul>
+          <li class="yes">Xem <b>thông tin liên lạc</b> của khách mới (7 ngày gần nhất): họ tên, điện thoại / Zalo, email, đối tượng, tỉnh</li>
+          <li class="yes">Bấm gọi, mở Zalo ngay trên điện thoại</li>
+          <li class="yes">Sửa chữ, ảnh trang mở đầu, ô giới thiệu trên viger.edu.vn, kho ảnh <span class="bd w">Vân xác nhận</span></li></ul>
+        <h5>Không làm được</h5><ul>
+          <li class="no">Xem kết quả Holland, báo cáo của khách</li><li class="no">Xem số liệu phân tích</li><li class="no">Xem khách cũ hơn 7 ngày</li><li class="no">Tải dữ liệu ra Excel</li></ul>
+      </div>
+    </div>
+    <p class="note">Chăm sóc khách (gọi điện, ghi chú, hẹn lịch) vẫn làm ở CRM như đã chốt 14/11. Khi CRM xong, mỗi khách bên CRM sẽ có nút "Xem báo cáo Holland" mở thẳng báo cáo ở đây; tư vấn viên không cần tự tra cứu nữa.</p>
+  </section>
+
+  <!-- MH1 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 1</b> Trang chủ quản trị – <b style="color:var(--g700);letter-spacing:0">Quản trị viên</b> (menu đặt lại tên theo việc làm)</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin</span></div>
+      <div class="fi" data-shell="home" data-role="ADMIN"><div class="main">
+        <div class="head"><h2>Trang chủ quản trị</h2><button class="help">?</button></div>
+        <div class="hello"><span class="avatar">QV</span><div><p><b>Xin chào Quản trị viên.</b> Hôm nay bạn muốn làm gì? Bấm một ô bên dưới.</p><small>Không biết một trang dùng để làm gì: bấm nút <b style="color:var(--amber)">?</b> vàng cạnh tiêu đề trang.</small></div></div>
+        <div class="stats">
+          <div class="stat"><small>Câu hỏi đang dùng</small><b>300</b><em class="ok">Đủ để ra đề 36 câu</em></div>
+          <div class="stat"><small>Câu hỏi tạm ngưng</small><b>0</b><em>Không được đưa vào đề</em></div>
+          <div class="stat"><small>Người làm bài hôm nay</small><b>0</b><em>Tổng cộng: 0</em></div>
+          <div class="stat"><small>Đã gửi sang CRM</small><b>–</b><em>Chưa kết nối CRM</em></div>
+        </div>
+        <div class="short">
+          <a class="sc"><span class="bx" data-i="search"></span><span><b>Tra cứu báo cáo khách</b><span>Gõ số điện thoại hoặc email để đọc kết quả của một khách.</span></span></a>
+          <a class="sc"><span class="bx" data-i="list"></span><span><b>Câu hỏi trắc nghiệm</b><span>Sửa câu, tạm ngưng câu chưa hay, duyệt câu mới.</span></span></a>
+          <a class="sc"><span class="bx" data-i="pencil"></span><span><b>Sửa trang mở đầu</b><span>Bấm vào chữ, ảnh trên trang để sửa như soạn văn bản.</span></span></a>
+          <a class="sc" href="#phan-tich"><span class="bx" data-i="chart"></span><span><b>Số liệu làm bài</b><span>Bao nhiêu người làm, đến từ đâu, bỏ ngang ở đâu.</span></span></a>
+          <a class="sc"><span class="bx" data-i="swatch"></span><span><b>Logo, màu, hotline, chân trang</b><span>Đổi số hotline, địa chỉ, logo hiện trên mọi trang khách.</span></span></a>
+          <a class="sc"><span class="bx" data-i="users"></span><span><b>Thêm tài khoản nhân sự</b><span>Tạo tài khoản cho tư vấn viên, nhân viên mới.</span></span></a>
+        </div>
+      </div></div>
+    </div>
+    <p class="note">Mục có nhãn "Sắp có" là phần sẽ làm ở các giai đoạn sau; bấm vào sẽ thấy trang giải thích sẽ làm gì (màn hình 14). Chỉ quản trị viên thấy các mục "Sắp có" của phần quản lý; tư vấn viên, nhân viên chỉ thấy mục của mình.</p>
+  </section>
+
+  <!-- MH2 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 2</b> Trang chủ – <b style="color:var(--g700);letter-spacing:0">Tư vấn viên</b>: ô tra cứu nằm ngay trang đầu <span class="new">Mới</span></div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin</span></div>
+      <div class="fi" data-shell="home" data-role="COUNSELOR"><div class="main">
+        <div class="head"><h2>Trang chủ quản trị</h2><button class="help">?</button></div>
+        <div class="lookup"><h3>Tra cứu báo cáo khách</h3><p>Gõ số điện thoại, email hoặc mã báo cáo của khách.</p>
+          <div class="row"><div class="search"><span data-i="search" class="s"></span>0912 345 678</div><button class="btn pri big">Tìm</button></div></div>
+        <div class="result"><span class="code3">ISA</span>
+          <div><b style="font-size:16px">Nguyễn Minh Anh</b> <span class="bd g">Học sinh / sinh viên</span>
+            <dl><dt>Năm sinh</dt><dt>Trường</dt><dt>Làm bài lúc</dt><dt>Ghi chú</dt><dd>2009</dd><dd>THPT Lê Hồng Phong</dd><dd>20:14 13/11/2026</dd><dd><span class="bd ok">Làm bài cẩn thận</span></dd></dl></div>
+          <a class="btn pri" href="#bao-cao-noi-bo">Đọc báo cáo đầy đủ →</a></div>
+      </div></div>
+    </div>
+    <p class="note"><b>Ghi chú cho Vân – tư vấn viên không thấy những dòng này.</b> Quy tắc chạy ngầm:
+      chỉ hiện khách khớp đúng số điện thoại / email / mã báo cáo (khách làm 2 lần thì 2 dòng, mới nhất ở trên); gõ thiếu thì báo "Không tìm thấy khách", không gợi ý khách khác;
+      mỗi lần mở báo cáo được ghi vào "Lịch sử thao tác" (chỉ quản trị viên xem); tra cứu quá 30 lần một giờ thì báo chung chung "Vui lòng thử lại sau ít phút".
+      Thông tin khách là ví dụ; báo cáo đầy đủ dùng mẫu "Báo cáo nội bộ" đã làm trước. Làm thật ở H4.</p>
+  </section>
+
+  <!-- MH2B: Báo cáo nội bộ -->
+  <section class="screen viz" id="bao-cao-noi-bo"><div class="screen__tag"><b>MÀN HÌNH 3</b> Báo cáo nội bộ – <b style="color:var(--g700);letter-spacing:0">Tư vấn viên</b> bấm "Đọc báo cáo đầy đủ" <span class="new">Mới</span></div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/bao-cao/8f3c…</span></div>
+      <div class="fi" data-shell="lookup" data-role="COUNSELOR"><div class="main">
+        <div class="crumb">Tra cứu báo cáo khách › Nguyễn Minh Anh</div>
+        <div class="head"><h2>Báo cáo của Nguyễn Minh Anh</h2><button class="help">?</button><div class="acts"><a class="btn sec"><span data-i="link" class="s"></span>Mở hồ sơ trong CRM</a></div></div>
+        <div class="card"><div class="body rp-head">
+          <div><small>Đối tượng</small><b>Học sinh / sinh viên</b></div>
+          <div><small>Năm sinh</small><b>2009</b></div>
+          <div><small>Trường · tỉnh</small><b>THPT Lê Hồng Phong · TP. HCM</b></div>
+          <div><small>Liên lạc</small><b><a class="link"><span data-i="phone" class="s"></span>0912 345 678</a></b><span class="muted">minhanh.ng@gmail.com</span></div>
+          <div><small>Làm bài</small><b>20:14 13/11/2026</b><span class="muted">Lần thứ 2 · 7 phút 12 giây</span></div>
+        </div></div>
+
+        <div class="card"><h3>Đọc trước khi tư vấn</h3><div class="body">
+          <div class="codes2">
+            <div><small>Khách đang thấy</small><span class="code3 g">IS</span></div>
+            <div><small>Mã đầy đủ (nội bộ)</small><span class="code3">ISA</span></div>
+            <div><small>Mã thay thế</small><span class="code3 g">IAS</span></div>
+            <div><small>Độ tin cậy bài làm</small><span class="bd ok" style="font-size:13px;line-height:26px;padding:0 10px">✓ Làm bài cẩn thận</span></div>
+          </div>
+          <ul class="sum">
+            <li><b>Nổi bật:</b> Nghiên cứu (4,67) và Xã hội (4,33). Thích tìm hiểu, phân tích nhưng muốn kết quả có ích cho con người.</li>
+            <li><b>Vì sao khách chỉ thấy 2 chữ:</b> nhóm thứ 3 là Sáng tạo (4,17), chưa qua ngưỡng 4,2.</li>
+            <li><b>Nên hỏi thêm:</b> Xã hội và Sáng tạo chỉ cách nhau 0,16 điểm, nên hỏi khách thêm về hướng Sáng tạo (mã thay thế IAS).</li>
+            <li><b>Kết hợp I – S:</b> cách một ô trên lục giác, độ nhất quán trung bình: hai sở thích khác kiểu nhưng vẫn đi cùng được (ví dụ nghiên cứu tâm lý, sức khỏe).</li>
+            <li><b>Bài làm:</b> trung bình 4,1 giây mỗi câu, không chọn một kiểu, không có đoạn làm vội.</li>
+          </ul>
+        </div></div>
+
+        <div class="two">
+          <div class="card"><h3>Điểm 6 nhóm</h3><p class="desc">Điểm trung bình 1–5 của các câu mỗi nhóm, xếp từ cao xuống.</p><div class="body"><div id="scores"></div></div></div>
+          <div class="card"><h3>Lục giác Holland</h3><p class="desc">Nhóm càng xa tâm càng được thích. So với lần làm trước.</p><div class="body"><div id="hexa"></div>
+            <div class="legend2" style="justify-content:center;margin-top:6px"><span><i style="background:var(--series-1)"></i>Lần này (13/11)</span><span><i style="background:var(--g400)"></i>Lần trước (02/10)</span></div></div></div>
+        </div>
+
+        <div class="card"><h3>Ngành gợi ý</h3><p class="desc">Ngành nền của cặp IS đứng trước, sau đó xếp theo mức khớp với mã ISA. Khách chỉ thấy 5 ngành đầu, kèm nhãn chữ, không thấy con số.</p><div class="body" style="padding:8px 0 0">
+          <table><thead><tr><th>#</th><th>Ngành (Việt / Đức)</th><th>Mã ngành</th><th style="text-align:right">Mức khớp (0–18)</th><th>Khách thấy nhãn</th><th>Hệ đào tạo</th><th>Nghề liên quan</th></tr></thead><tbody>
+            <tr><td>1</td><td><b>Tâm lý học</b><br><span class="muted">Psychologie</span></td><td>ISC</td><td style="text-align:right">15</td><td><span class="bd ok">Ngành nền của cặp IS</span></td><td>Uni</td><td>Nghiên cứu tâm lý, tư vấn học đường</td></tr>
+            <tr><td>2</td><td><b>Khoa học sức khỏe</b><br><span class="muted">Gesundheitswissenschaften</span></td><td>SIC</td><td style="text-align:right">5</td><td><span class="bd ok">Ngành nền của cặp IS</span></td><td>Uni, HAW</td><td>Nghiên cứu sức khỏe cộng đồng</td></tr>
+            <tr><td>3</td><td><b>Khoa học môi trường</b><br><span class="muted">Umweltwissenschaften</span></td><td>ISE</td><td style="text-align:right">16</td><td><span class="bd ok">Liên quan nhiều</span></td><td>Uni, HAW</td><td>Tư vấn bền vững</td></tr>
+            <tr><td>4</td><td><b>Giáo dục nghệ thuật</b><br><span class="muted">Kunstpädagogik</span></td><td>ASR</td><td style="text-align:right">13</td><td><span class="bd i">Liên quan</span></td><td>Uni</td><td>Giáo viên nghệ thuật</td></tr>
+            <tr><td>5</td><td><b>Kinh tế học</b><br><span class="muted">Volkswirtschaftslehre</span></td><td>IEC</td><td style="text-align:right">13</td><td><span class="bd i">Liên quan</span></td><td>Uni</td><td>Chuyên viên phân tích</td></tr>
+            <tr style="color:var(--g500)"><td>6</td><td><b>Khoa học nhận thức</b><br><span class="muted">Kognitionswissenschaft</span></td><td>IAR</td><td style="text-align:right">11</td><td><span class="muted">Khách không thấy</span></td><td>Uni</td><td>–</td></tr>
+          </tbody></table>
+          <div class="pager"><span class="link">Xem thêm 14 ngành »</span><span class="muted">Dữ liệu ngành: Tầng 4, đang chờ chuyên gia kiểm định</span></div></div></div>
+
+        <div class="two">
+          <div class="card"><h3>So sánh 2 lần làm bài</h3><div class="body" style="padding:8px 0 0">
+            <table><thead><tr><th>Nhóm</th><th style="text-align:right">02/10</th><th style="text-align:right">13/11</th><th style="text-align:right">Thay đổi</th></tr></thead><tbody id="cmp"></tbody></table>
+            <p class="insight" style="margin:12px 16px 16px"><span data-i="bulb" class="s"></span><span>Mã giữ nguyên <b>ISA</b> qua 2 lần: sở thích khá ổn định.</span></p></div></div>
+          <div class="card"><h3>Diễn biến</h3><div class="body"><ul class="tl">
+            <li><b>20:16 13/11</b>Đã gửi sang CRM</li>
+            <li><b>20:15 13/11</b>Khách nhập đúng mã gửi qua email và mở báo cáo bản khách xem (mã IS, 5 ngành)</li>
+            <li><b>20:14 13/11</b>Làm xong bài lần 2 (đến từ Facebook)</li>
+            <li><b>21:05 02/10</b>Làm xong bài lần 1</li></ul>
+            <p class="muted" style="margin:10px 0 0">Ghi chú tư vấn, cuộc gọi, lịch hẹn: xem trong CRM.</p></div></div>
+        </div>
+
+        <div class="card"><details open><summary class="sum-h">36 câu khách đã trả lời <span class="muted">(bấm để thu gọn)</span></summary>
+          <table><thead><tr><th>#</th><th>Mã</th><th>Chủ đề</th><th>Câu hỏi</th><th>Khách chọn</th><th style="text-align:right">Giây</th></tr></thead><tbody id="answers"></tbody></table>
+          <div class="pager"><span>8 trong 36 câu</span><span>‹ 1 2 3 4 5 ›</span></div></details></div>
+      </div></div>
+    </div>
+    <p class="note"><b>Ghi chú cho Vân – tư vấn viên không thấy những dòng này.</b> Hồ sơ mẫu là HS01 của Thầy (I 4,67 · S 4,33 · A 4,17 · R 3,33 · C 3,17 · E 2,33), tính bằng thuật toán tham chiếu; tên, liên lạc, lần làm trước là ví dụ.
+      Quản trị viên mở cùng báo cáo này sẽ thấy thêm 2 nút "In / PDF" và "Sao chép cho AI"; tư vấn viên không có. Cột "Nền tảng học tập" (theo học bạ) tạm bỏ vì học bạ do CRM thu sau. Thứ tự ngành đúng theo thuật toán tham chiếu; điểm cần hỏi Thầy: Khoa học sức khỏe mức khớp chỉ 5 nhưng vẫn đứng thứ 2 vì là ngành nền của cặp IS.</p>
+  </section>
+
+  <!-- MH3 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 4</b> Trang chủ – <b style="color:var(--g700);letter-spacing:0">Nhân viên</b>: danh sách khách mới để liên lạc <span class="new">Mới</span></div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/khach-can-lien-lac</span></div>
+      <div class="fi" data-shell="contacts" data-role="STAFF"><div class="main">
+        <div class="head"><h2>Khách cần liên lạc</h2><button class="help">?</button></div>
+        <p class="lead">Khách mới để lại thông tin, mới nhất ở trên. Bấm số điện thoại để gọi, bấm "Zalo" để nhắn.</p>
+        <div class="tabs"><span class="tab on">Hôm nay <span class="cnt">5</span></span><span class="tab">Hôm qua <span class="cnt">8</span></span><span class="tab">Tuần này <span class="cnt">41</span></span></div>
+        <div class="card">
+          <div class="tbar"><div class="search"><span data-i="search" class="s"></span>Tìm theo tên, số điện thoại…</div><span style="flex:1"></span><button class="btn sec">Đối tượng: Tất cả ▾</button><button class="btn sec">Tỉnh: Tất cả ▾</button></div>
+          <table><thead><tr><th>Họ tên</th><th>Điện thoại / Zalo</th><th>Email</th><th>Đối tượng</th><th>Năm sinh</th><th>Tỉnh / thành</th><th>Để lại lúc</th><th></th></tr></thead><tbody>
+            <tr><td><b>Nguyễn Minh Anh</b></td><td><a class="link"><span data-i="phone" class="s"></span>0912 345 678</a></td><td>minhanh.ng@gmail.com</td><td><span class="bd g">Học sinh / sinh viên</span></td><td>2008</td><td>TP. Hồ Chí Minh</td><td>09:42 hôm nay</td><td><a class="btn sec" style="height:30px">Zalo</a></td></tr>
+            <tr><td><b>Trần Thu Hà</b></td><td><a class="link"><span data-i="phone" class="s"></span>0987 112 233</a></td><td>thuha.tran@gmail.com</td><td><span class="bd g">Phụ huynh</span></td><td>2009</td><td>Đồng Nai</td><td>08:15 hôm nay</td><td><a class="btn sec" style="height:30px">Zalo</a></td></tr>
+            <tr><td><b>Lê Quốc Bảo</b></td><td><a class="link"><span data-i="phone" class="s"></span>0903 456 789</a></td><td>quocbao.le@gmail.com</td><td><span class="bd g">Học sinh / sinh viên</span></td><td>2007</td><td>Hà Nội</td><td>07:58 hôm nay</td><td><a class="btn sec" style="height:30px">Zalo</a></td></tr>
+          </tbody></table>
+          <div class="pager"><span>3 trong 5 khách hôm nay</span><span>‹ 1 2 ›</span></div>
+        </div>
+      </div></div>
+    </div>
+    <p class="note"><b>Ghi chú cho Vân – nhân viên không thấy những dòng này.</b> Quy tắc chạy ngầm: chỉ khách để lại thông tin trong 7 ngày gần nhất; không có nút tải Excel; không có cột kết quả Holland; mỗi lần mở danh sách được ghi vào "Lịch sử thao tác" (chỉ quản trị viên xem).
+      Ghi kết quả cuộc gọi, hẹn lịch: làm ở CRM như đã chốt <span class="bd w">Vân xác nhận</span>.</p>
+  </section>
+
+  <!-- MH3B: Số liệu làm bài -->
+  <section class="screen viz" id="phan-tich"><div class="screen__tag"><b>MÀN HÌNH 5</b> Số liệu làm bài (chỉ quản trị viên) <span class="new">Mới</span></div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/so-lieu</span></div>
+      <div class="fi" data-shell="stats" data-role="ADMIN"><div class="main">
+        <div class="head"><h2>Số liệu làm bài</h2><button class="help">?</button><div class="acts"><button class="btn sec"><span data-i="download" class="s"></span>Tải bảng số liệu (Excel)</button></div></div>
+        <p class="lead">Bao nhiêu người vào trang, làm xong bài, để lại thông tin; họ đến từ đâu và bỏ ngang ở bước nào. Toàn con số tổng, không có tên khách.</p>
+        <div class="filters"><span class="seg"><span>7 ngày</span><span class="on">30 ngày</span><span>Tháng này</span><span>Tùy chọn…</span></span><button class="btn sec">Nguồn: Tất cả ▾</button><button class="btn sec">Đối tượng: Tất cả ▾</button><span class="muted">18/10 – 16/11/2026 · so với 30 ngày trước</span></div>
+        <div class="stats five">
+          <div class="stat"><small>Vào trang mở đầu</small><b>1.240</b><em class="up">▲ 18% so với kỳ trước</em></div>
+          <div class="stat"><small>Bắt đầu làm bài</small><b>612</b><em>49% người vào trang</em></div>
+          <div class="stat"><small>Làm xong bài</small><b>478</b><em>78% người bắt đầu</em></div>
+          <div class="stat"><small>Để lại thông tin</small><b>263</b><em>55% người làm xong</em></div>
+          <div class="stat"><small>Xác nhận email, đọc báo cáo</small><b>241</b><em>Đã gửi hết sang CRM</em></div>
+        </div>
+        <div class="two">
+          <div class="card"><h3>Người dùng rơi rụng ở bước nào</h3><div class="body"><div id="funnel"></div>
+            <p class="insight"><span data-i="bulb" class="s"></span><span>Mất nhiều nhất ở bước <b>vào trang → bắt đầu làm</b> (51%). Có thể thử đổi chữ nút "Bắt đầu" hoặc banner trang mở đầu.</span></p></div></div>
+          <div class="card"><h3>Người làm xong bài mỗi ngày</h3><div class="body"><div id="line"></div>
+            <p class="insight"><span data-i="bulb" class="s"></span><span>Tăng mạnh từ 05/11 – ngày bắt đầu chạy quảng cáo Facebook.</span></p></div></div>
+        </div>
+        <div class="card"><h3>Khách đến từ đâu</h3><p class="desc">Theo link quảng cáo có gắn nguồn. "Gõ thẳng địa chỉ" là người tự vào, không qua link nào.</p><div class="body" style="padding:8px 0 0">
+          <table class="src"><thead><tr><th>Nguồn</th><th>Vào trang</th><th style="width:28%"></th><th>Làm xong</th><th>Để lại thông tin</th><th>Tỉ lệ để lại / vào trang</th></tr></thead><tbody id="sources"></tbody></table></div></div>
+        <div class="three">
+          <div class="card"><h3>Nhóm sở thích đứng đầu</h3><p class="desc">Nhóm có điểm cao nhất của mỗi người làm xong.</p><div class="body"><div id="groups"></div></div></div>
+          <div class="card"><h3>Ai làm bài</h3><p class="desc">Theo ô "Thuộc đối tượng" khách chọn.</p><div class="body"><div id="who"></div>
+            <h4 class="sub">5 tỉnh / thành nhiều nhất</h4><div id="provinces"></div></div></div>
+          <div class="card"><h3>Mã 2 chữ hay gặp</h3><p class="desc">Mã khách thấy trên báo cáo.</p><div class="body"><div id="codes"></div></div></div>
+        </div>
+        <div class="two">
+          <div class="card"><h3>Chất lượng bài làm</h3><div class="body"><div class="qual">
+            <div><b>6%</b><span>làm quá nhanh (dưới 2 giây mỗi câu)</span></div>
+            <div><b>3%</b><span>chọn một mức cho gần hết các câu</span></div>
+            <div><b>91%</b><span>làm bài cẩn thận, kết quả tin cậy</span></div></div>
+            <p class="insight" style="margin-top:12px"><span data-i="bulb" class="s"></span><span>Bài có cảnh báo vẫn có kết quả, nhưng tư vấn viên thấy dòng nhắc "nên hỏi lại khách" trong báo cáo.</span></p></div></div>
+          <div class="card"><h3>Câu hỏi nhiều người phân vân nhất</h3><p class="desc">Tỉ lệ chọn 3 sao "Phân vân". Câu quá cao có thể khó hiểu, Thầy nên xem lại.</p><div class="body" style="padding:8px 0 0">
+            <table><thead><tr><th>Mã</th><th>Câu hỏi</th><th style="text-align:right">Chọn "Phân vân"</th></tr></thead><tbody>
+              <tr><td><b>C027</b></td><td>Tôi muốn tham gia hoạt động tạo danh sách kiểm tra cho công việc.</td><td style="text-align:right">46%</td></tr>
+              <tr><td><b>E032</b></td><td>Tôi muốn tham gia hoạt động huy động người tham gia chương trình mới.</td><td style="text-align:right">41%</td></tr>
+              <tr><td><b>I045</b></td><td>Tôi thấy hấp dẫn khi được tìm hiểu tác động của một chính sách bằng dữ liệu.</td><td style="text-align:right">38%</td></tr>
+            </tbody></table></div></div>
+        </div>
+        <div class="card"><h3>Ngành được gợi ý nhiều nhất</h3><p class="desc">Ngành xuất hiện trong báo cáo của khách (nhãn "Liên quan nhiều" hoặc "Liên quan").</p><div class="body"><div id="majors"></div></div></div>
+      </div></div>
+    </div>
+    <p class="note">Toàn bộ con số là ví dụ; 3 câu hỏi là câu thật trong kho nhưng tỉ lệ "Phân vân" là giả định. Rê chuột lên cột, đường để xem số cụ thể. Số liệu lấy từ phần ghi lượt vào trang, bắt đầu, làm xong (giai đoạn H5), nên trang này làm thật ở H5–H6. Quản trị viên có thể tick quyền này cho vai trò khác nếu cần.</p>
+  </section>
+
+  <!-- MH4 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 6</b> Nút "?" vàng: hướng dẫn theo từng bước</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/questions</span></div>
+      <div class="fi" data-shell="questions" data-role="ADMIN" style="position:relative"><div class="main">
+        <div class="head"><h2>Câu hỏi trắc nghiệm</h2><button class="help">?</button></div><div class="card" style="height:320px"></div></div>
+        <div class="modal-bg"><div class="modal">
+          <h4><span class="help" style="margin:0;box-shadow:none">?</span>Trang này dùng để làm gì?</h4>
+          <p style="margin:0 0 12px;color:var(--g700)">Đây là kho <b>300 câu hỏi</b>. Mỗi lần có người làm bài, phần mềm tự bốc 36 câu từ kho (mỗi nhóm 6 câu) nên mỗi người gặp một đề khác nhau.</p>
+          <ol class="steps">
+            <li><span><b>Muốn sửa một câu:</b> bấm "Sửa" ở cuối dòng, sửa chữ, bấm "Lưu thay đổi". Người đã làm bài trước đó vẫn giữ câu cũ.</span></li>
+            <li><span><b>Thấy câu chưa hay:</b> tick ô đầu dòng, chọn "Tạm ngưng". Câu đó không còn được bốc vào đề, nhưng không mất.</span></li>
+            <li><span><b>Thêm câu mới:</b> bấm "Thêm câu hỏi". Câu mới ở trạng thái "Nháp", Thầy duyệt xong mới được bốc vào đề.</span></li>
+          </ol>
+          <p style="margin:0 0 14px;color:var(--g500);font-size:13px">"Mức ưu tiên" (A, B, C) chỉ quyết định câu hay được bốc hay không, không ảnh hưởng điểm của học sinh.</p>
+          <div style="text-align:right"><button class="btn pri">Đã hiểu</button></div>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MH5 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 7</b> Câu hỏi trắc nghiệm (cột và nút viết lại cho dễ hiểu)</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/questions</span></div>
+      <div class="fi" data-shell="questions" data-role="ADMIN"><div class="main">
+        <div class="head"><h2>Câu hỏi trắc nghiệm</h2><button class="help">?</button><div class="acts"><button class="btn pri"><span data-i="plus"></span>Thêm câu hỏi</button></div></div>
+        <p class="lead">Kho 300 câu. Mỗi người làm bài được bốc ngẫu nhiên 36 câu đang dùng.</p>
+        <div class="tabs"><span class="tab">Tất cả <span class="cnt">300</span></span><span class="tab on">R – Thực hành <span class="cnt">50</span></span><span class="tab">I – Nghiên cứu <span class="cnt">50</span></span><span class="tab">A – Sáng tạo <span class="cnt">50</span></span><span class="tab">S – Xã hội <span class="cnt">50</span></span><span class="tab">E – Kinh doanh <span class="cnt">50</span></span><span class="tab">C – Tổ chức <span class="cnt">50</span></span></div>
+        <div class="card">
+          <div class="tbar"><span class="bd p">Đã chọn 2 câu</span><button class="btn sec">Dùng lại</button><button class="btn sec">Tạm ngưng</button><button class="btn sec">Bỏ vào thùng rác</button><span style="flex:1"></span><div class="search"><span data-i="search" class="s"></span>Tìm theo chữ trong câu…</div></div>
+          <table><thead><tr><th style="width:32px"><span class="chk"></span></th><th>Mã</th><th>Chủ đề</th><th>Câu hỏi</th><th>Mức ưu tiên</th><th>Tình trạng</th><th></th></tr></thead><tbody id="qrows"></tbody></table>
+          <div class="pager"><span>1–8 trong 50 câu nhóm R</span><span>‹ 1 2 ›</span></div>
+        </div>
+        <p class="note">Đổi tên: "Trạng thái Đã duyệt / Tạm ngưng" → <b>"Đang dùng / Tạm ngưng / Nháp"</b>; "Loại A/B/C + Trọng số" gộp thành <b>"Mức ưu tiên: Cao / Vừa / Thấp"</b> (con số trọng số chỉ hiện trong trang Sửa).</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- MH6 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 8</b> Sửa một câu hỏi</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/questions/1/edit</span></div>
+      <div class="fi" data-shell="questions" data-role="ADMIN"><div class="main">
+        <div class="crumb">Câu hỏi trắc nghiệm › R001</div>
+        <div class="head"><h2>Sửa câu R001</h2><button class="help">?</button><div class="acts"><button class="btn dng"><span data-i="trash"></span>Bỏ vào thùng rác</button></div></div>
+        <div class="card"><h3>Câu hỏi</h3><div class="body"><div class="form" style="--c:3">
+          <div class="f"><label>Thuộc nhóm</label><div class="in dis">R – Thực hành</div></div>
+          <div class="f"><label>Chủ đề<span class="req">*</span></label><div class="in">Lắp ráp <span class="suf" style="border:0">▾</span></div></div>
+          <div class="f"><label>Tình trạng<span class="req">*</span></label><div class="in"><span class="bd ok">Đang dùng</span><span class="suf" style="border:0">▾</span></div></div>
+          <div class="f full"><label>Câu khách đọc<span class="req">*</span></label><div class="in area">Tôi thích lắp một mô hình cơ khí từ các bộ phận rời.</div><div class="hint">Viết ở ngôi "Tôi…", một ý, dễ hiểu với học sinh lớp 10.</div></div>
+        </div></div></div>
+        <div class="card"><h3>Mức ưu tiên khi bốc đề</h3><p class="desc">Câu ưu tiên cao được bốc vào đề thường xuyên hơn. Không ảnh hưởng điểm.</p><div class="body"><div class="form" style="--c:3">
+          <div class="f"><label>Mức ưu tiên<span class="req">*</span></label><div class="in">Cao (A) <span class="suf" style="border:0">▾</span></div></div>
+          <div class="f"><label>Con số ưu tiên <span class="q" data-i="q"></span></label><div class="in">4</div><div class="hint">Mặc định Cao = 5, Vừa = 3, Thấp = 1.</div></div>
+          <div class="f"><label>Luôn có trong mọi đề <span class="q" data-i="q"></span></label><span class="tgl off"></span></div>
+          <div class="f full"><label>Vì sao đổi con số ưu tiên?<span class="req">*</span></label><div class="in bad"></div><div class="err">Vui lòng ghi lý do để sau này biết vì sao đề thay đổi.</div></div>
+        </div></div></div>
+        <div class="foot"><button class="btn pri">Lưu thay đổi</button><button class="btn sec">Hủy</button><span style="color:var(--g500);font-size:13px">Người đã làm bài trước đó vẫn giữ câu cũ.</span></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- MH7 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 9</b> Cách bốc đề và chấm điểm (đổi tên từ "Cài đặt bài test")</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/test-settings</span></div>
+      <div class="fi" data-shell="settings" data-role="ADMIN"><div class="main">
+        <div class="head"><h2>Cách bốc đề và chấm điểm</h2><button class="help">?</button></div>
+        <p class="lead">Các con số quyết định đề có bao nhiêu câu, khi nào khách thấy mã 3 chữ, gợi ý bao nhiêu ngành. Lưu nhầm thì bấm "Quay lại bản này" ở cuối trang.</p>
+        <div class="card"><h3>Đề thi</h3><div class="body"><div class="form">
+          <div class="f"><label>Mỗi nhóm bốc mấy câu<span class="req">*</span></label><div class="in">6<span class="suf">câu</span></div><div class="hint">6 câu × 6 nhóm = đề 36 câu.</div></div>
+          <div class="f"><label>Mỗi trang hiện mấy câu<span class="req">*</span></label><div class="in">6<span class="suf">câu</span></div><div class="hint">Khách trả lời đủ các câu trên trang mới bấm "Tiếp tục" được.</div></div>
+          <div class="f full"><label>Chữ hiện cạnh số sao</label><div class="stars">
+            <div class="f"><label style="font-weight:400;color:var(--g500)">★ 1 sao</label><div class="in">Hoàn toàn không giống tôi</div></div>
+            <div class="f"><label style="font-weight:400;color:var(--g500)">★★ 2 sao</label><div class="in">Không giống lắm</div></div>
+            <div class="f"><label style="font-weight:400;color:var(--g500)">★★★ 3 sao</label><div class="in">Phân vân</div></div>
+            <div class="f"><label style="font-weight:400;color:var(--g500)">★★★★ 4 sao</label><div class="in">Khá giống tôi</div></div>
+            <div class="f"><label style="font-weight:400;color:var(--g500)">★★★★★ 5 sao</label><div class="in">Hoàn toàn giống tôi</div></div></div></div>
+        </div></div></div>
+        <div class="card"><h3>Đọc kết quả</h3><div class="body"><div class="form">
+          <div class="f"><label>Khi nào khách thấy mã 3 chữ<span class="req">*</span></label><div class="in">4,2<span class="suf">điểm</span></div><div class="hint">Nhóm đứng thứ 3 phải trên mức này (khoảng 26/30 điểm). Dưới mức này khách chỉ thấy mã 2 chữ.</div></div>
+          <div class="f"><label>Gợi ý tối đa mấy ngành cho khách<span class="req">*</span></label><div class="in">5<span class="suf">ngành</span></div></div>
+        </div></div></div>
+        <div class="card"><h3>Lịch sử thay đổi</h3><div class="body" style="padding:8px 0 0"><table><thead><tr><th>Bản</th><th>Đã đổi gì</th><th>Ai đổi</th><th>Lúc</th><th></th></tr></thead><tbody>
+          <tr><td><span class="bd ok">Bản 2 · đang dùng</span></td><td>Mỗi trang hiện mấy câu: 6 → 4</td><td>Quản trị viên</td><td>14:05 17/11</td><td></td></tr>
+          <tr><td><span class="bd g">Bản 1</span></td><td>Cài đặt ban đầu theo tài liệu của Thầy</td><td>Hệ thống</td><td>13:29 17/11</td><td><a class="link"><span data-i="undo" class="s"></span>Quay lại bản này</a></td></tr></tbody></table></div></div>
+        <div class="foot"><button class="btn pri">Lưu</button><span style="color:var(--g500);font-size:13px">Người làm bài sau khi lưu dùng cách mới; kết quả cũ giữ nguyên.</span></div>
+      </div></div>
+    </div>
+    <p class="note">Mỗi ô đổi tên thành câu hỏi "Mỗi nhóm bốc mấy câu", "Khi nào khách thấy mã 3 chữ"… thay cho tên kỹ thuật. Các ô cảnh báo làm bài vội, nhãn chỉ số C… gom vào phần "Nâng cao" thu gọn, chỉ mở khi cần.</p>
+  </section>
+
+  <!-- MH8 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 10</b> Tài khoản nhân sự</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/users</span></div>
+      <div class="fi" data-shell="users" data-role="ADMIN"><div class="main">
+        <div class="head"><h2>Tài khoản nhân sự</h2><button class="help">?</button><div class="acts"><button class="btn pri"><span data-i="plus"></span>Thêm tài khoản</button></div></div>
+        <p class="lead">Mỗi người một tài khoản, không dùng chung. Người nghỉ việc: bấm "Khóa", đừng xóa, để lịch sử vẫn biết ai đã làm gì.</p>
+        <div class="card"><table><thead><tr><th>Họ tên</th><th>Tên đăng nhập</th><th>Vai trò</th><th>Tình trạng</th><th>Vào lần cuối</th><th></th></tr></thead><tbody>
+          <tr><td><b>Quản trị viên</b></td><td>SPN</td><td><span class="bd p">Quản trị viên</span></td><td><span class="bd ok">Đang dùng</span></td><td>14:02 17/11</td><td><a class="link">Sửa</a></td></tr>
+          <tr><td><b>Chị Lan</b></td><td>lan.tuvan</td><td><span class="bd i">Tư vấn viên</span></td><td><span class="bd ok">Đang dùng</span></td><td style="color:var(--g400)">Chưa vào lần nào</td><td><a class="link">Sửa</a> · <a class="link" style="color:var(--g500)">Khóa</a></td></tr>
+          <tr><td><b>Nhân viên</b></td><td>staff</td><td><span class="bd g">Nhân viên</span></td><td><span class="bd ok">Đang dùng</span></td><td>10:15 17/11</td><td><a class="link">Sửa</a> · <a class="link" style="color:var(--g500)">Khóa</a></td></tr>
+          <tr><td><b>Bạn thực tập cũ</b></td><td>tts2025</td><td><span class="bd g">Nhân viên</span></td><td><span class="bd g">Đã khóa</span></td><td>02/10/2026</td><td><a class="link">Mở khóa</a></td></tr></tbody></table></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- MH9 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 11</b> Phân quyền: sửa vai trò Tư vấn viên (quyền viết thành câu "Được…")</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/roles/2/edit</span></div>
+      <div class="fi" data-shell="roles" data-role="ADMIN"><div class="main">
+        <div class="crumb">Phân quyền › Tư vấn viên</div>
+        <div class="head"><h2>Tư vấn viên được làm gì?</h2><button class="help">?</button></div>
+        <p class="lead">Tick việc mà mọi người có vai trò "Tư vấn viên" được làm. Ai cũng thấy trang chủ quản trị, không cần tick.</p>
+        <div class="card"><div class="body">
+          <div class="perm-grp"><h6><span class="bd w">Có thông tin cá nhân của khách</span></h6>
+            <div class="perm"><span class="chk on"></span><span><b>Được tra cứu và đọc báo cáo của từng khách</b><span>Tìm theo số điện thoại, email hoặc mã báo cáo; mỗi lần chỉ thấy một khách; mỗi lần xem được ghi lại.</span></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được xem thông tin liên lạc của khách mới (7 ngày gần nhất)</b><span>Họ tên, điện thoại / Zalo, email, đối tượng, tỉnh để gọi mời tư vấn. Không thấy kết quả bài làm. Mặc định: Nhân viên.</span></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được xem danh sách tất cả khách đã làm bài</b><span>Thấy toàn bộ khách, mọi thời điểm, kèm kết quả. Nên chỉ để quản trị viên.</span></span></div>
+            <div class="perm locked"><span class="chk lock"></span><span><b>Được tải dữ liệu khách ra Excel, sao lưu 🔒</b><span>Chỉ quản trị viên, không cấp được cho vai trò khác.</span></span></div></div>
+          <div class="perm-grp"><h6><span class="bd g">Không có thông tin cá nhân</span></h6>
+            <div class="perm"><span class="chk"></span><span><b>Được xem số liệu làm bài</b><span>Bao nhiêu người làm bài, đến từ đâu, bỏ ngang ở đâu, mã nào phổ biến. Không có tên khách. Mặc định: chỉ quản trị viên.</span></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được sửa chữ, ảnh trên các trang khách xem</b><span>Trang mở đầu, chữ trên báo cáo và email, ô giới thiệu trên viger.edu.vn, kho ảnh.</span></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được đổi logo, màu, hotline, chân trang</b><span>Ảnh hưởng mọi trang khách xem.</span></span></div></div>
+          <div class="perm-grp"><h6><span class="bd i">Bài trắc nghiệm</span></h6>
+            <div class="perm"><span class="chk"></span><span><b>Được sửa, tạm ngưng, thêm câu hỏi</b></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được đổi cách bốc đề và chấm điểm</b><span>Số câu, khi nào khách thấy mã 3 chữ, số ngành gợi ý.</span></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được sửa giải thích mã Holland, ngành học, nghề</b></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được sửa form thông tin khách điền</b><span>Ô nào bắt buộc, ô nào gửi sang CRM.</span></span></div></div>
+          <div class="perm-grp" style="margin:0"><h6><span class="bd p">Quản lý hệ thống</span></h6>
+            <div class="perm"><span class="chk"></span><span><b>Được cài đặt gửi khách sang CRM</b></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được thêm tài khoản và phân quyền</b><span>Không sửa được tài khoản quản trị viên.</span></span></div>
+            <div class="perm"><span class="chk"></span><span><b>Được xem lịch sử thao tác</b><span>Ai sửa gì, ai xem báo cáo của khách nào, lúc nào.</span></span></div></div>
+        </div></div>
+        <div class="foot"><button class="btn pri">Lưu</button><button class="btn sec">Hủy</button></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- MH10 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 12</b> Ô giới thiệu trên viger.edu.vn (đổi tên từ "Nhúng vào web chính"; đoạn mã đã giấu)</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/o-gioi-thieu</span></div>
+      <div class="fi" data-shell="embed" data-role="ADMIN"><div class="main">
+        <div class="head"><h2>Ô giới thiệu trên viger.edu.vn</h2><button class="help">?</button></div>
+        <p class="lead">Trên web chính viger.edu.vn có một ô mời khách làm bài trắc nghiệm (khung đỏ ở hình bên phải). Sửa chữ, ảnh ở đây rồi bấm "Lưu" là ô trên web chính đổi theo, không cần nhờ người làm web chính.</p>
+        <div class="two">
+          <div class="card"><h3>Sửa nội dung ô</h3><div class="body"><div class="form" style="--c:1">
+            <div class="f"><label>Tiêu đề<span class="req">*</span></label><div class="in">Bạn hợp với ngành nào?</div></div>
+            <div class="f"><label>Mô tả ngắn</label><div class="in area">Làm bài trắc nghiệm Holland 36 câu, khoảng 7 phút, để biết nhóm sở thích nghề nghiệp và ngành học tại Đức phù hợp.</div></div>
+            <div class="f"><label>Ảnh (không bắt buộc)</label><div class="in"><span class="link"><span data-i="photo" class="s"></span>Chọn ảnh từ kho ảnh</span></div></div>
+            <div class="f"><label>Chữ trên nút<span class="req">*</span></label><div class="in">Làm bài ngay</div></div>
+          </div></div></div>
+          <div class="card"><h3>Ô này sẽ hiện như sau trên viger.edu.vn</h3><div class="body">
+            <div class="site"><div class="nav"><b style="color:#12263f">VIGER.EDU.VN</b><span>Du học Đức · Tư vấn · Blog</span></div><div class="hero"></div>
+              <div class="blk"><span class="lbl">Ô giới thiệu</span><div class="im"></div><div class="tx"><h5>Bạn hợp với ngành nào?</h5><p>Làm bài trắc nghiệm Holland 36 câu, khoảng 7 phút, để biết nhóm sở thích nghề nghiệp và ngành học tại Đức phù hợp.</p><span class="btn pri" style="height:30px;font-size:12.5px">Làm bài ngay →</span></div></div>
+              <div class="rest"></div></div>
+          </div></div>
+        </div>
+        <details class="tech"><summary>Dành cho người làm web chính (chỉ dùng một lần lúc lắp đặt) ▸</summary>
+          <p style="margin:10px 0 0;color:var(--g600)">Lần đầu, chép đoạn dưới đây gửi người làm web chính (anh Tuấn) để gắn ô vào trang. Sau đó không cần gửi lại.</p>
+          <div class="code">&lt;div id="holland-embed"&gt;&lt;/div&gt;
+&lt;script src="https://holland.viger.edu.vn/embed.js" async&gt;&lt;/script&gt;</div>
+          <p style="margin:12px 0 4px;font-weight:600">Web nào được hiện ô này</p>
+          <div class="f"><div class="in area">https://viger.edu.vn<br>https://www.viger.edu.vn</div><div class="hint">Mỗi dòng một địa chỉ. Web khác chép đoạn mã về cũng không hiện được (chống giả mạo).</div></div>
+        </details>
+        <div class="foot" style="margin-top:16px"><button class="btn pri">Lưu</button></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- MH11 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 13</b> Menu mỗi người thấy sau khi đăng nhập</div>
+    <div class="people">
+      <div><b>Quản trị viên</b><div class="side" data-menu="ADMIN" style="background:#fff;border:1px solid var(--g200);border-radius:12px;margin-top:6px"></div></div>
+      <div><b>Tư vấn viên</b><div class="side" data-menu="COUNSELOR" style="background:#fff;border:1px solid var(--g200);border-radius:12px;margin-top:6px"></div></div>
+      <div><b>Nhân viên</b><div class="side" data-menu="STAFF" style="background:#fff;border:1px solid var(--g200);border-radius:12px;margin-top:6px"></div></div>
+    </div>
+  </section>
+
+  <!-- MH12 -->
+  <section class="screen"><div class="screen__tag"><b>MÀN HÌNH 14</b> Bấm vào mục "Sắp có"</div>
+    <div class="frame"><div class="url"><i></i><i></i><i></i><span>holland.viger.edu.vn/admin/sap-co/khach-da-lam-bai</span></div>
+      <div class="fi" data-shell="customers" data-role="ADMIN"><div class="main">
+        <div class="head"><h2>Danh sách khách đã làm bài</h2><button class="help">?</button></div>
+        <div class="card"><div class="empty"><div class="bx" data-i="clock"></div><h4>Phần này đang làm, dự kiến xong ở giai đoạn H6</h4>
+          <p style="max-width:540px;margin:0 auto 14px">Khi xong, ở đây có danh sách mọi khách đã làm bài, lọc theo ngày, mã Holland, nguồn quảng cáo; bấm vào một khách để đọc báo cáo đầy đủ; nút tải ra Excel (chỉ quản trị viên).</p>
+          <button class="btn sec"><span data-i="home" class="s"></span>Về trang chủ quản trị</button></div></div>
+      </div></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const I = {
+  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h5v-5h3v5h5V10"/>',
+  list:'<rect x="4" y="4" width="16" height="4" rx="2"/><path d="M4 12h16M4 16h16M4 20h16"/>',
+  sliders:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
+  pencil:'<path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/>',
+  swatch:'<rect x="4" y="4" width="7" height="16" rx="2"/><path d="M11 9.5 15.5 5l4 4-8.5 8.5"/><path d="M11 20h9v-6h-4"/>',
+  photo:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m21 16-5-5-8 8"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.5c2.6 0 4.4 1.6 5 4.5"/>',
+  shield:'<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
+  hex:'<path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Z"/>',
+  cap:'<path d="M2.5 9.5 12 5l9.5 4.5L12 14 2.5 9.5Z"/><path d="M6.5 11.5v4.5c3.5 2.5 7.5 2.5 11 0v-4.5"/>',
+  form:'<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  doc:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  google:'<circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5M8.5 11h5"/>',
+  log:'<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',search:'<circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/>',
+  trash:'<path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/>',
+  q:'<circle cx="12" cy="12" r="8.5"/><path d="M9.8 9.5a2.3 2.3 0 1 1 3.2 2.1c-.6.3-1 .8-1 1.4v.5M12 16.5h.01"/>',
+  ext:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+  globe:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.8 2.5 14.2 0 17M12 3.5c-2.5 2.8-2.5 14.2 0 17"/>',
+  undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  chev:'<path d="m6 15 6-6 6 6"/>',back:'<path d="m15 6-6 6 6 6"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16v4Z"/>',
+  phone:'<path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/>',
+  download:'<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19h14"/>',
+  bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3Z"/>',
+  contact:'<rect x="4" y="3.5" width="16" height="17" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8 16.5c.7-1.7 2.2-2.5 4-2.5s3.3.8 4 2.5"/>'
+};
+const svg = (n, s = '') => `<svg class="ic ${s}" viewBox="0 0 24 24">${I[n] || ''}</svg>`;
+
+/* Menu theo việc làm: [nhóm, [[khóa, chữ, icon, quyền, giai đoạn "Sắp có"]]]. */
+const MENU = [
+  [null, [['home', 'Trang chủ quản trị', 'home', null]]],
+  ['Khách hàng', [
+    ['lookup', 'Tra cứu báo cáo khách', 'search', 'reports.lookup', 'H4'],
+    ['contacts', 'Khách cần liên lạc', 'contact', 'contacts.view', 'H4'],
+    ['customers', 'Danh sách khách đã làm bài', 'doc', 'customers.list', 'H6'],
+    ['stats', 'Số liệu làm bài', 'chart', 'stats.view', 'H6'],
+  ]],
+  ['Bài trắc nghiệm', [
+    ['questions', 'Câu hỏi trắc nghiệm', 'list', 'questions.manage'],
+    ['settings', 'Cách bốc đề & chấm điểm', 'sliders', 'test_settings.manage'],
+    ['codes', 'Giải thích các mã Holland', 'hex', 'catalog.manage', 'H6'],
+    ['majors', 'Ngành học & nghề gợi ý', 'cap', 'catalog.manage', 'H6'],
+    ['fields', 'Form khách điền thông tin', 'form', 'form_fields.manage', 'H6'],
+  ]],
+  ['Trang khách xem', [
+    ['intro', 'Trang mở đầu', 'pencil', 'content.manage'],
+    ['report', 'Chữ trên báo cáo & email', 'mail', 'content.manage', 'H4'],
+    ['embed', 'Ô giới thiệu trên viger.edu.vn', 'globe', 'content.manage'],
+    ['media', 'Kho ảnh', 'photo', 'content.manage'],
+    ['appearance', 'Logo, màu, hotline, chân trang', 'swatch', 'appearance.manage'],
+  ]],
+  ['Quản lý hệ thống', [
+    ['crm', 'Gửi khách sang CRM', 'link', 'crm.manage', 'H5'],
+    ['seo', 'Hiển thị trên Google', 'google', 'appearance.manage', 'H7'],
+    ['users', 'Tài khoản nhân sự', 'users', 'accounts.manage'],
+    ['roles', 'Phân quyền', 'shield', 'accounts.manage'],
+    ['logs', 'Lịch sử thao tác', 'log', 'logs.view', 'H6'],
+  ]],
+];
+const PERMS = { ADMIN: '*', COUNSELOR: ['reports.lookup'], STAFF: ['contacts.view', 'content.manage'] };
+const can = (role, p) => p === null || PERMS[role] === '*' || PERMS[role].includes(p);
+const NAMES = { ADMIN: ['QV', 'Quản trị viên', 'Quản trị viên'], COUNSELOR: ['TV', 'Chị Lan', 'Tư vấn viên'], STAFF: ['NV', 'Bạn Hà', 'Nhân viên'] };
+
+function menuHtml(role, active) {
+  return MENU.map(([group, items]) => {
+    const visible = items.filter(it => can(role, it[3]));
+    if (!visible.length) return '';
+    return (group ? `<div class="grp">${group}${svg('chev', 's')}</div>` : '') + visible.map(([key, label, icon, , stage]) =>
+      `<a class="item ${key === active ? 'on' : ''} ${stage ? 'soon' : ''}">${svg(icon)}<span>${label}</span>${stage ? '<span class="tag">Sắp có</span>' : ''}</a>`).join('');
+  }).join('');
+}
+function topHtml(role) {
+  const [ini, name, roleName] = NAMES[role];
+  return `<div class="top"><span style="color:var(--g400)">${svg('back')}</span>
+    <span class="logo"><img src="../../public/img/logo.png" alt="Viger Edu" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='http://127.0.0.1:8000/img/logo.png'}"></span><span class="sp"></span>
+    <a class="tbtn">${svg('ext', 's')}Xem trang làm bài như khách</a>
+    ${role === 'ADMIN' ? `<a class="tbtn ghost">${svg('globe', 's')}Web chính</a><a class="tbtn ghost">${svg('link', 's')}Mở CRM</a>` : `<a class="tbtn ghost">${svg('link', 's')}Mở CRM</a>`}
+    <span class="who"><span class="avatar">${ini}</span><span><b>${name}</b><small>${roleName}</small></span></span></div>`;
+}
+document.querySelectorAll('.fi[data-shell]').forEach(shell => {
+  const main = shell.querySelector('.main');
+  shell.insertAdjacentHTML('afterbegin', topHtml(shell.dataset.role) + `<nav class="side">${menuHtml(shell.dataset.role, shell.dataset.shell)}</nav>`);
+  shell.appendChild(main);
+});
+document.querySelectorAll('[data-menu]').forEach(el => { el.innerHTML = menuHtml(el.dataset.menu, 'home'); });
+document.querySelectorAll('[data-i]').forEach(el => { el.innerHTML = svg(el.dataset.i, el.classList.contains('s') ? 's' : ''); });
+
+const Q = [
+  ['R001', 'Lắp ráp', 'Tôi thích lắp một mô hình cơ khí từ các bộ phận rời.', 'A', 'ok', 1],
+  ['R002', 'Lắp ráp', 'Tôi muốn tham gia hoạt động lắp ráp bộ dụng cụ học tập có nhiều chi tiết.', 'B', 'ok', 1],
+  ['R003', 'Lắp ráp', 'Tôi hứng thú với việc ghép các linh kiện để tạo mô hình chuyển động.', 'B', 'ok'],
+  ['R004', 'Lắp ráp', 'Nếu có cơ hội, tôi muốn thử các cách lắp khớp nối cho mô hình chắc chắn.', 'B', 'ok'],
+  ['R005', 'Lắp ráp', 'Tôi thấy hấp dẫn khi được lắp bộ mô hình năng lượng tái tạo theo hướng dẫn.', 'C', 'w'],
+  ['R006', 'Sửa chữa', 'Tôi thích tìm nguyên nhân khiến một đồ vật đơn giản không hoạt động.', 'A', 'ok'],
+  ['R007', 'Sửa chữa', 'Tôi muốn tham gia hoạt động thử sửa một vật dụng gia đình với sự hướng dẫn an toàn.', 'B', 'ok'],
+  ['R008', 'Sửa chữa', 'Tôi hứng thú với việc kiểm tra các bộ phận của mô hình khi bị trục trặc.', 'B', 'ok'],
+];
+const TIER = { A: ['ok', 'Cao'], B: ['i', 'Vừa'], C: ['g', 'Thấp'] };
+const ST = { ok: ['ok', 'Đang dùng'], w: ['w', 'Tạm ngưng'] };
+document.getElementById('qrows').innerHTML = Q.map(([code, facet, text, tier, st, sel]) =>
+  `<tr><td><span class="chk ${sel ? 'on' : ''}"></span></td><td><b>${code}</b></td><td>${facet}</td><td>${text}</td>
+   <td><span class="bd ${TIER[tier][0]}">${TIER[tier][1]}</span></td><td><span class="bd ${ST[st][0]}">${ST[st][1]}</span></td>
+   <td><a class="link">${svg('edit', 's')}Sửa</a></td></tr>`).join('');
+
+/* ===== Trang số liệu (dữ liệu ví dụ) ===== */
+const fmt = n => n.toLocaleString("vi-VN");
+const tip = document.createElement("div"); tip.className = "tip"; document.body.appendChild(tip);
+document.addEventListener("mousemove", e => {
+  const t = e.target.closest("[data-tip]");
+  if (!t) { tip.style.opacity = 0; return; }
+  tip.innerHTML = t.dataset.tip; tip.style.opacity = 1;
+  tip.style.left = Math.min(e.clientX + 14, innerWidth - 250) + "px"; tip.style.top = (e.clientY + 14) + "px";
+});
+function hbars(id, rows, opt = {}) {
+  const max = Math.max(...rows.map(r => r[1]));
+  document.getElementById(id).innerHTML = rows.map(([label, v, extra], i) =>
+    `<div class="hbar" style="--lw:${opt.lw || 128}px" data-tip="<b>${label}</b>${fmt(v)} ${opt.unit || "người"}${extra ? " · " + extra : ""}">
+       <span class="lab">${label}</span><span class="track"><span class="fill" style="display:block;width:${v / max * 100}%"></span></span>
+       <span class="val">${opt.pct ? v + "%" : fmt(v)}${extra && opt.showExtra ? "<small>" + extra + "</small>" : ""}</span></div>`
+    + (opt.drops && i < rows.length - 1 ? `<div class="drop">↓ còn <b>${Math.round(rows[i + 1][1] / v * 100)}%</b> đi tiếp · mất ${fmt(v - rows[i + 1][1])} người</div>` : "")
+  ).join("");
+}
+hbars("funnel", [["Vào trang mở đầu", 1240], ["Bắt đầu làm bài", 612], ["Làm xong bài", 478], ["Để lại thông tin", 263], ["Xác nhận email, đọc báo cáo", 241]], { lw: 170, drops: true });
+hbars("groups", [["S – Xã hội", 132], ["I – Nghiên cứu", 98], ["A – Sáng tạo", 84], ["E – Kinh doanh", 66], ["R – Thực hành", 56], ["C – Tổ chức", 42]], { lw: 110 });
+hbars("provinces", [["TP. Hồ Chí Minh", 96], ["Hà Nội", 41], ["Đồng Nai", 22], ["Đà Nẵng", 15], ["Cần Thơ", 12]], { lw: 110 });
+hbars("codes", [["SA", 14], ["IS", 11], ["SE", 9], ["AS", 8], ["IA", 7]], { lw: 70, pct: true, unit: "% người làm xong" });
+document.getElementById("codes").insertAdjacentHTML("beforeend", `<p class="muted" style="margin:10px 0 0">25 mã còn lại chiếm 51%, mỗi mã dưới 6%.</p>`);
+hbars("majors", [["Tâm lý học", 118], ["Khoa học máy tính", 104], ["Quản trị kinh doanh", 97], ["Thiết kế truyền thông", 81], ["Công tác xã hội", 76], ["Khoa học dữ liệu", 64]], { lw: 170, unit: "báo cáo có gợi ý ngành này" });
+
+/* Ai làm bài: một thanh chia 3 phần, có chú thích và số ngay bên dưới (không dựa vào màu). */
+const who = [["Học sinh / sinh viên", 187, "var(--series-1)"], ["Phụ huynh", 63, "var(--series-2)"], ["Khác", 13, "var(--series-3)"]];
+const tot = who.reduce((a, r) => a + r[1], 0);
+document.getElementById("who").innerHTML = `<div class="stack">${who.map(([l, v, c]) => `<span data-tip="<b>${l}</b>${fmt(v)} người · ${Math.round(v / tot * 100)}%" style="width:${v / tot * 100}%;background:${c}"></span>`).join("")}</div>
+  <div class="legend2">${who.map(([l, v, c]) => `<span><i style="background:${c}"></i>${l} <b>${Math.round(v / tot * 100)}%</b></span>`).join("")}</div>`;
+
+/* Nguồn: bảng có thanh nhỏ cho cột "Vào trang". */
+const src = [["Facebook", 508, 205, 118], ["Zalo", 298, 112, 71], ["Ô giới thiệu trên viger.edu.vn", 236, 98, 44], ["Google", 124, 41, 19], ["Gõ thẳng địa chỉ", 74, 22, 11]];
+document.getElementById("sources").innerHTML = src.map(([n, v, d, l]) => `<tr><td><b>${n}</b></td><td>${fmt(v)}</td>
+  <td><span class="track" style="display:block" data-tip="<b>${n}</b>${fmt(v)} người vào trang"><span class="fill" style="display:block;width:${v / 508 * 100}%"></span></span></td>
+  <td>${fmt(d)}</td><td>${fmt(l)}</td><td>${Math.round(l / v * 100)}%</td></tr>`).join("");
+
+/* Đường: người làm xong mỗi ngày, 30 ngày, rê chuột hiện số. */
+(function () {
+  const v = [9,12,10,11,13,8,10,12,11,14,10,9,12,11,13,10,12,11, 18,21,24,22,26,25,23,27,22,25,24,23];
+  const days = v.map((_, i) => { const d = new Date(2026, 9, 18 + i); return d.getDate() + "/" + (d.getMonth() + 1); });
+  const W = 560, H = 210, L = 30, R = 24, T = 12, B = 26, max = 30;
+  const x = i => L + i * (W - L - R) / (v.length - 1), y = n => T + (1 - n / max) * (H - T - B);
+  const grid = [0, 10, 20, 30].map(g => `<line x1="${L}" x2="${W - R}" y1="${y(g)}" y2="${y(g)}" stroke="var(--grid)"/><text x="${L - 6}" y="${y(g) + 4}" text-anchor="end">${g}</text>`).join("");
+  const ticks = [0, 7, 14, 21, 29].map(i => `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${days[i]}</text>`).join("");
+  const path = v.map((n, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(n).toFixed(1)).join(" ");
+  const ev = 18;
+  document.getElementById("line").innerHTML = `<svg class="lc" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Số người làm xong bài mỗi ngày, 30 ngày">
+    ${grid}${ticks}
+    <line x1="${x(ev)}" x2="${x(ev)}" y1="${T}" y2="${H - B}" stroke="var(--axis)" stroke-dasharray="3 3"/><text x="${x(ev) + 5}" y="${T + 10}">Bắt đầu quảng cáo</text>
+    <path d="${path}" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round"/>
+    <line id="xh" y1="${T}" y2="${H - B}" stroke="var(--g400)" opacity="0"/><circle id="xd" r="4.5" fill="var(--series-1)" stroke="#fff" stroke-width="2" opacity="0"/>
+    ${v.map((n, i) => `<rect x="${x(i) - (W - L - R) / (v.length - 1) / 2}" y="${T}" width="${(W - L - R) / (v.length - 1)}" height="${H - T - B}" fill="transparent" data-k="${i}" data-tip="<b>${days[i]}/2026</b>${n} người làm xong"/>`).join("")}
+  </svg>`;
+  const svgEl = document.querySelector("#line svg"), xh = svgEl.querySelector("#xh"), xd = svgEl.querySelector("#xd");
+  svgEl.addEventListener("mousemove", e => { const r = e.target.closest("rect[data-k]"); if (!r) return; const i = +r.dataset.k;
+    xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.setAttribute("opacity", 1); xd.setAttribute("cx", x(i)); xd.setAttribute("cy", y(v[i])); xd.setAttribute("opacity", 1); });
+  svgEl.addEventListener("mouseleave", () => { xh.setAttribute("opacity", 0); xd.setAttribute("opacity", 0); });
+})();
+/* ===== Báo cáo nội bộ (hồ sơ HS01) ===== */
+(function () {
+  const now = { I: 4.67, S: 4.33, A: 4.17, R: 3.33, C: 3.17, E: 2.33 };
+  const prev = { I: 4.50, S: 4.17, A: 4.00, R: 3.50, C: 3.00, E: 2.50 };
+  const NAME = { R: 'Thực hành', I: 'Nghiên cứu', A: 'Sáng tạo', S: 'Xã hội', E: 'Kinh doanh', C: 'Tổ chức' };
+  const vi = n => n.toFixed(2).replace('.', ',');
+  const pos = v => (v - 1) / 4 * 100;
+  const order = Object.keys(now).sort((a, b) => now[b] - now[a]);
+  document.getElementById('scores').innerHTML = order.map((k, i) => `<div class="sc-row" data-tip="<b>${k} – ${NAME[k]}</b>${vi(now[k])} điểm · lần trước ${vi(prev[k])}">
+      <span>${i < 3 ? '<b>' + k + ' – ' + NAME[k] + '</b>' : k + ' – ' + NAME[k]}</span>
+      <span class="sc-track"><span class="sc-fill ${i < 3 ? '' : 'weak'}" style="width:${pos(now[k])}%"></span><span class="sc-mark" style="left:${pos(3)}%"></span><span class="sc-mark" style="left:${pos(4.2)}%"></span></span>
+      <span class="val">${vi(now[k])}</span></div>`).join('')
+    + `<div class="sc-axis"><span></span><span class="ax"><span style="left:0">1</span><span style="left:${pos(3)}%">3</span><span style="left:${pos(4.2)}%">4,2</span><span style="left:100%">5</span></span><span></span></div><p class="muted" style="margin:4px 0 0">Vạch đứt: <b>3</b> = mốc "có quan tâm" · <b>4,2</b> = ngưỡng khách thấy chữ thứ 3.</p>`;
+
+  /* Lục giác: R I A S E C theo chiều kim đồng hồ, bắt đầu từ trên. */
+  const keys = ['R', 'I', 'A', 'S', 'E', 'C'], cx = 150, cy = 128, R0 = 96;
+  const pt = (i, v) => { const a = -Math.PI / 2 + i * Math.PI / 3, r = R0 * (v - 1) / 4; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+  const ring = v => keys.map((_, i) => pt(i, v).join(',')).join(' ');
+  const poly = d => keys.map((k, i) => pt(i, d[k]).join(',')).join(' ');
+  const labels = keys.map((k, i) => { const [x, y] = pt(i, 5.75); return `<text x="${x}" y="${y + 4}" text-anchor="middle" style="font:600 13px Inter;fill:var(--g700)">${k}</text>`; }).join('');
+  const dots = keys.map((k, i) => { const [x, y] = pt(i, now[k]); return `<circle cx="${x}" cy="${y}" r="5" fill="var(--series-1)" stroke="#fff" stroke-width="2" data-tip="<b>${k} – ${NAME[k]}</b>Lần này ${vi(now[k])} · lần trước ${vi(prev[k])}"/>`; }).join('');
+  document.getElementById('hexa').innerHTML = `<svg class="lc" viewBox="0 0 300 256" width="100%" style="max-width:340px;display:block;margin:0 auto" role="img" aria-label="Lục giác Holland, lần này và lần trước">
+    ${[2, 3, 4, 5].map(v => `<polygon points="${ring(v)}" fill="none" stroke="var(--grid)"/>`).join('')}
+    ${keys.map((_, i) => { const [x, y] = pt(i, 5); return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--grid)"/>`; }).join('')}
+    <polygon points="${poly(prev)}" fill="none" stroke="var(--g400)" stroke-width="2" stroke-dasharray="4 3"/>
+    <polygon points="${poly(now)}" fill="var(--series-1)" fill-opacity=".12" stroke="var(--series-1)" stroke-width="2"/>
+    ${dots}${labels}</svg>`;
+
+  document.getElementById('cmp').innerHTML = order.map(k => { const d = now[k] - prev[k];
+    return `<tr><td><b>${k}</b> ${NAME[k]}</td><td style="text-align:right">${vi(prev[k])}</td><td style="text-align:right">${vi(now[k])}</td><td style="text-align:right">${d > 0 ? '▲ +' : '▼ −'}${vi(Math.abs(d))}</td></tr>`; }).join('');
+
+  const A = [
+    ['I006', 'Giả thuyết', 'Tôi thích đưa ra giả thuyết để giải thích một kết quả lạ.', 5, 4.2],
+    ['S011', 'Hỗ trợ cá nhân', 'Tôi thích giúp bạn mới hòa nhập với tập thể.', 5, 3.6],
+    ['A002', 'Hình ảnh', 'Tôi muốn tham gia hoạt động thiết kế biểu tượng cho một chủ đề.', 4, 5.1],
+    ['I031', 'Toán và mô hình', 'Tôi thích tìm mô hình toán học mô tả một hiện tượng.', 4, 4.8],
+    ['S046', 'Tìm hiểu nhu cầu', 'Tôi thích hỏi người dùng để hiểu khó khăn của họ.', 4, 3.9],
+    ['E017', 'Đàm phán', 'Tôi muốn tham gia hoạt động đề xuất phương án dung hòa lợi ích khác nhau.', 2, 5.4],
+    ['C008', 'Lịch trình', 'Tôi hứng thú với việc theo dõi mốc thời gian để tránh trễ hạn.', 3, 3.2],
+    ['R026', 'Đo lường', 'Tôi thích dùng dụng cụ đo kích thước của các vật thể.', 3, 4.0],
+  ];
+  const LBL = ['', 'Hoàn toàn không giống tôi', 'Không giống lắm', 'Phân vân', 'Khá giống tôi', 'Hoàn toàn giống tôi'];
+  document.getElementById('answers').innerHTML = A.map(([c, f, t, st, sec], i) => `<tr><td>${i + 1}</td><td><b>${c}</b></td><td>${f}</td><td>${t}</td>
+    <td><span class="stars-s">${'★'.repeat(st)}<i>${'★'.repeat(5 - st)}</i></span><br><span class="muted">${LBL[st]}</span></td><td style="text-align:right">${sec.toFixed(1).replace('.', ',')}</td></tr>`).join('');
+})();
+</script>
+</body>
+</html>

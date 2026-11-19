@@ -1,0 +1,784 @@
+[
+ {
+  "id": "MAJ001",
+  "name_vi": "Cơ khí",
+  "name_de": "Maschinenbau",
+  "name_en": "Mechanical Engineering",
+  "group_id": 1,
+  "group": "Kỹ thuật & Công nghiệp 4.0",
+  "codes": [
+   "RIE"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Maschinenbau",
+  "pairs": [
+   "RI"
+  ],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ002",
+  "name_vi": "Cơ điện tử",
+  "name_de": "Mechatronik",
+  "name_en": "Mechatronics",
+  "group_id": 1,
+  "group": "Kỹ thuật & Công nghiệp 4.0",
+  "codes": [
+   "ICR"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Mechatronik",
+  "pairs": [
+   "RI"
+  ],
+  "routes": "Uni, HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ003",
+  "name_vi": "Kỹ thuật điện",
+  "name_de": "Elektrotechnik",
+  "name_en": "Electrical Engineering",
+  "group_id": 1,
+  "group": "Kỹ thuật & Công nghiệp 4.0",
+  "codes": [
+   "IRE"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Elektrotechnik",
+  "pairs": [],
+  "routes": "Uni, HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ004",
+  "name_vi": "Kỹ thuật xây dựng",
+  "name_de": "Bauingenieurwesen",
+  "name_en": "Civil Engineering",
+  "group_id": 1,
+  "group": "Kỹ thuật & Công nghiệp 4.0",
+  "codes": [
+   "RIC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Bauingenieurwesen",
+  "pairs": [],
+  "routes": "Uni, HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ005",
+  "name_vi": "Khoa học máy tính",
+  "name_de": "Informatik",
+  "name_en": "Computer Science",
+  "group_id": 2,
+  "group": "Tin học, AI & Dữ liệu",
+  "codes": [
+   "IRE"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Informatik",
+  "pairs": [],
+  "routes": "Uni, HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ006",
+  "name_vi": "Khoa học dữ liệu",
+  "name_de": "Data Science",
+  "name_en": "Data Science",
+  "group_id": 2,
+  "group": "Tin học, AI & Dữ liệu",
+  "codes": [],
+  "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã",
+  "pairs": [
+   "IC"
+  ],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ007",
+  "name_vi": "Hệ thống thông tin quản lý",
+  "name_de": "Wirtschaftsinformatik",
+  "name_en": "Business Information Systems",
+  "group_id": 2,
+  "group": "Tin học, AI & Dữ liệu",
+  "codes": [
+   "EIR"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Wirtschaftsinformatik",
+  "pairs": [
+   "IE"
+  ],
+  "routes": "Uni, HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ008",
+  "name_vi": "Tin học truyền thông",
+  "name_de": "Medieninformatik",
+  "name_en": "Media Informatics",
+  "group_id": 2,
+  "group": "Tin học, AI & Dữ liệu",
+  "codes": [
+   "IRA"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Medieninformatik",
+  "pairs": [
+   "IA"
+  ],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ009",
+  "name_vi": "Quản trị kinh doanh",
+  "name_de": "Betriebswirtschaftslehre",
+  "name_en": "Business Administration",
+  "group_id": 3,
+  "group": "Kinh tế & Quản trị",
+  "codes": [
+   "ECI"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Betriebswirtschaftslehre",
+  "pairs": [
+   "EC"
+  ],
+  "routes": "Uni, HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ010",
+  "name_vi": "Kinh doanh quốc tế",
+  "name_de": "International Business",
+  "name_en": "International Business",
+  "group_id": 3,
+  "group": "Kinh tế & Quản trị",
+  "codes": [
+   "ECS"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Internationale Betriebswirtschaftslehre (gần nhất)",
+  "pairs": [],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ011",
+  "name_vi": "Marketing",
+  "name_de": "Marketing",
+  "name_en": "Marketing",
+  "group_id": 3,
+  "group": "Kinh tế & Quản trị",
+  "codes": [
+   "EAS"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Marketing, Vertrieb",
+  "pairs": [],
+  "routes": "Uni, HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ012",
+  "name_vi": "Kinh tế học",
+  "name_de": "Volkswirtschaftslehre",
+  "name_en": "Economics",
+  "group_id": 3,
+  "group": "Kinh tế & Quản trị",
+  "codes": [
+   "IEC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Volkswirtschaftslehre",
+  "pairs": [],
+  "routes": "Uni",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ013",
+  "name_vi": "Quản trị logistics",
+  "name_de": "Logistikmanagement",
+  "name_en": "Logistics Management",
+  "group_id": 4,
+  "group": "Logistics & Giao thông",
+  "codes": [
+   "CER"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Logistik, Transport, Verkehrswirtschaft (gần nhất)",
+  "pairs": [],
+  "routes": "HAW, Uni, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ014",
+  "name_vi": "Quản trị chuỗi cung ứng",
+  "name_de": "Supply Chain Management",
+  "name_en": "Supply Chain Management",
+  "group_id": 4,
+  "group": "Logistics & Giao thông",
+  "codes": [],
+  "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã",
+  "pairs": [],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ015",
+  "name_vi": "Kỹ thuật giao thông",
+  "name_de": "Verkehrswesen",
+  "name_en": "Transport Engineering",
+  "group_id": 4,
+  "group": "Logistics & Giao thông",
+  "codes": [
+   "IRC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Verkehrstechnik (gần nhất)",
+  "pairs": [],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ016",
+  "name_vi": "Kỹ thuật – kinh tế",
+  "name_de": "Wirtschaftsingenieurwesen",
+  "name_en": "Industrial Engineering and Management",
+  "group_id": 1,
+  "group": "Kỹ thuật & Công nghiệp 4.0",
+  "codes": [
+   "EIR"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Wirtschaftsingenieurwesen",
+  "pairs": [
+   "RE"
+  ],
+  "routes": "Uni, HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ017",
+  "name_vi": "Kỹ thuật môi trường",
+  "name_de": "Umweltingenieurwesen",
+  "name_en": "Environmental Engineering",
+  "group_id": 5,
+  "group": "Môi trường, Năng lượng & Sự sống",
+  "codes": [
+   "IRC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Umweltingenieurwesen",
+  "pairs": [],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ018",
+  "name_vi": "Năng lượng tái tạo",
+  "name_de": "Erneuerbare Energien",
+  "name_en": "Renewable Energy",
+  "group_id": 5,
+  "group": "Môi trường, Năng lượng & Sự sống",
+  "codes": [
+   "IRC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Erneuerbare Energien",
+  "pairs": [],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ019",
+  "name_vi": "Công nghệ sinh học",
+  "name_de": "Biotechnologie",
+  "name_en": "Biotechnology",
+  "group_id": 5,
+  "group": "Môi trường, Năng lượng & Sự sống",
+  "codes": [
+   "ICR"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Biotechnologie",
+  "pairs": [],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ020",
+  "name_vi": "Khoa học môi trường",
+  "name_de": "Umweltwissenschaften",
+  "name_en": "Environmental Sciences",
+  "group_id": 5,
+  "group": "Môi trường, Năng lượng & Sự sống",
+  "codes": [
+   "ISE"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Umweltwissenschaft",
+  "pairs": [],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ021",
+  "name_vi": "Tâm lý học",
+  "name_de": "Psychologie",
+  "name_en": "Psychology",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "ISC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Psychologie",
+  "pairs": [
+   "IS"
+  ],
+  "routes": "Uni",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ022",
+  "name_vi": "Khoa học giáo dục",
+  "name_de": "Erziehungswissenschaft",
+  "name_en": "Educational Science",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "SIC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Pädagogik, Erziehungswissenschaft",
+  "pairs": [],
+  "routes": "Uni, HAW",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ023",
+  "name_vi": "Thiết kế truyền thông",
+  "name_de": "Kommunikationsdesign",
+  "name_en": "Communication Design",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "AEC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Kommunikationsdesign",
+  "pairs": [],
+  "routes": "HAW, ART",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ024",
+  "name_vi": "Công tác xã hội",
+  "name_de": "Soziale Arbeit",
+  "name_en": "Social Work",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "SCI"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Soziale Arbeit",
+  "pairs": [],
+  "routes": "HAW, DUAL",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ025",
+  "name_vi": "Thiết kế sản phẩm",
+  "name_de": "Produktdesign",
+  "name_en": "Product Design",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "ACE"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Industriedesign, Produktdesign",
+  "pairs": [
+   "RA"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ026",
+  "name_vi": "Thiết kế công nghiệp",
+  "name_de": "Industriedesign",
+  "name_en": "Industrial Design",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "ACE"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Industriedesign, Produktdesign",
+  "pairs": [
+   "RA"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ027",
+  "name_vi": "Hoạt động trị liệu",
+  "name_de": "Ergotherapie",
+  "name_en": "Occupational Therapy",
+  "group_id": 7,
+  "group": "Sức khỏe & Trị liệu (đề xuất thêm)",
+  "codes": [
+   "SRI"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Ergotherapie",
+  "pairs": [
+   "RS"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ028",
+  "name_vi": "Vật lý trị liệu",
+  "name_de": "Physiotherapie",
+  "name_en": "Physiotherapy",
+  "group_id": 7,
+  "group": "Sức khỏe & Trị liệu (đề xuất thêm)",
+  "codes": [
+   "SIR"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Physiotherapie",
+  "pairs": [
+   "RS"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ029",
+  "name_vi": "Quản lý xây dựng",
+  "name_de": "Baumanagement",
+  "name_en": "Construction Management",
+  "group_id": 1,
+  "group": "Kỹ thuật & Công nghiệp 4.0",
+  "codes": [
+   "RIC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Bauingenieurwesen (gần nhất)",
+  "pairs": [
+   "RE"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ030",
+  "name_vi": "Kỹ thuật sản xuất",
+  "name_de": "Produktionstechnik",
+  "name_en": "Production Engineering",
+  "group_id": 1,
+  "group": "Kỹ thuật & Công nghiệp 4.0",
+  "codes": [
+   "IRE"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Produktionstechnik",
+  "pairs": [
+   "RC"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ031",
+  "name_vi": "Logistics",
+  "name_de": "Logistik",
+  "name_en": "Logistics",
+  "group_id": 4,
+  "group": "Logistics & Giao thông",
+  "codes": [
+   "CER"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Logistik, Transport, Verkehrswirtschaft",
+  "pairs": [
+   "RC"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ032",
+  "name_vi": "Khoa học nhận thức",
+  "name_de": "Kognitionswissenschaft",
+  "name_en": "Cognitive Science",
+  "group_id": 2,
+  "group": "Tin học, AI & Dữ liệu",
+  "codes": [],
+  "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã",
+  "pairs": [
+   "IA"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ033",
+  "name_vi": "Khoa học sức khỏe",
+  "name_de": "Gesundheitswissenschaften",
+  "name_en": "Health Sciences",
+  "group_id": 7,
+  "group": "Sức khỏe & Trị liệu (đề xuất thêm)",
+  "codes": [
+   "SIC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Gesundheitswissenschaft",
+  "pairs": [
+   "IS"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ034",
+  "name_vi": "Phân tích kinh doanh",
+  "name_de": "Business Analytics",
+  "name_en": "Business Analytics",
+  "group_id": 2,
+  "group": "Tin học, AI & Dữ liệu",
+  "codes": [],
+  "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã",
+  "pairs": [
+   "IE"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ035",
+  "name_vi": "Toán kinh tế",
+  "name_de": "Wirtschaftsmathematik",
+  "name_en": "Business Mathematics",
+  "group_id": 2,
+  "group": "Tin học, AI & Dữ liệu",
+  "codes": [
+   "IEC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Wirtschaftsmathematik",
+  "pairs": [
+   "IC"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ036",
+  "name_vi": "Giáo dục truyền thông",
+  "name_de": "Medienpädagogik",
+  "name_en": "Media Education",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "SAC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Medienpädagogik (Lehramt) (gần nhất)",
+  "pairs": [
+   "AS"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ037",
+  "name_vi": "Giáo dục nghệ thuật",
+  "name_de": "Kunstpädagogik",
+  "name_en": "Art Education",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "ASR"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Kunstpädagogik",
+  "pairs": [
+   "AS"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ038",
+  "name_vi": "Quản trị truyền thông",
+  "name_de": "Medienmanagement",
+  "name_en": "Media Management",
+  "group_id": 3,
+  "group": "Kinh tế & Quản trị",
+  "codes": [
+   "ESA"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Medienwirtschaft, Medienmanagement",
+  "pairs": [
+   "AE"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ039",
+  "name_vi": "Quản trị truyền thông – PR",
+  "name_de": "Kommunikationsmanagement",
+  "name_en": "Communication Management",
+  "group_id": 3,
+  "group": "Kinh tế & Quản trị",
+  "codes": [],
+  "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã",
+  "pairs": [
+   "AE"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ040",
+  "name_vi": "Truyền thông kỹ thuật",
+  "name_de": "Technische Kommunikation",
+  "name_en": "Technical Communication",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [],
+  "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã",
+  "pairs": [
+   "AC"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ041",
+  "name_vi": "Thiết kế thông tin",
+  "name_de": "Informationsdesign",
+  "name_en": "Information Design",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [],
+  "code_source": "Chưa có trong danh sách SIT – chuyên gia cần gán mã",
+  "pairs": [
+   "AC"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ042",
+  "name_vi": "Quản trị nhân sự",
+  "name_de": "Personalmanagement",
+  "name_en": "Human Resource Management",
+  "group_id": 3,
+  "group": "Kinh tế & Quản trị",
+  "codes": [
+   "ECS"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Personalmanagement, Personalwesen",
+  "pairs": [
+   "SE"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ043",
+  "name_vi": "Quản lý dịch vụ xã hội",
+  "name_de": "Sozialmanagement",
+  "name_en": "Social Management",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "CES"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Public Management, Sozialmanagement (gần nhất)",
+  "pairs": [
+   "SE"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ044",
+  "name_vi": "Quản lý y tế",
+  "name_de": "Gesundheitsmanagement",
+  "name_en": "Healthcare Management",
+  "group_id": 7,
+  "group": "Sức khỏe & Trị liệu (đề xuất thêm)",
+  "codes": [
+   "ESC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Gesundheitsmanagement",
+  "pairs": [
+   "SC"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ045",
+  "name_vi": "Quản lý giáo dục",
+  "name_de": "Bildungsmanagement",
+  "name_en": "Education Management",
+  "group_id": 6,
+  "group": "Xã hội, Giáo dục & Sáng tạo",
+  "codes": [
+   "ESC"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Bildungsmanagement",
+  "pairs": [
+   "SC"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ },
+ {
+  "id": "MAJ046",
+  "name_vi": "Kiểm soát tài chính (Controlling)",
+  "name_de": "Controlling",
+  "name_en": "Management Accounting and Control",
+  "group_id": 3,
+  "group": "Kinh tế & Quản trị",
+  "codes": [
+   "CEI"
+  ],
+  "code_source": "SIT – HRK 13.01.2014: Rechnungswesen, Steuerwesen, Controlling",
+  "pairs": [
+   "EC"
+  ],
+  "routes": "Cần tra",
+  "status": "Đề xuất – chưa kiểm định",
+  "active": true
+ }
+]

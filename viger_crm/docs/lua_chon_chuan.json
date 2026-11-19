@@ -1,0 +1,362 @@
+{
+ "role": [
+  {
+   "value": "HS",
+   "label": "Học sinh / sinh viên tự làm",
+   "lead_points": null
+  },
+  {
+   "value": "PH",
+   "label": "Phụ huynh",
+   "lead_points": null
+  }
+ ],
+ "current_level": [
+  {
+   "value": "Lớp 9",
+   "label": "Lớp 9",
+   "lead_points": null
+  },
+  {
+   "value": "Lớp 10",
+   "label": "Lớp 10",
+   "lead_points": null
+  },
+  {
+   "value": "Lớp 11",
+   "label": "Lớp 11",
+   "lead_points": null
+  },
+  {
+   "value": "Lớp 12",
+   "label": "Lớp 12",
+   "lead_points": null
+  },
+  {
+   "value": "Đã tốt nghiệp THPT",
+   "label": "Đã tốt nghiệp THPT",
+   "lead_points": null
+  },
+  {
+   "value": "SV năm 1",
+   "label": "SV năm 1",
+   "lead_points": null
+  },
+  {
+   "value": "SV năm 2",
+   "label": "SV năm 2",
+   "lead_points": null
+  },
+  {
+   "value": "SV năm 3",
+   "label": "SV năm 3",
+   "lead_points": null
+  },
+  {
+   "value": "SV năm 4",
+   "label": "SV năm 4",
+   "lead_points": null
+  },
+  {
+   "value": "Tốt nghiệp ĐH",
+   "label": "Tốt nghiệp ĐH",
+   "lead_points": null
+  },
+  {
+   "value": "Đi làm",
+   "label": "Đi làm",
+   "lead_points": null
+  }
+ ],
+ "english_level": [
+  {
+   "value": "Chưa có",
+   "label": "Chưa có",
+   "lead_points": 0.5
+  },
+  {
+   "value": "IELTS 5.0-5.5",
+   "label": "IELTS 5.0–5.5 (hoặc tương đương)",
+   "lead_points": 1
+  },
+  {
+   "value": "IELTS 6.0+",
+   "label": "IELTS 6.0 trở lên",
+   "lead_points": 2
+  }
+ ],
+ "german_level": [
+  {
+   "value": "Chưa có",
+   "label": "Chưa có",
+   "lead_points": 0.5
+  },
+  {
+   "value": "Đức A1-A2",
+   "label": "Tiếng Đức A1–A2",
+   "lead_points": 1
+  },
+  {
+   "value": "Đức B1+",
+   "label": "Tiếng Đức B1 trở lên",
+   "lead_points": 2
+  }
+ ],
+ "desired_level": [
+  {
+   "value": "Dự bị",
+   "label": "Dự bị",
+   "lead_points": null
+  },
+  {
+   "value": "Đại học",
+   "label": "Đại học",
+   "lead_points": null
+  },
+  {
+   "value": "Thạc sĩ",
+   "label": "Thạc sĩ",
+   "lead_points": null
+  },
+  {
+   "value": "Học nghề",
+   "label": "Học nghề",
+   "lead_points": null
+  },
+  {
+   "value": "Chưa rõ",
+   "label": "Chưa rõ",
+   "lead_points": null
+  }
+ ],
+ "budget": [
+  {
+   "value": "< 300 triệu",
+   "label": "Dưới 300 triệu/năm",
+   "lead_points": 0.5
+  },
+  {
+   "value": "300-500 triệu",
+   "label": "300–500 triệu/năm",
+   "lead_points": 1.5
+  },
+  {
+   "value": "> 500 triệu",
+   "label": "Trên 500 triệu/năm",
+   "lead_points": 2
+  },
+  {
+   "value": "Chưa rõ",
+   "label": "Chưa rõ",
+   "lead_points": 0.5
+  }
+ ],
+ "timing": [
+  {
+   "value": "Trong 12 tháng",
+   "label": "Trong 12 tháng tới",
+   "lead_points": 1.5
+  },
+  {
+   "value": "1-2 năm",
+   "label": "1–2 năm nữa",
+   "lead_points": 1
+  },
+  {
+   "value": "Trên 2 năm",
+   "label": "Trên 2 năm",
+   "lead_points": 0.5
+  },
+  {
+   "value": "Chưa rõ",
+   "label": "Chưa rõ",
+   "lead_points": 0.5
+  }
+ ],
+ "source": [
+  {
+   "value": "holland",
+   "label": "Web trắc nghiệm",
+   "lead_points": null
+  },
+  {
+   "value": "chatbot",
+   "label": "Chatbot AI",
+   "lead_points": null
+  },
+  {
+   "value": "website_contact",
+   "label": "Form web chính",
+   "lead_points": null
+  },
+  {
+   "value": "event",
+   "label": "Sự kiện / Hội thảo",
+   "lead_points": null
+  },
+  {
+   "value": "facebook",
+   "label": "Facebook",
+   "lead_points": null
+  },
+  {
+   "value": "zalo",
+   "label": "Zalo",
+   "lead_points": null
+  },
+  {
+   "value": "ctv",
+   "label": "Cộng tác viên",
+   "lead_points": null
+  },
+  {
+   "value": "manual",
+   "label": "Nhập tay",
+   "lead_points": null
+  }
+ ],
+ "status": [
+  {
+   "value": "Chờ gọi",
+   "label": "Chờ gọi",
+   "lead_points": null
+  },
+  {
+   "value": "Đã gọi",
+   "label": "Đã gọi",
+   "lead_points": null
+  },
+  {
+   "value": "Đã hẹn",
+   "label": "Đã hẹn",
+   "lead_points": null
+  },
+  {
+   "value": "Đang làm hồ sơ",
+   "label": "Đang làm hồ sơ",
+   "lead_points": null
+  },
+  {
+   "value": "Đã ký hợp đồng",
+   "label": "Đã ký hợp đồng",
+   "lead_points": null
+  },
+  {
+   "value": "Ngừng",
+   "label": "Ngừng",
+   "lead_points": null
+  }
+ ],
+ "rec_type": [
+  {
+   "value": "Chính",
+   "label": "Chính",
+   "lead_points": null
+  },
+  {
+   "value": "Thay thế",
+   "label": "Thay thế",
+   "lead_points": null
+  }
+ ],
+ "program_level": [
+  {
+   "value": "Dự bị",
+   "label": "Dự bị",
+   "lead_points": null
+  },
+  {
+   "value": "Đại học",
+   "label": "Đại học",
+   "lead_points": null
+  },
+  {
+   "value": "Thạc sĩ",
+   "label": "Thạc sĩ",
+   "lead_points": null
+  },
+  {
+   "value": "Học nghề",
+   "label": "Học nghề",
+   "lead_points": null
+  }
+ ],
+ "program_language": [
+  {
+   "value": "DE",
+   "label": "Tiếng Đức",
+   "lead_points": null
+  },
+  {
+   "value": "EN",
+   "label": "Tiếng Anh",
+   "lead_points": null
+  },
+  {
+   "value": "DE/EN",
+   "label": "Đức + Anh",
+   "lead_points": null
+  }
+ ],
+ "lead_tier": [
+  {
+   "value": "GREEN",
+   "label": "Đủ điều kiện (≥ 7 điểm)",
+   "lead_points": null
+  },
+  {
+   "value": "YELLOW",
+   "label": "Cần chuẩn bị thêm (≥ 5)",
+   "lead_points": null
+  },
+  {
+   "value": "RED",
+   "label": "Chưa đủ điều kiện (< 5)",
+   "lead_points": null
+  }
+ ],
+ "school_type": [
+  {
+   "value": "UNI",
+   "label": "ĐH Nghiên cứu (Universität)",
+   "lead_points": null
+  },
+  {
+   "value": "HAW",
+   "label": "ĐH Ứng dụng (Hochschule/FH)",
+   "lead_points": null
+  },
+  {
+   "value": "ART",
+   "label": "ĐH Nghệ thuật – Âm nhạc",
+   "lead_points": null
+  },
+  {
+   "value": "ADMIN",
+   "label": "ĐH Hành chính",
+   "lead_points": null
+  },
+  {
+   "value": "SPECIAL",
+   "label": "ĐH Đặc thù",
+   "lead_points": null
+  }
+ ],
+ "school_ownership": [
+  {
+   "value": "public",
+   "label": "Công lập",
+   "lead_points": null
+  },
+  {
+   "value": "private",
+   "label": "Tư thục",
+   "lead_points": null
+  },
+  {
+   "value": "church",
+   "label": "Tôn giáo",
+   "lead_points": null
+  }
+ ]
+}

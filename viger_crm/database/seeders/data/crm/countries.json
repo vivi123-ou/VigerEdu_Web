@@ -1,0 +1,23 @@
+[
+ {
+  "code": "DE",
+  "name": "Đức",
+  "currency": "EUR",
+  "is_active": 1,
+  "note": "Đang triển khai"
+ },
+ {
+  "code": "AT",
+  "name": "Áo",
+  "currency": "EUR",
+  "is_active": 0,
+  "note": "Mở rộng sau: đổi is_active = 1"
+ },
+ {
+  "code": "NL",
+  "name": "Hà Lan",
+  "currency": "EUR",
+  "is_active": 0,
+  "note": "Mở rộng sau"
+ }
+]

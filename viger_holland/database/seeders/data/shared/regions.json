@@ -1,0 +1,104 @@
+[
+ {
+  "code": "BW",
+  "name": "Baden-Württemberg",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "BY",
+  "name": "Bayern",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "BE",
+  "name": "Berlin",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "BB",
+  "name": "Brandenburg",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "HB",
+  "name": "Bremen",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "HH",
+  "name": "Hamburg",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "HE",
+  "name": "Hessen",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "NI",
+  "name": "Niedersachsen",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "MV",
+  "name": "Mecklenburg-Vorpommern",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "NW",
+  "name": "Nordrhein-Westfalen",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "RP",
+  "name": "Rheinland-Pfalz",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "SL",
+  "name": "Saarland",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "SN",
+  "name": "Sachsen",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "ST",
+  "name": "Sachsen-Anhalt",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "SH",
+  "name": "Schleswig-Holstein",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "TH",
+  "name": "Thüringen",
+  "country_code": "DE",
+  "is_active": 1
+ },
+ {
+  "code": "AT-W",
+  "name": "Wien",
+  "country_code": "AT",
+  "is_active": 0
+ }
+]

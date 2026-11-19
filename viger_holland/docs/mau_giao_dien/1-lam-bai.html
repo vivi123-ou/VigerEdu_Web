@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mẫu 1 – Làm bài trắc nghiệm</title>
+<link rel="stylesheet" href="mau.css">
+<style>
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+  .quiz { flex: 1; display: grid; place-items: start center; padding: 2rem 1rem 3rem; }
+  .quiz__box { width: min(40rem, 100%); }
+  .progress { display: flex; align-items: center; gap: .75rem; font-size: .85rem; color: var(--muted); }
+  .progress__track { flex: 1; height: .5rem; border-radius: 999px; background: var(--line); overflow: hidden; }
+  .progress__fill { height: 100%; width: 33%; background: linear-gradient(90deg, var(--red), var(--gold)); border-radius: 999px; }
+  .milestone { margin: 1rem 0 0; padding: .7rem 1rem; border-radius: var(--r); background: #fff4d6; color: #6b4600; font-size: .9rem; display: flex; gap: .5rem; align-items: center; }
+  .q { margin-top: 1.5rem; padding: 2rem 1.5rem; }
+  .q__hint { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--red); font-weight: 700; }
+  .q__text { font-family: "Playfair Display", serif; font-size: clamp(1.35rem, 4vw, 1.75rem); line-height: 1.35; margin: .5rem 0 1.5rem; }
+  .scale { display: grid; gap: .6rem; }
+  .opt { display: flex; align-items: center; gap: .9rem; width: 100%; padding: .9rem 1rem; border: 1.5px solid var(--line); border-radius: 1rem; background: var(--white); font: 500 1rem "Inter"; color: var(--ink); text-align: left; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; }
+  .opt:hover { border-color: var(--gold); background: #fffaf0; }
+  .opt:active { transform: scale(.99); }
+  .opt__dot { flex: none; width: 2.1rem; height: 2.1rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--line-2); color: var(--ink-2); }
+  .opt.is-on { border-color: var(--red); background: #fff5f5; }
+  .opt.is-on .opt__dot { background: var(--red); color: #fff; }
+  @media (min-width: 40rem) {
+    .scale { grid-template-columns: repeat(5, 1fr); }
+    .opt { flex-direction: column; text-align: center; gap: .6rem; padding: 1rem .5rem; font-size: .85rem; min-height: 8.5rem; justify-content: flex-start; }
+  }
+  .nav-q { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+  .saved { font-size: .8rem; color: var(--ok); display: flex; align-items: center; gap: .35rem; }
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap bar__in">
+  <a class="brand" href="index.html"><img src="../../public/img/logo.png" alt=""><span><b>VIGER.EDU.VN</b><small>Trắc nghiệm sở thích nghề nghiệp</small></span></a>
+  <a class="btn btn--sm" href="#">Thoát (bài được lưu tạm)</a>
+</div></header>
+
+<main class="quiz"><div class="quiz__box">
+  <div class="progress" aria-label="Tiến độ">
+    <span><strong style="color:var(--ink)">Câu 12</strong> / 36</span>
+    <div class="progress__track"><div class="progress__fill"></div></div>
+    <span>33%</span>
+  </div>
+  <p class="milestone">Bạn đã đi được một phần ba chặng đường. Cứ trả lời theo cảm nhận thật của mình nhé!</p>
+
+  <section class="card q">
+    <p class="q__hint">Câu này giống bạn đến mức nào?</p>
+    <h1 class="q__text">Tôi hứng thú với việc tìm hiểu vì sao một hiện tượng tự nhiên xảy ra rồi tự làm thí nghiệm để kiểm chứng.</h1>
+    <div class="scale" role="radiogroup" aria-label="Mức độ giống bạn">
+      <button class="opt" role="radio"><span class="opt__dot">1</span>Hoàn toàn không giống tôi</button>
+      <button class="opt" role="radio"><span class="opt__dot">2</span>Không giống lắm</button>
+      <button class="opt" role="radio"><span class="opt__dot">3</span>Phân vân</button>
+      <button class="opt is-on" role="radio" aria-checked="true"><span class="opt__dot">4</span>Khá giống tôi</button>
+      <button class="opt" role="radio"><span class="opt__dot">5</span>Hoàn toàn giống tôi</button>
+    </div>
+  </section>
+
+  <div class="nav-q">
+    <a class="btn btn--sm" href="#">← Câu trước</a>
+    <span class="saved">✓ Đã lưu tạm trên máy</span>
+  </div>
+  <p class="muted small" style="text-align:center;margin-top:2rem">Bấm chọn là tự sang câu tiếp. Không có đúng – sai, không giới hạn thời gian.</p>
+</div></main>
+<p class="note-demo">Mẫu giao diện · <a href="index.html">Xem các mẫu khác</a></p>
+</body>
+</html>
