@@ -8,9 +8,14 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Str;
 
 class BannerForm
 {
@@ -53,22 +58,53 @@ class BannerForm
 
                 Section::make('Hình ảnh & Hiển thị')
                     ->schema([
+                        ToggleButtons::make('image_source')
+                            ->label('Nguồn hình ảnh')
+                            ->options([
+                                'upload' => 'Tải ảnh lên',
+                                'url' => 'Dùng đường dẫn ảnh (URL)',
+                            ])
+                            ->icons([
+                                'upload' => Heroicon::OutlinedArrowUpTray,
+                                'url' => Heroicon::OutlinedLink,
+                            ])
+                            ->inline()
+                            ->default('upload')
+                            ->live()
+                            ->columnSpanFull(),
                         FileUpload::make('image')
                             ->label('Hình ảnh banner')
+                            ->helperText('JPG, PNG hoặc WebP, tối đa '.self::maxUploadLabel().'. Nên dùng ảnh ngang, khoảng 1920×1080.')
                             ->image()
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->maxSize(self::maxUploadKb())
+                            ->imageEditor()
                             ->disk('public')
                             ->directory('banners')
-                            ->required()
+                            ->required(fn (Get $get) => $get('image_source') !== 'url')
+                            ->visible(fn (Get $get) => $get('image_source') !== 'url')
+                            ->columnSpanFull(),
+                        TextInput::make('image_url')
+                            ->label('Đường dẫn ảnh')
+                            ->placeholder('https://...')
+                            ->url()
+                            ->maxLength(1000)
+                            ->live(onBlur: true)
+                            ->required(fn (Get $get) => $get('image_source') === 'url')
+                            ->visible(fn (Get $get) => $get('image_source') === 'url')
+                            ->columnSpanFull(),
+                        View::make('filament.forms.components.banner-image-preview')
+                            ->visible(fn (Get $get) => $get('image_source') === 'url' && filled($get('image_url')))
                             ->columnSpanFull(),
                         Toggle::make('is_active')
                             ->label('Kích hoạt hiển thị')
                             ->default(true),
                         TextInput::make('sort_order')
                             ->label('Thứ tự sắp xếp')
-                            ->helperText('Nhập số đã có banner dùng thì banner mới chèn vào vị trí đó, các banner khác tự lùi xuống.')
+                            ->helperText('Số nhỏ hiển thị trước (có thể nhập 0). Nhập số đã có banner dùng thì banner này chèn vào vị trí đó, các banner khác tự lùi xuống.')
                             ->numeric()
                             ->integer()
-                            ->minValue(1)
+                            ->minValue(0)
                             ->required()
                             ->default(fn () => (int) Banner::max('sort_order') + 1),
                     ])->columns(2),
@@ -84,5 +120,68 @@ class BannerForm
                             ->placeholder('Ví dụ: /lien-he'),
                     ])->columns(2),
             ]);
+    }
+
+    /** Ảnh là đường dẫn ngoài (http/https) thay vì file đã tải lên. */
+    public static function isExternalUrl(?string $image): bool
+    {
+        return Str::startsWith((string) $image, ['http://', 'https://', '//']);
+    }
+
+    /** Khi mở form sửa: ảnh dạng URL => chuyển sang ô "Đường dẫn ảnh". */
+    public static function fillImageFields(array $data): array
+    {
+        if (self::isExternalUrl($data['image'] ?? null)) {
+            $data['image_source'] = 'url';
+            $data['image_url'] = $data['image'];
+            $data['image'] = null;
+        } else {
+            $data['image_source'] = 'upload';
+        }
+
+        return $data;
+    }
+
+    /** Khi lưu: gộp 2 ô ảnh về cột "image". */
+    public static function saveImageFields(array $data): array
+    {
+        if (($data['image_source'] ?? 'upload') === 'url') {
+            $data['image'] = trim((string) ($data['image_url'] ?? ''));
+        }
+
+        unset($data['image_source'], $data['image_url']);
+
+        return $data;
+    }
+
+    /** Giới hạn tải lên thực tế của PHP (upload_max_filesize, post_max_size), tính bằng KB, tối đa 10MB. */
+    public static function maxUploadKb(): int
+    {
+        $toKb = function (string $value): int {
+            $value = trim($value);
+            $number = (float) $value;
+
+            return (int) match (strtolower(substr($value, -1))) {
+                'g' => $number * 1024 * 1024,
+                'm' => $number * 1024,
+                'k' => $number,
+                default => $number / 1024,
+            };
+        };
+
+        $limits = array_filter([
+            $toKb((string) ini_get('upload_max_filesize')),
+            $toKb((string) ini_get('post_max_size')),
+            10 * 1024,
+        ]);
+
+        return max(1, min($limits));
+    }
+
+    public static function maxUploadLabel(): string
+    {
+        $kb = self::maxUploadKb();
+
+        return $kb >= 1024 ? rtrim(rtrim(number_format($kb / 1024, 1), '0'), '.').'MB' : $kb.'KB';
     }
 }

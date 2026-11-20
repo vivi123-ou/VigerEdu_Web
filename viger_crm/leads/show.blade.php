@@ -1,0 +1,215 @@
+@extends('crm::layouts.app')
+
+@section('title', $lead->full_name)
+@section('breadcrumb', $lead->full_name)
+
+@use('App\Models\Lead')
+@use('App\Models\LeadActivity')
+
+@php
+    $editLabels = [
+        'parent' => 'Chỉnh sửa thông tin phụ huynh',
+        'student' => 'Chỉnh sửa thông tin học sinh',
+        'consult' => 'Chỉnh sửa nhu cầu tư vấn',
+    ];
+    $editIcon = '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+    $hollandCode = $lead->hollandCode();
+    $scores = $lead->hollandScores();
+@endphp
+
+@section('content')
+    <a href="{{ route('crm.leads.index') }}" class="back-link">← Danh sách khách hàng tiềm năng</a>
+
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    {{-- ===== THÔNG TIN KHÁCH HÀNG ===== --}}
+    <section class="card lead-hero" id="general">
+        <div class="lead-hero-top">
+            <span class="crm-avatar lg">{{ mb_strtoupper(mb_substr($lead->full_name, 0, 1)) }}</span>
+            <div class="lead-hero-name">
+                <h1>{{ $lead->full_name }}</h1>
+                <p class="muted">
+                    {{ $lead->code() }}
+                    @if ($lead->student_name) · Học sinh: <b>{{ $lead->student_name }}</b>@endif
+                </p>
+            </div>
+            <div class="page-actions">
+                <a href="tel:{{ $lead->phone }}" class="btn btn-outline">
+                    <svg viewBox="0 0 24 24">{!! LeadActivity::TYPES['call'][1] !!}</svg> {{ $lead->phone }}
+                </a>
+                <a href="{{ route('crm.leads.edit', [$lead, 'general']) }}" class="btn btn-primary">{!! $editIcon !!} Cập nhật trạng thái</a>
+                @if (auth()->user()->isAdmin())
+                    <form method="POST" action="{{ route('crm.leads.destroy', $lead) }}"
+                          onsubmit="return confirm('Xoá khách hàng {{ addslashes($lead->full_name) }} và toàn bộ lịch sử tư vấn? Không thể hoàn tác.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger-outline" title="Xoá khách hàng">
+                            <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg> Xoá
+                        </button>
+                    </form>
+                @endif
+            </div>
+        </div>
+
+        <dl class="info-strip">
+            <div><dt>Mã khách hàng</dt><dd>{{ $lead->code() }}</dd></div>
+            <div><dt>Nguồn</dt><dd><span class="source source-{{ $lead->source }}">{{ $lead->sourceLabel() }}</span></dd></div>
+            <div><dt>Ngày tiếp nhận</dt><dd>{{ $lead->created_at->format('d/m/Y') }}</dd></div>
+            <div><dt>Trạng thái</dt><dd><span class="badge {{ $lead->statusBadge() }}">{{ $lead->statusLabel() }}</span></dd></div>
+            <div><dt>Tư vấn viên</dt><dd>{!! $lead->assignee ? e($lead->assignee->displayName()) : '<span class="muted fst-italic">Chưa gán</span>' !!}</dd></div>
+        </dl>
+    </section>
+
+    <div class="lead-layout">
+        {{-- ===== CỘT TRÁI: I – IV ===== --}}
+        <div class="lead-col">
+            @foreach (['parent', 'student', 'consult'] as $key)
+                @php $sec = $sections[$key]; @endphp
+                <section class="card" id="{{ $key }}">
+                    <div class="card-head">
+                        <h3 class="section-title"><span>{{ $sec['no'] }}</span>{{ $sec['title'] }}</h3>
+                    </div>
+                    <dl class="info-grid">
+                        @foreach ($sec['fields'] as $field => $def)
+                            @php $v = $lead->displayValue($field, $def); @endphp
+                            <div class="{{ ! empty($def['full']) ? 'full' : '' }}">
+                                <dt>{{ $def['label'] }}</dt>
+                                <dd>
+                                    @if ($v === null)
+                                        <span class="empty-val">Chưa cập nhật</span>
+                                    @elseif ($def['type'] === 'tel')
+                                        <a href="tel:{{ $v }}" class="link">{{ $v }}</a>
+                                    @elseif ($def['type'] === 'email')
+                                        <a href="mailto:{{ $v }}" class="link">{{ $v }}</a>
+                                    @elseif ($def['type'] === 'textarea')
+                                        {!! nl2br(e($v)) !!}
+                                    @else
+                                        {{ $v }}
+                                    @endif
+                                </dd>
+                            </div>
+                        @endforeach
+                    </dl>
+                    <div class="card-actions">
+                        <a href="{{ route('crm.leads.edit', [$lead, $key]) }}" class="btn btn-outline btn-sm">{!! $editIcon !!} {{ $editLabels[$key] }}</a>
+                    </div>
+                </section>
+            @endforeach
+
+            {{-- IV. HOLLAND --}}
+            <section class="card" id="holland">
+                <div class="card-head">
+                    <h3 class="section-title"><span>IV</span>Thông tin Holland <small class="muted">(nếu có)</small></h3>
+                </div>
+
+                @if ($hollandCode)
+                    <div class="holland-head">
+                        <div>
+                            <p class="muted">Mã Holland</p>
+                            <p class="holland-code">
+                                @foreach (str_split($hollandCode) as $l)<span class="h-{{ strtolower($l) }}">{{ $l }}</span>@endforeach
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="holland-bars">
+                        @foreach (Lead::HOLLAND_TYPES as $l => [$name])
+                            @php $s = $scores[$l] ?? null; @endphp
+                            <div class="hbar {{ str_contains($hollandCode, $l) ? 'is-top' : '' }}">
+                                <span class="hbar-label"><b>{{ $l }}</b> {{ $name }}</span>
+                                <span class="hbar-track"><span class="hbar-fill h-{{ strtolower($l) }}" style="width: {{ (int) $s }}%"></span></span>
+                                <span class="hbar-val">{{ $s ?? '—' }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="holland-detail" id="hollandDetail" hidden>
+                        @foreach (str_split($hollandCode) as $i => $l)
+                            <div class="holland-type">
+                                <span class="holland-badge h-{{ strtolower($l) }}">{{ $l }}</span>
+                                <div>
+                                    <b>{{ $i + 1 }}. {{ Lead::HOLLAND_TYPES[$l][0] }}</b> · {{ $scores[$l] }} điểm
+                                    <p class="muted">{{ Lead::HOLLAND_TYPES[$l][1] }}</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="empty-val">Khách hàng chưa làm hoặc chưa có kết quả trắc nghiệm Holland.</p>
+                @endif
+
+                <div class="card-actions">
+                    @if ($hollandCode)
+                        <button type="button" class="btn btn-outline btn-sm" data-holland-toggle>Xem kết quả Holland</button>
+                    @endif
+                    <a href="{{ route('crm.leads.edit', [$lead, 'holland']) }}" class="btn btn-outline btn-sm">{!! $editIcon !!} {{ $hollandCode ? 'Cập nhật điểm' : 'Nhập điểm Holland' }}</a>
+                </div>
+            </section>
+        </div>
+
+        {{-- ===== CỘT PHẢI: V – VI ===== --}}
+        <div class="lead-col lead-side">
+            <section class="card" id="history">
+                <div class="card-head">
+                    <h3 class="section-title"><span>V</span>Lịch sử tư vấn</h3>
+                    <span class="muted">{{ $lead->activities->count() }} hoạt động</span>
+                </div>
+
+                <ol class="timeline">
+                    @forelse ($lead->activities as $a)
+                        <li class="tl-item tl-{{ $a->type }}">
+                            <span class="tl-icon"><svg viewBox="0 0 24 24">{!! $a->typeIcon() !!}</svg></span>
+                            <div class="tl-body">
+                                <p class="tl-meta">
+                                    <b>{{ $a->created_at->format('d/m/Y H:i') }}</b>
+                                    · {{ $a->typeLabel() }}
+                                    @if ($a->user) · {{ $a->user->displayName() }}@endif
+                                </p>
+                                <p class="tl-content">{!! nl2br(e($a->content)) !!}</p>
+                            </div>
+                        </li>
+                    @empty
+                        <li class="empty-val">Chưa có hoạt động nào.</li>
+                    @endforelse
+                </ol>
+            </section>
+
+            <section class="card" id="notes">
+                <div class="card-head">
+                    <h3 class="section-title"><span>VI</span>Ghi chú và hoạt động</h3>
+                </div>
+                <form method="POST" action="{{ route('crm.leads.notes.store', $lead) }}" class="note-form">
+                    @csrf
+                    <div class="note-types">
+                        @foreach (LeadActivity::MANUAL_TYPES as $t)
+                            <label class="chip">
+                                <input type="radio" name="type" value="{{ $t }}" @checked(old('type', 'note') === $t)>
+                                <span><svg viewBox="0 0 24 24">{!! LeadActivity::TYPES[$t][1] !!}</svg>{{ LeadActivity::TYPES[$t][0] }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    <label class="field @error('content') has-error @enderror">
+                        <textarea name="content" rows="4" placeholder="Nhập nội dung trao đổi với phụ huynh..." required>{{ old('content') }}</textarea>
+                        @error('content')<small class="error">{{ $message }}</small>@enderror
+                    </label>
+                    <button type="submit" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Thêm ghi chú
+                    </button>
+                </form>
+            </section>
+        </div>
+    </div>
+@endsection
+
+@push('scripts')
+    <script>
+        var hBtn = document.querySelector('[data-holland-toggle]');
+        if (hBtn) hBtn.addEventListener('click', function () {
+            var box = document.getElementById('hollandDetail');
+            box.hidden = !box.hidden;
+            this.textContent = box.hidden ? 'Xem kết quả Holland' : 'Ẩn kết quả Holland';
+        });
+    </script>
+@endpush

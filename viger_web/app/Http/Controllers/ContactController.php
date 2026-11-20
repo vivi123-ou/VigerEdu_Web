@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendContactToCrm;
 use App\Models\ContactMessage;
 use App\Support\ContactPage;
 use Illuminate\Http\Request;
@@ -28,9 +29,21 @@ class ContactController extends Controller
             'message.max' => __('contact.validation.message_max'),
         ]);
 
-        ContactMessage::create($data);
+        // Lưu đúng câu đồng ý khách thấy dưới nút gửi (gửi kèm sang CRM — HOP_DONG_KET_NOI mục 2.1)
+        $data['consent_text'] = self::consentText();
+
+        $message = ContactMessage::create($data);
+
+        // Gửi sang CRM qua hàng đợi: CRM lỗi thì tự thử lại, form vẫn được lưu ở web chính
+        SendContactToCrm::dispatch($message);
 
         return redirect(url('/lien-he').'#dang-ky')
             ->with('status', ContactPage::get('contact_success_message'));
+    }
+
+    /** Câu đồng ý hiển thị dưới nút gửi (theo ngôn ngữ đang xem và chữ trên nút). */
+    public static function consentText(): string
+    {
+        return __('contact.consent_text', ['button' => ContactPage::get('contact_form_button')]);
     }
 }

@@ -18,4 +18,6 @@ return [
         'phone_required' => 'Please enter your phone number.',
         'message_max' => 'The message may not exceed 2000 characters.',
     ],
+
+    'consent_text' => 'By clicking ":button", you agree that VIGER EDU may use the information above to contact you for consultation in accordance with our privacy policy.',
 ];

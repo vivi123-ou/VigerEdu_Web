@@ -67,6 +67,12 @@ class User extends Authenticatable implements FilamentUser, HasName
         return $this->attributes['full_name'] ?? $this->attributes['username'] ?? null;
     }
 
+    /** Tên hiển thị trong CRM */
+    public function displayName(): string
+    {
+        return (string) ($this->full_name ?: ($this->name ?: $this->username));
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'ADMIN';

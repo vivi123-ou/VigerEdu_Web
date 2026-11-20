@@ -88,6 +88,10 @@ return [
     */
     'supported_locales' => ['vi', 'en'],
 
+    // CRM tạm chạy trong viger_web: subdomain (để trống => /crm) và thư mục chứa view CRM
+    'crm_domain' => env('CRM_DOMAIN'),
+    'crm_views_path' => env('CRM_VIEWS_PATH', base_path('../viger_crm')),
+
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*

@@ -18,4 +18,7 @@ return [
         'phone_required' => 'Vui lòng nhập số điện thoại.',
         'message_max' => 'Lời nhắn tối đa 2000 ký tự.',
     ],
+
+    // Câu đồng ý gửi kèm sang CRM (HOP_DONG_KET_NOI: consent.text). Đổi câu => tăng CRM_CONSENT_VERSION.
+    'consent_text' => 'Bấm ":button" là bạn đồng ý cho VIGER EDU dùng thông tin trên để liên hệ tư vấn theo chính sách bảo mật.',
 ];

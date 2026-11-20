@@ -8,6 +8,9 @@ use App\Models\Category;
 use App\Models\Page;
 use Illuminate\Support\Facades\Route;
 
+// CRM (TẠM THỜI chạy trong viger_web cho đến khi viger_crm thành app riêng) — phải nạp TRƯỚC route web chính
+require __DIR__.'/crm.php';
+
 /*
 |--------------------------------------------------------------------------
 | Trang tĩnh

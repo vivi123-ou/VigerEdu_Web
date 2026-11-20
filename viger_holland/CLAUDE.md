@@ -105,7 +105,7 @@
 ```bash
 composer install && cp .env.example .env && php artisan key:generate
 php artisan migrate --seed          # máy dev
-php artisan serve                   # http://127.0.0.1:8000
+php artisan serve --port=8002       # http://holland.localhost:8002
 php artisan test                    # chạy test
 vendor/bin/pint --dirty             # định dạng code
 php artisan queue:work              # chạy job gửi CRM (dev)

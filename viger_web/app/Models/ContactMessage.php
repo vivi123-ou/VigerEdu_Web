@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ContactMessage extends Model
 {
-    protected $fillable = ['name', 'email', 'phone', 'message'];
+    protected $fillable = ['name', 'email', 'phone', 'message', 'consent_text'];
+
+    protected function casts(): array
+    {
+        return [
+            'crm_synced_at' => 'datetime',
+        ];
+    }
 }

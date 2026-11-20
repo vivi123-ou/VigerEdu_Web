@@ -21,9 +21,9 @@ Kết nối với các web khác theo `docs/HOP_DONG_KET_NOI.md`.
    cp .env.example .env        # rồi điền HOLLAND_ADMIN_USERNAME / HOLLAND_ADMIN_PASSWORD
    php artisan key:generate
    php artisan migrate --seed  # tạo bảng + 72 câu hỏi mẫu + nội dung mẫu + tài khoản quản trị
-   php artisan serve           # mở http://127.0.0.1:8000
+   php artisan serve --port=8002   # mở http://holland.localhost:8002
    ```
-4. Trang quản trị: `http://127.0.0.1:8000/admin` (đăng nhập bằng tên đăng nhập hoặc email).
+4. Trang quản trị: `http://holland.localhost:8002/admin` (đăng nhập bằng tên đăng nhập hoặc email).
 
 Seeder chạy lại bao nhiêu lần cũng được: chỉ thêm cái chưa có, **không ghi đè** câu hỏi / nội dung / mật khẩu đã sửa.
 

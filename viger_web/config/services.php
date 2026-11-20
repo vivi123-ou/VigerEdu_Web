@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    // Kết nối CRM (HOP_DONG_KET_NOI mục 4): form liên hệ gửi POST {url}/leads với token kênh website.
+    // Để trống CRM_API_URL / CRM_API_TOKEN => không gửi, form chỉ lưu ở web chính.
+    'crm' => [
+        'url' => env('CRM_API_URL'),
+        'token' => env('CRM_API_TOKEN'),
+        'consent_version' => env('CRM_CONSENT_VERSION', 'lien-he-2026-11'),
+    ],
+
 ];
