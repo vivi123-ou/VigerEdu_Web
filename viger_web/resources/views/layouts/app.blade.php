@@ -40,7 +40,7 @@
 
     {{-- JS chung --}}
     <script src="{{ asset('js/main.js') }}"></script>
-    <script src="{{ asset('js/chatbot.js') }}"></script>
+    <script src="{{ asset('js/chatbot.js') }}?v={{ filemtime(public_path('js/chatbot.js')) }}"></script>
     <script src="{{ asset('js/back-to-top.js') }}"></script>
 
     {{-- JS riêng của từng trang (layout:fragment="scripts") --}}

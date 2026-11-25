@@ -1,5 +1,10 @@
 {{-- Chatbot AI: nút nổi góc phải dưới + cửa sổ chat --}}
-<div class="chatbot" id="chatbot" data-i18n='@json(__("chatbot"))'>
+@php
+  // Chatbot Python hiện chỉ trả lời tiếng Việt -> trang tiếng Anh dùng câu trả lời soạn sẵn
+  $chatbotEndpoint = app()->getLocale() === 'vi' && config('services.chatbot.url')
+      ? rtrim(config('services.chatbot.url'), '/') . '/chat' : '';
+@endphp
+<div class="chatbot" id="chatbot" data-i18n='@json(__("chatbot"))' data-endpoint="{{ $chatbotEndpoint }}">
   <div
     class="chatbot-window"
     id="chatbot-window"

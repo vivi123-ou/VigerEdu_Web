@@ -43,4 +43,10 @@ return [
         'consent_version' => env('CRM_CONSENT_VERSION', 'lien-he-2026-11'),
     ],
 
+    // Dịch vụ chatbot (viger_chatbot): trình duyệt gọi POST {url}/chat. Không có token (API công khai,
+    // giới hạn theo IP + CORS phía chatbot). Để trống => widget dùng câu trả lời soạn sẵn.
+    'chatbot' => [
+        'url' => env('CHATBOT_API_URL'),
+    ],
+
 ];

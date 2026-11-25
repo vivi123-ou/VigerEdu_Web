@@ -24,6 +24,13 @@ return [
             'token_hash' => env('CRM_CHANNEL_WEBSITE_TOKEN_HASH'),
             'scopes' => ['leads:write'],
         ],
+        [
+            // viger_chatbot gửi khách khi khách để lại SĐT / email trong khung chat
+            'code' => 'chatbot',
+            'enabled' => (bool) env('CRM_CHANNEL_CHATBOT_ENABLED', true),
+            'token_hash' => env('CRM_CHANNEL_CHATBOT_TOKEN_HASH'),
+            'scopes' => ['leads:write'],
+        ],
     ],
 
     'menu' => [

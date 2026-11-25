@@ -1,0 +1,77 @@
+{
+  "_huong_dan": "Câu hỏi thường gặp. Sửa 'answer' theo nội dung Viger đã duyệt. 'keywords' viết không dấu, chữ thường; câu khách chứa càng nhiều từ khóa thì càng được chọn. Sửa xong khởi động lại chatbot.",
+  "items": [
+    {
+      "id": "hoc_phi",
+      "keywords": ["hoc phi", "tien hoc", "mien phi", "tuition", "phi hoc", "chi phi hoc"],
+      "answer": "Phần lớn trường công lập ở Đức không thu học phí, sinh viên chỉ đóng phí học kỳ (thường vài trăm euro mỗi kỳ). Riêng bang Baden-Württemberg thu học phí với sinh viên ngoài EU. Trường tư thục thu học phí riêng tùy trường. Mức cụ thể theo từng trường, tư vấn viên Viger sẽ kiểm tra giúp bạn.",
+      "suggestions": ["Trường công lập ở Bayern", "Chi phí sinh hoạt ở Đức", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "chi_phi_song",
+      "keywords": ["chi phi song", "sinh hoat phi", "chi phi sinh hoat", "tien nha", "thue nha", "ton bao nhieu", "chi phi o duc"],
+      "answer": "Chi phí sinh hoạt ở Đức khác nhau theo thành phố: các thành phố lớn như München, Hamburg, Frankfurt đắt hơn hẳn các thành phố nhỏ ở miền Đông. Bạn có thể hỏi mình về một bang cụ thể (ví dụ: \"bang Sachsen thế nào\") để xem mức chi phí tương đối.",
+      "suggestions": ["Bang Sachsen thế nào", "Bang Bayern thế nào", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "tai_khoan_phong_toa",
+      "keywords": ["tai khoan phong toa", "phong toa", "blocked account", "sperrkonto", "chung minh tai chinh"],
+      "answer": "Để xin visa du học Đức, bạn thường cần chứng minh tài chính bằng tài khoản phong tỏa (Sperrkonto) với số tiền đủ sinh hoạt một năm theo mức Bộ Ngoại giao Đức quy định (thay đổi hằng năm). Tư vấn viên Viger sẽ báo mức hiện hành và hướng dẫn mở tài khoản.",
+      "suggestions": ["Hồ sơ visa du học", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "visa",
+      "keywords": ["visa", "thi thuc", "dai su quan", "phong van visa", "ho so visa"],
+      "answer": "Hồ sơ visa du học Đức thường gồm: thư mời nhập học (hoặc giấy dự bị), chứng chỉ ngoại ngữ, chứng minh tài chính (tài khoản phong tỏa), bảo hiểm, APS và lịch hẹn tại Đại sứ quán/Tổng lãnh sự quán. Viger hỗ trợ chuẩn bị trọn bộ hồ sơ, bạn để lại số điện thoại để được tư vấn chi tiết nhé.",
+      "suggestions": ["APS là gì", "Tài khoản phong tỏa", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "aps",
+      "keywords": ["aps", "tham dinh ho so", "kiem tra ho so"],
+      "answer": "APS là thủ tục thẩm định học thuật bắt buộc với học sinh, sinh viên Việt Nam trước khi xin visa du học Đức. APS kiểm tra tính xác thực của bằng cấp và học bạ. Viger hướng dẫn bạn chuẩn bị hồ sơ APS.",
+      "suggestions": ["Hồ sơ visa du học", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "tieng_duc",
+      "keywords": ["tieng duc", "b1", "b2", "c1", "testdaf", "dsh", "goethe", "ngon ngu", "hoc tieng"],
+      "answer": "Chương trình dạy bằng tiếng Đức thường yêu cầu trình độ B2–C1 (TestDaF, DSH, Goethe C1…); vào dự bị đại học thường cần B1. Một số chương trình dạy bằng tiếng Anh yêu cầu IELTS/TOEFL. Yêu cầu cụ thể tùy trường và ngành.",
+      "suggestions": ["Dự bị đại học là gì", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "du_bi",
+      "keywords": ["du bi", "studienkolleg", "foundation", "hoc du bi"],
+      "answer": "Dự bị đại học (Studienkolleg) là năm học chuẩn bị dành cho học sinh tốt nghiệp THPT Việt Nam chưa đủ điều kiện vào thẳng đại học Đức. Cuối khóa có kỳ thi FSP, đậu thì được nộp vào đại học. Thường cần tiếng Đức B1 để thi vào dự bị.",
+      "suggestions": ["Yêu cầu tiếng Đức", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "loai_truong",
+      "keywords": ["khac nhau", "phan biet", "nen chon", "uni hay", "ung dung hay", "nghien cuu hay", "la gi"],
+      "answer": "Ở Đức có hai loại trường chính:\n- ĐH Nghiên cứu (Universität): nặng lý thuyết và nghiên cứu, có quyền đào tạo tiến sĩ.\n- ĐH Ứng dụng (Hochschule / Fachhochschule): gắn với thực hành, thực tập doanh nghiệp, ra trường dễ đi làm.\nNgoài ra có ĐH Nghệ thuật/Âm nhạc. Bạn muốn xem danh sách loại nào, ở bang nào?",
+      "suggestions": ["ĐH Ứng dụng ở Bayern", "ĐH Nghiên cứu ở Berlin"]
+    },
+    {
+      "id": "lam_them",
+      "keywords": ["lam them", "di lam", "viec lam", "part time", "lam part"],
+      "answer": "Sinh viên quốc tế ở Đức được phép đi làm thêm trong giới hạn số ngày mỗi năm theo luật cư trú. Sau tốt nghiệp được gia hạn cư trú để tìm việc. Tư vấn viên Viger sẽ giải thích chi tiết quy định hiện hành.",
+      "suggestions": ["Chi phí sinh hoạt ở Đức", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "nganh",
+      "keywords": ["nganh", "chuyen nganh", "hoc nganh", "nganh gi", "nganh nao"],
+      "answer": "Hiện mình chưa có dữ liệu ngành học của từng trường. Bạn có thể làm bài trắc nghiệm Holland để biết nhóm ngành phù hợp, hoặc để lại số điện thoại để tư vấn viên tìm trường có ngành bạn muốn.",
+      "suggestions": ["Làm trắc nghiệm Holland", "Tư vấn trực tiếp"]
+    },
+    {
+      "id": "holland",
+      "keywords": ["holland", "trac nghiem", "bai test", "huong nghiep", "lam test"],
+      "answer": "Bài trắc nghiệm Holland giúp bạn biết nhóm tính cách nghề nghiệp và các ngành phù hợp. Bạn làm miễn phí tại holland.viger.edu.vn nhé.",
+      "suggestions": ["Tư vấn trực tiếp"]
+    },
+    {
+      "id": "lien_he",
+      "keywords": ["tu van truc tiep", "lien he", "hotline", "so dien thoai", "goi dien", "gap tu van", "dia chi van phong"],
+      "answer": "Bạn để lại số điện thoại (hoặc email) ngay trong khung chat này, tư vấn viên Viger sẽ gọi lại cho bạn sớm nhất.",
+      "suggestions": []
+    }
+  ]
+}

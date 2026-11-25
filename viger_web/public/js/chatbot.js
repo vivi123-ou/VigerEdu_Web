@@ -54,10 +54,10 @@
     }
 
     /*
-     * Trả lời tạm thời theo từ khoá.
-     * Khi kết nối AI thật, thay hàm này bằng một request tới backend (vd POST /chatbot).
+     * Câu trả lời soạn sẵn theo từ khoá: dùng khi chưa cấu hình dịch vụ chatbot (CHATBOT_API_URL),
+     * khi dịch vụ lỗi, hoặc ở trang tiếng Anh.
      */
-    function getBotReply(text) {
+    function getLocalReply(text) {
         var q = text.toLowerCase();
         var r = t.replies || {};
         if (/chi phí|học phí|tiền|giá|cost|fee|tuition|price|money/.test(q)) return r.cost;
@@ -69,19 +69,80 @@
         return r.fallback;
     }
 
+    // Dịch vụ chatbot (viger_chatbot) trả chữ thường có **đậm**, xuống dòng và link -> đổi sang HTML an toàn
+    function formatBotText(text) {
+        var html = String(text)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" rel="noopener nofollow">$1</a>');
+        return html.replace(/\n/g, '<br>');
+    }
+
+    function renderSuggestions(list) {
+        suggestions.innerHTML = '';
+        (list || []).slice(0, 4).forEach(function (label) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'chatbot-chip';
+            b.textContent = label;
+            suggestions.appendChild(b);
+        });
+    }
+
+    var endpoint = root.dataset.endpoint || '';
+    var SESSION_KEY = 'viger_chatbot_session';
+    var sessionCode = null;
+    try { sessionCode = sessionStorage.getItem(SESSION_KEY); } catch (e) {}
+    var busy = false;
+
+    function askServer(text) {
+        var ctrl = window.AbortController ? new AbortController() : null;
+        var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 15000) : null;
+        return fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ message: text, session_code: sessionCode }),
+            signal: ctrl ? ctrl.signal : undefined
+        }).then(function (res) {
+            if (timer) clearTimeout(timer);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+        }).then(function (data) {
+            if (data.session_code) {
+                sessionCode = data.session_code;
+                try { sessionStorage.setItem(SESSION_KEY, sessionCode); } catch (e) {}
+            }
+            return data;
+        });
+    }
+
     function send(text) {
-        text = text.trim();
-        if (!text) return;
+        text = text.trim().slice(0, 1000);
+        if (!text || busy) return;
+        busy = true;
 
         addMessage(text, 'user');
         suggestions.innerHTML = '';
         input.value = '';
-
         var typing = showTyping();
-        setTimeout(function () {
+
+        function done(html, chips) {
             typing.remove();
-            addMessage(getBotReply(text), 'bot', true);
-        }, 700);
+            addMessage(html, 'bot', true);
+            renderSuggestions(chips);
+            busy = false;
+        }
+
+        if (!endpoint) {
+            setTimeout(function () { done(getLocalReply(text)); }, 700);
+            return;
+        }
+        askServer(text).then(function (data) {
+            done(formatBotText(data.reply || ''), data.suggestions);
+        }).catch(function () {
+            done(getLocalReply(text));
+        });
     }
 
     form.addEventListener('submit', function (e) {
