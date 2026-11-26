@@ -15,12 +15,16 @@
             <p class="muted">Quản lý khách hàng tiềm năng · {{ number_format($leads->total()) }} khách hàng</p>
         </div>
         <div class="page-actions">
+            @if (auth()->user()->crmCan('leads.create'))
             <a href="{{ route('crm.leads.create') }}" class="btn btn-primary">
                 <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Thêm khách hàng
             </a>
+            @endif
+            @if (auth()->user()->crmCan('leads.export'))
             <a href="{{ route('crm.leads.export', request()->query()) }}" class="btn btn-outline">
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Xuất Excel
             </a>
+            @endif
             <button type="button" class="btn btn-outline {{ $activeFilters ? 'is-on' : '' }}" data-filter-toggle>
                 <svg viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg> Bộ lọc
                 @if ($activeFilters)<span class="count">{{ $activeFilters }}</span>@endif
@@ -113,9 +117,11 @@
                                 <a href="{{ route('crm.leads.show', $lead) }}" class="icon-link" title="Xem chi tiết">
                                     <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
                                 </a>
+                                @if (auth()->user()->crmCan('leads.update'))
                                 <a href="{{ route('crm.leads.edit', [$lead, 'parent']) }}" class="icon-link" title="Chỉnh sửa">
                                     <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
                                 </a>
+                                @endif
                             </td>
                         </tr>
                     @empty

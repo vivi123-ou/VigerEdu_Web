@@ -29,7 +29,7 @@ class NotificationController extends Controller
     {
         $query = LeadActivity::query()
             ->where(fn ($q) => $q->whereNull('user_id')->orWhere('user_id', '!=', $user->id))
-            ->when(! $user->isAdmin(), fn ($q) => $q->whereHas('lead', fn ($l) => $l->where('assigned_to', $user->id)));
+            ->whereHas('lead', fn ($l) => $l->visibleTo($user));
 
         $seenAt = self::seenAt($user);
 

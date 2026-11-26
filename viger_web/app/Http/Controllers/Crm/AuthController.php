@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Crm;
 
 use App\Http\Controllers\Controller;
+use App\Models\CrmAuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -37,11 +38,13 @@ class AuthController extends Controller
         if (Auth::attempt([...$credentials, 'active' => true], $request->boolean('remember'))) {
             RateLimiter::clear($key);
             $request->session()->regenerate();
+            CrmAuditLog::record('login', 'Đăng nhập CRM.');
 
             return redirect()->intended(route('crm.dashboard'));
         }
 
         RateLimiter::hit($key, 60);
+        CrmAuditLog::record('login_failed', 'Đăng nhập sai với tên đăng nhập "'.Str::limit($credentials['username'], 60).'".');
 
         return back()->withInput($request->only('username'))->withErrors([
             'username' => 'Tên đăng nhập hoặc mật khẩu không đúng.',

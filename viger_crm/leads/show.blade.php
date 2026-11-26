@@ -39,8 +39,10 @@
                 <a href="tel:{{ $lead->phone }}" class="btn btn-outline">
                     <svg viewBox="0 0 24 24">{!! LeadActivity::TYPES['call'][1] !!}</svg> {{ $lead->phone }}
                 </a>
-                <a href="{{ route('crm.leads.edit', [$lead, 'general']) }}" class="btn btn-primary">{!! $editIcon !!} Cập nhật trạng thái</a>
-                @if (auth()->user()->isAdmin())
+                @if (auth()->user()->crmCan('leads.update'))
+                    <a href="{{ route('crm.leads.edit', [$lead, 'general']) }}" class="btn btn-primary">{!! $editIcon !!} Cập nhật trạng thái</a>
+                @endif
+                @if (auth()->user()->crmCan('leads.delete'))
                     <form method="POST" action="{{ route('crm.leads.destroy', $lead) }}"
                           onsubmit="return confirm('Xoá khách hàng {{ addslashes($lead->full_name) }} và toàn bộ lịch sử tư vấn? Không thể hoàn tác.')">
                         @csrf
@@ -92,9 +94,11 @@
                             </div>
                         @endforeach
                     </dl>
-                    <div class="card-actions">
-                        <a href="{{ route('crm.leads.edit', [$lead, $key]) }}" class="btn btn-outline btn-sm">{!! $editIcon !!} {{ $editLabels[$key] }}</a>
-                    </div>
+                    @if (auth()->user()->crmCan('leads.update'))
+                        <div class="card-actions">
+                            <a href="{{ route('crm.leads.edit', [$lead, $key]) }}" class="btn btn-outline btn-sm">{!! $editIcon !!} {{ $editLabels[$key] }}</a>
+                        </div>
+                    @endif
                 </section>
             @endforeach
 
@@ -102,6 +106,15 @@
             <section class="card" id="holland">
                 <div class="card-head">
                     <h3 class="section-title"><span>IV</span>Thông tin Holland <small class="muted">(nếu có)</small></h3>
+                    <div class="holland-links">
+                        @if ($lead->holland_report_url)
+                            <a href="{{ $lead->holland_report_url }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Xem bài làm trên Holland ↗</a>
+                        @endif
+                        <button type="button" class="btn btn-outline btn-sm" data-copy="{{ $lead->hollandInviteUrl() }}"
+                                title="Gửi link này cho khách qua Zalo / email. Khách làm xong, kết quả tự về hồ sơ này.">
+                            Chép link trắc nghiệm cho khách
+                        </button>
+                    </div>
                 </div>
 
                 @if ($hollandCode)
@@ -112,6 +125,19 @@
                                 @foreach (str_split($hollandCode) as $l)<span class="h-{{ strtolower($l) }}">{{ $l }}</span>@endforeach
                             </p>
                         </div>
+                        @if ($hr = $lead->holland_result)
+                            <div class="holland-meta">
+                                <p class="muted">Từ hệ thống Holland{{ ! empty($hr['code_public']) ? ' · khách thấy mã '.$hr['code_public'] : '' }}</p>
+                                <p>
+                                    @if (! empty($hr['reliability']))
+                                        <span class="badge {{ $hr['reliability'] === 'Tin cậy' ? 'badge-green' : ($hr['reliability'] === 'Cần xem lại' ? 'badge-amber' : 'badge-gray') }}">Độ tin cậy: {{ $hr['reliability'] }}</span>
+                                    @endif
+                                    @if (! empty($hr['consistency']))
+                                        <span class="badge badge-sky">Nhất quán: {{ $hr['consistency'] }}</span>
+                                    @endif
+                                </p>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="holland-bars">
@@ -120,10 +146,26 @@
                             <div class="hbar {{ str_contains($hollandCode, $l) ? 'is-top' : '' }}">
                                 <span class="hbar-label"><b>{{ $l }}</b> {{ $name }}</span>
                                 <span class="hbar-track"><span class="hbar-fill h-{{ strtolower($l) }}" style="width: {{ (int) $s }}%"></span></span>
-                                <span class="hbar-val">{{ $s ?? '—' }}</span>
+                                {{-- Kết quả từ hệ thống Holland: hiện điểm trung bình gốc x/5; nhập tay: điểm 0–100 --}}
+                                @php $avg = $lead->hollandAverage($l); @endphp
+                                <span class="hbar-val">{{ $avg !== null ? $avg.'/5' : ($s ?? '—') }}</span>
                             </div>
                         @endforeach
                     </div>
+
+                    @if (! empty($lead->holland_result['majors']))
+                        <div class="holland-majors">
+                            <p class="muted">Ngành gợi ý từ Holland (tư vấn viên chọn lại khi tư vấn):</p>
+                            <p>
+                                @foreach ($lead->holland_result['majors'] as $m)
+                                    <span class="chip-static {{ ! empty($m['shown_to_customer']) ? 'is-shown' : '' }}"
+                                          title="{{ ! empty($m['shown_to_customer']) ? 'Khách đã thấy ngành này' : 'Chỉ hiện nội bộ' }}">
+                                        {{ $m['name_vi'] ?? $m['id'] ?? '' }}{{ ! empty($m['name_de']) ? ' · '.$m['name_de'] : '' }}
+                                    </span>
+                                @endforeach
+                            </p>
+                        </div>
+                    @endif
 
                     <div class="holland-detail" id="hollandDetail" hidden>
                         @foreach (str_split($hollandCode) as $i => $l)
@@ -144,13 +186,49 @@
                     @if ($hollandCode)
                         <button type="button" class="btn btn-outline btn-sm" data-holland-toggle>Xem kết quả Holland</button>
                     @endif
+                    @if (auth()->user()->crmCan('leads.update'))
                     <a href="{{ route('crm.leads.edit', [$lead, 'holland']) }}" class="btn btn-outline btn-sm">{!! $editIcon !!} {{ $hollandCode ? 'Cập nhật điểm' : 'Nhập điểm Holland' }}</a>
+                    @endif
                 </div>
             </section>
         </div>
 
         {{-- ===== CỘT PHẢI: V – VI ===== --}}
         <div class="lead-col lead-side">
+            {{-- Lịch hẹn của khách --}}
+            @php
+                $upcomingAppts = $lead->appointments->where('status', 'scheduled');
+                $pastAppts = $lead->appointments->where('status', '!=', 'scheduled')->sortByDesc('scheduled_at')->take(3);
+            @endphp
+            <section class="card" id="appointments">
+                <div class="card-head">
+                    <h3 class="section-title"><span>
+                        <svg viewBox="0 0 24 24" style="width:14px;height:14px"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    </span>Lịch hẹn</h3>
+                    @if (auth()->user()->crmCan('appointments.manage'))
+                        <a href="{{ route('crm.appointments.create', ['lead' => $lead->id, 'return' => 'lead']) }}" class="btn btn-outline btn-sm">+ Đặt lịch hẹn</a>
+                    @endif
+                </div>
+                <ul class="mini-appts">
+                    @forelse ($upcomingAppts->concat($pastAppts) as $a)
+                        <li class="{{ $a->isOverdue() ? 'is-overdue' : '' }} appt-{{ $a->status }}">
+                            <span class="appt-icon sm"><svg viewBox="0 0 24 24">{!! $a->typeIcon() !!}</svg></span>
+                            <div>
+                                <b>{{ $a->scheduled_at->format('H:i d/m/Y') }}</b> · {{ $a->typeLabel() }}
+                                <span class="badge {{ $a->statusBadge() }}">{{ $a->isOverdue() ? 'Quá giờ' : $a->statusLabel() }}</span>
+                                <p class="muted">{{ $a->consultant?->displayName() ?? 'Chưa có người phụ trách' }}{{ $a->note ? ' · '.\Illuminate\Support\Str::limit($a->note, 60) : '' }}</p>
+                                @if ($a->status === 'scheduled' && auth()->user()->crmCan('appointments.manage'))
+                                    <a href="{{ route('crm.appointments.edit', [$a, 'return' => 'lead']) }}" class="link">Đổi lịch</a>
+                                    · <a href="{{ route('crm.appointments.index', ['tab' => $a->isOverdue() ? 'overdue' : ($a->scheduled_at->isToday() ? 'today' : 'upcoming')]) }}" class="link">Cập nhật kết quả</a>
+                                @endif
+                            </div>
+                        </li>
+                    @empty
+                        <li class="empty-val">Chưa có lịch hẹn.</li>
+                    @endforelse
+                </ul>
+            </section>
+
             <section class="card" id="history">
                 <div class="card-head">
                     <h3 class="section-title"><span>V</span>Lịch sử tư vấn</h3>
@@ -176,6 +254,7 @@
                 </ol>
             </section>
 
+            @if (auth()->user()->crmCan('leads.update'))
             <section class="card" id="notes">
                 <div class="card-head">
                     <h3 class="section-title"><span>VI</span>Ghi chú và hoạt động</h3>
@@ -199,12 +278,21 @@
                     </button>
                 </form>
             </section>
+            @endif
         </div>
     </div>
 @endsection
 
 @push('scripts')
     <script>
+        document.querySelectorAll('[data-copy]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var text = btn.getAttribute('data-copy'), old = btn.textContent;
+                var done = function () { btn.textContent = 'Đã chép ✓'; setTimeout(function () { btn.textContent = old; }, 1800); };
+                if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, function () { window.prompt('Chép link:', text); }); }
+                else { window.prompt('Chép link:', text); }
+            });
+        });
         var hBtn = document.querySelector('[data-holland-toggle]');
         if (hBtn) hBtn.addEventListener('click', function () {
             var box = document.getElementById('hollandDetail');

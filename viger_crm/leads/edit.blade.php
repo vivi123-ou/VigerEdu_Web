@@ -21,6 +21,7 @@
 
         <div class="form-grid {{ $key === 'holland' ? 'form-grid-3' : '' }}">
             @foreach ($section['fields'] as $name => $def)
+                @continue($name === 'assigned_to' && ! auth()->user()->crmCan('leads.assign'))
                 @include('crm::partials.field', ['value' => $lead->{$name}])
             @endforeach
         </div>

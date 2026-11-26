@@ -60,6 +60,7 @@ class Lead extends Model
         return [
             'student_dob' => 'date',
             'gpa' => 'decimal:2',
+            'holland_result' => 'array',
         ];
     }
 
@@ -124,6 +125,40 @@ class Lead extends Model
         return $this->hasMany(LeadActivity::class)->latest()->latest('id');
     }
 
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class)->orderBy('scheduled_at');
+    }
+
+    /** Tìm khách theo mã VIGER-LEAD-00001 (customer_code các kênh gửi lại, utm_content của link Holland). */
+    public static function findByCode(?string $code): ?self
+    {
+        return $code && preg_match('/^VIGER-LEAD-(\d+)$/', trim($code), $m) ? static::find((int) $m[1]) : null;
+    }
+
+    /** Link trắc nghiệm Holland gắn mã khách: kết quả gửi về CRM tự nối vào đúng hồ sơ này. */
+    public function hollandInviteUrl(): string
+    {
+        return rtrim((string) config('crm.holland_url'), '/').'/?'.http_build_query([
+            'utm_source' => 'crm', 'utm_medium' => 'tu_van', 'utm_content' => $this->inviteRef(),
+        ]);
+    }
+
+    /** Mã trong link mời: VIGER-LEAD-00001.<chữ ký 10 ký tự> — chống đoán mã để gắn kết quả vào hồ sơ người khác. */
+    public function inviteRef(): string
+    {
+        return $this->code().'.'.substr(hash_hmac('sha256', $this->code(), (string) config('app.key')), 0, 10);
+    }
+
+    /** Khách theo mã trong link mời; chữ ký sai => null (rơi về khớp SĐT / email như thường). */
+    public static function findByInviteRef(?string $ref): ?self
+    {
+        [$code, $sig] = array_pad(explode('.', (string) $ref, 2), 2, '');
+        $lead = static::findByCode($code);
+
+        return $lead && hash_equals(substr($lead->inviteRef(), -10), $sig) ? $lead : null;
+    }
+
     /** Mã khách hàng hiển thị: VIGER-LEAD-00001 */
     public function code(): string
     {
@@ -157,6 +192,11 @@ class Lead extends Model
     /** Mã Holland = 3 nhóm điểm cao nhất, VD "ISR". Null nếu chưa có điểm. */
     public function hollandCode(): ?string
     {
+        // Mã do hệ thống Holland tính (code_full) được ưu tiên hơn mã tự tính từ điểm
+        if ($this->holland_code) {
+            return $this->holland_code;
+        }
+
         $scores = $this->hollandScores();
 
         if (! $scores) {
@@ -166,6 +206,32 @@ class Lead extends Model
         arsort($scores);
 
         return implode('', array_slice(array_keys($scores), 0, 3));
+    }
+
+    /**
+     * Gắn kết quả Holland nhận từ hệ thống Holland (holland-result/3, điểm trung bình 1–5).
+     * Lưu nguyên gói + mã 3 chữ; quy đổi điểm sang thang 0–100 (1 → 0, 5 → 100) cho các cột holland_r…c
+     * để thanh điểm và bộ lọc hiện có dùng chung. Số hiển thị lấy từ gói gốc (x/5).
+     */
+    public function applyHollandResult(array $result): void
+    {
+        $this->holland_result = $result;
+        $this->holland_code = isset($result['code_full']) ? mb_substr((string) $result['code_full'], 0, 3) : null;
+
+        foreach (array_keys(self::HOLLAND_TYPES) as $l) {
+            $avg = $result['scores'][$l] ?? null;
+            $this->{'holland_'.strtolower($l)} = is_numeric($avg)
+                ? (int) round(max(0, min(100, ((float) $avg - 1) / 4 * 100)))
+                : null;
+        }
+    }
+
+    /** Điểm trung bình gốc (1–5) của một nhóm nếu kết quả đến từ hệ thống Holland. */
+    public function hollandAverage(string $letter): ?float
+    {
+        $v = $this->holland_result['scores'][$letter] ?? null;
+
+        return is_numeric($v) ? (float) $v : null;
     }
 
     /** Giá trị hiển thị của một trường theo khai báo trong sections(). */
@@ -184,6 +250,24 @@ class Lead extends Model
             $def['type'] === 'gpa' => rtrim(rtrim((string) $value, '0'), '.'),
             default => (string) $value,
         };
+    }
+
+    /**
+     * Đổi trạng thái và ghi lịch sử "Đổi trạng thái: A → B." (trang Đã chuyển đổi đọc dòng này để lấy ngày chốt).
+     * Trả về false nếu trạng thái không đổi.
+     */
+    public function moveToStatus(string $status): bool
+    {
+        $old = $this->status;
+
+        if ($old === $status) {
+            return false;
+        }
+
+        $this->update(['status' => $status]);
+        $this->log('Đổi trạng thái: '.(self::STATUSES[$old][0] ?? $old).' → '.$this->statusLabel().'.');
+
+        return true;
     }
 
     /** Ghi một dòng vào lịch sử tư vấn. */
@@ -205,6 +289,29 @@ class Lead extends Model
                 $lead->log('Phân công tư vấn viên: '.$lead->assignee->displayName().'.');
             }
         });
+    }
+
+    /**
+     * Phạm vi dữ liệu theo vai trò (đặc tả: lọc ở truy vấn, không lọc ở view):
+     *   all  — mọi khách
+     *   team — khách giao cho thành viên nhóm phụ trách + khách chưa phân công (để giao việc)
+     *   own  — chỉ khách được giao cho chính mình
+     * Không có quyền leads.view (VD Marketing) => không thấy khách nào.
+     * $aggregate = true: dùng cho số liệu tổng hợp (báo cáo, nguồn) — bỏ qua yêu cầu leads.view, vẫn theo phạm vi.
+     */
+    public function scopeVisibleTo(Builder $query, User $user, bool $aggregate = false): Builder
+    {
+        if (! $aggregate && ! $user->crmCan('leads.view')) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return match ($user->crmScope()) {
+            'all' => $query,
+            'team' => $query->where(fn (Builder $q) => $q
+                ->whereNull('assigned_to')
+                ->orWhereIn('assigned_to', $user->teamMemberIds())),
+            default => $query->where('assigned_to', $user->id),
+        };
     }
 
     /**

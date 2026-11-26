@@ -79,6 +79,59 @@
         return html.replace(/\n/g, '<br>');
     }
 
+    /*
+     * Hiệu ứng "đang gõ" kiểu ChatGPT: câu trả lời (đã định dạng HTML) hiện dần từng cụm chữ,
+     * có con trỏ nhấp nháy. Giữ nguyên thẻ <strong>, <a>, <br>: chỉ làm hiện dần các đoạn chữ bên trong.
+     * Câu dài cũng xong trong khoảng 2,5 giây. Người dùng bật "giảm chuyển động" thì hiện ngay.
+     */
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function typeOut(el, onDone) {
+        var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+        var nodes = [];
+        var total = 0;
+        while (walker.nextNode()) {
+            nodes.push({ node: walker.currentNode, text: walker.currentNode.nodeValue });
+            total += walker.currentNode.nodeValue.length;
+        }
+        if (reduceMotion || total === 0) { onDone(); return; }
+
+        nodes.forEach(function (n) { n.node.nodeValue = ''; });
+        var cursor = document.createElement('span');
+        cursor.className = 'chatbot-cursor';
+        cursor.setAttribute('aria-hidden', 'true');
+        el.appendChild(cursor);
+        el.setAttribute('aria-busy', 'true');
+
+        var TICK = 20;
+        var step = Math.max(2, Math.ceil(total / (2500 / TICK)));
+        var i = 0;
+        var pos = 0;
+
+        (function tick() {
+            var left = step;
+            while (left > 0 && i < nodes.length) {
+                var n = nodes[i];
+                var take = Math.min(left, n.text.length - pos);
+                pos += take;
+                left -= take;
+                n.node.nodeValue = n.text.slice(0, pos);
+                if (pos >= n.text.length) { i++; pos = 0; }
+            }
+            var nearBottom = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 80;
+            if (nearBottom) messages.scrollTop = messages.scrollHeight;
+
+            if (i < nodes.length) {
+                setTimeout(tick, TICK);
+            } else {
+                cursor.remove();
+                el.removeAttribute('aria-busy');
+                messages.scrollTop = messages.scrollHeight;
+                onDone();
+            }
+        })();
+    }
+
     function renderSuggestions(list) {
         suggestions.innerHTML = '';
         (list || []).slice(0, 4).forEach(function (label) {
@@ -129,9 +182,10 @@
 
         function done(html, chips) {
             typing.remove();
-            addMessage(html, 'bot', true);
-            renderSuggestions(chips);
-            busy = false;
+            typeOut(addMessage(html, 'bot', true), function () {
+                renderSuggestions(chips);
+                busy = false;
+            });
         }
 
         if (!endpoint) {

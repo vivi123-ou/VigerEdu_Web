@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Crm;
 
 use App\Http\Controllers\Controller;
+use App\Models\CrmAuditLog;
 use App\Models\Lead;
 use App\Models\LeadActivity;
 use App\Models\User;
@@ -28,7 +29,7 @@ class LeadController extends Controller
     {
         $filters = $request->only(self::FILTER_KEYS);
 
-        $leads = Lead::with('assignee')
+        $leads = Lead::visibleTo($request->user())->with('assignee')
             ->filter($filters)
             ->latest()
             ->paginate(15)
@@ -48,9 +49,19 @@ class LeadController extends Controller
 
     public function store(Request $request)
     {
-        $fields = collect(Lead::sections())->flatMap(fn ($s) => $s['fields'])->only(self::CREATE_FIELDS)->all();
+        $canAssign = $request->user()->crmCan('leads.assign');
+        $fields = collect(Lead::sections())->flatMap(fn ($s) => $s['fields'])->only(self::CREATE_FIELDS)
+            ->when(! $canAssign, fn ($c) => $c->except('assigned_to'))   // không có quyền => bỏ qua trường gửi lên
+            ->all();
 
-        $lead = Lead::create($this->validateFields($request, $fields));
+        $data = $this->validateFields($request, $fields);
+
+        // Không có quyền phân công => khách tự giao cho người tạo (để không "mất" khách khỏi phạm vi của mình)
+        if (! $canAssign) {
+            $data['assigned_to'] = $request->user()->id;
+        }
+
+        $lead = Lead::create($data);
 
         return redirect()->route('crm.leads.show', $lead)
             ->with('success', "Đã thêm khách hàng {$lead->full_name}. Bạn có thể bổ sung thông tin học sinh và nhu cầu tư vấn.");
@@ -58,7 +69,7 @@ class LeadController extends Controller
 
     public function show(Lead $lead)
     {
-        $lead->load(['assignee', 'activities.user']);
+        $lead->load(['assignee', 'activities.user', 'appointments.consultant']);
 
         return view('crm::leads.show', [
             'lead' => $lead,
@@ -80,9 +91,20 @@ class LeadController extends Controller
     public function update(Request $request, Lead $lead, string $section)
     {
         $def = $this->section($section);
-        $lead->fill($this->validateFields($request, $def['fields'], $lead));
+
+        // Không có quyền phân công => bỏ qua trường người phụ trách (không đổi, không báo lỗi)
+        $fields = $request->user()->crmCan('leads.assign') ? $def['fields'] : array_diff_key($def['fields'], ['assigned_to' => true]);
+        $data = $this->validateFields($request, $fields, $lead);
+
+        $lead->fill($data);
 
         $changes = array_keys($lead->getDirty());
+
+        // Tư vấn viên tự sửa điểm Holland => bỏ mã / gói kết quả cũ từ hệ thống Holland, mã tính lại từ điểm mới
+        if ($section === 'holland' && $changes) {
+            $lead->holland_code = null;
+            $lead->holland_result = null;
+        }
         $oldStatus = $lead->getOriginal('status');
         $lead->save();
         $lead->load('assignee');
@@ -108,9 +130,8 @@ class LeadController extends Controller
 
     public function destroy(Request $request, Lead $lead)
     {
-        abort_unless($request->user()->isAdmin(), 403, 'Chỉ quản trị viên được xoá khách hàng.');
-
         $lead->delete();
+        CrmAuditLog::record('leads.delete', "Xoá khách hàng {$lead->code()}.");
 
         return redirect()->route('crm.leads.index')
             ->with('success', "Đã xoá khách hàng {$lead->full_name} ({$lead->code()}).");
@@ -136,6 +157,16 @@ class LeadController extends Controller
     public function export(Request $request): StreamedResponse
     {
         $filters = $request->only(self::FILTER_KEYS);
+        // Bộ lọc ghi bằng chữ dễ đọc (VD "trạng thái: Mới"), không ghi tham số URL
+        $applied = collect($filters)->filter(fn ($v) => filled($v))->map(fn ($v, $k) => match ($k) {
+            'q' => "tìm “{$v}”",
+            'status' => 'trạng thái: '.(Lead::STATUSES[$v][0] ?? $v),
+            'source' => 'nguồn: '.(Lead::SOURCES[$v] ?? $v),
+            'assigned_to' => 'phụ trách: '.($v === 'none' ? 'Chưa phân công' : (User::find($v)?->displayName() ?? $v)),
+            'date' => 'thời gian: '.(['today' => 'Hôm nay', '7d' => '7 ngày qua', '30d' => '30 ngày qua'][$v] ?? $v),
+            default => "{$k}: {$v}",
+        });
+        CrmAuditLog::record('leads.export', 'Xuất CSV danh sách khách'.($applied->isNotEmpty() ? ' (lọc: '.$applied->implode(', ').')' : '').'.');
         $filename = 'leads-'.now()->format('Ymd-His').'.csv';
 
         return response()->streamDownload(function () use ($filters) {
@@ -143,7 +174,7 @@ class LeadController extends Controller
             fwrite($out, "\xEF\xBB\xBF");
             fputcsv($out, ['Mã KH', 'Phụ huynh', 'SĐT', 'Email', 'Học sinh', 'Nguồn', 'Trạng thái', 'Phụ trách', 'Chương trình', 'Mã Holland', 'Ngày tạo', 'Ghi chú']);
 
-            Lead::with('assignee')->filter($filters)->latest()->lazy()->each(function (Lead $lead) use ($out) {
+            Lead::visibleTo(auth()->user())->with('assignee')->filter($filters)->latest()->lazy()->each(function (Lead $lead) use ($out) {
                 fputcsv($out, [
                     $lead->code(),
                     $lead->full_name,
@@ -184,7 +215,7 @@ class LeadController extends Controller
                 'score' => ['integer', 'between:0,100'],
                 'gpa' => ['numeric', 'between:0,10'],
                 'select' => [$def['options'] === 'consultants'
-                    ? Rule::exists('users', 'id')->where('active', true)
+                    ? Rule::in($this->consultants()->keys()->all())
                     : Rule::in(array_keys($def['options']))],
                 default => ['string', 'max:255'],
             }];
@@ -196,9 +227,9 @@ class LeadController extends Controller
     }
 
     /** Danh sách tư vấn viên (nhân viên đang hoạt động) cho dropdown. */
+    /** Danh sách tư vấn viên có thể giao khách — theo phạm vi của người đang thao tác. */
     private function consultants(): Collection
     {
-        return User::where('active', true)->orderBy('full_name')->get()
-            ->mapWithKeys(fn (User $u) => [$u->id => $u->displayName()]);
+        return auth()->user()->assignableUsers();
     }
 }

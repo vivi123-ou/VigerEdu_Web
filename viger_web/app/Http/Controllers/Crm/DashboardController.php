@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Crm;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
+use App\Models\CrmSetting;
 use App\Models\Lead;
 use App\Models\LeadActivity;
 
@@ -13,11 +15,11 @@ class DashboardController extends Controller
 
     public function __invoke()
     {
-        $byStatus = Lead::selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
+        $byStatus = Lead::visibleTo(auth()->user(), true)->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
         $total = (int) $byStatus->sum();
 
-        $thisMonth = Lead::where('created_at', '>=', now()->startOfMonth())->count();
-        $lastMonth = Lead::whereBetween('created_at', [now()->subMonthNoOverflow()->startOfMonth(), now()->startOfMonth()])->count();
+        $thisMonth = Lead::visibleTo(auth()->user(), true)->where('created_at', '>=', now()->startOfMonth())->count();
+        $lastMonth = Lead::visibleTo(auth()->user(), true)->whereBetween('created_at', [now()->subMonthNoOverflow()->startOfMonth(), now()->startOfMonth()])->count();
 
         $stats = [
             [
@@ -47,18 +49,19 @@ class DashboardController extends Controller
         for ($i = 5; $i >= 0; $i--) {
             $start = now()->startOfMonth()->subMonthsNoOverflow($i);
             $leadsChart['labels'][] = 'T'.$start->month.'/'.$start->format('y');
-            $leadsChart['data'][] = Lead::whereBetween('created_at', [$start, $start->copy()->endOfMonth()])->count();
+            $leadsChart['data'][] = Lead::visibleTo(auth()->user(), true)->whereBetween('created_at', [$start, $start->copy()->endOfMonth()])->count();
         }
 
-        $bySource = Lead::selectRaw('source, count(*) as total')->groupBy('source')->pluck('total', 'source');
+        $bySource = Lead::visibleTo(auth()->user(), true)->selectRaw('source, count(*) as total')->groupBy('source')->pluck('total', 'source');
         $sourceChart = [
             'labels' => array_values(Lead::SOURCES),
             'data' => array_map(fn ($key) => (int) ($bySource[$key] ?? 0), array_keys(Lead::SOURCES)),
         ];
 
-        $newLeads = Lead::with('assignee')->latest()->latest('id')->limit(5)->get();
+        $newLeads = Lead::visibleTo(auth()->user())->with('assignee')->latest()->latest('id')->limit(5)->get();
 
         // Công việc cần xử lý — mỗi dòng dẫn tới danh sách đã lọc sẵn
+        $idleDays = CrmSetting::get('idle_days');
         $tasks = [
             [
                 'count' => (int) ($byStatus['new'] ?? 0),
@@ -67,25 +70,29 @@ class DashboardController extends Controller
                 'url' => route('crm.leads.index', ['status' => 'new']),
             ],
             [
-                'count' => Lead::whereNull('assigned_to')->whereIn('status', self::OPEN_STATUSES)->count(),
+                'count' => Lead::visibleTo(auth()->user(), true)->whereNull('assigned_to')->whereIn('status', self::OPEN_STATUSES)->count(),
                 'text' => 'khách chưa phân công tư vấn viên',
                 'level' => 'warning',
                 'url' => route('crm.leads.index', ['assigned_to' => 'none']),
             ],
             [
-                'count' => Lead::whereIn('status', ['contacted', 'consulting', 'potential'])
-                    ->whereDoesntHave('activities', fn ($q) => $q->where('created_at', '>=', now()->subDays(7)))
+                'count' => Lead::visibleTo(auth()->user(), true)->whereIn('status', ['contacted', 'consulting', 'potential'])
+                    ->whereDoesntHave('activities', fn ($q) => $q->where('created_at', '>=', now()->subDays($idleDays)))
                     ->count(),
-                'text' => 'khách cần chăm sóc lại (7 ngày chưa có hoạt động)',
+                'text' => "khách cần chăm sóc lại ({$idleDays} ngày chưa có hoạt động)",
                 'level' => 'info',
                 'url' => null,
             ],
         ];
 
-        $activities = LeadActivity::with(['lead', 'user'])->latest()->latest('id')->limit(6)->get();
+        $activities = LeadActivity::with(['lead', 'user'])->whereHas('lead', fn ($l) => $l->visibleTo(auth()->user()))->latest()->latest('id')->limit(6)->get();
+
+        $appointments = Appointment::upcoming()->whereHas('lead', fn ($l) => $l->visibleTo(auth()->user(), true))->with(['lead', 'consultant'])->orderBy('scheduled_at')->limit(5)->get();
+        $overdueAppointments = Appointment::overdue()->whereHas('lead', fn ($l) => $l->visibleTo(auth()->user(), true))->count();
 
         return view('crm::dashboard', compact(
-            'total', 'stats', 'leadsChart', 'sourceChart', 'newLeads', 'tasks', 'activities'
+            'total', 'stats', 'leadsChart', 'sourceChart', 'newLeads', 'tasks', 'activities',
+            'appointments', 'overdueAppointments'
         ));
     }
 }

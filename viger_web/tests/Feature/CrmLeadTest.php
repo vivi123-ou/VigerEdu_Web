@@ -18,7 +18,7 @@ class CrmLeadTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create(['active' => true, 'full_name' => 'Tư Vấn Một']);
+        $this->user = User::factory()->create(['crm_role' => 'admin', 'active' => true, 'full_name' => 'Tư Vấn Một']);
     }
 
     public function test_guest_cannot_see_leads(): void
@@ -58,7 +58,7 @@ class CrmLeadTest extends TestCase
         Lead::factory()->create(['full_name' => 'Lead Cũ', 'created_at' => now()->subDays(20)]);
 
         $this->actingAs($this->user)->get(self::CRM.'/leads?date=7d')
-            ->assertSee('Lead Hôm Nay')->assertDontSee('Lead Cũ');
+            ->assertSee('Lead Hôm Nay')->assertDontSee('class="link-strong">Lead Cũ</a>', false);
     }
 
     public function test_store_creates_lead(): void

@@ -59,7 +59,7 @@ class CrmNotificationTest extends TestCase
 
     public function test_empty_state(): void
     {
-        $this->actingAs(User::factory()->create(['active' => true]))
+        $this->actingAs(User::factory()->create(['crm_role' => 'admin', 'active' => true]))
             ->get(self::CRM.'/')
             ->assertSee('Chưa có thông báo nào.');
     }

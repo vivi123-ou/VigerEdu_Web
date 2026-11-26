@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Crm\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\CrmSetting;
 use App\Models\Lead;
+use App\Models\LeadActivity;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,6 +40,20 @@ class LeadIntakeController extends Controller
             'contact.email' => ['required_without:contact.phone', 'nullable', 'email', 'max:255'],
             'extra_fields' => ['nullable', 'array'],
             'extra_fields.loi_nhan' => ['nullable', 'string', 'max:2000'],
+            // Kết quả Holland (holland-result/3 — hợp đồng mục 3.2), không bắt buộc
+            'holland_result' => ['nullable', 'array'],
+            'holland_result.schema_version' => ['required_with:holland_result', 'in:holland-result/3'],
+            'holland_result.scores' => ['required_with:holland_result', 'array'],
+            'holland_result.scores.*' => ['numeric', 'between:1,5'],
+            'holland_result.code_full' => ['nullable', 'string', 'regex:/^[RIASEC]{2,3}$/'],
+            'customer_code' => ['nullable', 'string', 'max:40'],
+            'utm' => ['nullable', 'array'],
+            'utm.*' => ['nullable', 'string', 'max:255'],
+            'quiz' => ['nullable', 'array'],
+            'quiz.view_url' => ['nullable', 'url', 'max:500'],
+            'events' => ['nullable', 'array', 'max:200'],
+            'events.*.type' => ['required', 'string', 'max:50'],
+            'events.*.at' => ['nullable', 'date'],
         ]);
 
         // 422 chỉ ghi tên trường, không lặp lại giá trị (hợp đồng mục 1)
@@ -65,8 +82,10 @@ class LeadIntakeController extends Controller
             $message = $request->input('extra_fields.loi_nhan');
             $sourceLabel = Lead::SOURCES[self::CHANNEL_SOURCES[$channel] ?? 'other'];
 
-            // Khớp khách: SĐT (cả dạng 0… và +84…) → email
-            $lead = $phone
+            // Khớp khách: customer_code → mã trong link CRM gửi khách (utm_content) → SĐT (cả dạng 0… và +84…) → email
+            $lead = Lead::findByCode($request->input('customer_code'))
+                ?? Lead::findByInviteRef($request->input('utm.content'));
+            $lead ??= $phone
                 ? Lead::whereIn('phone', [$phone, '+84'.substr($phone, 1)])->first()
                 : null;
             $lead ??= $email ? Lead::where('email', $email)->first() : null;
@@ -83,6 +102,12 @@ class LeadIntakeController extends Controller
                     'status' => 'new',
                     'note' => $message,
                 ]);
+
+                // Tự chia khách (trang Cấu hình CRM)
+                if ($assignee = CrmSetting::nextAssignee()) {
+                    $lead->update(['assigned_to' => $assignee->id]);
+                    $lead->log('Tự động phân công tư vấn viên: '.$assignee->displayName().'.');
+                }
             } else {
                 // Không ghi đè dữ liệu cũ bằng giá trị rỗng: chỉ bổ sung trường đang trống
                 $lead->fill(array_filter([
@@ -97,6 +122,26 @@ class LeadIntakeController extends Controller
 
             if ($message) {
                 $lead->log($message, 'form');
+            }
+
+            if ($url = $request->input('quiz.view_url')) {
+                $lead->update(['holland_report_url' => $url]);
+            }
+
+            $utm = array_filter((array) $request->input('utm'));
+            if ($utm && $isNew) {
+                $lead->log('Nguồn chiến dịch: '.collect($utm)->map(fn ($v, $k) => "{$k}={$v}")->implode(', ').'.');
+            }
+
+            self::logEvents($lead, (array) $request->input('events', []));
+
+            // Kết quả Holland mới nhất thay kết quả cũ (dữ liệu có giá trị, không phải giá trị rỗng)
+            if ($holland = $request->input('holland_result')) {
+                $lead->applyHollandResult($holland);
+                $lead->save();
+                $lead->log('Nhận kết quả Holland: mã '.($lead->holland_code ?? $lead->hollandCode())
+                    .(! empty($holland['reliability']) ? " · độ tin cậy: {$holland['reliability']}" : '')
+                    .(! empty($holland['consistency']) ? " · nhất quán: {$holland['consistency']}" : '').'.');
             }
 
             $lead->load('assignee');
@@ -119,6 +164,26 @@ class LeadIntakeController extends Controller
 
             return response()->json($response, $isNew ? 201 : 200);
         });
+    }
+
+    /**
+     * Ghi các hành vi (events/1 hoặc mảng events trong lead/2) vào lịch sử khách, loại "tracking".
+     * Hành vi "nóng" (bấm Gọi / Zalo, chatbot chuyển người) ghi kèm lời nhắc gọi lại.
+     *
+     * @param  array<int, array{type: string, at?: string, meta?: array}>  $events
+     */
+    public static function logEvents(Lead $lead, array $events): int
+    {
+        foreach ($events as $e) {
+            $label = LeadActivity::EVENT_LABELS[$e['type']] ?? $e['type'];
+            $hot = in_array($e['type'], LeadActivity::HOT_EVENTS, true) ? ' — nên liên hệ lại sớm' : '';
+            $activity = $lead->log($label.$hot.'.', 'tracking', null);
+            if (! empty($e['at'])) {
+                $activity->forceFill(['created_at' => Carbon::parse($e['at'])])->save();
+            }
+        }
+
+        return count($events);
     }
 
     /** +84901234567 / 84901234567 / 0901234567 => 0901234567 (định dạng đang lưu trong leads) */

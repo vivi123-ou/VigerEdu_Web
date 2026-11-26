@@ -279,3 +279,23 @@
     height: calc(100vh - 6.5rem);
   }
 }
+
+/* Con trỏ nhấp nháy khi bot đang "gõ" câu trả lời (chatbot.js: typeOut) */
+.chatbot-cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    margin-left: 2px;
+    vertical-align: -0.15em;
+    background: currentColor;
+    opacity: 0.7;
+    animation: chatbot-blink 0.9s steps(1) infinite;
+}
+
+@keyframes chatbot-blink {
+    50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chatbot-cursor { animation: none; }
+}

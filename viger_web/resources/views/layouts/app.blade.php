@@ -17,7 +17,7 @@
 
     <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
     <link href="{{ asset('styles.css') }}" rel="stylesheet" />
-    <link href="{{ asset('css/chatbot.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/chatbot.css') }}?v={{ filemtime(public_path('css/chatbot.css')) }}" rel="stylesheet" />
     <link href="{{ asset('css/back-to-top.css') }}" rel="stylesheet" />
 
     {{-- CSS riêng của từng trang --}}

@@ -20,7 +20,7 @@
         $crumbs = [];
         foreach (config('crm.menu') as $group) {
             foreach ($group['items'] as $item) {
-                if ($item['route'] && request()->routeIs($item['active'] ?? $item['route'])) {
+                if (\App\Support\CrmMenu::isActive($item)) {
                     $crumbs = [$group['label'], $item['name']];
                 }
             }
@@ -90,12 +90,12 @@
                     <details class="crm-dropdown">
                         <summary class="crm-user">
                             <span class="crm-avatar">{{ mb_strtoupper(mb_substr($crmUserName, 0, 1)) }}</span>
-                            <span class="crm-user-name">{{ $crmUserName }}<small>{{ $crmUser->role === 'ADMIN' ? 'Quản trị viên' : 'Tư vấn viên' }}</small></span>
+                            <span class="crm-user-name">{{ $crmUserName }}<small>{{ $crmUser->crmRoleLabel() }}</small></span>
                             <svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
                         </summary>
                         <div class="crm-menu">
-                            <a href="#">Hồ sơ cá nhân</a>
-                            <a href="#">Đổi mật khẩu</a>
+                            <a href="{{ route('crm.leads.index', ['assigned_to' => $crmUser->id]) }}">Khách tôi phụ trách</a>
+                            <a href="{{ route('crm.account.password') }}">Đổi mật khẩu</a>
                             <form method="POST" action="{{ route('crm.logout') }}">
                                 @csrf
                                 <button type="submit" class="danger">Đăng xuất</button>

@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Middleware\CrmAdmin;
 use App\Http\Middleware\CrmApiToken;
+use App\Http\Middleware\CrmCan;
+use App\Http\Middleware\CrmForcePasswordChange;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
@@ -21,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => EnsureUserIsAdmin::class,
             'crm.token' => CrmApiToken::class,
+            'crm.admin' => CrmAdmin::class,
+            'crm.can' => CrmCan::class,
+            'crm.password' => CrmForcePasswordChange::class,
         ]);
 
         // Khách chưa đăng nhập vào CRM => trang login của CRM

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Lead;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -23,7 +24,7 @@ class CrmDashboardTest extends TestCase
 
     public function test_user_can_login_and_see_dashboard(): void
     {
-        User::factory()->create([
+        User::factory()->create(['crm_role' => 'admin',
             'username' => 'nv1',
             'password' => 'secret123',
             'active' => true,
@@ -42,11 +43,11 @@ class CrmDashboardTest extends TestCase
 
     public function test_dashboard_shows_real_numbers(): void
     {
-        $user = User::factory()->create(['active' => true]);
+        $user = User::factory()->create(['crm_role' => 'admin', 'active' => true]);
 
-        \App\Models\Lead::factory()->count(3)->create(['status' => 'new', 'source' => 'website', 'assigned_to' => null]);
-        \App\Models\Lead::factory()->count(2)->create(['status' => 'consulting', 'source' => 'holland', 'assigned_to' => $user->id]);
-        \App\Models\Lead::factory()->create(['status' => 'converted', 'source' => 'chatbot', 'full_name' => 'Khách Chốt']);
+        Lead::factory()->count(3)->create(['status' => 'new', 'source' => 'website', 'assigned_to' => null]);
+        Lead::factory()->count(2)->create(['status' => 'consulting', 'source' => 'holland', 'assigned_to' => $user->id]);
+        Lead::factory()->create(['status' => 'converted', 'source' => 'chatbot', 'full_name' => 'Khách Chốt']);
 
         $response = $this->actingAs($user)->get(self::CRM.'/');
         $response->assertOk()
@@ -62,7 +63,7 @@ class CrmDashboardTest extends TestCase
 
     public function test_dashboard_empty_state(): void
     {
-        $this->actingAs(User::factory()->create(['active' => true]))
+        $this->actingAs(User::factory()->create(['crm_role' => 'admin', 'active' => true]))
             ->get(self::CRM.'/')
             ->assertOk()
             ->assertSee('Chưa có khách hàng nào');
@@ -70,7 +71,7 @@ class CrmDashboardTest extends TestCase
 
     public function test_wrong_password_shows_error(): void
     {
-        User::factory()->create(['username' => 'nv1', 'password' => 'secret123', 'active' => true]);
+        User::factory()->create(['crm_role' => 'admin', 'username' => 'nv1', 'password' => 'secret123', 'active' => true]);
 
         $this->from(self::CRM.'/login')
             ->post(self::CRM.'/login', ['username' => 'nv1', 'password' => 'wrong'])

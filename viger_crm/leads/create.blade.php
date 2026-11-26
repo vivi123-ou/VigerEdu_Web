@@ -43,7 +43,8 @@
                 <span>Nguồn <i>*</i></span>
                 <select name="source" required>
                     @foreach (Lead::SOURCES as $key => $label)
-                        <option value="{{ $key }}" @selected(old('source', 'website') === $key)>{{ $label }}</option>
+                        {{-- ?source=other (từ trang Nguồn khác) chọn sẵn nguồn --}}
+                        <option value="{{ $key }}" @selected(old('source', array_key_exists(request('source'), Lead::SOURCES) ? request('source') : 'website') === $key)>{{ $label }}</option>
                     @endforeach
                 </select>
                 @error('source')<small class="error">{{ $message }}</small>@enderror
@@ -59,6 +60,7 @@
                 @error('status')<small class="error">{{ $message }}</small>@enderror
             </label>
 
+            @if (auth()->user()->crmCan('leads.assign'))
             <label class="field @error('assigned_to') has-error @enderror">
                 <span>Tư vấn viên phụ trách</span>
                 <select name="assigned_to">
@@ -69,6 +71,9 @@
                 </select>
                 @error('assigned_to')<small class="error">{{ $message }}</small>@enderror
             </label>
+            @else
+                <div class="field"><span>Tư vấn viên phụ trách</span><p class="muted">Bạn sẽ phụ trách khách hàng này.</p></div>
+            @endif
 
             <label class="field field-full @error('note') has-error @enderror">
                 <span>Ghi chú</span>

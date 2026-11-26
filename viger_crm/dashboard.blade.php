@@ -20,6 +20,10 @@
         <p class="greeting">Xin chào, <b>{{ auth()->user()->displayName() }}</b></p>
     </div>
 
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
     <section class="stat-grid">
         @foreach ($stats as $s)
             <a href="{{ $s['url'] }}" class="card stat stat-{{ $s['color'] }}">
@@ -52,6 +56,7 @@
         </div>
     </section>
 
+    @if (auth()->user()->crmCan('leads.view'))
     <section class="card card-flush">
         <div class="card-head card-head-pad">
             <div><h3>Khách hàng mới</h3><p class="muted">5 leads gần nhất</p></div>
@@ -89,7 +94,37 @@
         </div>
     </section>
 
-    <section class="grid-2">
+    @endif
+
+    @if (auth()->user()->crmCan('leads.view'))
+    <section class="grid-3">
+        <div class="card">
+            <div class="card-head">
+                <h3>Lịch hẹn sắp tới</h3>
+                <a href="{{ route('crm.appointments.index') }}" class="btn btn-ghost">Tất cả →</a>
+            </div>
+            <ul class="appt-list">
+                @forelse ($appointments as $a)
+                    <li>
+                        <span class="appt-time-pill {{ $a->scheduled_at->isToday() ? 'is-today' : '' }}">
+                            {{ $a->scheduled_at->format('H:i') }}
+                            <small>{{ $a->scheduled_at->isToday() ? 'Hôm nay' : ($a->scheduled_at->isTomorrow() ? 'Ngày mai' : $a->scheduled_at->format('d/m')) }}</small>
+                        </span>
+                        <div>
+                            <a href="{{ route('crm.leads.show', $a->lead_id) }}#appointments" class="link-strong">{{ $a->lead->full_name }}</a>
+                            <p class="muted">{{ $a->typeLabel() }}{{ $a->consultant ? ' · '.$a->consultant->displayName() : '' }}</p>
+                        </div>
+                    </li>
+                @empty
+                    <li class="empty-val">Chưa có lịch hẹn sắp tới.</li>
+                @endforelse
+            </ul>
+            @if ($overdueAppointments)
+                <a href="{{ route('crm.appointments.index', ['tab' => 'overdue']) }}" class="task task-warning" style="margin-top:12px">
+                    <b>{{ $overdueAppointments }}</b> lịch hẹn quá giờ chưa cập nhật kết quả <span class="task-go">→</span>
+                </a>
+            @endif
+        </div>
         <div class="card">
             <div class="card-head"><h3>Công việc cần xử lý</h3></div>
             <ul class="task-list">
@@ -125,6 +160,7 @@
             </ol>
         </div>
     </section>
+    @endif
 @endsection
 
 @push('scripts')

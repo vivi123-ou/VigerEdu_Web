@@ -28,7 +28,8 @@ class CrmApiToken
             return response()->json(['message' => 'Sai hoặc thiếu token.'], 401);
         }
 
-        if (empty($channel['enabled']) || ! in_array($scope, $channel['scopes'] ?? [], true)) {
+        // scope "any": chỉ cần token hợp lệ của kênh đang bật (GET /ping)
+        if (empty($channel['enabled']) || ($scope !== 'any' && ! in_array($scope, $channel['scopes'] ?? [], true))) {
             return response()->json(['message' => 'Token không có quyền.'], 403);
         }
 

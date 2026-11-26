@@ -8,10 +8,13 @@
     <nav class="crm-nav">
         @foreach (config('crm.menu') as $group)
             @php
+                // Mục không có quyền: ẩn hẳn; nhóm không còn mục nào: ẩn cả nhóm
+                $group['items'] = array_values(array_filter($group['items'], fn ($i) => \App\Support\CrmMenu::visible($i)));
                 $groupActive = collect($group['items'])->contains(
-                    fn ($i) => $i['route'] && request()->routeIs($i['active'] ?? $i['route'])
+                    fn ($i) => \App\Support\CrmMenu::isActive($i)
                 );
             @endphp
+            @continue(empty($group['items']))
 
             <details class="crm-nav-group" @if ($groupActive || $loop->first) open @endif>
                 <summary class="crm-nav-label">
@@ -20,8 +23,8 @@
                 </summary>
 
                 @foreach ($group['items'] as $item)
-                    @php $active = $item['route'] && request()->routeIs($item['active'] ?? $item['route']); @endphp
-                    <a href="{{ $item['route'] ? route($item['route']) : '#' }}"
+                    @php $active = \App\Support\CrmMenu::isActive($item); @endphp
+                    <a href="{{ \App\Support\CrmMenu::url($item) }}"
                        class="crm-nav-link {{ $active ? 'is-active' : '' }} {{ $item['route'] ? '' : 'is-soon' }}"
                        @if ($active) aria-current="page" @endif
                        @unless ($item['route']) title="Chức năng đang phát triển" @endunless>
