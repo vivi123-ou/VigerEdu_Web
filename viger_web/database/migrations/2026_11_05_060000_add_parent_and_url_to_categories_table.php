@@ -8,12 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // categories.id trong DB là BIGINT có dấu (signed), nên parent_id cũng phải signed để tạo khóa ngoại.
+        // categories.id là BIGINT UNSIGNED ($table->id()), nên parent_id phải unsignedBigInteger để tạo khóa ngoại.
         Schema::table('categories', function (Blueprint $table) {
             if (Schema::hasColumn('categories', 'parent_id')) {
-                $table->bigInteger('parent_id')->nullable()->change();
+                $table->unsignedBigInteger('parent_id')->nullable()->change();
             } else {
-                $table->bigInteger('parent_id')->nullable()->after('menu_group');
+                $table->unsignedBigInteger('parent_id')->nullable()->after('menu_group');
             }
             if (! Schema::hasColumn('categories', 'url')) {
                 $table->string('url')->nullable()->after('parent_id');
