@@ -1147,3 +1147,126 @@ img {
   width: 20px;
   height: 20px;
 }
+
+/* ===================================================================
+   15. HEADER RESPONSIVE (laptop nhỏ, tablet, mobile + menu trượt)
+   =================================================================== */
+/* Laptop nhỏ: menu không canh giữa tuyệt đối nữa để không đè logo/nút */
+@media (max-width: 1279px) and (min-width: 1025px) {
+  .bar { padding: 0.875rem 1.25rem; gap: 1rem; }
+  .navpanel { position: static; transform: none; margin-left: auto; }
+  .navpanel, .menu { gap: 1.25rem; }
+  .header-actions { margin-left: 0; }
+  #brand-sub { display: none; }
+}
+
+/* Tablet & mobile: menu trượt từ phải */
+@media (max-width: 1024px) {
+  .bar { padding: 0.75rem 1.25rem; gap: 0.75rem; }
+  .header-actions { order: 2; }
+  .burger {
+    order: 3;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: -8px;
+    cursor: pointer;
+  }
+  .burger svg { width: 22px; height: 22px; overflow: visible; }
+  .burger path { transition: transform 0.25s ease, opacity 0.2s ease; transform-origin: 11px 7px; }
+  .navtoggle:checked ~ .burger .b1 { transform: translateY(6px) rotate(45deg); }
+  .navtoggle:checked ~ .burger .b2 { opacity: 0; }
+  .navtoggle:checked ~ .burger .b3 { transform: translateY(-6px) rotate(-45deg); }
+
+  .scrim {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 1;
+    background: rgba(18, 38, 63, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+  .navtoggle:checked ~ .scrim { opacity: 1; visibility: visible; }
+
+  .navpanel,
+  .menu {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .navpanel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: 2;
+    width: min(320px, 85vw);
+    height: 100vh;
+    height: 100dvh;
+    padding: 4.5rem 1.25rem 2rem;
+    overflow-y: auto;
+    background: var(--bg-white);
+    box-shadow: var(--shadow-xl);
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0.3s ease;
+  }
+  .navtoggle:checked ~ .navpanel { transform: none; visibility: visible; }
+
+  .menu > a,
+  .menu-dropdown > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 0.25rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .menu-dropdown { display: block; }
+  .menu-dropdown .caret { display: none; }
+  .dropdown-content,
+  .menu-dropdown:hover .dropdown-content {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    min-width: 0;
+    box-shadow: none;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    padding: 0.25rem 0 0.5rem 0.75rem;
+  }
+  .dropdown-content a { font-size: 0.9rem; padding: 0.5rem 0.75rem; }
+}
+
+body:has(#nav-open:checked) { overflow: hidden; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .bar { padding: 0.625rem 1rem; }
+  .brand img { height: 30px; }
+  #brand-title { font-size: 1rem; }
+  #brand-sub { display: none; }
+  .header-actions { gap: 0.5rem; }
+  .lang-toggle { padding: 0.3rem 0.6rem; font-size: 0.7rem; }
+  .cta-pill { padding: 0.5rem 0.9rem; font-size: 0.8rem; }
+}
+
+/* Điện thoại rất hẹp: ẩn chữ thương hiệu và nút CTA để không bị tràn */
+@media (max-width: 380px) {
+  .brand-text { display: none !important; }
+  .header-actions .cta-pill { display: none; }
+}
