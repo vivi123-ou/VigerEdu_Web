@@ -223,7 +223,7 @@
             <button type="submit" class="btn-red" style="width: 100%; padding: 14px 40px; font-size: 1.05rem">
               {{ $c['contact_form_button'] }}
             </button>
-            <p style="margin-top: 12px; font-size: 0.85rem; opacity: 0.8; line-height: 1.5">
+            <p style="margin-top: 12px; font-size: 0.85rem; line-height: 1.5; color: var(--accent-alt)">
               {{ \App\Http\Controllers\ContactController::consentText() }}
             </p>
           </div>
