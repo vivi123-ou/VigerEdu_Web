@@ -28,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
         Translatable::fallback(fallbackLocale: $supportedLocales[0], fallbackAny: true);
         Translatable::locales($supportedLocales);
 
+        if ($this->app->environment('production')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         // CRM tạm chạy trong viger_web: view nằm ở thư mục viger_crm/, gọi bằng "crm::..."
         View::addNamespace('crm', config('app.crm_views_path'));
     }

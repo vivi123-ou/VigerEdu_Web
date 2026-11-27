@@ -16,7 +16,7 @@
     <title>@hasSection('title')@yield('title') - @endif VIGER.EDU.VN</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
-    <link href="{{ asset('styles.css') }}" rel="stylesheet" />
+    <link href="{{ asset('styles.css') }}?v={{ filemtime(public_path('styles.css')) }}" rel="stylesheet" />
     <link href="{{ asset('css/chatbot.css') }}?v={{ filemtime(public_path('css/chatbot.css')) }}" rel="stylesheet" />
     <link href="{{ asset('css/back-to-top.css') }}" rel="stylesheet" />
 
