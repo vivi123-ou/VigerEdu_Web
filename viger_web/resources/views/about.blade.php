@@ -134,7 +134,7 @@
         </div>
         <h2 class="cta-title">{{ $about['about_cta_title'] }}</h2>
         <p class="cta-desc">{{ $about['about_cta_description'] }}</p>
-        <a class="cta-pill" href="{{ $about['about_cta_button_url'] }}">{{ $about['about_cta_button_text'] }}</a>
+        <a class="cta-pill" href="{{ localized_url($about['about_cta_button_url']) }}">{{ $about['about_cta_button_text'] }}</a>
       </div>
     </section>
   </main>

@@ -26,7 +26,7 @@
 
 <header class="bar">
   <div class="brand-group">
-    <a class="brand" href="/">
+    <a class="brand" href="{{ localized_url('/') }}">
       <img src="{{ \Illuminate\Support\Str::startsWith($siteLogo, ['http', '/']) ? $siteLogo : asset($siteLogo) }}" alt="Logo" />
       <div
         class="brand-text"
@@ -49,10 +49,10 @@
   </label>
 
   <nav class="navpanel menu">
-    <a href="/ve-chung-toi"><span id="nav-home">{{ __('messages.about_us') }}</span></a>
+    <a href="{{ localized_url('/ve-chung-toi') }}"><span id="nav-home">{{ __('messages.about_us') }}</span></a>
 
     <div class="menu-dropdown">
-      <a href="/giao-duc-tai-duc"
+      <a href="{{ localized_url('/giao-duc-tai-duc') }}"
         ><span id="nav-about">{{ __('messages.education') }}</span>
         <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
           <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
@@ -64,17 +64,17 @@
             <a href="{{ $c->menuUrl() }}">{{ $c->displayName() }}</a>
           @endforeach
         @else
-          <a href="/giao-duc-tai-duc/tong-quan">{{ __('messages.overview') }}</a>
-          <a href="/giao-duc-tai-duc/he-thong-giao-duc">{{ __('messages.education_system') }}</a>
-          <a href="/giao-duc-tai-duc/nghien-cuu-va-ung-dung">{{ __('messages.research_applied') }}</a>
-          <a href="/giao-duc-tai-duc/chi-phi-va-co-hoi">{{ __('messages.costs_opportunities') }}</a>
-          <a href="/giao-duc-tai-duc/co-hoi-nghe-nghiep">{{ __('messages.career_opportunities') }}</a>
+          <a href="{{ localized_url('/giao-duc-tai-duc/tong-quan') }}">{{ __('messages.overview') }}</a>
+          <a href="{{ localized_url('/giao-duc-tai-duc/he-thong-giao-duc') }}">{{ __('messages.education_system') }}</a>
+          <a href="{{ localized_url('/giao-duc-tai-duc/nghien-cuu-va-ung-dung') }}">{{ __('messages.research_applied') }}</a>
+          <a href="{{ localized_url('/giao-duc-tai-duc/chi-phi-va-co-hoi') }}">{{ __('messages.costs_opportunities') }}</a>
+          <a href="{{ localized_url('/giao-duc-tai-duc/co-hoi-nghe-nghiep') }}">{{ __('messages.career_opportunities') }}</a>
         @endif
       </div>
     </div>
 
     <div class="menu-dropdown">
-      <a href="/tu-van"
+      <a href="{{ localized_url('/tu-van') }}"
         ><span id="nav-consult">{{ __('messages.consulting') }}</span>
         <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
           <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
@@ -85,21 +85,21 @@
           @foreach ($consultCategories as $c)
             <a href="{{ $c->menuUrl() }}">{{ $c->displayName() }}</a>
           @endforeach
-          <a href="/tu-van/quy-trinh-tu-van">{{ __('messages.consult_process') }}</a>
+          <a href="{{ localized_url('/tu-van/quy-trinh-tu-van') }}">{{ __('messages.consult_process') }}</a>
         @else
-          <a href="/tu-van/du-hoc-dai-hoc">{{ __('messages.consult_bachelor') }}</a>
-          <a href="/tu-van/du-hoc-cao-hoc">{{ __('messages.consult_master') }}</a>
-          <a href="/tu-van/quy-trinh-tu-van">{{ __('messages.consult_process') }}</a>
+          <a href="{{ localized_url('/tu-van/du-hoc-dai-hoc') }}">{{ __('messages.consult_bachelor') }}</a>
+          <a href="{{ localized_url('/tu-van/du-hoc-cao-hoc') }}">{{ __('messages.consult_master') }}</a>
+          <a href="{{ localized_url('/tu-van/quy-trinh-tu-van') }}">{{ __('messages.consult_process') }}</a>
         @endif
       </div>
     </div>
 
-    <a href="/chuong-trinh-hoc"
+    <a href="{{ localized_url('/chuong-trinh-hoc') }}"
       ><span id="nav-programs">{{ __('messages.programs') }}</span></a
     >
 
     <div class="menu-dropdown">
-      <a href="/blog"
+      <a href="{{ localized_url('/blog') }}"
         ><span id="nav-blog">{{ __('messages.blog') }}</span>
         <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
           <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
@@ -111,8 +111,8 @@
             <a href="{{ $c->menuUrl() }}">{{ $c->displayName() }}</a>
           @endforeach
         @else
-          <a href="/blog/hieu-ve-duc">{{ __('messages.understand_germany') }}</a>
-          <a href="/blog/cuoc-song-o-duc">{{ __('messages.life_in_germany') }}</a>
+          <a href="{{ localized_url('/blog/hieu-ve-duc') }}">{{ __('messages.understand_germany') }}</a>
+          <a href="{{ localized_url('/blog/cuoc-song-o-duc') }}">{{ __('messages.life_in_germany') }}</a>
         @endif
       </div>
     </div>
@@ -175,7 +175,7 @@
     @endphp
     <a
       class="lang-toggle"
-      href="{{ route('switch.language', $nextLocale) }}"
+      href="{{ \App\Support\LocalizedUrl::switchTo($nextLocale) }}"
       hreflang="{{ $nextLocale }}"
       title="{{ __('messages.switch_lang') }}"
       aria-label="{{ __('messages.switch_lang') }}"
@@ -186,7 +186,7 @@
       @endforeach
     </a>
 
-    <a class="cta-pill" href="{{ $headerCtaUrl }}"
+    <a class="cta-pill" href="{{ localized_url($headerCtaUrl) }}"
       ><span id="nav-cta">{{ $headerCtaText }}</span></a
     >
   </div>

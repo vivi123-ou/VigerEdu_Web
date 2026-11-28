@@ -39,7 +39,7 @@ class HomePageLocalizationTest extends TestCase
     public function test_home_page_shows_english_content_in_english_mode(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/')
+            ->get('/en')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Home', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('Your journey')
@@ -98,7 +98,7 @@ class HomePageLocalizationTest extends TestCase
         $this->assertNull(Setting::get('home_hero_button_url'));
         $this->assertSame([['label' => 'Students enrolled'], ['label' => 'Visa success rate'], ['label' => 'Years of experience']], json_decode(Setting::get('home_hero_stats_en'), true));
 
-        $this->withSession(['locale' => 'en'])->get('/')->assertSee('Your German adventure');
+        $this->withSession(['locale' => 'en'])->get('/en')->assertSee('Your German adventure');
         $this->withSession(['locale' => 'vi'])->get('/')->assertSee('Hành trình của bạn')->assertDontSee('Your German adventure');
     }
 
@@ -114,14 +114,14 @@ class HomePageLocalizationTest extends TestCase
 
         $this->assertSame('Chinh phục nước Đức', Setting::get('home_hero_heading'));
         $this->assertNull(Setting::get('home_hero_heading_en'));
-        $this->withSession(['locale' => 'en'])->get('/')->assertSee('Your journey');
+        $this->withSession(['locale' => 'en'])->get('/en')->assertSee('Your journey');
     }
 
     public function test_banner_slider_uses_english_translations(): void
     {
         $this->seed(BannerSeeder::class);
 
-        $this->withSession(['locale' => 'en'])->get('/')
+        $this->withSession(['locale' => 'en'])->get('/en')
             ->assertSee('Study today, work in Europe tomorrow')
             ->assertDontSee('Học tập hôm nay, làm việc tại Châu Âu ngày mai');
 

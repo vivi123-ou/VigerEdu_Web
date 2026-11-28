@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Filament\Pages\ManageEducationPages;
 use App\Models\Setting;
 use App\Models\User;
+use App\Support\LocalizedUrl;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -43,8 +44,7 @@ class EducationPagesHeroTest extends TestCase
             ->assertSee($vietnamese, false)
             ->assertDontSee($english, false);
 
-        $this->withSession(['locale' => 'en'])
-            ->get($url)
+        $this->get(LocalizedUrl::switchTo('en', $url))
             ->assertOk()
             ->assertSee($english, false)
             ->assertDontSee($vietnamese, false);
@@ -53,7 +53,7 @@ class EducationPagesHeroTest extends TestCase
     public function test_english_page_title_is_used(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/giao-duc-tai-duc/tong-quan')
+            ->get('/en/study-in-germany/overview')
             ->assertSeeInOrder(['<title>', 'German Education Overview', 'VIGER.EDU.VN</title>'], false);
     }
 
@@ -79,7 +79,7 @@ class EducationPagesHeroTest extends TestCase
         $this->assertNull(Setting::get('education_overview_heading_en'));
 
         $this->get('/giao-duc-tai-duc/tong-quan')->assertSee('GIÁO DỤC ĐỨC TOÀN CẢNH');
-        $this->withSession(['locale' => 'en'])->get('/giao-duc-tai-duc/tong-quan')
+        $this->withSession(['locale' => 'en'])->get('/en/study-in-germany/overview')
             ->assertSee('GERMAN EDUCATION OVERVIEW')
             ->assertDontSee('GIÁO DỤC ĐỨC TOÀN CẢNH');
     }
@@ -104,7 +104,7 @@ class EducationPagesHeroTest extends TestCase
         $this->assertNull(Setting::get('education_career_opportunities_heading'));
         $this->assertNull(Setting::get('education_career_opportunities_image_en'));
 
-        $this->withSession(['locale' => 'en'])->get('/giao-duc-tai-duc/co-hoi-nghe-nghiep')
+        $this->withSession(['locale' => 'en'])->get('/en/study-in-germany/career-opportunities')
             ->assertSee('WORK IN GERMANY')
             ->assertSee('Jobs and residence for graduates.');
         $this->withSession(['locale' => 'vi'])->get('/giao-duc-tai-duc/co-hoi-nghe-nghiep')

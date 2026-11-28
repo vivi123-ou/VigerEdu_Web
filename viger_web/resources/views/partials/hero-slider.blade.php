@@ -95,7 +95,7 @@
         @if (!empty($s['buttons']))
           <div class="hs-actions">
             @foreach ($s['buttons'] as $b)
-              <a href="{{ $b[1] }}" class="hs-btn {{ ($b[2] ?? '') === 'ghost' ? 'ghost' : '' }}">{{ $b[0] }}</a>
+              <a href="{{ localized_url($b[1]) }}" class="hs-btn {{ ($b[2] ?? '') === 'ghost' ? 'ghost' : '' }}">{{ $b[0] }}</a>
             @endforeach
           </div>
         @endif

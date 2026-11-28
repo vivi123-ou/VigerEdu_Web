@@ -34,7 +34,7 @@ class ConsultPagesLocalizationTest extends TestCase
     public function test_consult_page_shows_english_in_english_mode(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/tu-van')
+            ->get('/en/consulting')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Study Abroad Consulting', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('STUDY ABROAD CONSULTING')
@@ -52,14 +52,14 @@ class ConsultPagesLocalizationTest extends TestCase
         $this->get('/tu-van/du-hoc-cao-hoc')->assertOk()->assertSee('DU HỌC CAO HỌC TẠI ĐỨC');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/tu-van/du-hoc-dai-hoc')
+            ->get('/en/consulting/bachelor-studies')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Bachelor Study Consulting', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('BACHELOR STUDIES IN GERMANY')
             ->assertDontSee('DU HỌC ĐẠI HỌC TẠI ĐỨC');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/tu-van/du-hoc-cao-hoc')
+            ->get('/en/consulting/master-studies')
             ->assertOk()
             ->assertSee('GRADUATE STUDIES IN GERMANY')
             ->assertDontSee('DU HỌC CAO HỌC TẠI ĐỨC');
@@ -73,7 +73,7 @@ class ConsultPagesLocalizationTest extends TestCase
             ->assertSee('Tư vấn miễn phí');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/tu-van/quy-trinh-tu-van')
+            ->get('/en/consulting/consulting-process')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Consulting Process', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('STUDY ABROAD CONSULTING PROCESS')
@@ -105,7 +105,7 @@ class ConsultPagesLocalizationTest extends TestCase
         $this->assertNull(Setting::get('consult_bachelor_heading_en'));
 
         $this->get('/tu-van/du-hoc-dai-hoc')->assertSee('CỬ NHÂN TẠI ĐỨC');
-        $this->withSession(['locale' => 'en'])->get('/tu-van/du-hoc-dai-hoc')
+        $this->withSession(['locale' => 'en'])->get('/en/consulting/bachelor-studies')
             ->assertSee('BACHELOR STUDIES IN GERMANY')
             ->assertDontSee('CỬ NHÂN TẠI ĐỨC');
     }
@@ -124,7 +124,7 @@ class ConsultPagesLocalizationTest extends TestCase
         $this->assertSame('MASTER\'S IN GERMANY', Setting::get('consult_master_heading_en'));
         $this->assertNull(Setting::get('consult_master_heading'));
 
-        $this->withSession(['locale' => 'en'])->get('/tu-van/du-hoc-cao-hoc')->assertSee('MASTER&#039;S IN GERMANY', false);
+        $this->withSession(['locale' => 'en'])->get('/en/consulting/master-studies')->assertSee('MASTER&#039;S IN GERMANY', false);
         $this->withSession(['locale' => 'vi'])->get('/tu-van/du-hoc-cao-hoc')
             ->assertSee('DU HỌC CAO HỌC TẠI ĐỨC')
             ->assertDontSee('MASTER&#039;S IN GERMANY', false);

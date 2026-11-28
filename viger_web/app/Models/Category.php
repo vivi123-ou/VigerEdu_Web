@@ -150,31 +150,58 @@ class Category extends Model
     public function menuUrl(): string
     {
         if (filled($this->url)) {
-            return Str::startsWith($this->url, ['http://', 'https://', '//', '#', 'mailto:', 'tel:'])
-                ? $this->url
-                : url($this->url);
+            // URL nội bộ (vd. /chuong-trinh-hoc) => tự đổi sang đường dẫn tiếng Anh ở chế độ tiếng Anh
+            return localized_url($this->url);
         }
 
         return $this->pageUrl();
     }
 
-    /** Trang danh sách bài viết của chuyên mục (bỏ qua URL tùy chỉnh). */
+    /** Trang danh sách bài viết của chuyên mục (bỏ qua URL tùy chỉnh), theo ngôn ngữ đang chọn. */
     public function pageUrl(): string
     {
-        // Chuyên mục tiếng Anh dùng chung URL với chuyên mục gốc (trang tự đổi nội dung theo ngôn ngữ)
+        // Chuyên mục tiếng Anh dùng chung trang với chuyên mục gốc (trang tự đổi nội dung theo ngôn ngữ)
         if ($this->translation_of_id !== null && $this->translationOf !== null) {
             return $this->translationOf->pageUrl();
         }
 
         if (Route::has('category.'.$this->slug)) {
-            return route('category.'.$this->slug);
+            return localized_url(route('category.'.$this->slug, absolute: false));
         }
 
         if (isset(self::GROUP_PREFIXES[(string) $this->menu_group])) {
-            return url(self::GROUP_PREFIXES[(string) $this->menu_group].'/'.$this->slug);
+            return localized_url(self::GROUP_PREFIXES[(string) $this->menu_group].'/'.$this->urlSlug());
         }
 
-        return url('/blog?category='.$this->id);
+        return localized_url('/blog?category='.$this->id);
+    }
+
+    /**
+     * Slug trên URL theo ngôn ngữ: tiếng Anh => slug từ tên tiếng Anh (vd. hoc-bong => scholarships),
+     * chưa có tên tiếng Anh => slug gốc.
+     */
+    public function urlSlug(?string $locale = null): string
+    {
+        $locale ??= app()->getLocale();
+
+        if ($locale === 'en') {
+            $englishSlug = Str::slug((string) $this->localized('en')->getTranslation('name', 'en', false));
+
+            if ($englishSlug !== '') {
+                return $englishSlug;
+            }
+        }
+
+        return $this->slug;
+    }
+
+    /** Tìm chuyên mục của nhóm menu theo slug trên URL (slug gốc hoặc slug tiếng Anh). */
+    public static function findByUrlSlug(string $group, string $urlSlug): ?Category
+    {
+        $categories = static::with('englishVersion')->where('menu_group', $group)->get();
+
+        return $categories->firstWhere('slug', $urlSlug)
+            ?? $categories->first(fn (Category $category) => $category->urlSlug('en') === $urlSlug);
     }
 
     public function scopeInMenu(Builder $query, ?string $group = null): Builder

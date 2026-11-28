@@ -24,7 +24,7 @@ class EducationPageLocalizationTest extends TestCase
     public function test_education_page_shows_english_content_in_english_mode(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/giao-duc-tai-duc')
+            ->get('/en/study-in-germany')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Study in Germany', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('STUDY IN GERMANY')
@@ -48,7 +48,7 @@ class EducationPageLocalizationTest extends TestCase
             ->assertSee('Mô tả từ admin');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/giao-duc-tai-duc')
+            ->get('/en/study-in-germany')
             ->assertSee('STUDY IN GERMANY')
             ->assertDontSee('Tiêu đề từ admin')
             ->assertDontSee('Mô tả từ admin');
@@ -62,7 +62,7 @@ class EducationPageLocalizationTest extends TestCase
         ]);
 
         $this->withSession(['locale' => 'en'])
-            ->get('/giao-duc-tai-duc')
+            ->get('/en/study-in-germany')
             ->assertSee('Admin English title')
             ->assertDontSee('Tiêu đề từ admin');
     }

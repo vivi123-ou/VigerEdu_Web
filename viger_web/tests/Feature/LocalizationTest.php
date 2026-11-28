@@ -50,7 +50,7 @@ class LocalizationTest extends TestCase
             ->assertSee('<html lang="vi">', false)
             ->assertSee('Về chúng tôi')
             ->assertSee('<span class="lang-active">VI</span>', false)
-            ->assertSeeInOrder(['</nav>', 'class="lang-toggle"', 'href="'.route('switch.language', 'en').'"'], false)
+            ->assertSeeInOrder(['</nav>', 'class="lang-toggle"', 'href="'.url('/en').'"'], false)
             ->assertDontSee('lang-switcher', false);
     }
 
@@ -58,17 +58,17 @@ class LocalizationTest extends TestCase
     {
         $this->from('/blog')
             ->get('/lang/en')
-            ->assertRedirect('/blog')
+            ->assertRedirect('/en/blog')
             ->assertSessionHas('locale', 'en');
 
-        $this->get('/')
+        $this->get('/en')
             ->assertOk()
             ->assertSee('<html lang="en">', false)
             ->assertSee('<span id="nav-about">Study in Germany</span>', false)
-            ->assertSee('<a href="/giao-duc-tai-duc">Study in Germany</a>', false)
+            ->assertSee('<a href="'.url('/en/study-in-germany').'">Study in Germany</a>', false)
             ->assertDontSee('<span id="nav-about">Giáo dục tại Đức</span>', false)
             ->assertSee('<span class="lang-active">EN</span>', false)
-            ->assertSee('href="'.route('switch.language', 'vi').'"', false);
+            ->assertSee('href="'.url('/').'"', false);
     }
 
     public function test_unsupported_locale_is_ignored(): void
@@ -89,7 +89,7 @@ class LocalizationTest extends TestCase
             ->assertDontSee('English title');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/bai-viet/bai-song-ngu')
+            ->get('/en/posts/bai-song-ngu')
             ->assertSee('English title')
             ->assertSee('English content', false)
             ->assertDontSee('Tiêu đề tiếng Việt');
@@ -109,7 +109,7 @@ class LocalizationTest extends TestCase
             ->assertDontSee('English only post');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/blog')
+            ->get('/en/blog')
             ->assertSee('Bilingual post')
             ->assertSee('English only post')
             ->assertDontSee('Chỉ có tiếng Việt')
@@ -122,8 +122,8 @@ class LocalizationTest extends TestCase
         $this->makePost('english-only', ['en' => 'English only post'], ['content' => ['en' => '<p>Content</p>']]);
 
         $this->withSession(['locale' => 'en'])
-            ->get('/bai-viet/chi-tieng-viet')
-            ->assertRedirect('/blog');
+            ->get('/en/posts/chi-tieng-viet')
+            ->assertRedirect('/en/blog');
 
         $this->withSession(['locale' => 'vi'])
             ->get('/bai-viet/english-only')
@@ -142,7 +142,7 @@ class LocalizationTest extends TestCase
         $this->makePost('related-vi', ['vi' => 'Liên quan chỉ tiếng Việt'], ['content' => ['vi' => '<p>Nội dung</p>']]);
 
         $this->withSession(['locale' => 'en'])
-            ->get('/bai-viet/main')
+            ->get('/en/posts/main')
             ->assertSee('Related English')
             ->assertDontSee('Liên quan chỉ tiếng Việt');
     }
@@ -157,13 +157,13 @@ class LocalizationTest extends TestCase
         $this->get('/blog?q=bổng')->assertSee('Học bổng DAAD')->assertDontSee('Thủ tục thị thực');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/blog?q=scholarship')
+            ->get('/en/blog?q=scholarship')
             ->assertSee('DAAD scholarship')
             ->assertDontSee('Student visa');
 
         // "vi" là key JSON của mọi bản ghi, chỉ được khớp với nội dung thật
         $this->withSession(['locale' => 'en'])
-            ->get('/blog?q=vi')
+            ->get('/en/blog?q=vi')
             ->assertDontSee('DAAD scholarship')
             ->assertSee('Student visa');
     }
@@ -194,6 +194,39 @@ class LocalizationTest extends TestCase
                 'title.vi' => 'Du học Đức 2027',
                 'title.en' => 'Study in Germany 2027',
             ]);
+    }
+
+    public function test_admin_english_post_slug_is_generated_from_english_title(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'ADMIN', 'active' => true]));
+        Filament::setCurrentPanel('admin');
+
+        // Gõ nhầm tiêu đề tiếng Việt rồi xóa => slug theo tiêu đề English
+        Livewire::test(CreatePost::class)
+            ->fillForm(['title' => ['vi' => 'Tiêu đề tạm']])
+            ->assertSchemaStateSet(['slug' => 'tieu-de-tam'])
+            ->fillForm(['title' => ['vi' => null, 'en' => 'Life in Germany for Students']])
+            ->assertSchemaStateSet(['slug' => 'life-in-germany-for-students']);
+
+        // Slug đã có bài khác dùng => thêm hậu tố
+        $this->makePost('study-in-germany', ['en' => 'Study in Germany'], ['content' => ['en' => '<p>x</p>']]);
+
+        Livewire::test(CreatePost::class)
+            ->fillForm([
+                'title' => ['en' => 'Study in Germany'],
+                'content' => ['en' => '<p>Content</p>'],
+                'category_id' => $this->category->id,
+            ])
+            ->assertSchemaStateSet(['slug' => 'study-in-germany-2'])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        // Sửa tiêu đề bài đã có => giữ slug cũ để không hỏng link
+        $post = Post::where('slug', 'study-in-germany-2')->firstOrFail();
+
+        Livewire::test(EditPost::class, ['record' => $post->getRouteKey()])
+            ->fillForm(['title' => ['en' => 'Studying in Germany 2027']])
+            ->assertSchemaStateSet(['slug' => 'study-in-germany-2']);
     }
 
     public function test_admin_post_needs_at_least_one_language(): void
@@ -253,8 +286,8 @@ class LocalizationTest extends TestCase
 
         // Menu: cùng URL, tên theo ngôn ngữ
         $this->get('/')->assertSee('href="'.url('/giao-duc-tai-duc/tong-quan').'">Tổng quan</a>', false);
-        $this->withSession(['locale' => 'en'])->get('/')
-            ->assertSee('href="'.url('/giao-duc-tai-duc/tong-quan').'">German education overview</a>', false)
+        $this->withSession(['locale' => 'en'])->get('/en')
+            ->assertSee('href="'.url('/en/study-in-germany/overview').'">German education overview</a>', false)
             ->assertDontSee('>Tổng quan</a>', false);
 
         // Trang chuyên mục: tiếng Việt => bài chuyên mục gốc, tiếng Anh => bài chuyên mục tiếng Anh
@@ -262,13 +295,16 @@ class LocalizationTest extends TestCase
             ->assertOk()
             ->assertSee('Bài tổng quan tiếng Việt')
             ->assertDontSee('German education English post');
-        $this->withSession(['locale' => 'en'])->get('/giao-duc-tai-duc/tong-quan')
+        $this->withSession(['locale' => 'en'])->get('/en/study-in-germany/overview')
             ->assertOk()
             ->assertSee('German education English post')
             ->assertDontSee('Bài tổng quan tiếng Việt');
 
-        // Breadcrumb của bài tiếng Anh dẫn về cùng trang chuyên mục
+        // Breadcrumb của bài tiếng Anh dẫn về cùng trang chuyên mục (theo ngôn ngữ)
+        app()->setLocale('vi');
         $this->assertSame(url('/giao-duc-tai-duc/tong-quan'), $english->pageUrl());
+        app()->setLocale('en');
+        $this->assertSame(url('/en/study-in-germany/overview'), $english->pageUrl());
     }
 
     public function test_category_without_english_version_keeps_its_own_page_in_english_mode(): void
@@ -280,9 +316,11 @@ class LocalizationTest extends TestCase
             'is_in_menu' => true,
         ]);
 
-        $this->withSession(['locale' => 'en'])->get('/')
-            ->assertSee('href="'.url('/giao-duc-tai-duc/hoc-bong').'">Scholarships</a>', false);
-        $this->withSession(['locale' => 'en'])->get('/giao-duc-tai-duc/hoc-bong')->assertOk();
+        $this->withSession(['locale' => 'en'])->get('/en')
+            ->assertSee('href="'.url('/en/study-in-germany/scholarships').'">Scholarships</a>', false);
+        $this->get('/en/study-in-germany/scholarships')->assertOk();
+        // Slug tiếng Việt dưới /en (vd. vừa bấm chuyển ngôn ngữ) => chuyển về slug tiếng Anh
+        $this->get('/en/study-in-germany/hoc-bong')->assertRedirect(url('/en/study-in-germany/scholarships'));
     }
 
     public function test_translation_link_migration_moves_english_category_posts_to_english(): void
@@ -347,7 +385,7 @@ class LocalizationTest extends TestCase
         $this->get('/')->assertSee('>Tổng quan</a>', false);
 
         $this->withSession(['locale' => 'en'])
-            ->get('/')
+            ->get('/en')
             ->assertSee('>Overview</a>', false)
             ->assertDontSee('>Tổng quan</a>', false);
     }

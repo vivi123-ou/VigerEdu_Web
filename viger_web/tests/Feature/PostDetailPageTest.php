@@ -76,7 +76,7 @@ class PostDetailPageTest extends TestCase
             ->assertSee('Ban biên tập')
             ->assertSee('Đọc thêm')
             ->assertSee('Gọi ngay cho chúng tôi')
-            ->assertSee('href="/tu-van"', false)
+            ->assertSee('href="'.url('/tu-van').'"', false)
             ->getContent();
 
         $this->assertSame(2, substr_count($html, 'class="related-post-item"'));

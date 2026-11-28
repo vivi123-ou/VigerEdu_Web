@@ -12,6 +12,11 @@
     />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
+    {{-- Các bản ngôn ngữ của trang này (/... và /en/...) --}}
+    @foreach (config('app.supported_locales') as $locale)
+      <link rel="alternate" hreflang="{{ $locale }}" href="{{ \App\Support\LocalizedUrl::switchTo($locale) }}" />
+    @endforeach
+
     {{-- Tương đương layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE" --}}
     <title>@hasSection('title')@yield('title') - @endif VIGER.EDU.VN</title>
 

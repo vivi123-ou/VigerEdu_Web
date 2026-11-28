@@ -148,7 +148,7 @@
         </div>
         <h2 class="cta-title">{{ __('education.cta_title') }}</h2>
         <p class="cta-desc">{{ __('education.cta_description') }}</p>
-        <a class="cta-pill" href="/lien-he">{{ __('education.cta_button') }}</a>
+        <a class="cta-pill" href="{{ localized_url('/lien-he') }}">{{ __('education.cta_button') }}</a>
       </div>
     </section>
   </main>

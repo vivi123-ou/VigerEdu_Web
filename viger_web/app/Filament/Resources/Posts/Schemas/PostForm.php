@@ -5,14 +5,17 @@ namespace App\Filament\Resources\Posts\Schemas;
 use App\Enums\PostStatus;
 use App\Filament\Forms\Components\CKEditor;
 use App\Filament\Forms\Components\TranslatableTabs;
+use App\Models\Post;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
 
 class PostForm
@@ -33,11 +36,7 @@ class PostForm
                                 ->validationMessages(['required' => 'Cần nhập tiêu đề ở ít nhất một ngôn ngữ.'])
                                 ->maxLength(500)
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(function ($state, Get $get, Set $set) use ($isPrimary) {
-                                    if ($isPrimary || blank($get('slug'))) {
-                                        $set('slug', Str::slug($state));
-                                    }
-                                }),
+                                ->afterStateUpdated(fn (Get $get, Set $set, string $operation, ?Post $record) => self::fillSlug($get, $set, $operation, $record)),
                             Textarea::make("excerpt.{$locale}")
                                 ->label('Tóm tắt ngắn (Excerpt)')
                                 ->rows(3),
@@ -52,7 +51,10 @@ class PostForm
                     ->schema([
                         TextInput::make('slug')
                             ->label('Đường dẫn (Slug)')
+                            ->helperText('Tự tạo từ tiêu đề Tiếng Việt; bài chỉ có tiếng Anh thì tạo từ tiêu đề English.')
                             ->required()
+                            ->unique(ignoreRecord: true)
+                            ->validationMessages(['unique' => 'Slug này đã được dùng cho bài viết khác.'])
                             ->maxLength(500),
                         Select::make('category_id')
                             ->label('Chuyên mục')
@@ -73,8 +75,66 @@ class PostForm
                             ->image()
                             ->disk('public')
                             ->directory('posts')
+                            // Nút bút chì trên ảnh: cắt / xoay ảnh trước khi lưu
+                            ->imageEditor()
+                            ->imageEditorAspectRatioOptions([
+                                null,
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                            ])
+                            ->helperText('Bấm biểu tượng bút chì trên ảnh để cắt hoặc xoay ảnh.')
+                            ->columnSpanFull(),
+                        ToggleButtons::make('featured_image_fit')
+                            ->label('Cách hiển thị ảnh ở trang chi tiết')
+                            ->options([
+                                'cover' => 'Cắt cho vừa khung',
+                                'contain' => 'Hiện ảnh đầy đủ',
+                            ])
+                            ->icons([
+                                'cover' => Heroicon::OutlinedScissors,
+                                'contain' => Heroicon::OutlinedArrowsPointingOut,
+                            ])
+                            ->default('cover')
+                            ->inline()
+                            ->required()
+                            ->helperText('"Hiện ảnh đầy đủ" giữ nguyên toàn bộ ảnh, không bị cắt mất phần nào.')
                             ->columnSpanFull(),
                     ])->columns(2),
             ]);
+    }
+
+    /**
+     * Tự tạo slug từ tiêu đề: ưu tiên tiêu đề Tiếng Việt, bài chỉ có tiếng Anh thì dùng tiêu đề English.
+     * Khi sửa bài đã có slug thì giữ nguyên để không làm hỏng link cũ.
+     */
+    private static function fillSlug(Get $get, Set $set, string $operation, ?Post $record): void
+    {
+        if ($operation !== 'create' && filled($record?->slug)) {
+            return;
+        }
+
+        $title = collect(config('app.supported_locales'))
+            ->map(fn (string $locale) => $get("title.{$locale}"))
+            ->first(fn ($title) => filled($title));
+
+        if (blank($title)) {
+            return;
+        }
+
+        $set('slug', self::uniqueSlug(Str::slug($title), $record?->getKey()));
+    }
+
+    /** Thêm hậu tố -2, -3... nếu slug đã có bài khác dùng. */
+    private static function uniqueSlug(string $base, ?int $ignoreId = null): string
+    {
+        $slug = $base;
+        $suffix = 2;
+
+        while (Post::where('slug', $slug)->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))->exists()) {
+            $slug = $base.'-'.$suffix++;
+        }
+
+        return $slug;
     }
 }

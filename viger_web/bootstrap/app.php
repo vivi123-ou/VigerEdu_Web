@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'crm.admin' => CrmAdmin::class,
             'crm.can' => CrmCan::class,
             'crm.password' => CrmForcePasswordChange::class,
+            'locale' => SetLocale::class,
         ]);
 
         // Khách chưa đăng nhập vào CRM => trang login của CRM

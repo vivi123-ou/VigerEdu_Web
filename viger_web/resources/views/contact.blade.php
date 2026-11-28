@@ -196,7 +196,7 @@
           </div>
         @endif
 
-        <form action="{{ url('/lien-he') }}" method="POST">
+        <form action="{{ localized_url('/lien-he') }}" method="POST">
           @csrf
 
           <div style="margin-bottom: 1.5rem">

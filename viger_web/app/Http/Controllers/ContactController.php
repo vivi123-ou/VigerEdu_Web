@@ -37,7 +37,7 @@ class ContactController extends Controller
         // Gửi sang CRM qua hàng đợi: CRM lỗi thì tự thử lại, form vẫn được lưu ở web chính
         SendContactToCrm::dispatch($message);
 
-        return redirect(url('/lien-he').'#dang-ky')
+        return redirect(localized_url('/lien-he').'#dang-ky')
             ->with('status', ContactPage::get('contact_success_message'));
     }
 

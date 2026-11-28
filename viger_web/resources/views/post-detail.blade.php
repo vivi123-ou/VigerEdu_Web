@@ -153,6 +153,20 @@
       object-fit: cover;
       display: block;
     }
+    /* Hiện ảnh đầy đủ theo đúng kích thước gốc (chỉ thu nhỏ khi rộng hơn khung) */
+    .article-featured-img--contain {
+      width: fit-content;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .article-featured-img--contain img {
+      width: auto;
+      max-width: 100%;
+      max-height: none;
+      height: auto;
+      object-fit: initial;
+    }
 
     /* Excerpt Lead */
     .article-excerpt-box {
@@ -442,19 +456,19 @@
 
     // Link breadcrumb tới trang chuyên mục, không có chuyên mục thì về /blog
     $category = $post->category;
-    $categoryUrl = $category ? $category->pageUrl() : url('/blog');
+    $categoryUrl = $category ? $category->pageUrl() : localized_url('/blog');
   @endphp
 
   <main class="post-detail-wrapper">
     <div class="post-detail-container">
       <!-- BREADCRUMB -->
       <nav class="post-breadcrumb animate-hidden">
-        <a href="{{ url('/') }}">Trang chủ</a>
+        <a href="{{ localized_url('/') }}">Trang chủ</a>
         <span class="separator">/</span>
         @if ($category)
           <a href="{{ $categoryUrl }}">{{ $category->name }}</a>
         @else
-          <a href="{{ url('/blog') }}">Bài viết</a>
+          <a href="{{ localized_url('/blog') }}">Bài viết</a>
         @endif
         <span class="separator">/</span>
         <span class="current">{{ $post->title }}</span>
@@ -515,7 +529,7 @@
 
             <!-- Ảnh đại diện nổi bật (nếu có) -->
             @if ($post->featured_image_url)
-              <div class="article-featured-img">
+              <div class="article-featured-img {{ $post->featured_image_fit === 'contain' ? 'article-featured-img--contain' : '' }}">
                 <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" />
               </div>
             @endif
@@ -555,7 +569,7 @@
               <h3 class="sidebar-title">{{ $detail['post_detail_related_title'] }}</h3>
               <div class="related-post-list">
                 @foreach ($relatedPosts as $relPost)
-                  <a href="{{ url('/bai-viet/' . $relPost->slug) }}" class="related-post-item">
+                  <a href="{{ localized_url('/bai-viet/' . $relPost->slug) }}" class="related-post-item">
                     <div class="related-post-thumb">
                       <img
                         src="{{ $relPost->featured_image_url ?: $relatedPlaceholder }}"
@@ -579,7 +593,7 @@
             <div class="sidebar-cta animate-hidden delay-200">
               <h3>{{ $detail['post_detail_cta_title'] }}</h3>
               <p>{{ $detail['post_detail_cta_description'] }}</p>
-              <a href="{{ $detail['post_detail_cta_button_url'] }}" class="btn-cta">{{ $detail['post_detail_cta_button_text'] }}</a>
+              <a href="{{ localized_url($detail['post_detail_cta_button_url']) }}" class="btn-cta">{{ $detail['post_detail_cta_button_text'] }}</a>
             </div>
           @endif
         </aside>

@@ -387,7 +387,7 @@
     <div class="blog-search-wrap">
       <div class="blog-search-bar animate-hidden">
         {{-- Form GET nên không cần @csrf --}}
-        <form action="{{ url('/blog') }}" method="get" class="blog-search-input-wrap">
+        <form action="{{ localized_url('/blog') }}" method="get" class="blog-search-input-wrap">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -413,10 +413,10 @@
           />
         </form>
         <div class="blog-tags">
-          <a href="{{ url('/blog') }}" class="blog-tag {{ $activeCategory === null ? 'active' : '' }}">{{ __('blog.all') }}</a>
+          <a href="{{ localized_url('/blog') }}" class="blog-tag {{ $activeCategory === null ? 'active' : '' }}">{{ __('blog.all') }}</a>
           @foreach ($categories as $c)
             <a
-              href="{{ url('/blog?category=' . $c->id) }}"
+              href="{{ localized_url('/blog?category=' . $c->id) }}"
               class="blog-tag {{ $activeCategory == $c->id ? 'active' : '' }}"
               >{{ $c->name }}</a
             >
@@ -453,7 +453,7 @@
               <span class="featured-card-meta">
                 {{ $featured->created_at?->format('d/m/Y') }} · Viger EDU
               </span>
-              <a href="{{ url('/bai-viet/' . $featured->slug) }}" class="read-more-link">{{ __('blog.read_more') }}</a>
+              <a href="{{ localized_url('/bai-viet/' . $featured->slug) }}" class="read-more-link">{{ __('blog.read_more') }}</a>
             </div>
           </div>
         </div>
@@ -470,7 +470,7 @@
       @if ($posts->isNotEmpty())
         <div class="post-grid">
           @foreach ($posts as $post)
-            <a href="{{ url('/bai-viet/' . $post->slug) }}" class="post-card animate-hidden">
+            <a href="{{ localized_url('/bai-viet/' . $post->slug) }}" class="post-card animate-hidden">
               <div class="post-card-img">
                 <img
                   src="{{ $post->featured_image_url ?: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=80' }}"
@@ -543,7 +543,7 @@
         <p class="cta-desc">
           {{ __('blog.cta_description') }}
         </p>
-        <a class="cta-pill" href="/lien-he">{{ __('blog.cta_button') }}</a>
+        <a class="cta-pill" href="{{ localized_url('/lien-he') }}">{{ __('blog.cta_button') }}</a>
       </div>
     </section>
   </main>

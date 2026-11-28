@@ -10,14 +10,26 @@ use Symfony\Component\HttpFoundation\Response;
 class SetLocale
 {
     /**
-     * Đặt ngôn ngữ hiển thị theo lựa chọn lưu trong session (route switch.language).
-     * Không có hoặc không hợp lệ => dùng ngôn ngữ mặc định config('app.locale').
+     * Đặt ngôn ngữ hiển thị.
+     *
+     * - Route trang công khai khai báo ngôn ngữ qua tham số (middleware 'locale:en'): URL quyết định
+     *   ngôn ngữ (/en/... là tiếng Anh) và ghi nhớ vào session.
+     * - Trang khác (đăng nhập...): dùng ngôn ngữ đã ghi nhớ trong session, không có => config('app.locale').
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ?string $routeLocale = null): Response
     {
+        $supportedLocales = config('app.supported_locales');
+
+        if (in_array($routeLocale, $supportedLocales, true)) {
+            $request->session()->put('locale', $routeLocale);
+            App::setLocale($routeLocale);
+
+            return $next($request);
+        }
+
         $locale = $request->session()->get('locale');
 
-        if (in_array($locale, config('app.supported_locales'), true)) {
+        if (in_array($locale, $supportedLocales, true)) {
             App::setLocale($locale);
         }
 

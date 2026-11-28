@@ -48,7 +48,12 @@ class BlogController extends Controller
      */
     public function groupCategory(string $slug, string $group)
     {
-        $category = Category::with('englishVersion')->where('menu_group', $group)->where('slug', $slug)->firstOrFail();
+        $category = Category::findByUrlSlug($group, $slug) ?? abort(404);
+
+        // Slug của ngôn ngữ khác (vd. vừa bấm chuyển ngôn ngữ) => chuyển về URL đúng của ngôn ngữ đang chọn
+        if ($category->urlSlug() !== $slug) {
+            return redirect($category->pageUrl(), 301);
+        }
 
         $posts = $this->visiblePosts()
             ->whereIn('category_id', $category->languageFamilyIds())
@@ -68,7 +73,7 @@ class BlogController extends Controller
         $post = $this->visiblePosts()->with('category')->where('slug', $slug)->first();
 
         if (! $post) {
-            return redirect('/blog');
+            return redirect(localized_url('/blog'));
         }
 
         // Bài liên quan: cùng chuyên mục, không có thì lấy bài khác (số lượng cấu hình trong admin)

@@ -191,7 +191,7 @@
         </div>
         <h2 class="cta-title">{{ $content['consult_process_cta_title'] }}</h2>
         <p class="cta-desc">{{ $content['consult_process_cta_description'] }}</p>
-        <a class="cta-pill" href="{{ $content['consult_process_cta_button_url'] }}">{{ $content['consult_process_cta_button_text'] }}</a>
+        <a class="cta-pill" href="{{ localized_url($content['consult_process_cta_button_url']) }}">{{ $content['consult_process_cta_button_text'] }}</a>
       </div>
     </section>
   </main>

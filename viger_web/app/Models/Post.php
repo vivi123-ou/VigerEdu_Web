@@ -32,6 +32,7 @@ class Post extends Model
         'slug',
         'status',
         'featured_image',
+        'featured_image_fit',
         'category_id',
     ];
 

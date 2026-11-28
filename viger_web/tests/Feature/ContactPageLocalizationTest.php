@@ -35,7 +35,7 @@ class ContactPageLocalizationTest extends TestCase
     public function test_contact_page_shows_english_in_english_mode(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/lien-he')
+            ->get('/en/contact')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Contact', '</title>'], false)
             ->assertSee('CONNECT WITH VIGER EDU')
@@ -53,11 +53,11 @@ class ContactPageLocalizationTest extends TestCase
     public function test_validation_and_success_messages_follow_locale(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->post('/lien-he', [])
+            ->post('/en/contact', [])
             ->assertSessionHasErrors(['name' => 'Please enter your name.']);
 
         $this->withSession(['locale' => 'en'])
-            ->post('/lien-he', ['name' => 'Anna', 'email' => 'anna@example.com', 'phone' => '0123'])
+            ->post('/en/contact', ['name' => 'Anna', 'email' => 'anna@example.com', 'phone' => '0123'])
             ->assertSessionHas('status', 'Thank you! VIGER EDU will contact you within 24 hours.');
     }
 
@@ -82,7 +82,7 @@ class ContactPageLocalizationTest extends TestCase
         $this->assertNull(Setting::get('contact_phone'));
         $this->assertNull(Setting::get('contact_phone_en'));
 
-        $this->withSession(['locale' => 'en'])->get('/lien-he')->assertSee('TALK TO VIGER EDU');
+        $this->withSession(['locale' => 'en'])->get('/en/contact')->assertSee('TALK TO VIGER EDU');
         $this->withSession(['locale' => 'vi'])->get('/lien-he')
             ->assertSee('KẾT NỐI VỚI VIGER EDU')
             ->assertDontSee('TALK TO VIGER EDU');

@@ -23,7 +23,7 @@ class AboutPageLocalizationTest extends TestCase
     public function test_about_page_shows_english_content_in_english_mode(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/ve-chung-toi')
+            ->get('/en/about-us')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'About', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('Our story')
@@ -41,7 +41,7 @@ class AboutPageLocalizationTest extends TestCase
         Setting::set('about_hero_pretitle_en', 'Who we are');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/ve-chung-toi')
+            ->get('/en/about-us')
             ->assertOk()
             ->assertSee('Who we are')
             ->assertDontSee('Our story');

@@ -16,7 +16,7 @@
   <div class="foot-container">
     <!-- Cột trái: Logo + Text + Socials -->
     <div class="foot-left animate-hidden">
-      <a class="brand foot-brand" href="/">
+      <a class="brand foot-brand" href="{{ localized_url('/') }}">
         <img src="{{ \Illuminate\Support\Str::startsWith($siteLogo, ['http', '/']) ? $siteLogo : asset($siteLogo) }}" alt="Logo" />
         <div
           class="brand-text"
@@ -75,11 +75,11 @@
     <!-- Cột phải: Links -->
     <div class="foot-right animate-hidden delay-100">
       <nav class="foot-nav">
-        <a href="/ve-chung-toi">{{ __('messages.about_us') }}</a>
-        <a href="/giao-duc-tai-duc">{{ __('messages.education') }}</a>
-        <a href="/tu-van">{{ __('messages.consulting') }}</a>
-        <a href="/chuong-trinh-hoc">{{ __('messages.programs') }}</a>
-        <a href="/blog">{{ __('messages.blog') }}</a>
+        <a href="{{ localized_url('/ve-chung-toi') }}">{{ __('messages.about_us') }}</a>
+        <a href="{{ localized_url('/giao-duc-tai-duc') }}">{{ __('messages.education') }}</a>
+        <a href="{{ localized_url('/tu-van') }}">{{ __('messages.consulting') }}</a>
+        <a href="{{ localized_url('/chuong-trinh-hoc') }}">{{ __('messages.programs') }}</a>
+        <a href="{{ localized_url('/blog') }}">{{ __('messages.blog') }}</a>
       </nav>
     </div>
 

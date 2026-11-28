@@ -252,7 +252,7 @@ html.fx-text .fx-cursor-ring {
             </div>
             <div class="hero-buttons">
               <a
-                href="{{ $h['home_hero_button_url'] }}"
+                href="{{ localized_url($h['home_hero_button_url']) }}"
                 class="btn-red"
                 >{{ $h['home_hero_button_text'] }}</a
               >
@@ -299,7 +299,7 @@ html.fx-text .fx-cursor-ring {
             <p class="about-desc">
               <span>{{ $h['home_about_description'] }}</span>
             </p>
-            <a href="{{ $h['home_about_link_url'] }}" class="link-custom">{{ $h['home_about_link_text'] }}</a>
+            <a href="{{ localized_url($h['home_about_link_url']) }}" class="link-custom">{{ $h['home_about_link_text'] }}</a>
           </div>
           <div class="about-images animate-hidden delay-200">
             <div class="grid-images">
@@ -349,7 +349,7 @@ html.fx-text .fx-cursor-ring {
           </div>
         </div>
         <div class="text-center animate-hidden">
-          <a href="{{ $h['home_process_link_url'] }}" class="link-more">{{ $h['home_process_link_text'] }}</a>
+          <a href="{{ localized_url($h['home_process_link_url']) }}" class="link-more">{{ $h['home_process_link_text'] }}</a>
         </div>
       </div>
     </section>
@@ -394,7 +394,7 @@ html.fx-text .fx-cursor-ring {
         </div>
         <h2 class="cta-title">{{ $h['home_cta_title'] }}</h2>
         <p class="cta-desc">{{ $h['home_cta_description'] }}</p>
-        <a class="cta-pill" href="{{ $h['home_cta_button_url'] }}">{{ $h['home_cta_button_text'] }}</a>
+        <a class="cta-pill" href="{{ localized_url($h['home_cta_button_url']) }}">{{ $h['home_cta_button_text'] }}</a>
       </div>
     </section>
   </main>

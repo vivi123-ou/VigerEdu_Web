@@ -286,7 +286,7 @@
         @if ($posts->isNotEmpty())
           <div class="blog-grid-new">
             @foreach ($posts as $post)
-              <a href="{{ url('/bai-viet/' . $post->slug) }}" class="card-new animate-hidden delay-100">
+              <a href="{{ localized_url('/bai-viet/' . $post->slug) }}" class="card-new animate-hidden delay-100">
                 <div class="card-new-img">
                   <img
                     src="{{ $post->featured_image_url ?: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80' }}"
@@ -378,7 +378,7 @@
 
           <div class="sidebar-list">
             @forelse ($latestPosts as $p)
-              <a href="{{ url('/bai-viet/' . $p->slug) }}" class="sidebar-item">
+              <a href="{{ localized_url('/bai-viet/' . $p->slug) }}" class="sidebar-item">
                 <div class="sidebar-item-num">{{ $loop->iteration }}</div>
                 <div class="sidebar-item-text">{{ $p->title }}</div>
               </a>

@@ -21,7 +21,7 @@ class ChatbotLocalizationTest extends TestCase
 
     public function test_chatbot_is_english_in_english_mode(): void
     {
-        $response = $this->withSession(['locale' => 'en'])->get('/lien-he')
+        $response = $this->withSession(['locale' => 'en'])->get('/en/contact')
             ->assertOk()
             ->assertSee('VIGER AI Assistant')
             ->assertSee('Online')
@@ -55,7 +55,7 @@ class ChatbotLocalizationTest extends TestCase
     {
         config(['services.chatbot.url' => 'https://chat.example.test']);
 
-        $this->withSession(['locale' => 'en'])->get('/lien-he')->assertOk()
+        $this->withSession(['locale' => 'en'])->get('/en/contact')->assertOk()
             ->assertSee('data-endpoint=""', false);
     }
 }

@@ -34,7 +34,7 @@ class ProgramsPageLocalizationTest extends TestCase
     public function test_programs_page_shows_english_in_english_mode(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/chuong-trinh-hoc')
+            ->get('/en/study-programs')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Study Programs', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('STUDY PROGRAMS')
@@ -78,13 +78,13 @@ class ProgramsPageLocalizationTest extends TestCase
         $this->get('/chuong-trinh-hoc')
             ->assertSee('CÁC CHƯƠNG TRÌNH TẠI ĐỨC')
             ->assertSee('Cần tư vấn chọn chương trình?')
-            ->assertSee('href="/tu-van"', false);
+            ->assertSee('href="'.url('/tu-van').'"', false);
 
-        // Bản English vẫn dùng chữ tiếng Anh, liên kết dùng chung
-        $this->withSession(['locale' => 'en'])->get('/chuong-trinh-hoc')
+        // Bản English vẫn dùng chữ tiếng Anh; liên kết dùng chung tự đổi sang đường dẫn tiếng Anh
+        $this->withSession(['locale' => 'en'])->get('/en/study-programs')
             ->assertSee('STUDY PROGRAMS')
             ->assertSee('Not sure which program to choose?')
-            ->assertSee('href="/tu-van"', false);
+            ->assertSee('href="'.url('/en/consulting').'"', false);
     }
 
     public function test_admin_edits_english_version_without_touching_vietnamese(): void
@@ -111,7 +111,7 @@ class ProgramsPageLocalizationTest extends TestCase
         $this->assertNull(Setting::get('programs_cta_button_url'));
         $this->assertNull(Setting::get('programs_cta_button_url_en'));
 
-        $this->withSession(['locale' => 'en'])->get('/chuong-trinh-hoc')
+        $this->withSession(['locale' => 'en'])->get('/en/study-programs')
             ->assertSee('PROGRAMS IN GERMANY')
             ->assertSee('Need help choosing?');
         $this->withSession(['locale' => 'vi'])->get('/chuong-trinh-hoc')

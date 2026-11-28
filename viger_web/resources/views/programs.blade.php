@@ -21,7 +21,7 @@
       </div>
       <h2 class="cta-title">{{ $cta['programs_cta_title'] }}</h2>
       <p class="cta-desc">{{ $cta['programs_cta_description'] }}</p>
-      <a class="cta-pill" href="{{ $cta['programs_cta_button_url'] }}">{{ $cta['programs_cta_button_text'] }}</a>
+      <a class="cta-pill" href="{{ localized_url($cta['programs_cta_button_url']) }}">{{ $cta['programs_cta_button_text'] }}</a>
     </div>
   </section>
 @endsection

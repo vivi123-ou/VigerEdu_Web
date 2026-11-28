@@ -27,7 +27,7 @@ class BlogPagesLocalizationTest extends TestCase
     public function test_blog_page_shows_english_text_in_english_mode(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/blog')
+            ->get('/en/blog')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Blog - Study in Germany Insights', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('STUDY IN GERMANY INSIGHTS')
@@ -55,7 +55,7 @@ class BlogPagesLocalizationTest extends TestCase
     public function test_blog_category_pages_show_english_text_in_english_mode(): void
     {
         $this->withSession(['locale' => 'en'])
-            ->get('/blog/hieu-ve-duc')
+            ->get('/en/blog/understanding-germany')
             ->assertOk()
             ->assertSeeInOrder(['<title>', 'Understanding Germany', 'VIGER.EDU.VN</title>'], false)
             ->assertSee('UNDERSTANDING GERMANY')
@@ -66,7 +66,7 @@ class BlogPagesLocalizationTest extends TestCase
             ->assertDontSee('Bài Đăng Mới Nhất');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/blog/cuoc-song-o-duc')
+            ->get('/en/blog/life-in-germany')
             ->assertOk()
             ->assertSee('LIFE IN GERMANY')
             ->assertSee('Topics &amp; Articles', false)
@@ -93,7 +93,7 @@ class BlogPagesLocalizationTest extends TestCase
             ->assertSee('Xem chi tiết');
 
         $this->withSession(['locale' => 'en'])
-            ->get('/blog/hieu-ve-duc')
+            ->get('/en/blog/understanding-germany')
             ->assertSee('Nov 05, 2026')
             ->assertSee('View details')
             ->assertDontSee('Xem chi tiết');
@@ -109,7 +109,7 @@ class BlogPagesLocalizationTest extends TestCase
         ]);
 
         $this->withSession(['locale' => 'en'])
-            ->get('/blog/hoc-bong')
+            ->get('/en/blog/scholarships')
             ->assertOk()
             ->assertSee('A collection of articles in the Scholarships category.')
             ->assertDontSee('Mô tả tiếng Việt');
