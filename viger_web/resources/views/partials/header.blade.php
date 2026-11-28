@@ -94,9 +94,20 @@
       </div>
     </div>
 
-    <a href="{{ localized_url('/chuong-trinh-hoc') }}"
-      ><span id="nav-programs">{{ __('messages.programs') }}</span></a
-    >
+    {{-- Menu chính (Chương trình học...) quản trị ở Chuyên mục: mục có mục con sẽ hiển thị dạng dropdown --}}
+    @foreach ($mainMenuItems as $item)
+      @if ($item->children->isNotEmpty())
+        <div class="menu-dropdown">
+          <a href="{{ $item->menuUrl() }}"
+            ><span>{{ $item->displayName() }}</span>
+            <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
+              <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
+            </svg>
+          </a>
+          <div class="dropdown-content">
+            @foreach ($item->children as $child)
+              <a href="{{ $child->menuUrl() }}">{{ $child->displayName() }}</a>
+            @endforeach
 
     <div class="menu-dropdown">
       <a href="{{ localized_url('/blog') }}"
@@ -117,20 +128,6 @@
       </div>
     </div>
 
-    {{-- Menu chính quản trị từ Filament: mục có mục con sẽ hiển thị dạng dropdown --}}
-    @foreach ($mainMenuItems as $item)
-      @if ($item->children->isNotEmpty())
-        <div class="menu-dropdown">
-          <a href="{{ $item->menuUrl() }}"
-            ><span>{{ $item->displayName() }}</span>
-            <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
-              <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1" />
-            </svg>
-          </a>
-          <div class="dropdown-content">
-            @foreach ($item->children as $child)
-              <a href="{{ $child->menuUrl() }}">{{ $child->displayName() }}</a>
-            @endforeach
           </div>
         </div>
       @else
