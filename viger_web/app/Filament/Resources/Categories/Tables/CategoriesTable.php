@@ -19,6 +19,8 @@ class CategoriesTable
     public static function configure(Table $table): Table
     {
         return $table
+            // Số chuyên mục ít: hiện tất cả trên 1 trang (phân trang 10 dòng làm "mất" chuyên mục ở trang 2)
+            ->paginated(false)
             ->defaultSort(fn ($query) => $query->orderBy('menu_group')->orderBy('sort_order'))
             ->defaultGroup(
                 Group::make('menu_group')

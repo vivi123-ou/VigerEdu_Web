@@ -108,6 +108,12 @@
             @foreach ($item->children as $child)
               <a href="{{ $child->menuUrl() }}">{{ $child->displayName() }}</a>
             @endforeach
+          </div>
+        </div>
+      @else
+        <a href="{{ $item->menuUrl() }}"><span>{{ $item->displayName() }}</span></a>
+      @endif
+    @endforeach
 
     <div class="menu-dropdown">
       <a href="{{ localized_url('/blog') }}"
@@ -127,13 +133,6 @@
         @endif
       </div>
     </div>
-
-          </div>
-        </div>
-      @else
-        <a href="{{ $item->menuUrl() }}"><span>{{ $item->displayName() }}</span></a>
-      @endif
-    @endforeach
 
     {{-- Tương đương sec:authorize="hasRole('ADMIN')" --}}
     @auth
