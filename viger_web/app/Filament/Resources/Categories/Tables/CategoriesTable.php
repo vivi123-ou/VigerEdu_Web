@@ -19,8 +19,9 @@ class CategoriesTable
     public static function configure(Table $table): Table
     {
         return $table
-            // Số chuyên mục ít: hiện tất cả trên 1 trang (phân trang 10 dòng làm "mất" chuyên mục ở trang 2)
-            ->paginated(false)
+            // Giữ thanh phân trang, mặc định 50 dòng để chuyên mục không bị đẩy sang trang 2
+            ->paginated([10, 25, 50, 'all'])
+            ->defaultPaginationPageOption(50)
             ->defaultSort(fn ($query) => $query->orderBy('menu_group')->orderBy('sort_order'))
             ->defaultGroup(
                 Group::make('menu_group')
